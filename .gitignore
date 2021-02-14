@@ -1,0 +1,5 @@
+_book/*
+_bookdown_files/*
+handbook_files/*
+.Rproj.user
+.Rhistory

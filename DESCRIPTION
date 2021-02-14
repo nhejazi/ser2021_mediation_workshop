@@ -1,0 +1,64 @@
+Package: ser2021mediation
+Title: Causal Mediation Analysis - Modern Methods for Path Analysis
+Version: 0.0.1
+Authors@R: c(
+    person("Nima", "Hejazi", email = "nh@nimahejazi.org",
+           role = c("aut", "cre", "cph"),
+           comment = c(ORCID = "0000-0002-7127-2789")),
+    person("Iván", "Díaz", email = "ild2005@med.cornell.edu",
+           role = "aut",
+           comment = c(ORCID = "0000-0001-9056-2047")),
+    person("Kara", "Rudolph", email = "kr2854@cumc.columbia.edu",
+           role = "aut",
+           comment = c(ORCID = "0000-0002-9417-7960"))
+  )
+Maintainer: Nima Hejazi <nh@nimahejazi.org>
+Depends: R (>= 3.6.0)
+Imports:
+  bookdown,
+  bslib,
+  downlit,
+  rmarkdown,
+  ggplot2,
+  tibble,
+  tidyr,
+  dplyr,
+  readr,
+  knitr,
+  stringr,
+  skimr,
+  kableExtra,
+  ggfortify,
+  data.table,
+  mvtnorm,
+  dagitty,
+  ggdag,
+  randomForest,
+  forecast,
+  origami,
+  hal9001,
+  sl3,
+  medshift,
+  medoutcon
+Suggests:
+  nnls,
+  Rsolnp,
+  arm,
+  gam,
+  e1071,
+  glmnet,
+  speedglm,
+  ranger,
+  SuperLearner
+Remotes:
+  github::rstudio/bslib,
+  github::rstudio/bookdown,
+  github::tlverse/sl3@master,
+  github::tlverse/hal9001@master,
+  github::nhejazi/medshift@master,
+  github::nhejazi/medoutcon@master
+URL:
+  https://github.com/nhejazi/ser2021_mediation_workshop,
+  https://code.nimahejazi.org/ser2021_mediation_workshop
+BugReports: https://github.com/nhejazi/ser2021_mediation_workshop/issues
+RoxygenNote: 7.1.1

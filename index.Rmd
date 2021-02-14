@@ -1,0 +1,191 @@
+---
+knit: "bookdown::render_book"
+title: "Causal Mediation Analysis: Modern Methods for Path Analysis"
+author: "Iván Díaz, Nima Hejazi, Kara Rudolph"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+documentclass: book
+site: bookdown::bookdown_site
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+suppress-bibliography: true
+link-citations: yes
+colorlinks: yes
+graphics: yes
+lot: yes
+lof: yes
+always_allow_html: yes
+---
+
+# About this workshop {-}
+
+Causal mediation analysis provides a rigorous framework for developing
+a mechanistic understanding of _how_ an exposure impacts an outcome, a central
+goal in epidemiology and allied health sciences. Beginning with an overview of
+classical direct and indirect effects, this workshop will present recent
+advances that overcome their existing limitations, including (i) restriction to
+binary exposures and static interventions, (ii) effects identifiable only in the
+absence of intermediate confounders affected by exposure, and (iii)
+a restrictive assumption on independence of "cross-world" counterfactuals.
+Emphasis will be placed on flexible, stochastic and interventional direct and
+indirect effects, highlighting how these may be brought to bear on substantive
+epidemiological questions from real-world studies. Multiply robust,
+nonparametric estimators of these causal effects, and free and open source `R`
+packages (`medshift` and `medoutcon`) for their application, will be introduced.
+
+To ensure translation to real-world data analysis, this workshop will
+incorporate hands-on `R` programming exercises to allow participants practice in
+implementing the statistical tools presented. It is highly recommended that
+participants have working knowledge of the basic notions of causal inference,
+including counterfactuals and identification (linking the causal effect to
+a parameter estimable from the observed data distribution). Familiarity with the
+`R` programming language will be essential.
+
+## Workshop schedule {#schedule}
+
+TODO
+
+* Motivations
+* Path Analysis: A History
+* The Natural Direct/Indirect Effects
+* Interventional Direct/Indirect Effects
+* Stochastic Direct/Indirect Effects
+
+## About the authors {-}
+
+### Iván Díaz {-}
+
+TODO
+
+### Nima Hejazi {-}
+
+Nima Hejazi is a PhD candidate in biostatistics, working under the collaborative
+direction of Mark van der Laan and Alan Hubbard. Nima is affiliated with UC
+Berkeley's Center for Computational Biology and NIH Biomedical Big Data training
+program, as well as with the Fred Hutchinson Cancer Research Center. Previously,
+he earned an MA in Biostatistics and a BA (with majors in Molecular and Cell
+Biology, Psychology, and Public Health), both at UC Berkeley.  His research
+interests fall at the intersection of causal inference and machine learning,
+drawing on ideas from non/semi-parametric estimation in large, flexible
+statistical models to develop efficient and robust statistical procedures for
+evaluating complex target estimands in observational and randomized studies.
+Particular areas of current emphasis include mediation/path analysis,
+outcome-dependent sampling designs, targeted loss-based estimation, and vaccine
+efficacy trials.  Nima is also passionate about statistical computing and open
+source software development for applied statistics.
+
+### Kara Rudolph {-}
+
+TODO
+
+<!--
+# Acknowledgements {-}
+-->
+
+## Reproduciblity {#repro}
+
+These workshop materials were written using [bookdown](http://bookdown.org/),
+and the complete source is available on
+[GitHub](https://github.com/tlverse/tlverse-handbook).  This version of the book
+was built with `r R.version.string`, [pandoc](https://pandoc.org/) version `r
+rmarkdown::pandoc_version()`, and the following packages:
+
+```{r pkg-list, echo = FALSE, results="asis"}
+# borrowed from https://github.com/tidymodels/TMwR/blob/master/index.Rmd
+deps <- desc::desc_get_deps()
+pkgs <- sort(deps$package[deps$type == "Imports"])
+pkgs <- sessioninfo::package_info(pkgs, dependencies = FALSE)
+df <- tibble::tibble(
+  package = pkgs$package,
+  version = pkgs$ondiskversion,
+  source = gsub("@", "\\\\@", pkgs$source)
+)
+knitr::kable(df, format = "markdown")
+```
+
+## Setup instructions {#setup}
+
+### R and RStudio
+
+**R** and **RStudio** are separate downloads and installations. R is the
+underlying statistical computing environment. RStudio is a graphical integrated
+development environment (IDE) that makes using R much easier and more
+interactive. You need to install R before you install RStudio.
+
+#### Windows
+
+##### If you already have R and RStudio installed
+
+* Open RStudio, and click on "Help" > "Check for updates". If a new version is
+  available, quit RStudio, and download the latest version for RStudio.
+* To check which version of R you are using, start RStudio and the first thing
+  that appears in the console indicates the version of R you are
+  running. Alternatively, you can type `sessionInfo()`, which will also display
+  which version of R you are running. Go on the [CRAN
+  website](https://cran.r-project.org/bin/windows/base/) and check whether a
+  more recent version is available. If so, please download and install it. You
+  can [check here](https://cran.r-project.org/bin/windows/base/rw-FAQ.html#How-do-I-UNinstall-R_003f)
+  for more information on how to remove old versions from your system if you
+  wish to do so.
+
+##### If you don't have R and RStudio installed
+
+* Download R from
+  the [CRAN website](http://cran.r-project.org/bin/windows/base/release.htm).
+* Run the `.exe` file that was just downloaded
+* Go to the [RStudio download
+  page](https://www.rstudio.com/products/rstudio/download/#download)
+* Under *Installers* select **RStudio x.yy.zzz - Windows
+  XP/Vista/7/8** (where x, y, and z represent version numbers)
+* Double click the file to install it
+* Once it's installed, open RStudio to make sure it works and you don't get any
+  error messages.
+
+#### macOS / Mac OS X
+
+##### If you already have R and RStudio installed
+
+* Open RStudio, and click on "Help" > "Check for updates". If a new version is
+  available, quit RStudio, and download the latest version for RStudio.
+* To check the version of R you are using, start RStudio and the first thing
+  that appears on the terminal indicates the version of R you are running.
+  Alternatively, you can type `sessionInfo()`, which will also display which
+  version of R you are running. Go on the [CRAN
+  website](https://cran.r-project.org/bin/macosx/) and check whether a more
+  recent version is available. If so, please download and install it.
+
+##### If you don't have R and RStudio installed
+
+* Download R from
+  the [CRAN website](http://cran.r-project.org/bin/macosx).
+* Select the `.pkg` file for the latest R version
+* Double click on the downloaded file to install R
+* It is also a good idea to install [XQuartz](https://www.xquartz.org/) (needed
+  by some packages)
+* Go to the [RStudio download
+  page](https://www.rstudio.com/products/rstudio/download/#download)
+* Under *Installers* select **RStudio x.yy.zzz - Mac OS X 10.6+ (64-bit)**
+  (where x, y, and z represent version numbers)
+* Double click the file to install RStudio
+* Once it's installed, open RStudio to make sure it works and you don't get any
+  error messages.
+
+#### Linux
+
+* Follow the instructions for your distribution
+  from [CRAN](https://cloud.r-project.org/bin/linux), they provide information
+  to get the most recent version of R for common distributions. For most
+  distributions, you could use your package manager (e.g., for Debian/Ubuntu run
+  `sudo apt-get install r-base`, and for Fedora `sudo yum install R`), but we
+  don't recommend this approach as the versions provided by this are
+  usually out of date. In any case, make sure you have at least R 3.3.1.
+* Go to the [RStudio download
+  page](https://www.rstudio.com/products/rstudio/download/#download)
+* Under *Installers* select the version that matches your distribution, and
+  install it with your preferred method (e.g., with Debian/Ubuntu `sudo dpkg -i
+  rstudio-x.yy.zzz-amd64.deb` at the terminal).
+* Once it's installed, open RStudio to make sure it works and you don't get any
+  error messages.
+
+These setup instructions are adapted from those written for [Data Carpentry: R
+for Data Analysis and Visualization of Ecological
+Data](http://www.datacarpentry.org/R-ecology-lesson/).

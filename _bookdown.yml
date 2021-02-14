@@ -1,0 +1,23 @@
+new_session: yes
+delete_merged_file: true
+book_filename: "ser2021mediation"
+clean: [packages.bib, ser2021mediation.bbl]
+before_chapter_script: "_common.R"
+
+language:
+  label:
+    fig: "FIGURE "
+    tab: "TABLE "
+  ui:
+    chapter_name: "Chapter "
+
+rmd_files: [
+  "index.Rmd",
+  "01-preface.Rmd",
+  "02-roadmap.Rmd",
+  "03-natural.Rmd",
+  "04-interventional.Rmd",
+  "05-stochastic.Rmd",
+  #"99-sl3_primer.Rmd",
+  "references.Rmd"
+]
