@@ -1,6 +1,6 @@
 bookdown::bs4_book:
   theme:
-    primary: "#544154"
+    primary: "#0098db"
   repo: https://github.com/nhejazi/ser2021_mediation_workshop
 
 bookdown::gitbook:
