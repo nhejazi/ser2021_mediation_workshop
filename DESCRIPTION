@@ -1,6 +1,6 @@
 Package: ser2021mediation
-Title: Causal Mediation Analysis - Modern Methods for Path Analysis
-Version: 0.0.1
+Title: Causal Mediation - Modern Methods for Path Analysis
+Version: 0.0.2
 Authors@R: c(
     person("Nima", "Hejazi", email = "nh@nimahejazi.org",
            role = c("aut", "cre", "cph"),
@@ -33,30 +33,25 @@ Imports:
   mvtnorm,
   dagitty,
   ggdag,
-  randomForest,
-  forecast,
   origami,
-  hal9001,
   sl3,
   medshift,
   medoutcon
 Suggests:
   nnls,
   Rsolnp,
-  arm,
   gam,
-  e1071,
   glmnet,
   speedglm,
   ranger,
+  hal9001,
   SuperLearner
 Remotes:
   github::rstudio/bslib,
   github::rstudio/bookdown,
-  github::tlverse/sl3@master,
-  github::tlverse/hal9001@master,
-  github::nhejazi/medshift@master,
-  github::nhejazi/medoutcon@master
+  github::tlverse/sl3@devel,
+  github::nhejazi/medshift,
+  github::nhejazi/medoutcon
 URL:
   https://github.com/nhejazi/ser2021_mediation_workshop,
   https://code.nimahejazi.org/ser2021_mediation_workshop
