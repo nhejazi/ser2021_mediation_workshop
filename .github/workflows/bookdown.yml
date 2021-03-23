@@ -9,6 +9,9 @@ jobs:
   bookdown:
     name: build-bookdown
     runs-on: ubuntu-latest
+    env:
+      RENV_PATHS_ROOT: ~/.local/share/renv
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
@@ -26,18 +29,19 @@ jobs:
         run: |
           sudo apt install -y curl libcurl4-doc libcurl4-openssl-dev
 
-      - name: Install R dependencies
-        run: |
-          install.packages("remotes")
-          saveRDS(remotes::local_package_deps(dependencies = TRUE), ".github/r-depends.rds")
-        shell: Rscript {0}
-
       - name: Cache R packages
         uses: actions/cache@v2
         with:
-          path: ${{ env.R_LIBS_USER }}
-          key: ${{ runner.os }}-${{ steps.install-r.outputs.installed-r-version }}-1-${{ hashFiles('.github/r-depends.rds') }}
-          restore-keys: ${{ runner.os }}-${{ steps.install-r.outputs.installed-r-version }}-1-
+          path: ${{ env.RENV_PATHS_ROOT }}
+          key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-renv-
+
+      - name: Restore R packages
+        shell: Rscript {0}
+        run: |
+          if (!requireNamespace("renv", quietly = TRUE)) install.packages("renv")
+          renv::restore()
 
       - name: Cache bookdown results
         uses: actions/cache@v2
@@ -45,13 +49,6 @@ jobs:
           path: _bookdown_files
           key: bookdown-2-${{ hashFiles('**/*Rmd') }}
           restore-keys: bookdown-2-
-
-      - name: Install book dependencies
-        run: |
-          remotes::install_github("rstudio/bookdown")
-          remotes::install_github("rstudio/bslib")
-          remotes::install_deps(dependencies = TRUE)
-        shell: Rscript {0}
 
       - name: Render book
         run: |
