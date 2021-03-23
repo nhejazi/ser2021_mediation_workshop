@@ -24,10 +24,10 @@ description: "Open source, reproducible teaching materials accompanying a
 
 # Welcome to SER! {-}
 
-This open source, reproducible vignette is for a half-day workshop on modern
-methods for _causal mediation analysis_, given at the [SER 2021 Meeting]() on
-Monday, 24 May 2021. While we encourage use of this `bookdown` site, for
-convenience, we have also made these workshop materials [available in
+This open source, reproducible vignette accompanies a half-day workshop on
+modern methods for _causal mediation analysis_, given at the [SER 2021
+Meeting]() on Monday, 24 May 2021. While we encourage use of this `bookdown`
+site, for convenience, we have also made these workshop materials [available in
 PDF](https://code.nimahejazi.org/ser2021_mediation_workshop/ser2021mediation.pdf).
 
 ## About this workshop {#about}
@@ -73,7 +73,7 @@ parameter estimable from the observed data distribution). Familiarity with the
 
 __NOTE: All times listed in Pacific Time.__
 
-## About the instructors {-}
+## About the instructors {#instructors}
 
 ### Iván Díaz {-}
 
@@ -111,10 +111,6 @@ across populations.  More generally, my work on generalizing/ transporting
 findings from study samples to target populations and identifying subpopulations
 most likely to benefit from interventions contributes to efforts to optimally
 target available policy and program resources.
-
-<!--
-# Acknowledgements {-}
--->
 
 ## Reproduciblity {#repro}
 

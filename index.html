@@ -48,10 +48,10 @@
   </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><!--bookdown:title:end--><!--bookdown:title:start--><div id="welcome-to-ser" class="section level1 unnumbered">
 <h1>Welcome to SER!<a class="anchor" aria-label="anchor" href="#welcome-to-ser"><i class="fas fa-link"></i></a>
 </h1>
-<p>This open source, reproducible vignette is for a half-day workshop on modern
-methods for <em>causal mediation analysis</em>, given at the <a href="">SER 2021 Meeting</a> on
-Monday, 24 May 2021. While we encourage use of this <code>bookdown</code> site, for
-convenience, we have also made these workshop materials <a href="https://code.nimahejazi.org/ser2021_mediation_workshop/ser2021mediation.pdf">available in
+<p>This open source, reproducible vignette accompanies a half-day workshop on
+modern methods for <em>causal mediation analysis</em>, given at the <a href="">SER 2021
+Meeting</a> on Monday, 24 May 2021. While we encourage use of this <code>bookdown</code>
+site, for convenience, we have also made these workshop materials <a href="https://code.nimahejazi.org/ser2021_mediation_workshop/ser2021mediation.pdf">available in
 PDF</a>.</p>
 <div id="about" class="section level2">
 <h2>
@@ -100,8 +100,9 @@ effects</li>
 </ul>
 <p><strong>NOTE: All times listed in Pacific Time.</strong></p>
 </div>
-<div id="about-the-instructors" class="section level2 unnumbered">
-<h2>About the instructors<a class="anchor" aria-label="anchor" href="#about-the-instructors"><i class="fas fa-link"></i></a>
+<div id="instructors" class="section level2">
+<h2>
+<span class="header-section-number">0.3</span> About the instructors<a class="anchor" aria-label="anchor" href="#instructors"><i class="fas fa-link"></i></a>
 </h2>
 <div id="iván-díaz" class="section level3 unnumbered">
 <h3>Iván Díaz<a class="anchor" aria-label="anchor" href="#iv%C3%A1n-d%C3%ADaz"><i class="fas fa-link"></i></a>
@@ -142,14 +143,11 @@ across populations. More generally, my work on generalizing/ transporting
 findings from study samples to target populations and identifying subpopulations
 most likely to benefit from interventions contributes to efforts to optimally
 target available policy and program resources.</p>
-<!--
-# Acknowledgements {-}
--->
 </div>
 </div>
 <div id="repro" class="section level2">
 <h2>
-<span class="header-section-number">0.3</span> Reproduciblity<a class="anchor" aria-label="anchor" href="#repro"><i class="fas fa-link"></i></a>
+<span class="header-section-number">0.4</span> Reproduciblity<a class="anchor" aria-label="anchor" href="#repro"><i class="fas fa-link"></i></a>
 </h2>
 <p>These workshop materials were written using <a href="http://bookdown.org/">bookdown</a>,
 and the complete source is available on
@@ -277,11 +275,11 @@ was built with R version 4.0.4 (2021-02-15), <a href="https://pandoc.org/">pando
 </div>
 <div id="setup" class="section level2">
 <h2>
-<span class="header-section-number">0.4</span> Setup instructions<a class="anchor" aria-label="anchor" href="#setup"><i class="fas fa-link"></i></a>
+<span class="header-section-number">0.5</span> Setup instructions<a class="anchor" aria-label="anchor" href="#setup"><i class="fas fa-link"></i></a>
 </h2>
 <div id="r-and-rstudio" class="section level3">
 <h3>
-<span class="header-section-number">0.4.1</span> R and RStudio<a class="anchor" aria-label="anchor" href="#r-and-rstudio"><i class="fas fa-link"></i></a>
+<span class="header-section-number">0.5.1</span> R and RStudio<a class="anchor" aria-label="anchor" href="#r-and-rstudio"><i class="fas fa-link"></i></a>
 </h3>
 <p><strong>R</strong> and <strong>RStudio</strong> are separate downloads and installations. R is the
 underlying statistical computing environment. RStudio is a graphical integrated
@@ -289,11 +287,11 @@ development environment (IDE) that makes using R much easier and more
 interactive. You need to install R before you install RStudio.</p>
 <div id="windows" class="section level4">
 <h4>
-<span class="header-section-number">0.4.1.1</span> Windows<a class="anchor" aria-label="anchor" href="#windows"><i class="fas fa-link"></i></a>
+<span class="header-section-number">0.5.1.1</span> Windows<a class="anchor" aria-label="anchor" href="#windows"><i class="fas fa-link"></i></a>
 </h4>
 <div id="if-you-already-have-r-and-rstudio-installed" class="section level5">
 <h5>
-<span class="header-section-number">0.4.1.1.1</span> If you already have R and RStudio installed<a class="anchor" aria-label="anchor" href="#if-you-already-have-r-and-rstudio-installed"><i class="fas fa-link"></i></a>
+<span class="header-section-number">0.5.1.1.1</span> If you already have R and RStudio installed<a class="anchor" aria-label="anchor" href="#if-you-already-have-r-and-rstudio-installed"><i class="fas fa-link"></i></a>
 </h5>
 <ul>
 <li>Open RStudio, and click on “Help” &gt; “Check for updates”. If a new version is
@@ -311,7 +309,7 @@ wish to do so.</li>
 </div>
 <div id="if-you-dont-have-r-and-rstudio-installed" class="section level5">
 <h5>
-<span class="header-section-number">0.4.1.1.2</span> If you don’t have R and RStudio installed<a class="anchor" aria-label="anchor" href="#if-you-dont-have-r-and-rstudio-installed"><i class="fas fa-link"></i></a>
+<span class="header-section-number">0.5.1.1.2</span> If you don’t have R and RStudio installed<a class="anchor" aria-label="anchor" href="#if-you-dont-have-r-and-rstudio-installed"><i class="fas fa-link"></i></a>
 </h5>
 <ul>
 <li>Download R from
@@ -330,11 +328,11 @@ error messages.</li>
 </div>
 <div id="macos-mac-os-x" class="section level4">
 <h4>
-<span class="header-section-number">0.4.1.2</span> macOS / Mac OS X<a class="anchor" aria-label="anchor" href="#macos-mac-os-x"><i class="fas fa-link"></i></a>
+<span class="header-section-number">0.5.1.2</span> macOS / Mac OS X<a class="anchor" aria-label="anchor" href="#macos-mac-os-x"><i class="fas fa-link"></i></a>
 </h4>
 <div id="if-you-already-have-r-and-rstudio-installed-1" class="section level5">
 <h5>
-<span class="header-section-number">0.4.1.2.1</span> If you already have R and RStudio installed<a class="anchor" aria-label="anchor" href="#if-you-already-have-r-and-rstudio-installed-1"><i class="fas fa-link"></i></a>
+<span class="header-section-number">0.5.1.2.1</span> If you already have R and RStudio installed<a class="anchor" aria-label="anchor" href="#if-you-already-have-r-and-rstudio-installed-1"><i class="fas fa-link"></i></a>
 </h5>
 <ul>
 <li>Open RStudio, and click on “Help” &gt; “Check for updates”. If a new version is
@@ -349,7 +347,7 @@ recent version is available. If so, please download and install it.</li>
 </div>
 <div id="if-you-dont-have-r-and-rstudio-installed-1" class="section level5">
 <h5>
-<span class="header-section-number">0.4.1.2.2</span> If you don’t have R and RStudio installed<a class="anchor" aria-label="anchor" href="#if-you-dont-have-r-and-rstudio-installed-1"><i class="fas fa-link"></i></a>
+<span class="header-section-number">0.5.1.2.2</span> If you don’t have R and RStudio installed<a class="anchor" aria-label="anchor" href="#if-you-dont-have-r-and-rstudio-installed-1"><i class="fas fa-link"></i></a>
 </h5>
 <ul>
 <li>Download R from
@@ -371,7 +369,7 @@ error messages.</li>
 </div>
 <div id="linux" class="section level4">
 <h4>
-<span class="header-section-number">0.4.1.3</span> Linux<a class="anchor" aria-label="anchor" href="#linux"><i class="fas fa-link"></i></a>
+<span class="header-section-number">0.5.1.3</span> Linux<a class="anchor" aria-label="anchor" href="#linux"><i class="fas fa-link"></i></a>
 </h4>
 <ul>
 <li>Follow the instructions for your distribution
@@ -407,15 +405,15 @@ Data</a>.</p>
 <li><a class="nav-link" href="#about"><span class="header-section-number">0.1</span> About this workshop</a></li>
 <li><a class="nav-link" href="#schedule"><span class="header-section-number">0.2</span> Workshop schedule</a></li>
 <li>
-<a class="nav-link" href="#about-the-instructors">About the instructors</a><ul class="nav navbar-nav">
+<a class="nav-link" href="#instructors"><span class="header-section-number">0.3</span> About the instructors</a><ul class="nav navbar-nav">
 <li><a class="nav-link" href="#iv%C3%A1n-d%C3%ADaz">Iván Díaz</a></li>
 <li><a class="nav-link" href="#nima-hejazi">Nima Hejazi</a></li>
 <li><a class="nav-link" href="#kara-rudolph">Kara Rudolph</a></li>
 </ul>
 </li>
-<li><a class="nav-link" href="#repro"><span class="header-section-number">0.3</span> Reproduciblity</a></li>
+<li><a class="nav-link" href="#repro"><span class="header-section-number">0.4</span> Reproduciblity</a></li>
 <li>
-<a class="nav-link" href="#setup"><span class="header-section-number">0.4</span> Setup instructions</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#r-and-rstudio"><span class="header-section-number">0.4.1</span> R and RStudio</a></li></ul>
+<a class="nav-link" href="#setup"><span class="header-section-number">0.5</span> Setup instructions</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#r-and-rstudio"><span class="header-section-number">0.5.1</span> R and RStudio</a></li></ul>
 </li>
 </ul>
 
