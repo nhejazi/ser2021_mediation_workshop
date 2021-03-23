@@ -57,7 +57,6 @@ jobs:
 
       - name: Render book PDF
         run: |
-          Rscript -e 'bookdown::clean_book(TRUE)'
           Rscript -e 'bookdown::render_book("index.Rmd", "bookdown::pdf_book")'
 
       - uses: actions/upload-artifact@v1
