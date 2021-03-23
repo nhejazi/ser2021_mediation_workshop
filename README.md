@@ -10,3 +10,10 @@ RStudio's
 [`bookdown`](https://www.rstudio.com/resources/webinars/introducing-bookdown/)
 `R` package; for more information on how to use `bookdown` see
 [bookdown.org](https://bookdown.org/).
+
+## Workshop materials:
+
+* The `bookdown` site may be accessed
+  [here](https://code.nimahejazi.org/ser2021_mediation_workshop/).
+* The materials may be downloaded in PDF
+  [here](https://code.nimahejazi.org/ser2021_mediation_workshop/ser2021mediation.pdf).
