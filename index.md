@@ -26,9 +26,11 @@ description: "Open source, reproducible teaching materials accompanying a
 
 This open source, reproducible vignette is for a half-day workshop on modern
 methods for _causal mediation analysis_, given at the [SER 2021 Meeting]() on
-Monday, 24 May 2021.
+Monday, 24 May 2021. While we encourage use of this `bookdown` site, for
+convenience, we have also made these workshop materials [available in
+PDF](https://code.nimahejazi.org/ser2021_mediation_workshop/ser2021mediation.pdf).
 
-# About this workshop {-}
+## About this workshop {#about}
 
 Causal mediation analysis can provide a mechanistic understanding of how an
 exposure impacts an outcome, a central goal in epidemiology and health sciences.
