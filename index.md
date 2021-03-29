@@ -2,7 +2,7 @@
 knit: "bookdown::render_book"
 title: "[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis"
 author: "Iván Díaz, Nima Hejazi, Kara Rudolph"
-date: "updated: March 23, 2021"
+date: "updated: March 29, 2021"
 documentclass: book
 site: bookdown::bookdown_site
 bibliography: [book.bib, packages.bib]
@@ -134,14 +134,14 @@ rmarkdown::pandoc_version()`, and the following packages:
 |ggplot2    |3.3.3      |CRAN (R 4.0.4)                      |
 |kableExtra |1.3.4      |CRAN (R 4.0.4)                      |
 |knitr      |1.31       |CRAN (R 4.0.4)                      |
-|medoutcon  |0.1.0      |Github (nhejazi/medoutcon\@f8f14c4) |
+|medoutcon  |NA         |NA                                  |
 |medshift   |0.1.4      |Github (nhejazi/medshift\@f9e11a9)  |
 |mvtnorm    |1.1-1      |CRAN (R 4.0.4)                      |
 |origami    |1.0.3      |CRAN (R 4.0.4)                      |
 |readr      |1.4.0      |CRAN (R 4.0.4)                      |
 |rmarkdown  |2.7.4      |Github (rstudio/rmarkdown\@1450461) |
 |skimr      |2.1.3      |CRAN (R 4.0.4)                      |
-|sl3        |1.4.3      |Github (tlverse/sl3\@3950846)       |
+|sl3        |1.4.2      |Github (tlverse/sl3\@a119d47)       |
 |stringr    |1.4.0      |CRAN (R 4.0.4)                      |
 |tibble     |3.1.0      |CRAN (R 4.0.4)                      |
 |tidyr      |1.1.3      |CRAN (R 4.0.4)                      |
