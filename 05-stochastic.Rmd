@@ -30,7 +30,7 @@ the above DAG and the following causal models:
   M &= f(Z, A, W, U_M)\\
   Y &= f(M, Z, A, W, U_Y),
 \end{align*}
-where ($U_W, U_A, U_Z, U_M, U_Y$) are exogenous random errors.  We assume $A$ is
+where ($U_W, U_A, U_Z, U_M, U_Y$) are exogenous random errors. We assume $A$ is
 a single binary treatment, $Z$ is a single binary intermediate confounder, $M$
 is a single binary mediator. There are no restrictions on the distribution of
 $W$ or $Y$.
@@ -71,21 +71,21 @@ G-computation-based estimator. The procedure is as follows
 
 ### Estimate with doubly robust methods based on the EIF
 
-The EIF for the parameter $\Psi(P)(a^\prime, \hat{g}_{M \mid a^\star,W})$,
-where, again, $\hat{g}_{M \mid a^\star,W}$ is assumed known, is given by:
+The EIF for the parameter $\Psi(P)(a^{\prime}, \hat{g}_{M \mid a^{\star},W})$,
+where, again, $\hat{g}_{M \mid a^{\star}, W}$ is assumed known, is given by:
 \begin{align*}
-  D^{\star}(a^\prime, \hat{g}_{M \mid a^{\star}, W}) &= \sum_{k=0}^2
-      D_k^{\star}(a^\prime, \hat{g}_{M \mid a^{\star},W}), \text{ where }\\
-  D^{\star}_0(a^\prime, \hat{g}_{M \mid a^{\star}, W}) &=
-      \bar{Q}^{a^\prime}_Z(W) -
-      \Psi(P)(a^\prime, \hat{g}_{M \mid a^{\star}, W})\\
-  D^{\star}_1(a^\prime, \hat{g}_{M \mid a^{\star}, W}) &=
-      \frac{I(A=a^\prime)}{\P(A=a^\prime \mid W)}(\bar{Q}^{\hat{g}}_M(Z,W) -
-      \bar{Q}^{a^\prime}_Z(W))\\
-  D^{\star}_2(a^\prime, \hat{g}_{M \mid a^{\star}, W}) &=
-      \frac{I(A=a^\prime)\{I(M=1)\hat{g}_{M \mid a^{\star}, W} +
-      I(M=0)(1-\hat{g}_{M \mid a^{\star},W}) \}}{\P(A=a^\prime
-    &\times (Y-\bar{Q}_Y(M,Z,W)).
+  D^{\star}(a^{\prime}, \hat{g}_{M \mid a^{\star}, W}) &= \sum_{k=0}^2
+      D_k^{\star}(a^{\prime}, \hat{g}_{M \mid a^{\star}, W}), \text{ where }\\
+  D^{\star}_0(a^{\prime}, \hat{g}_{M \mid a^{\star}, W}) &=
+      \bar{Q}^{a^{\prime}}_{Z(W)} -
+      \Psi(P)(a^{\prime}, \hat{g}_{M \mid a^{\star}, W})\\
+  D^{\star}_1(a^{\prime}, \hat{g}_{M \mid a^{\star}, W}) &=
+      \frac{I(A=a^{\prime})}{\P(A=a^{\prime} \mid W)}(\bar{Q}^{\hat{g}}_M(Z,W)
+      - \bar{Q}^{a^{\prime}}_{Z(W)})\\
+  D^{\star}_2(a^{\prime}, \hat{g}_{M \mid a^{\star}, W}) &=
+      \frac{I(A=a^{\prime})\{I(M=1) \hat{g}_{M \mid a^{\star}, W} +
+      I(M=0)(1-\hat{g}_{M \mid a^{\star}, W}) \}}{\P(A=a^{\prime}}
+      &\times (Y-\bar{Q}_{Y(M,Z,W)}).
 \end{align*}
 
 ### Estimate using TMLE
@@ -98,7 +98,7 @@ where, again, $\hat{g}_{M \mid a^\star,W}$ is assumed known, is given by:
    \hat{g}_{M \mid z=1,W}\hat{g}_{Z \mid a^{\star}, W} +
    \hat{g}_{M \mid z=0,W}(1-\hat{g}_{Z|a^{\star}, W})$.
 
-```{r, echo=TRUE,eval=FALSE}
+```{r, eval=FALSE}
 zmodel <- "z ~ a + w1 "
 mmodel <- "m ~ z + w1"
 ymodel <- "y ~ m + z*w1"
@@ -125,7 +125,7 @@ gma1 <- (mz1 * za1) + (mz0 * (1 - za1))
    regression of $Y$ on $M,Z,W$, setting $m=1$ and $m=0$, giving
    $\hat{Y}(m=1, z, w)$ and $\hat{Y}(m=0, z, w)$.
 
-```{r, echo=TRUE,eval=FALSE}
+```{r, eval=FALSE}
 tmpdat$qyinit <- cbind(
   predict(glm(formula = ymodel, family = "binomial",
               data = data.frame(cbind(datw, z = z, m = m, y = y))),
@@ -146,7 +146,7 @@ tmpdat$qyinit <- cbind(
         g_{M \mid Z,W} + I(M=0)(1-g_{M \mid Z,W}) \}}
    \end{equation*}
 
-```{r, echo=TRUE,eval=FALSE}
+```{r, eval=FALSE}
 psa1 <- I(a == 1) / mean(a)
 psa0 <- I(a == 0) / mean(1 - a)
 mz <- predict(glm(formula = mmodel, family = "binomial",
@@ -167,7 +167,7 @@ tmpdat$ha0gma0 <- ((m * gm + (1 - m) * (1 - gm)) / psm) * psa0 * svywt
 7. The estimate of $\bar{Q}_{Y}(M,Z,W)$ is updated by
    $\hat{\bar{Q}}^{\star}_{Y}(M,Z,W) =  \hat{\bar{Q}}_{Y}(\epsilon_n)(M,Z,W)$.
 
-```{r, echo=TRUE,eval=FALSE}
+```{r, eval=FALSE}
 # for E(Y_{1,gmastar})
 epsilonma1g0 <- coef(glm(y ~ 1, weights = tmpdat$ha1gma0,
                          offset = (qlogis(qyinit[, 1])),
@@ -199,7 +199,7 @@ tmpdat$qyupm1a0g0 <- plogis(qlogis(tmpdat$qyinit[, 3]) + epsilonma0g0)
    \hat{Q}^{\star}_Y(m=1, z, w) \hat{g}_{M|a^{\star},W} +
    \hat{Q}^{\star}_Y(m=0, z, w)(1-\hat{g}_{M|a^{\star},W})$).
 
-```{r, echo=TRUE,eval=FALSE}
+```{r, eval=FALSE}
 tmpdat$Qma1g0 <- tmpdat$qyupm0a1g0 * (1 - gm) + tmpdat$qyupm1a1g0 * gm
 tmpdat$Qma1g1 <- tmpdat$qyupm0a1g1 * (1 - gma1) + tmpdat$qyupm1a1g1 * gma1
 tmpdat$Qma0g0 <- tmpdat$qyupm0a0g0 * (1 - gm) + tmpdat$qyupm1a0g0 * gm
@@ -209,7 +209,7 @@ tmpdat$Qma0g0 <- tmpdat$qyupm0a0g0 * (1 - gm) + tmpdat$qyupm1a0g0 * gm
    among those with $A=a^\prime$. We call the predicted values from this
    regression $\hat{\bar{Q}}^{a^\prime}_{Z}(W)$.
 
-```{r, echo=TRUE,eval=FALSE}
+```{r, eval=FALSE}
 Qzfita1g0 <- glm(formula = paste("Qma1g0", qmodel, sep = "~"),
                  data = tmpdat[tmpdat$a == 1, ], family = "quasibinomial")
 Qzfita1g1 <- glm(formula = paste("Qma1g1", qmodel, sep = "~"),
@@ -228,7 +228,7 @@ second targeting step.)
 10. The empirical mean of these predicted values is the TML estimate of
    $\Psi(P)(a^\prime, \hat{g}_{M \mid a^{\star}, W})$.
 
-```{r, echo=TRUE,eval=FALSE}
+```{r, eval=FALSE}
 tmlea1m0 <- sum(Qzupa1g0 * svywt) / sum(svywt)
 tmlea1m1 <- sum(Qzupa1g1 * svywt) / sum(svywt)
 tmlea0m0 <- sum(Qzupa0g0 * svywt) / sum(svywt)
@@ -248,7 +248,7 @@ tmlea0m0 <- sum(Qzupa0g0 * svywt) / sum(svywt)
     $\Psi(P)(a,\hat{g}_{M \mid a,W}) -
     \Psi(P)(a, \hat{g}_{M \mid a^{\star}, W})$.
 
-```{r, echo=TRUE,eval=FALSE}
+```{r, eval=FALSE}
 nde <- tmlea1m0 - tmlea0m0
 nie <- tmlea1m1 - tmlea1m0
 ```
@@ -256,7 +256,7 @@ nie <- tmlea1m1 - tmlea1m0
 13. The variance can be estimated as the sample variance of the EIF (defined
     above, substituting in the targeted fits) divided by $n$.
 
-```{r, echo=TRUE,eval=FALSE}
+```{r, eval=FALSE}
 # first get EIF
 tmpdat$qyupa1g0 <- plogis(qlogis(tmpdat$qyinit[, 1]) + epsilonma1g0)
 tmpdat$qyupa1g1 <- plogis(qlogis(tmpdat$qyinit[, 1]) + epsilonma1g1)
