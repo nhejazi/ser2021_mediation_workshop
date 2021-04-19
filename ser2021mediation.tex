@@ -213,7 +213,8 @@
 \newcommand{\pt}{\mbox{$p_0$}}
 \newcommand{\Pt}{\mbox{$P_0$}}
 \newcommand{\pl}{\parallel}
-\newcommand{\indep}{\mbox{$\perp\!\!\!\perp$}} \newcommand{\rs}{R}
+\newcommand{\indep}{\mbox{$\perp\!\!\!\perp$}}
+\newcommand{\rs}{R}
 \newcommand{\ds}{D^\dag}
 \newcommand{\dd}{\mathrm{d}}
 \newcommand{\Pn}{\mathbb{P}_{n}}
@@ -241,7 +242,7 @@
 
 \title{{[}SER 2021 Workshop{]} Causal Mediation: Modern Methods for Path Analysis}
 \author{Iván Díaz, Nima Hejazi, Kara Rudolph}
-\date{updated: March 29, 2021}
+\date{updated: April 19, 2021}
 
 \begin{document}
 \maketitle
@@ -388,7 +389,7 @@ target available policy and program resources.
 These workshop materials were written using \href{http://bookdown.org/}{bookdown},
 and the complete source is available on
 \href{https://github.com/tlverse/tlverse-handbook}{GitHub}. This version of the book
-was built with R version 4.0.4 (2021-02-15), \href{https://pandoc.org/}{pandoc} version \texttt{r\ rmarkdown::pandoc\_version()}, and the following packages:
+was built with R version 4.0.5 (2021-03-31), \href{https://pandoc.org/}{pandoc} version \texttt{r\ rmarkdown::pandoc\_version()}, and the following packages:
 
 \begin{longtable}[]{@{}lll@{}}
 \toprule
@@ -397,26 +398,26 @@ package & version & source\tabularnewline
 \endhead
 bookdown & 0.21.7 & Github (rstudio/bookdown@b66380e)\tabularnewline
 bslib & 0.2.4.9002 & Github (rstudio/bslib@b2b4e55)\tabularnewline
-dagitty & 0.3-1 & CRAN (R 4.0.4)\tabularnewline
-data.table & 1.14.0 & CRAN (R 4.0.4)\tabularnewline
-downlit & 0.2.1 & CRAN (R 4.0.4)\tabularnewline
-dplyr & 1.0.5 & CRAN (R 4.0.4)\tabularnewline
-ggdag & 0.2.3 & CRAN (R 4.0.4)\tabularnewline
-ggfortify & 0.4.11 & CRAN (R 4.0.4)\tabularnewline
-ggplot2 & 3.3.3 & CRAN (R 4.0.4)\tabularnewline
-kableExtra & 1.3.4 & CRAN (R 4.0.4)\tabularnewline
-knitr & 1.31 & CRAN (R 4.0.4)\tabularnewline
+dagitty & 0.3-1 & CRAN (R 4.0.5)\tabularnewline
+data.table & 1.14.0 & CRAN (R 4.0.5)\tabularnewline
+downlit & 0.2.1 & CRAN (R 4.0.5)\tabularnewline
+dplyr & 1.0.5 & CRAN (R 4.0.5)\tabularnewline
+ggdag & 0.2.3 & CRAN (R 4.0.5)\tabularnewline
+ggfortify & 0.4.11 & CRAN (R 4.0.5)\tabularnewline
+ggplot2 & 3.3.3 & CRAN (R 4.0.5)\tabularnewline
+kableExtra & 1.3.4 & CRAN (R 4.0.5)\tabularnewline
+knitr & 1.31 & CRAN (R 4.0.5)\tabularnewline
 medoutcon & NA & NA\tabularnewline
 medshift & 0.1.4 & Github (nhejazi/medshift@f9e11a9)\tabularnewline
-mvtnorm & 1.1-1 & CRAN (R 4.0.4)\tabularnewline
-origami & 1.0.3 & CRAN (R 4.0.4)\tabularnewline
-readr & 1.4.0 & CRAN (R 4.0.4)\tabularnewline
+mvtnorm & 1.1-1 & CRAN (R 4.0.5)\tabularnewline
+origami & 1.0.3 & CRAN (R 4.0.5)\tabularnewline
+readr & 1.4.0 & CRAN (R 4.0.5)\tabularnewline
 rmarkdown & 2.7.4 & Github (rstudio/rmarkdown@1450461)\tabularnewline
-skimr & 2.1.3 & CRAN (R 4.0.4)\tabularnewline
+skimr & 2.1.3 & CRAN (R 4.0.5)\tabularnewline
 sl3 & 1.4.2 & Github (tlverse/sl3@a119d47)\tabularnewline
-stringr & 1.4.0 & CRAN (R 4.0.4)\tabularnewline
-tibble & 3.1.0 & CRAN (R 4.0.4)\tabularnewline
-tidyr & 1.1.3 & CRAN (R 4.0.4)\tabularnewline
+stringr & 1.4.0 & CRAN (R 4.0.5)\tabularnewline
+tibble & 3.1.0 & CRAN (R 4.0.5)\tabularnewline
+tidyr & 1.1.3 & CRAN (R 4.0.5)\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -558,430 +559,728 @@ Data}.
 
 {[}TO FILL IN{]}
 
-\hypertarget{intro}{%
-\chapter{The Roadmap for Statistical Learning}\label{intro}}
+\hypertarget{estimands}{%
+\chapter{Path-specific casual mediation effect types}\label{estimands}}
 
-\hypertarget{learning-objectives}{%
-\section*{Learning Objectives}\label{learning-objectives}}
-
-
-By the end of this chapter you will be able to:
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
+\begin{itemize}
 \tightlist
 \item
-  Translate scientific questions to statistical questions.
+  Controlled direct effects
 \item
-  Define a statistical model based on the knowledge of the experiment that
-  generated the data.
+  Natural direct and indirect effects
 \item
-  Identify a causal parameter as a function of the observed data distribution.
-\item
-  Explain the following causal and statistical assumptions and their
-  implications: i.i.d., consistency, interference, positivity, SUTVA.
-\end{enumerate}
+  Interventional direct and indirect effects
+\end{itemize}
 
-\hypertarget{introduction}{%
-\section*{Introduction}\label{introduction}}
+\hypertarget{controlled-direct-effects}{%
+\section*{Controlled direct effects}\label{controlled-direct-effects}}
 
 
-The roadmap of statistical learning is concerned with the translation from
-real-world data applications to a mathematical and statistical formulation of
-the relevant estimation problem. This involves data as a random variable having
-a probability distribution, scientific knowledge represented by a statistical
-model, a statistical target parameter representing an answer to the question of
-interest, and the notion of an estimator and sampling distribution of the
-estimator.
+\begin{equation*}
+  \psi_{\text{CDE}} = \E(Y_{1,m}) - \E(Y_{0,m})
+\end{equation*}
 
-\hypertarget{roadmap}{%
-\section{The Roadmap}\label{roadmap}}
-
-Following the roadmap is a process of five stages.
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
+\begin{itemize}
 \tightlist
 \item
-  Data as a random variable with a probability distribution, \(O \sim P_0\).
+  Set \(M=m\) uniformly for everyone in sample
 \item
-  The statistical model \(\mathcal{M}\) such that \(P_0 \in \mathcal{M}\).
+  Independence assumptions:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \(A \indep Y_{a,m} \mid W\)
+  \item
+    \(M \indep Y_{a,m} \mid W, A\)
+  \end{itemize}
 \item
-  The statistical target parameter \(\Psi\) and estimand \(\Psi(P_0)\).
-\item
-  The estimator \(\hat{\Psi}\) and estimate \(\hat{\Psi}(P_n)\).
-\item
-  A measure of uncertainty for the estimate \(\hat{\Psi}(P_n)\).
-\end{enumerate}
+  Positivity assumptions:
 
-\hypertarget{data-a-random-variable-with-a-probability-distribution-o-sim-p_0}{%
-\subsection*{\texorpdfstring{(1) Data: A random variable with a probability distribution, \(O \sim P_0\)}{(1) Data: A random variable with a probability distribution, O \textbackslash sim P\_0}}\label{data-a-random-variable-with-a-probability-distribution-o-sim-p_0}}
+  \begin{itemize}
+  \tightlist
+  \item
+    \(\P(M = m \mid A=a, W) > 0 \text{  } a.e.\)
+  \item
+    \(\P(A=a \mid W) > 0 \text{  } a.e.\)
+  \end{itemize}
+\end{itemize}
 
+\begin{figure}
 
-The data set we're confronted with is the result of an experiment and we can
-view the data as a random variable, \(O\), because if we repeat the experiment
-we would have a different realization of this experiment. In particular, if we
-repeat the experiment many times we could learn the probability distribution,
-\(P_0\), of our data. So, the observed data \(O\) with probability distribution
-\(P_0\) are \(n\) independent identically distributed (i.i.d.) observations of the
-random variable \(O; O_1, \ldots, O_n\). Note that while not all data are i.i.d.,
-there are ways to handle non-i.i.d. data, such as establishing conditional
-independence, stratifying data to create sets of identically distributed data,
-etc. It is crucial that researchers be absolutely clear about what they actually
-know about the data-generating distribution for a given problem of interest.
-Unfortunately, communication between statisticians and researchers is often
-fraught with misinterpretation. The roadmap provides a mechanism by which to
-ensure clear communication between research and statistician -- it truly helps
-with this communication!
+{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/graphic4a3} 
 
-\hypertarget{the-empirical-probability-measure-p_n}{%
-\subsubsection*{\texorpdfstring{The empirical probability measure, \(P_n\)}{The empirical probability measure, P\_n}}\label{the-empirical-probability-measure-p_n}}
+}
 
+\end{figure}
 
-Once we have \(n\) of such i.i.d. observations we have an empirical probability
-measure, \(P_n\). The empirical probability measure is an approximation of the
-true probability measure \(P_0\), allowing us to learn from our data. For
-example, we can define the empirical probability measure of a set, \(A\), to be
-the proportion of observations which end up in \(A\). That is,
-\begin{equation*}
-  P_n(A) = \frac{1}{n}\sum_{i=1}^{n} \mathbb{I}(O_i \in A)
-\end{equation*}
+\hypertarget{is-this-the-estimand-i-want}{%
+\subsection{Is this the estimand I want?}\label{is-this-the-estimand-i-want}}
 
-In order to start learning something, we need to ask \emph{``What do we know about the
-probability distribution of the data?''} This brings us to Step 2.
-
-\hypertarget{the-statistical-model-mathcalm-such-that-p_0-in-mathcalm}{%
-\subsection*{\texorpdfstring{(2) The statistical model \(\mathcal{M}\) such that \(P_0 \in \mathcal{M}\)}{(2) The statistical model \textbackslash mathcal\{M\} such that P\_0 \textbackslash in \textbackslash mathcal\{M\}}}\label{the-statistical-model-mathcalm-such-that-p_0-in-mathcalm}}
-
-
-The statistical model \(\mathcal{M}\) is defined by the question we asked at the
-end of Step 1. It is defined as the set of possible probability
-distributions for our observed data. Often \(\mathcal{M}\) is very large (possibly
-infinite-dimensional), to reflect the fact that statistical knowledge is
-limited. In the case that \(\mathcal{M}\) is infinite-dimensional, we deem this a
-nonparametric statistical model.
-
-Alternatively, if the probability distribution of the data at hand is described
-by a finite number of parameters, then the statistical model is parametric. In
-this case, we subscribe to the belief that the random variable \(O\) being
-observed has, for example, a normal distribution with mean \(\mu\) and variance
-\(\sigma^2\). Formally, a parametric model may be defined
-\begin{equation*}
-  \mathcal{M} = \{P_{\theta} : \theta \in \mathcal{R}^d \}
-\end{equation*}
-
-Sadly, the assumption that the data-generating distribution has a specific,
-parametric form is all too common, especially since this is a leap of faith or
-an assumption made of convenience. This practice of oversimplification in the
-current culture of data analysis typically derails any attempt at trying to
-answer the scientific question at hand; alas, such statements as the
-ever-popular quip of Box that ``All models are wrong but some are useful''
-encourage the data analyst to make arbitrary choices even when such a practice
-often forces starkly different answers to the same estimation problem. The
-Targeted Learning paradigm does not suffer from this bias since it defines the
-statistical model through a representation of the true data-generating
-distribution corresponding to the observed data.
-
-Now, on to Step 3: \emph{``What are we trying to learn from the data?''}
-
-\hypertarget{the-statistical-target-parameter-psi-and-estimand-psip_0}{%
-\subsection*{\texorpdfstring{(3) The statistical target parameter \(\Psi\) and estimand \(\Psi(P_0)\)}{(3) The statistical target parameter \textbackslash Psi and estimand \textbackslash Psi(P\_0)}}\label{the-statistical-target-parameter-psi-and-estimand-psip_0}}
-
-
-The statistical target parameter, \(\Psi\), is defined as a mapping from the
-statistical model, \(\mathcal{M}\), to the parameter space (i.e., a real number)
-\(\mathcal{R}\). That is, \(\Psi: \mathcal{M}\rightarrow\mathbb{R}\). The estimand
-may be seen as a representation of the quantity that we wish to learn from the
-data, the answer to a well-specified (often causal) question of interest. In
-contrast to purely statistical estimands, causal estimands require
-\emph{identification from the observed data}, based on causal models that include
-several untestable assumptions, described in more detail in the section on
-\protect\hyperlink{causal}{causal target parameters}.
-
-For a simple example, consider a data set which contains observations of a
-survival time on every subject, for which our question of interest is ``What's
-the probability that someone lives longer than five years?'' We have,
-\begin{equation*}
-  \Psi(P_0) = \mathbb{P}(O > 5)
-\end{equation*}
-
-This answer to this question is the \textbf{estimand, \(\Psi(P_0)\)}, which is the
-quantity we're trying to learn from the data. Once we have defined \(O\),
-\(\mathcal{M}\) and \(\Psi(P_0)\) we have formally defined the statistical
-estimation problem.
-
-\hypertarget{the-estimator-hatpsi-and-estimate-hatpsip_n}{%
-\subsection*{\texorpdfstring{(4) The estimator \(\hat{\Psi}\) and estimate \(\hat{\Psi}(P_n)\)}{(4) The estimator \textbackslash hat\{\textbackslash Psi\} and estimate \textbackslash hat\{\textbackslash Psi\}(P\_n)}}\label{the-estimator-hatpsi-and-estimate-hatpsip_n}}
-
-
-To obtain a good approximation of the estimand, we need an estimator, an \emph{a
-priori}-specified algorithm defined as a mapping from the set of possible
-empirical distributions, \(P_n\), which live in a non-parametric statistical
-model, \(\mathcal{M}_{NP}\) (\(P_n \in \mathcal{M}_{NP}\)), to the parameter space
-of the parameter of interest. That is, \(\hat{\Psi} : \mathcal{M}_{NP} \rightarrow \mathbb{R}^d\). The estimator is a function that takes as input
-the observed data, a realization of \(P_n\), and gives as output a value in the
-parameter space, which is the \textbf{estimate, \(\hat{\Psi}(P_n)\)}.
-
-Where the estimator may be seen as an operator that maps the observed data and
-corresponding empirical distribution to a value in the parameter space, the
-numerical output that produced such a function is the estimate. Thus, it is an
-element of the parameter space based on the empirical probability distribution
-of the observed data. If we plug in a realization of \(P_n\) (based on a sample
-size \(n\) of the random variable \(O\)), we get back an estimate \(\hat{\Psi}(P_n)\)
-of the true parameter value \(\Psi(P_0)\).
-
-In order to quantify the uncertainty in our estimate of the target parameter
-(i.e., to construct statistical inference), an understanding of the sampling
-distribution of our estimator will be necessary. This brings us to Step 5.
-
-\hypertarget{a-measure-of-uncertainty-for-the-estimate-hatpsip_n}{%
-\subsection*{\texorpdfstring{(5) A measure of uncertainty for the estimate \(\hat{\Psi}(P_n)\)}{(5) A measure of uncertainty for the estimate \textbackslash hat\{\textbackslash Psi\}(P\_n)}}\label{a-measure-of-uncertainty-for-the-estimate-hatpsip_n}}
-
-
-Since the estimator \(\hat{\Psi}\) is a function of the empirical
-distribution \(P_n\), the estimator itself is a random variable with a sampling
-distribution. So, if we repeat the experiment of drawing \(n\) observations we
-would every time end up with a different realization of our estimate and our
-estimator has a sampling distribution. The sampling distribution of some estimators
-can be theoretically validated to be approximately normally distributed by a
-Central Limit Theorem (CLT).
-
-A class of \textbf{Central Limit Theorems} (CLTs) are statements regarding the
-convergence of the \textbf{sampling distribution of an estimator} to a normal
-distribution. In general, we will construct estimators whose limit sampling
-distributions may be shown to be approximately normal distributed as sample size
-increases. For large enough \(n\) we have,
-\begin{equation*}
-  \hat{\Psi}(P_n) \sim N \left(\Psi(P_0), \frac{\sigma^2}{n}\right),
-\end{equation*}
-permitting statistical inference. Now, we can proceed to quantify the
-uncertainty of our chosen estimator by construction of hypothesis tests and
-confidence intervals. For example, we may construct a confidence interval at
-level \((1 - \alpha)\) for our estimand, \(\Psi(P_0)\):
-\begin{equation*}
-  \hat{\Psi}(P_n) \pm z_{1 - \frac{\alpha}{2}}
-    \left(\frac{\sigma}{\sqrt{n}}\right),
-\end{equation*}
-where \(z_{1 - \frac{\alpha}{2}}\) is the \((1 - \frac{\alpha}{2})^\text{th}\)
-quantile of the standard normal distribution. Often, we will be interested in
-constructing 95\% confidence intervals, corresponding to mass \(\alpha = 0.05\) in
-either tail of the limit distribution; thus, we will typically take
-\(z_{1 - \frac{\alpha}{2}} \approx 1.96\).
-
-\emph{Note:} we will typically have to estimate the standard error,
-\(\frac{\sigma}{\sqrt{n}}\).
-
-A 95\% confidence interval means that if we were to take 100 different samples
-of size \(n\) and compute a 95\% confidence interval for each sample, then
-approximately 95 of the 100 confidence intervals would contain the estimand,
-\(\Psi(P_0)\). More practically, this means that there is a 95\% probability
-that the confidence interval procedure generates intervals containing the
-true estimand value (or 95\% confidence of ``covering'' the true value). That is,
-any single estimated confidence interval either will contain the true estimand
-or will not (also called ``coverage'').
-
-\hypertarget{roadmap-summary}{%
-\section{Summary of the Roadmap}\label{roadmap-summary}}
-
-Data, \(O\), is viewed as a random variable that has a probability distribution.
-We often have \(n\) units of independent identically distributed units with
-probability distribution \(P_0\), such that \(O_1, \ldots, O_n \sim P_0\). We have
-statistical knowledge about the experiment that generated this data. In other
-words, we make a statement that the true data distribution \(P_0\) falls in a
-certain set called a statistical model, \(\mathcal{M}\). Often these sets are very
-large because statistical knowledge is very limited - hence, these statistical
-models are often infinite dimensional models. Our statistical query is, ``What
-are we trying to learn from the data?'' denoted by the statistical target
-parameter, \(\Psi\), which maps the \(P_0\) into the estimand, \(\Psi(P_0)\). At this
-point the statistical estimation problem is formally defined and now we will
-need statistical theory to guide us in the construction of estimators. There's a
-lot of statistical theory we will review in this course that, in particular,
-relies on the Central Limit Theorem, allowing us to come up with estimators that
-are approximately normally distributed and also allowing us to come with
-statistical inference (i.e., confidence intervals and hypothesis tests).
-
-\hypertarget{causal}{%
-\section{Causal Target Parameters}\label{causal}}
-
-In many cases, we are interested in problems that ask questions regarding the
-effect of an intervention on a future outcome of interest. These questions can
-be represented as causal estimands.
-
-\hypertarget{the-causal-model}{%
-\subsection*{The Causal Model}\label{the-causal-model}}
-
-
-After formalizing the data and the statistical model, we can define a causal
-model to express causal parameters of interest. Directed acyclic graphs (DAGs)
-are one useful tool to express what we know about the causal relations among
-variables. Ignoring exogenous \(U\) terms (explained below), we assume the
-following ordering of the variables in the observed data \(O\). We do this below
-using \texttt{DAGitty} \citep{textor2011dagitty}:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(dagitty)}
-\KeywordTok{library}\NormalTok{(ggdag)}
-
-\CommentTok{# make DAG by specifying dependence structure}
-\NormalTok{dag <-}\StringTok{ }\KeywordTok{dagitty}\NormalTok{(}
-  \StringTok{"dag \{}
-\StringTok{    W -> A}
-\StringTok{    W -> Y}
-\StringTok{    A -> Y}
-\StringTok{    W -> A -> Y}
-\StringTok{  \}"}
-\NormalTok{)}
-\KeywordTok{exposures}\NormalTok{(dag) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"A"}\NormalTok{)}
-\KeywordTok{outcomes}\NormalTok{(dag) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"Y"}\NormalTok{)}
-\NormalTok{tidy_dag <-}\StringTok{ }\KeywordTok{tidy_dagitty}\NormalTok{(dag)}
-
-\CommentTok{# visualize DAG}
-\KeywordTok{ggdag}\NormalTok{(tidy_dag) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{theme_dag}\NormalTok{()}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{center}\includegraphics[width=0.8\linewidth]{02-roadmap_files/figure-latex/simple-DAG-1} \end{center}
-
-While directed acyclic graphs (DAGs) like above provide a convenient means by
-which to visualize causal relations between variables, the same causal relations
-among variables can be represented via a set of structural equations, which
-define the non-parametric structural equation model (NPSEM):
-\begin{align*}
-  W &= f_W(U_W) \\
-  A &= f_A(W, U_A) \\
-  Y &= f_Y(W, A, U_Y),
-\end{align*}
-where \(U_W\), \(U_A\), and \(U_Y\) represent the unmeasured exogenous background
-characteristics that influence the value of each variable. In the NPSEM, \(f_W\),
-\(f_A\) and \(f_Y\) denote that each variable (for \(W\), \(A\) and \(Y\), respectively)
-is a function of its parents and unmeasured background characteristics, but note
-that there is no imposition of any particular functional constraints(e.g.,
-linear, logit-linear, only one interaction, etc.). For this reason, they are
-called non-parametric structural equation models (NPSEMs). The DAG and set of
-nonparametric structural equations represent exactly the same information and so
-may be used interchangeably.
-
-The first hypothetical experiment we will consider is assigning exposure to the
-whole population and observing the outcome, and then assigning no exposure to
-the whole population and observing the outcome. On the nonparametric structural
-equations, this corresponds to a comparison of the outcome distribution in the
-population under two interventions:
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
+\begin{itemize}
 \tightlist
 \item
-  \(A\) is set to \(1\) for all individuals, and
-\item
-  \(A\) is set to \(0\) for all individuals.
-\end{enumerate}
+  Makes the most sense if can intervene directly on \(M\)
 
-These interventions imply two new nonparametric structural equation models. For
-the case \(A = 1\), we have
-\begin{align*}
-  W &= f_W(U_W) \\
-  A &= 1 \\
-  Y(1) &= f_Y(W, 1, U_Y),
-\end{align*}
-and for the case \(A=0\),
-\begin{align*}
-  W &= f_W(U_W) \\
-  A &= 0 \\
-  Y(0) &= f_Y(W, 0, U_Y).
-\end{align*}
+  \begin{itemize}
+  \tightlist
+  \item
+    and can think of a policy that would set everyone to a single constant
+    level \(m \in \mathcal{M}\).
+  \item
+    J. Pearl calls this \emph{prescriptive}.
+  \item
+    Can you think of an example?
+  \item
+    Air pollution, rescue inhaler dosage, hospital visits
+  \end{itemize}
+\end{itemize}
 
-In these equations, \(A\) is no longer a function of \(W\) because we have
-intervened on the system, setting \(A\) deterministically to either of the values
-\(1\) or \(0\). The new symbols \(Y(1)\) and \(Y(0)\) indicate the outcome variable in
-our population if it were generated by the respective NPSEMs above; these are
-often called \emph{counterfactuals} (since they run contrary-to-fact). The difference
-between the means of the outcome under these two interventions defines a
-parameter that is often called the ``average treatment effect'' (ATE), denoted
-\begin{equation}\label{eqn:ate}
-  ATE = \mathbb{E}_X(Y(1)-Y(0)),
-\end{equation}
-where \(\mathbb{E}_X\) is the mean under the theoretical (unobserved) full data
-\(X = (W, Y(1), Y(0))\).
+\emph{What if our research question doesn't involve intervening directly on the
+mediator?}
 
-Note, we can define much more complicated interventions on NPSEM's, such as
-interventions based upon rules (themselves based upon covariates), stochastic
-rules, etc. and each results in a different targeted parameter and entails
-different identifiability assumptions discussed below.
-
-\hypertarget{identifiability}{%
-\subsection*{Identifiability}\label{identifiability}}
+\hypertarget{natural-direct-and-indirect-effects}{%
+\section*{Natural direct and indirect effects}\label{natural-direct-and-indirect-effects}}
 
 
-Because we can never observe both \(Y(0)\) (the counterfactual outcome when \(A=0\))
-and \(Y(1)\) (similarly, the counterfactual outcome when \(A=1\)), we cannot
-estimate \ref{eqn:ate} directly. Instead, we have to make assumptions under
-which this quantity may be estimated from the observed data \(O \sim P_0\) under
-the data-generating distribution \(P_0\). Fortunately, given the causal model
-specified in the NPSEM above, we can, with a handful of untestable assumptions,
-estimate the ATE, even from observational data. These assumptions may be
-summarized as follows.
+Natural direct effect (NDE):
+\begin{equation*}
+  \psi_{\text{NDE}} = \E(Y_{1,M_0}) - \E(Y_{0,M_0})
+\end{equation*}
 
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
+Natural indirect effect (NIE):
+\begin{equation*}
+  \psi_{\text{NIE}} = \E(Y_{1,M_1}) - \E(Y_{1,M_0})
+\end{equation*}
+
+The NDE can also be written as: \(\E_W \sum_m \{\E(Y_{1,m} \mid W) - \E(Y_{0,m} \mid W)\} \P(M_{0}=m \mid W)\)
+
+\begin{itemize}
 \tightlist
 \item
-  The causal graph implies \(Y(a) \perp A\) for all \(a \in \mathcal{A}\), which
-  is the \emph{randomization} assumption. In the case of observational data, the
-  analogous assumption is \emph{strong ignorability} or \emph{no unmeasured confounding}
-  \(Y(a) \perp A \mid W\) for all \(a \in \mathcal{A}\);
+  Weighted average of controlled direct effects at each level of \(m\).
 \item
-  Although not represented in the causal graph, also required is the assumption
-  of no interference between units, that is, the outcome for unit \(i\) \(Y_i\) is
-  not affected by exposure for unit \(j\) \(A_j\) unless \(i=j\);
+  If no interaction between \(A\) and \(M\) on \(Y\), then CDE = NDE.
+\end{itemize}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/graphic4a} 
+
+}
+
+\end{figure}
+
+\hypertarget{identification-assumptions}{%
+\subsection{Identification assumptions:}\label{identification-assumptions}}
+
+\begin{itemize}
+\tightlist
 \item
-  \emph{Consistency} of the treatment mechanism is also required, i.e., the outcome
-  for unit \(i\) is \(Y_i(a)\) whenever \(A_i = a\), an assumption also known as ``no
-  other versions of treatment'';
+  \(A \indep Y_{a,m} \mid W\)
 \item
-  It is also necessary that all observed units, across strata defined by \(W\),
-  have a bounded (non-deterministic) probability of receiving treatment --
-  that is, \(0 < \mathbb{P}(A = a \mid W) < 1\) for all \(a\) and \(W\)). This assumption
-  is referred to as \emph{positivity} or \emph{overlap}.
-\end{enumerate}
+  \(M \indep Y_{a,m} \mid W, A\)
+\item
+  \(A \indep M_a \mid W\)
+\item
+  \(M_{a^{\star}} \indep Y_{a,m} \mid W\)
+\item
+  and positivity assumptions
+\end{itemize}
 
-\emph{Remark}: Together, (2) and (3), the assumptions of no interference and
-consistency, respectively, are jointly referred to as the \emph{stable unit
-treatment value assumption} (SUTVA).
+What does \(M_0 \indep Y_{1,m} \mid W\) mean?
 
-Given these assumptions, the ATE may be re-written as a function of \(P_0\),
-specifically
-\begin{equation}\label{eqn:estimand}
-  ATE = \mathbb{E}_0(Y(1) - Y(0)) = \mathbb{E}_0
-    \left(\mathbb{E}_0[Y \mid A = 1, W] - \mathbb{E}_0[Y \mid A = 0, W]\right).
-\end{equation}
-In words, the ATE is the difference in the predicted outcome values for each subject, under the
-contrast of treatment conditions (\(A = 0\) vs.~\(A = 1\)), in the population,
-averaged over all observations. Thus, a parameter of a theoretical ``full'' data
-distribution can be represented as an estimand of the observed data
-distribution. Significantly, there is nothing about the representation in
-\ref{eqn:estimand} that requires parameteric assumptions; thus, the regressions
-on the right hand side may be estimated freely with machine learning. With
-different parameters, there will be potentially different identifiability
-assumptions and the resulting estimands can be functions of different components
-of \(P_0\). We discuss several more complex estimands in later sections of this
-handbook.
+\begin{itemize}
+\tightlist
+\item
+  Conditional on \(W\), knowledge of \(M\) in the absence of treatment \(A\)
+  provides no information of the effect of \(A\) on \(Y\).
+\item
+  Can you think of a data-generating mechanism that would violate this
+  assumption?
+\item
+  Whenever we believe that treatment assignment works through adherence (i.e.,
+  almost always), we are violating this assumption.
+\end{itemize}
 
-\hypertarget{natural}{%
-\chapter{The Natural Direct and Indirect Effects}\label{natural}}
+\hypertarget{is-this-the-estimand-i-want-1}{%
+\subsection{Is this the estimand I want?}\label{is-this-the-estimand-i-want-1}}
 
-{[}TO FILL IN{]}
+\begin{itemize}
+\tightlist
+\item
+  Makes sense to intervene on \(A\) but not directly on \(M\).
+\item
+  Want to understand a natural mechanism underlying an association/ total
+  effect. J. Pearl calls this \emph{descriptive}.
+\item
+  NDE + NIE = total effect (ATE).
+\item
+  Okay with the assumptions.
+\end{itemize}
+
+\emph{What if our data structure involves a post-treatment confounder of the
+mediator-outcome relationship (e.g., adherence)?}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.2\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/medDAG2} 
+
+}
+
+\end{figure}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/ctndag} 
+
+}
+
+\end{figure}
+
+\hypertarget{interventional-direct-indirect-effects}{%
+\section*{Interventional direct/ indirect effects}\label{interventional-direct-indirect-effects}}
+
+
+\begin{itemize}
+\tightlist
+\item
+  Fully conditional on past
+\item
+  Conditional SDE: \(\E(Y_{a, g_{M \mid Z, a^{\star}, W}}) - \E(Y_{a^{\star}, g_{M \mid Z, a^{\star}, W}})\)
+\item
+  Conditional SIE: \(\E(Y_{a, g_{M \mid Z, a, W}}) - \E(Y_{a, g_{M \mid Z, a^{\star}, W}})\)
+\item
+  Marginal SDE: \(\E(Y_{a, g_{M \mid a^{\star}, W}}) - \E(Y_{a^{\star}, g_{M \mid a^{\star}, W}})\)
+\item
+  Marginal SIE: \(\E(Y_{a, g_{M \mid a, W}}) - \E(Y_{a, g_{M \mid a^{\star}, W}})\)
+\item
+  Note that \(g_{M \mid Z, a^{\star}, W}\), \(g_{M \mid a^{\star}, W}\) represents
+  stochastic intervention on the mediator, where value \(m\) is drawn with
+  probability \(\P(M = m \mid Z, A = a^{\star}, W = w)\),
+  \(\P(M = m \mid A = a^{\star}, W = w)\), respectively
+\item
+  Can you think of an example when you would want the conditional versions?
+  Marginal versions?
+\end{itemize}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/graphic4b} 
+
+}
+
+\end{figure}
+
+\hypertarget{identification-assumptions-1}{%
+\subsection{Identification assumptions:}\label{identification-assumptions-1}}
+
+\begin{itemize}
+\tightlist
+\item
+  \(A \indep Y_{a,m} \mid W\)
+\item
+  \(M \indep Y_{a,m} \mid W, A\)
+\item
+  \(A \indep M_a \mid W\)
+\item
+  and positivity assumptions.
+\end{itemize}
+
+Is this the estimand I want?
+
+\begin{itemize}
+\tightlist
+\item
+  Makes sense to intervene on \(A\) but not directly on \(M\).
+\item
+  Goal is to understand a natural mechanism underlying an association or total
+  effect.
+\item
+  Okay with the assumptions!
+\end{itemize}
+
+\hypertarget{estimand-summary}{%
+\section*{Estimand Summary}\label{estimand-summary}}
+
+
+\begin{figure}
+
+{\centering \includegraphics[width=1\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/table1} 
+
+}
+
+\end{figure}
+
+\hypertarget{estimandirl}{%
+\chapter{How to choose an estimand: Real world example}\label{estimandirl}}
+
+\hypertarget{comparative-effectivness-of-two-medications-for-opioid-use-disorder-oud}{%
+\section{Comparative effectivness of two medications for opioid use disorder (OUD)}\label{comparative-effectivness-of-two-medications-for-opioid-use-disorder-oud}}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/ctndag} 
+
+}
+
+\end{figure}
+
+\emph{Motivation}: Opposite overall treatment effects for homeless versus
+nonhomeless participants.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/tmleesttotal} 
+
+}
+
+\end{figure}
+
+\hypertarget{getting-specific-about-the-question}{%
+\subsection{Getting specific about the question}\label{getting-specific-about-the-question}}
+
+To what extent does the indirect effect through mediators of adherence, pain,
+and depressive symptoms explain the differences in treatment effects on OUD
+relapse for homeless and nonhomeless individuals?
+
+What estimand do we want?
+
+\begin{itemize}
+\tightlist
+\item
+  Can we set \(M=m\) (i.e., same value) for everyone?
+\item
+  Are we interested in estimating indirect effects?
+\end{itemize}
+
+\(\rightarrow\) So, \emph{not} controlled direct effect.
+
+\begin{itemize}
+\tightlist
+\item
+  Do we have an intermediate confounder?
+\item
+  Yes, and it's important.
+\end{itemize}
+
+\(\rightarrow\) So, \emph{not} natural (in)direct effects.
+
+\begin{itemize}
+\tightlist
+\item
+  So, we're left with the interventional direct and indirect effects.
+\item
+  Do we want to estimate the path through treatment initiation (\(Z\))?
+\item
+  Yes, so, \emph{not} the conditional versions of these effects.
+\item
+  Estimands:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Direct effect: \(\E(Y_{1,g_0} - Y_{0,g_0})\)
+  \item
+    Indirect effect: \(\E(Y_{1,g_1} - Y_{1,g_0})\)
+  \end{itemize}
+\item
+  Need to incorporate multiple and continuous mediators
+\end{itemize}
 
 \hypertarget{interventional}{%
 \chapter{The Interventional Direct and Indirect Effects}\label{interventional}}
 
 {[}TO FILL IN{]}
 
-\hypertarget{stochastic}{%
-\chapter{The Stochastic Direct and Indirect Effects}\label{stochastic}}
+\hypertarget{estimation-of-natural-indirect-effects-interventional-indirect-effects}{%
+\chapter{Estimation of natural (in)direct effects, interventional (in)direct effects}\label{estimation-of-natural-indirect-effects-interventional-indirect-effects}}
 
-{[}TO FILL IN{]}
+\hypertarget{interventional-direct-and-indirect-effects}{%
+\section{Interventional direct and indirect effects}\label{interventional-direct-and-indirect-effects}}
+
+Recall:
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/medDAG2} 
+
+}
+
+\end{figure}
+
+We define the interventional direct effect as:
+\begin{equation*}
+  \psi_{\text{PIDE}} = \E(Y_{a^\prime,g_{M \mid a^\star,W}}) -
+    \E(Y_{a\star,g_{M \mid a^\star,W}}),
+\end{equation*}
+and the interventional indirect effect as:
+\begin{equation*}
+  \psi_{\text{PIIE}} = \E(Y_{a^\prime,g_{M \mid a^\prime,W}}) -
+    \E(Y_{a^\prime,g_{M \mid a^\star,W}}).
+\end{equation*}
+
+\hypertarget{simple-case-for-intuition}{%
+\section{Simple case for intuition}\label{simple-case-for-intuition}}
+
+Consider a simple data structure \(O=(W, A, Z, M, Y)\). This SCM is represented in
+the above DAG and the following causal models:
+\begin{align*}
+  W &= f(U_W)\\
+  A &= f(U_A)\\
+  Z &= f(A, W, U_Z)\\
+  M &= f(Z, A, W, U_M)\\
+  Y &= f(M, Z, A, W, U_Y),
+\end{align*}
+where (\(U_W, U_A, U_Z, U_M, U_Y\)) are exogenous random errors. We assume \(A\) is
+a single binary treatment, \(Z\) is a single binary intermediate confounder, \(M\)
+is a single binary mediator. There are no restrictions on the distribution of
+\(W\) or \(Y\).
+
+\(g_{M \mid a^\prime,W}\) represents a stochastic draw from the counterfactual,
+conditional distribution of \(M\), as described by
+\citet{vanderweele2016mediation}:
+\begin{equation*}
+  g_{M \mid A,W}(m, a^{\star}, W) \equiv g_{M \mid a^{\star}, W}(W) =
+    \sum_{z=0}^1 \P(M=1 \mid Z=z,W) \P(Z=z \mid A=a^{\star}, W).
+\end{equation*}
+In what follows, we are going to assume that \(g_{M \mid A,W}(m, a^{\star}, W)\)
+is known, estimated from observed data, which we call
+\(\hat{g}_{M \mid a^{\star}, W}\). This is going to slightly alter the usual
+identification assumptions such that we no longer need to assume exchangeability
+of \(A\) and the counterfactual \(M\) values. This means the remaining assumptions
+are the same as those for controlled direct effects.
+
+\hypertarget{estimation-using-g-computation}{%
+\subsection{Estimation using G-Computation}\label{estimation-using-g-computation}}
+
+The estimand \(E(Y_{a^\prime, \hat{g}_{M \mid a^\star,W}})\) can be identified
+via sequential regression, which provides the framework for the
+G-computation-based estimator. The procedure is as follows
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Fit a regression of \(Y\) on \(M,Z,W\). Predict outcome values under under
+  \(M=m\). We'll call the result \(\bar{Q}_Y(M,Z,W)\).
+\item
+  Integrate out \(M\) under our stochastic intervention
+  \(\hat{g}_{M \mid a^{\star}, W}\). We can do this by evaluating
+  \(\E(Y \mid M=m,Z=z,W)\) at each \(m\) and multiplying it by the probability
+  that \(M=m\) under \(\hat{g}_{M \mid a^{\star}, W}\), summing over all \(m\).
+  We'll call the results \(\bar{Q}^{g}_M(Z,W)\).
+\item
+  Integrate out \(Z\) and set \(A=a^\prime\). Again, we can do this by evaluating
+  the predicted values from Step 2, setting \(A=a^\prime\), and at each \(z\),
+  multiplying the prediction by the probability that \(Z=z\) under \(A=a^\prime\).
+  We'll call the result \(\bar{Q}^{a^\prime}_Z(W)\).
+\item
+  Taking the sample mean (marginalizing over \(W\)) gives the parameter
+  estimate.
+\end{enumerate}
+
+\hypertarget{estimate-with-doubly-robust-methods-based-on-the-eif}{%
+\subsection{Estimate with doubly robust methods based on the EIF}\label{estimate-with-doubly-robust-methods-based-on-the-eif}}
+
+The EIF for the parameter \(\Psi(P)(a^{\prime}, \hat{g}_{M \mid a^{\star},W})\),
+where, again, \(\hat{g}_{M \mid a^{\star}, W}\) is assumed known, is given by:
+\begin{align*}
+  D^{\star}(a^{\prime}, \hat{g}_{M \mid a^{\star}, W}) &= \sum_{k=0}^2
+      D_k^{\star}(a^{\prime}, \hat{g}_{M \mid a^{\star}, W}), \text{ where }\\
+  D^{\star}_0(a^{\prime}, \hat{g}_{M \mid a^{\star}, W}) &=
+      \bar{Q}^{a^{\prime}}_{Z(W)} -
+      \Psi(P)(a^{\prime}, \hat{g}_{M \mid a^{\star}, W})\\
+  D^{\star}_1(a^{\prime}, \hat{g}_{M \mid a^{\star}, W}) &=
+      \frac{I(A=a^{\prime})}{\P(A=a^{\prime} \mid W)}(\bar{Q}^{\hat{g}}_M(Z,W)
+      - \bar{Q}^{a^{\prime}}_{Z(W)})\\
+  D^{\star}_2(a^{\prime}, \hat{g}_{M \mid a^{\star}, W}) &=
+      \frac{I(A=a^{\prime})\{I(M=1) \hat{g}_{M \mid a^{\star}, W} +
+      I(M=0)(1-\hat{g}_{M \mid a^{\star}, W}) \}}{\P(A=a^{\prime}}
+      &\times (Y-\bar{Q}_{Y(M,Z,W)}).
+\end{align*}
+
+\hypertarget{estimate-using-tmle}{%
+\subsection{Estimate using TMLE}\label{estimate-using-tmle}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  We estimate \(g_{Z \mid a^{\star}, W}(W) = \P(Z=1 \mid A=a^{\star}, W)\) from
+  a logistic regression of \(Z\) on \(A, W\) setting \(A=a^{\star}\).
+\item
+  We then estimate \(g_{M \mid z,W}(W) = \P(M=1 \mid Z=z, W)\) from a logistic
+  regression of \(M\) on \(Z, W\), setting \(z=\{0,1\}\).
+\item
+  We use these quantities to calculate \(\hat{g}_{M \mid a^{\star}, W} = \hat{g}_{M \mid z=1,W}\hat{g}_{Z \mid a^{\star}, W} + \hat{g}_{M \mid z=0,W}(1-\hat{g}_{Z|a^{\star}, W})\).
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{zmodel <-}\StringTok{ "z ~ a + w1 "}
+\NormalTok{mmodel <-}\StringTok{ "m ~ z + w1"}
+\NormalTok{ymodel <-}\StringTok{ "y ~ m + z*w1"}
+
+\CommentTok{# make gm and get counterfactual predictions}
+\NormalTok{zfit <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(}\DataTypeTok{formula =}\NormalTok{ zmodel, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{, }\DataTypeTok{data =}\NormalTok{ obsdat)}
+\NormalTok{mfit <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(}\DataTypeTok{formula =}\NormalTok{ mmodel, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{, }\DataTypeTok{data =}\NormalTok{ obsdat)}
+
+\NormalTok{za0 <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(zfit, }\DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{w1 =}\NormalTok{ obsdat}\OperatorTok{$}\NormalTok{w1, }\DataTypeTok{a =} \DecValTok{0}\NormalTok{),}
+               \DataTypeTok{type =} \StringTok{"response"}\NormalTok{)}
+\NormalTok{za1 <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(zfit, }\DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{w1 =}\NormalTok{ obsdat}\OperatorTok{$}\NormalTok{w1, }\DataTypeTok{a =} \DecValTok{1}\NormalTok{),}
+               \DataTypeTok{type =} \StringTok{"response"}\NormalTok{)}
+
+\NormalTok{mz1 <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(mfit, }\DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{w1 =}\NormalTok{ obsdat}\OperatorTok{$}\NormalTok{w1, }\DataTypeTok{z =} \DecValTok{1}\NormalTok{),}
+               \DataTypeTok{type =} \StringTok{"response"}\NormalTok{)}
+\NormalTok{mz0 }\OperatorTok{<}\StringTok{ }\OperatorTok{-}\KeywordTok{predict}\NormalTok{(mfit, }\DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{w1 =}\NormalTok{ obsdat}\OperatorTok{$}\NormalTok{w1, }\DataTypeTok{z =} \DecValTok{0}\NormalTok{),}
+               \DataTypeTok{type =} \StringTok{"response"}\NormalTok{)}
+
+\NormalTok{gm0 <-}\StringTok{ }\NormalTok{(mz1 }\OperatorTok{*}\StringTok{ }\NormalTok{za0) }\OperatorTok{+}\StringTok{ }\NormalTok{(mz0 }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{za0))}
+\NormalTok{gma1 <-}\StringTok{ }\NormalTok{(mz1 }\OperatorTok{*}\StringTok{ }\NormalTok{za1) }\OperatorTok{+}\StringTok{ }\NormalTok{(mz0 }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{za1))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  To obtain an estimate of \(\bar{Q}_{Y}(M,Z,W)\), predict values of \(Y\) from a
+  regression of \(Y\) on \(M,Z,W\), setting \(m=1\) and \(m=0\), giving
+  \(\hat{Y}(m=1, z, w)\) and \(\hat{Y}(m=0, z, w)\).
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyinit <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(}
+  \KeywordTok{predict}\NormalTok{(}\KeywordTok{glm}\NormalTok{(}\DataTypeTok{formula =}\NormalTok{ ymodel, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{,}
+              \DataTypeTok{data =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{z =}\NormalTok{ z, }\DataTypeTok{m =}\NormalTok{ m, }\DataTypeTok{y =}\NormalTok{ y))),}
+          \DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{z =}\NormalTok{ z, }\DataTypeTok{m =}\NormalTok{ m)), }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{),}
+  \KeywordTok{predict}\NormalTok{(}\KeywordTok{glm}\NormalTok{(}\DataTypeTok{formula =}\NormalTok{ ymodel, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{,}
+              \DataTypeTok{data =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{z =}\NormalTok{ z, }\DataTypeTok{m =}\NormalTok{ m, }\DataTypeTok{y =}\NormalTok{ y))),}
+          \DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{z =}\NormalTok{ z, }\DataTypeTok{m =} \DecValTok{0}\NormalTok{)), }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{),}
+  \KeywordTok{predict}\NormalTok{(}\KeywordTok{glm}\NormalTok{(}\DataTypeTok{formula =}\NormalTok{ ymodel, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{,}
+              \DataTypeTok{data =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{z =}\NormalTok{ z, }\DataTypeTok{m =}\NormalTok{ m, }\DataTypeTok{y =}\NormalTok{ y))),}
+          \DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{z =}\NormalTok{ z, }\DataTypeTok{m =} \DecValTok{1}\NormalTok{)), }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{)}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{4}
+\tightlist
+\item
+  Estimate the weights to be used for the initial targeting step:
+  \begin{equation*}
+     h_1(a) = \frac{I(A=a)\{I(M=1)\hat{g}_{M \mid a^{\star}, W} +
+       I(M=0)(1-\hat{g}_{M \mid a^{\star}, W}) \}}{\P(A=a)\{I(M=1)
+       g_{M \mid Z,W} + I(M=0)(1-g_{M \mid Z,W}) \}}
+  \end{equation*}
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{psa1 <-}\StringTok{ }\KeywordTok{I}\NormalTok{(a }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{) }\OperatorTok{/}\StringTok{ }\KeywordTok{mean}\NormalTok{(a)}
+\NormalTok{psa0 <-}\StringTok{ }\KeywordTok{I}\NormalTok{(a }\OperatorTok{==}\StringTok{ }\DecValTok{0}\NormalTok{) }\OperatorTok{/}\StringTok{ }\KeywordTok{mean}\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{a)}
+\NormalTok{mz <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(}\KeywordTok{glm}\NormalTok{(}\DataTypeTok{formula =}\NormalTok{ mmodel, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{,}
+                  \DataTypeTok{data =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{z =}\NormalTok{ z, }\DataTypeTok{m =}\NormalTok{ m))),}
+              \DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{z =}\NormalTok{ z)), }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{)}
+\NormalTok{psm <-}\StringTok{ }\NormalTok{(mz }\OperatorTok{*}\StringTok{ }\NormalTok{m) }\OperatorTok{+}\StringTok{ }\NormalTok{((}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{mz) }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{m))}
+
+\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{ha1gma1 <-}\StringTok{ }\NormalTok{((m }\OperatorTok{*}\StringTok{ }\NormalTok{gma1 }\OperatorTok{+}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{m) }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{gma1)) }\OperatorTok{/}\StringTok{ }\NormalTok{psm) }\OperatorTok{*}\StringTok{ }\NormalTok{psa1 }\OperatorTok{*}\StringTok{ }\NormalTok{svywt}
+\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{ha1gma0 <-}\StringTok{ }\NormalTok{((m }\OperatorTok{*}\StringTok{ }\NormalTok{gm }\OperatorTok{+}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{m) }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{gm)) }\OperatorTok{/}\StringTok{ }\NormalTok{psm) }\OperatorTok{*}\StringTok{ }\NormalTok{psa1 }\OperatorTok{*}\StringTok{ }\NormalTok{svywt}
+\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{ha0gma0 <-}\StringTok{ }\NormalTok{((m }\OperatorTok{*}\StringTok{ }\NormalTok{gm }\OperatorTok{+}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{m) }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{gm)) }\OperatorTok{/}\StringTok{ }\NormalTok{psm) }\OperatorTok{*}\StringTok{ }\NormalTok{psa0 }\OperatorTok{*}\StringTok{ }\NormalTok{svywt}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{5}
+\item
+  Estimate \(\hat{\epsilon}\) by setting \(\epsilon\) as the intercept of a
+  weighted logistic regression model of \(Y\) with
+  \(\text{logit}(\hat{\bar{Q}}_{Y}(M,Z,W))\) as an offset and weights
+  \(\hat{h}_{1}(a)\). (Note that this is just one possible TMLE.)
+\item
+  The estimate of \(\bar{Q}_{Y}(M,Z,W)\) is updated by
+  \(\hat{\bar{Q}}^{\star}_{Y}(M,Z,W) = \hat{\bar{Q}}_{Y}(\epsilon_n)(M,Z,W)\).
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# for E(Y_\{1,gmastar\})}
+\NormalTok{epsilonma1g0 <-}\StringTok{ }\KeywordTok{coef}\NormalTok{(}\KeywordTok{glm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\DecValTok{1}\NormalTok{, }\DataTypeTok{weights =}\NormalTok{ tmpdat}\OperatorTok{$}\NormalTok{ha1gma0,}
+                         \DataTypeTok{offset =}\NormalTok{ (}\KeywordTok{qlogis}\NormalTok{(qyinit[, }\DecValTok{1}\NormalTok{])),}
+                         \DataTypeTok{family =} \StringTok{"quasibinomial"}\NormalTok{, }\DataTypeTok{data =}\NormalTok{ tmpdat))}
+\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupm0a1g0 <-}\StringTok{ }\KeywordTok{plogis}\NormalTok{(}\KeywordTok{qlogis}\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{qyinit[, }\DecValTok{2}\NormalTok{]) }\OperatorTok{+}\StringTok{ }\NormalTok{epsilonma1g0)}
+\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupm1a1g0 <-}\StringTok{ }\KeywordTok{plogis}\NormalTok{(}\KeywordTok{qlogis}\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{qyinit[, }\DecValTok{3}\NormalTok{]) }\OperatorTok{+}\StringTok{ }\NormalTok{epsilonma1g0)}
+
+\CommentTok{# for E(Y_\{1,gma\})}
+\NormalTok{epsilonma1g1 <-}\StringTok{ }\KeywordTok{coef}\NormalTok{(}\KeywordTok{glm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\DecValTok{1}\NormalTok{, }\DataTypeTok{weights =}\NormalTok{ tmpdat}\OperatorTok{$}\NormalTok{ha1gma1,}
+                         \DataTypeTok{offset =}\NormalTok{ (}\KeywordTok{qlogis}\NormalTok{(qyinit[, }\DecValTok{1}\NormalTok{])),}
+                         \DataTypeTok{family =} \StringTok{"quasibinomial"}\NormalTok{, }\DataTypeTok{data =}\NormalTok{ tmpdat))}
+\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupm0a1g1 <-}\StringTok{ }\KeywordTok{plogis}\NormalTok{(}\KeywordTok{qlogis}\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{qyinit[, }\DecValTok{2}\NormalTok{]) }\OperatorTok{+}\StringTok{ }\NormalTok{epsilonma1g1)}
+\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupm1a1g1 <-}\StringTok{ }\KeywordTok{plogis}\NormalTok{(}\KeywordTok{qlogis}\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{qyinit[, }\DecValTok{3}\NormalTok{]) }\OperatorTok{+}\StringTok{ }\NormalTok{epsilonma1g1)}
+
+\CommentTok{# for E(Y_\{0,gmastar\})}
+\NormalTok{epsilonma0g0 <-}\StringTok{ }\KeywordTok{coef}\NormalTok{(}\KeywordTok{glm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\DecValTok{1}\NormalTok{, }\DataTypeTok{weights =}\NormalTok{ tmpdat}\OperatorTok{$}\NormalTok{ha0gma0,}
+                         \DataTypeTok{offset =}\NormalTok{ (}\KeywordTok{qlogis}\NormalTok{(qyinit[, }\DecValTok{1}\NormalTok{])),}
+                         \DataTypeTok{family =} \StringTok{"quasibinomial"}\NormalTok{, }\DataTypeTok{data =}\NormalTok{ tmpdat))}
+\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupm0a0g0 <-}\StringTok{ }\KeywordTok{plogis}\NormalTok{(}\KeywordTok{qlogis}\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{qyinit[, }\DecValTok{2}\NormalTok{]) }\OperatorTok{+}\StringTok{ }\NormalTok{epsilonma0g0)}
+\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupm1a0g0 <-}\StringTok{ }\KeywordTok{plogis}\NormalTok{(}\KeywordTok{qlogis}\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{qyinit[, }\DecValTok{3}\NormalTok{]) }\OperatorTok{+}\StringTok{ }\NormalTok{epsilonma0g0)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{7}
+\tightlist
+\item
+  We next integrate out \(M\) from \(\bar{Q}^{\star}_{Y}(M,Z,W)\). First, we
+  estimate \(\bar{Q}^{\star}_{Y,n}(M,Z,W)\) setting \(m=1\) and \(m=0\), giving
+  \(\bar{Q}^{\star}_Y(m=1, z, w)\) and \(\bar{Q}^{\star}_Y(m=0, z, w)\). Then,
+  multiply these predicted values by their probabilities under
+  \(\hat{g}_{M \mid a^{\star},W}(W)\) (for \(a \in \{a, a^{\star}\}\)), and add
+  them together (i.e., \(\bar{Q}^{\hat{g}}_{M,n}(Z,W) = \hat{Q}^{\star}_Y(m=1, z, w) \hat{g}_{M|a^{\star},W} + \hat{Q}^{\star}_Y(m=0, z, w)(1-\hat{g}_{M|a^{\star},W})\)).
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{Qma1g0 <-}\StringTok{ }\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupm0a1g0 }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{gm) }\OperatorTok{+}\StringTok{ }\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupm1a1g0 }\OperatorTok{*}\StringTok{ }\NormalTok{gm}
+\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{Qma1g1 <-}\StringTok{ }\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupm0a1g1 }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{gma1) }\OperatorTok{+}\StringTok{ }\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupm1a1g1 }\OperatorTok{*}\StringTok{ }\NormalTok{gma1}
+\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{Qma0g0 <-}\StringTok{ }\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupm0a0g0 }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{gm) }\OperatorTok{+}\StringTok{ }\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupm1a0g0 }\OperatorTok{*}\StringTok{ }\NormalTok{gm}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{8}
+\tightlist
+\item
+  We now fit a regression of \(\bar{Q}^{\hat{g},\star}_{M,n}(Z,W)\) on \(W\)
+  among those with \(A=a^\prime\). We call the predicted values from this
+  regression \(\hat{\bar{Q}}^{a^\prime}_{Z}(W)\).
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Qzfita1g0 <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(}\DataTypeTok{formula =} \KeywordTok{paste}\NormalTok{(}\StringTok{"Qma1g0"}\NormalTok{, qmodel, }\DataTypeTok{sep =} \StringTok{"~"}\NormalTok{),}
+                 \DataTypeTok{data =}\NormalTok{ tmpdat[tmpdat}\OperatorTok{$}\NormalTok{a }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{, ], }\DataTypeTok{family =} \StringTok{"quasibinomial"}\NormalTok{)}
+\NormalTok{Qzfita1g1 <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(}\DataTypeTok{formula =} \KeywordTok{paste}\NormalTok{(}\StringTok{"Qma1g1"}\NormalTok{, qmodel, }\DataTypeTok{sep =} \StringTok{"~"}\NormalTok{),}
+                 \DataTypeTok{data =}\NormalTok{ tmpdat[tmpdat}\OperatorTok{$}\NormalTok{a }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{, ], }\DataTypeTok{family =} \StringTok{"quasibinomial"}\NormalTok{)}
+\NormalTok{Qzfita0g0 <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(}\DataTypeTok{formula =} \KeywordTok{paste}\NormalTok{(}\StringTok{"Qma0g0"}\NormalTok{, qmodel, }\DataTypeTok{sep =} \StringTok{"~"}\NormalTok{),}
+                 \DataTypeTok{data =}\NormalTok{ tmpdat[tmpdat}\OperatorTok{$}\NormalTok{a }\OperatorTok{==}\StringTok{ }\DecValTok{0}\NormalTok{, ], }\DataTypeTok{family =} \StringTok{"quasibinomial"}\NormalTok{)}
+
+\NormalTok{Qza1g0 <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(Qzfita1g0, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{, }\DataTypeTok{newdata =}\NormalTok{ tmpdat)}
+\NormalTok{Qza1g1 <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(Qzfita1g1, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{, }\DataTypeTok{newdata =}\NormalTok{ tmpdat)}
+\NormalTok{Qza0g0 <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(Qzfita0g0, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{, }\DataTypeTok{newdata =}\NormalTok{ tmpdat)}
+\end{Highlighting}
+\end{Shaded}
+
+(Note that if \(A\) were not randomly assigned, we would need to complete a
+second targeting step.)
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{9}
+\tightlist
+\item
+  The empirical mean of these predicted values is the TML estimate of
+  \(\Psi(P)(a^\prime, \hat{g}_{M \mid a^{\star}, W})\).
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tmlea1m0 <-}\StringTok{ }\KeywordTok{sum}\NormalTok{(Qzupa1g0 }\OperatorTok{*}\StringTok{ }\NormalTok{svywt) }\OperatorTok{/}\StringTok{ }\KeywordTok{sum}\NormalTok{(svywt)}
+\NormalTok{tmlea1m1 <-}\StringTok{ }\KeywordTok{sum}\NormalTok{(Qzupa1g1 }\OperatorTok{*}\StringTok{ }\NormalTok{svywt) }\OperatorTok{/}\StringTok{ }\KeywordTok{sum}\NormalTok{(svywt)}
+\NormalTok{tmlea0m0 <-}\StringTok{ }\KeywordTok{sum}\NormalTok{(Qzupa0g0 }\OperatorTok{*}\StringTok{ }\NormalTok{svywt) }\OperatorTok{/}\StringTok{ }\KeywordTok{sum}\NormalTok{(svywt)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{10}
+\tightlist
+\item
+  Repeat the above steps for each of the interventions. For example, for
+  binary \(A\), we would execute these steps a total of three times to
+  estimate:
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    \(\Psi(P)(1,\hat{g}_{M \mid 1, W})\),
+  \item
+    \(\Psi(P)(1,\hat{g}_{M \mid 0, W})\), and
+  \item
+    \(\Psi(P)(0,\hat{g}_{M \mid 0, W})\).
+  \end{enumerate}
+\item
+  The PIDE can then be obtained by substituting estimates of parameters
+  \(\Psi(P)(a,\hat{g}_{M \mid a^{\star}, W}) - \Psi(P)(a^{\star},\hat{g}_{M \mid a^{\star}, W})\) and the PIIE
+  can be obtained by substituting estimates of parameters
+  \(\Psi(P)(a,\hat{g}_{M \mid a,W}) - \Psi(P)(a, \hat{g}_{M \mid a^{\star}, W})\).
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{nde <-}\StringTok{ }\NormalTok{tmlea1m0 }\OperatorTok{-}\StringTok{ }\NormalTok{tmlea0m0}
+\NormalTok{nie <-}\StringTok{ }\NormalTok{tmlea1m1 }\OperatorTok{-}\StringTok{ }\NormalTok{tmlea1m0}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{12}
+\tightlist
+\item
+  The variance can be estimated as the sample variance of the EIF (defined
+  above, substituting in the targeted fits) divided by \(n\).
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# first get EIF}
+\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupa1g0 <-}\StringTok{ }\KeywordTok{plogis}\NormalTok{(}\KeywordTok{qlogis}\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{qyinit[, }\DecValTok{1}\NormalTok{]) }\OperatorTok{+}\StringTok{ }\NormalTok{epsilonma1g0)}
+\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupa1g1 <-}\StringTok{ }\KeywordTok{plogis}\NormalTok{(}\KeywordTok{qlogis}\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{qyinit[, }\DecValTok{1}\NormalTok{]) }\OperatorTok{+}\StringTok{ }\NormalTok{epsilonma1g1)}
+\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupa0g0 <-}\StringTok{ }\KeywordTok{plogis}\NormalTok{(}\KeywordTok{qlogis}\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{qyinit[, }\DecValTok{1}\NormalTok{]) }\OperatorTok{+}\StringTok{ }\NormalTok{epsilonma0g0)}
+
+\NormalTok{eic1a1g0 <-}\StringTok{ }\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{ha1gma0 }\OperatorTok{*}\StringTok{ }\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{y }\OperatorTok{-}\StringTok{ }\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupa1g0)}
+\NormalTok{eic2a1g0 <-}\StringTok{ }\NormalTok{psa1 }\OperatorTok{*}\StringTok{ }\NormalTok{svywt }\OperatorTok{*}\StringTok{ }\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{Qma1g0 }\OperatorTok{-}\StringTok{ }\NormalTok{Qzupa1g0)}
+\NormalTok{eic3a1g0 <-}\StringTok{ }\NormalTok{Qzupa1g0 }\OperatorTok{-}\StringTok{ }\NormalTok{tmlea1m0}
+\NormalTok{eica1g0 <-}\StringTok{ }\NormalTok{eic1a1g0 }\OperatorTok{+}\StringTok{ }\NormalTok{eic2a1g0 }\OperatorTok{+}\StringTok{ }\NormalTok{eic3a1g0}
+
+\NormalTok{eic1a1g1 <-}\StringTok{ }\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{ha1gma1 }\OperatorTok{*}\StringTok{ }\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{y }\OperatorTok{-}\StringTok{ }\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupa1g1)}
+\NormalTok{eic2a1g1 <-}\StringTok{ }\NormalTok{psa1 }\OperatorTok{*}\StringTok{ }\NormalTok{svywt }\OperatorTok{*}\StringTok{ }\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{Qma1g1 }\OperatorTok{-}\StringTok{ }\NormalTok{Qzupa1g1)}
+\NormalTok{eic3a1g1 <-}\StringTok{ }\NormalTok{Qzupa1g1 }\OperatorTok{-}\StringTok{ }\NormalTok{tmlea1m1}
+\NormalTok{eica1g1 <-}\StringTok{ }\NormalTok{eic1a1g1 }\OperatorTok{+}\StringTok{ }\NormalTok{eic2a1g1 }\OperatorTok{+}\StringTok{ }\NormalTok{eic3a1g1}
+
+\NormalTok{eic1a0g0 <-}\StringTok{ }\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{ha0gma0 }\OperatorTok{*}\StringTok{ }\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{y }\OperatorTok{-}\StringTok{ }\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupa0g0)}
+\NormalTok{eic2a0g0 <-}\StringTok{ }\NormalTok{psa0 }\OperatorTok{*}\StringTok{ }\NormalTok{svywt }\OperatorTok{*}\StringTok{ }\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{Qma0g0 }\OperatorTok{-}\StringTok{ }\NormalTok{Qzupa0g0)}
+\NormalTok{eic3a0g0 <-}\StringTok{ }\NormalTok{Qzupa0g0 }\OperatorTok{-}\StringTok{ }\NormalTok{tmlea0m0}
+\NormalTok{eica0g0 <-}\StringTok{ }\NormalTok{eic1a0g0 }\OperatorTok{+}\StringTok{ }\NormalTok{eic2a0g0 }\OperatorTok{+}\StringTok{ }\NormalTok{eic3a0g0}
+
+\CommentTok{# estimands}
+\NormalTok{ndeeic <-}\StringTok{ }\NormalTok{eica1g0 }\OperatorTok{-}\StringTok{ }\NormalTok{eica0g0}
+\NormalTok{vareic <-}\StringTok{ }\KeywordTok{var}\NormalTok{(ndeeic) }\OperatorTok{/}\StringTok{ }\KeywordTok{nrow}\NormalTok{(tmpdat)}
+
+\NormalTok{nieeic <-}\StringTok{ }\NormalTok{eica1g1 }\OperatorTok{-}\StringTok{ }\NormalTok{eica1g0}
+\NormalTok{varnieeic <-}\StringTok{ }\KeywordTok{var}\NormalTok{(nieeic) }\OperatorTok{/}\StringTok{ }\KeywordTok{nrow}\NormalTok{(tmpdat)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{the-general-case}{%
+\section{The general case}\label{the-general-case}}
+
+Actually, we would want to have the fixed parameter with the true, unknown
+\(g_{M \mid a, W}\) and would like \(M\) to be continuous/multi-dimensional.
+
+This is a pain to do by hand, but Nima made an easy-to-use package for all of us
+called \href{https://github.com/nhejazi/medoutcon}{medoutcon}! He will go through
+this next.
 
   \bibliography{book.bib,packages.bib}
 

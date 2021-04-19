@@ -2,7 +2,7 @@
 knit: "bookdown::render_book"
 title: "[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis"
 author: "Iván Díaz, Nima Hejazi, Kara Rudolph"
-date: "updated: March 29, 2021"
+date: "updated: April 19, 2021"
 documentclass: book
 site: bookdown::bookdown_site
 bibliography: [book.bib, packages.bib]
@@ -117,7 +117,7 @@ target available policy and program resources.
 These workshop materials were written using [bookdown](http://bookdown.org/),
 and the complete source is available on
 [GitHub](https://github.com/tlverse/tlverse-handbook).  This version of the book
-was built with R version 4.0.4 (2021-02-15), [pandoc](https://pandoc.org/) version `r
+was built with R version 4.0.5 (2021-03-31), [pandoc](https://pandoc.org/) version `r
 rmarkdown::pandoc_version()`, and the following packages:
 
 
@@ -125,26 +125,26 @@ rmarkdown::pandoc_version()`, and the following packages:
 |:----------|:----------|:-----------------------------------|
 |bookdown   |0.21.7     |Github (rstudio/bookdown\@b66380e)  |
 |bslib      |0.2.4.9002 |Github (rstudio/bslib\@b2b4e55)     |
-|dagitty    |0.3-1      |CRAN (R 4.0.4)                      |
-|data.table |1.14.0     |CRAN (R 4.0.4)                      |
-|downlit    |0.2.1      |CRAN (R 4.0.4)                      |
-|dplyr      |1.0.5      |CRAN (R 4.0.4)                      |
-|ggdag      |0.2.3      |CRAN (R 4.0.4)                      |
-|ggfortify  |0.4.11     |CRAN (R 4.0.4)                      |
-|ggplot2    |3.3.3      |CRAN (R 4.0.4)                      |
-|kableExtra |1.3.4      |CRAN (R 4.0.4)                      |
-|knitr      |1.31       |CRAN (R 4.0.4)                      |
+|dagitty    |0.3-1      |CRAN (R 4.0.5)                      |
+|data.table |1.14.0     |CRAN (R 4.0.5)                      |
+|downlit    |0.2.1      |CRAN (R 4.0.5)                      |
+|dplyr      |1.0.5      |CRAN (R 4.0.5)                      |
+|ggdag      |0.2.3      |CRAN (R 4.0.5)                      |
+|ggfortify  |0.4.11     |CRAN (R 4.0.5)                      |
+|ggplot2    |3.3.3      |CRAN (R 4.0.5)                      |
+|kableExtra |1.3.4      |CRAN (R 4.0.5)                      |
+|knitr      |1.31       |CRAN (R 4.0.5)                      |
 |medoutcon  |NA         |NA                                  |
 |medshift   |0.1.4      |Github (nhejazi/medshift\@f9e11a9)  |
-|mvtnorm    |1.1-1      |CRAN (R 4.0.4)                      |
-|origami    |1.0.3      |CRAN (R 4.0.4)                      |
-|readr      |1.4.0      |CRAN (R 4.0.4)                      |
+|mvtnorm    |1.1-1      |CRAN (R 4.0.5)                      |
+|origami    |1.0.3      |CRAN (R 4.0.5)                      |
+|readr      |1.4.0      |CRAN (R 4.0.5)                      |
 |rmarkdown  |2.7.4      |Github (rstudio/rmarkdown\@1450461) |
-|skimr      |2.1.3      |CRAN (R 4.0.4)                      |
+|skimr      |2.1.3      |CRAN (R 4.0.5)                      |
 |sl3        |1.4.2      |Github (tlverse/sl3\@a119d47)       |
-|stringr    |1.4.0      |CRAN (R 4.0.4)                      |
-|tibble     |3.1.0      |CRAN (R 4.0.4)                      |
-|tidyr      |1.1.3      |CRAN (R 4.0.4)                      |
+|stringr    |1.4.0      |CRAN (R 4.0.5)                      |
+|tibble     |3.1.0      |CRAN (R 4.0.5)                      |
+|tidyr      |1.1.3      |CRAN (R 4.0.5)                      |
 
 ## Setup instructions {#setup}
 

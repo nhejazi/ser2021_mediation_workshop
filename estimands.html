@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 2 Path-specific casual mediation effect types | [SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</title>
+<meta name="author" content="Iván Díaz, Nima Hejazi, Kara Rudolph">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.2"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.5.1/jquery-3.5.1.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.2.4.9002/tabs.js"></script><script src="libs/bs3compat-0.2.4.9002/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+</head>
+<body>
+<span class="math inline">
+  \(\DeclareMathOperator{\expit}{expit}\)
+  \(\DeclareMathOperator{\logit}{logit}\)
+  \(\DeclareMathOperator*{\argmin}{\arg\!\min}\)
+  \(\newcommand{\indep}{\perp\!\!\!\perp}\)
+  \(\newcommand{\coloneqq}{\mathrel{=}}\)
+  \(\newcommand{\R}{\mathbb{R}}\)
+  \(\newcommand{\E}{\mathbb{E}}\)
+  \(\newcommand{\M}{\mathcal{M}}\)
+  \(\renewcommand{\P}{\mathbb{P}}\)
+  \(\newcommand{\I}{\mathbb{I}}\)
+  \(\newcommand{\1}{\mathbbm{1}}\)
+  </span>
+    <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/mark.js@8.11.1/dist/mark.min.js"></script><!-- CSS --><div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Welcome to SER!</a></li>
+<li><a class="" href="mediation.html"><span class="header-section-number">1</span> Causal Mediation Analysis</a></li>
+<li><a class="active" href="estimands.html"><span class="header-section-number">2</span> Path-specific casual mediation effect types</a></li>
+<li><a class="" href="estimandirl.html"><span class="header-section-number">3</span> How to choose an estimand: Real world example</a></li>
+<li><a class="" href="interventional.html"><span class="header-section-number">4</span> The Interventional Direct and Indirect Effects</a></li>
+<li><a class="" href="estimation-of-natural-indirect-effects-interventional-indirect-effects.html"><span class="header-section-number">5</span> Estimation of natural (in)direct effects, interventional (in)direct effects</a></li>
+<li><a class="" href="references.html">References</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/nhejazi/ser2021_mediation_workshop">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="estimands" class="section level1">
+<h1>
+<span class="header-section-number">2</span> Path-specific casual mediation effect types<a class="anchor" aria-label="anchor" href="#estimands"><i class="fas fa-link"></i></a>
+</h1>
+<ul>
+<li>Controlled direct effects</li>
+<li>Natural direct and indirect effects</li>
+<li>Interventional direct and indirect effects</li>
+</ul>
+<div id="controlled-direct-effects" class="section level2 unnumbered">
+<h2>Controlled direct effects<a class="anchor" aria-label="anchor" href="#controlled-direct-effects"><i class="fas fa-link"></i></a>
+</h2>
+<p><span class="math display">\[\begin{equation*}
+  \psi_{\text{CDE}} = \E(Y_{1,m}) - \E(Y_{0,m})
+\end{equation*}\]</span></p>
+<ul>
+<li>Set <span class="math inline">\(M=m\)</span> uniformly for everyone in sample</li>
+<li>Independence assumptions:
+<ul>
+<li><span class="math inline">\(A \indep Y_{a,m} \mid W\)</span></li>
+<li><span class="math inline">\(M \indep Y_{a,m} \mid W, A\)</span></li>
+</ul>
+</li>
+<li>Positivity assumptions:
+<ul>
+<li><span class="math inline">\(\P(M = m \mid A=a, W) &gt; 0 \text{  } a.e.\)</span></li>
+<li><span class="math inline">\(\P(A=a \mid W) &gt; 0 \text{  } a.e.\)</span></li>
+</ul>
+</li>
+</ul>
+<embed src="/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/graphic4a3.pdf" width="50%" style="display: block; margin: auto;" type="application/pdf"></embed><div id="is-this-the-estimand-i-want" class="section level3">
+<h3>
+<span class="header-section-number">2.0.1</span> Is this the estimand I want?<a class="anchor" aria-label="anchor" href="#is-this-the-estimand-i-want"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li>Makes the most sense if can intervene directly on <span class="math inline">\(M\)</span>
+<ul>
+<li>and can think of a policy that would set everyone to a single constant
+level <span class="math inline">\(m \in \mathcal{M}\)</span>.</li>
+<li>J. Pearl calls this <em>prescriptive</em>.</li>
+<li>Can you think of an example?</li>
+<li>Air pollution, rescue inhaler dosage, hospital visits</li>
+</ul>
+</li>
+</ul>
+<p><em>What if our research question doesn’t involve intervening directly on the
+mediator?</em></p>
+</div>
+</div>
+<div id="natural-direct-and-indirect-effects" class="section level2 unnumbered">
+<h2>Natural direct and indirect effects<a class="anchor" aria-label="anchor" href="#natural-direct-and-indirect-effects"><i class="fas fa-link"></i></a>
+</h2>
+<p>Natural direct effect (NDE):
+<span class="math display">\[\begin{equation*}
+  \psi_{\text{NDE}} = \E(Y_{1,M_0}) - \E(Y_{0,M_0})
+\end{equation*}\]</span></p>
+<p>Natural indirect effect (NIE):
+<span class="math display">\[\begin{equation*}
+  \psi_{\text{NIE}} = \E(Y_{1,M_1}) - \E(Y_{1,M_0})
+\end{equation*}\]</span></p>
+<p>The NDE can also be written as: <span class="math inline">\(\E_W \sum_m \{\E(Y_{1,m} \mid W) - \E(Y_{0,m} \mid W)\} \P(M_{0}=m \mid W)\)</span></p>
+<ul>
+<li>Weighted average of controlled direct effects at each level of <span class="math inline">\(m\)</span>.</li>
+<li>If no interaction between <span class="math inline">\(A\)</span> and <span class="math inline">\(M\)</span> on <span class="math inline">\(Y\)</span>, then CDE = NDE.</li>
+</ul>
+<embed src="/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/graphic4a.pdf" width="50%" style="display: block; margin: auto;" type="application/pdf"></embed><div id="identification-assumptions" class="section level3">
+<h3>
+<span class="header-section-number">2.0.2</span> Identification assumptions:<a class="anchor" aria-label="anchor" href="#identification-assumptions"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li><span class="math inline">\(A \indep Y_{a,m} \mid W\)</span></li>
+<li><span class="math inline">\(M \indep Y_{a,m} \mid W, A\)</span></li>
+<li><span class="math inline">\(A \indep M_a \mid W\)</span></li>
+<li><span class="math inline">\(M_{a^{\star}} \indep Y_{a,m} \mid W\)</span></li>
+<li>and positivity assumptions</li>
+</ul>
+<p>What does <span class="math inline">\(M_0 \indep Y_{1,m} \mid W\)</span> mean?</p>
+<ul>
+<li>Conditional on <span class="math inline">\(W\)</span>, knowledge of <span class="math inline">\(M\)</span> in the absence of treatment <span class="math inline">\(A\)</span>
+provides no information of the effect of <span class="math inline">\(A\)</span> on <span class="math inline">\(Y\)</span>.</li>
+<li>Can you think of a data-generating mechanism that would violate this
+assumption?</li>
+<li>Whenever we believe that treatment assignment works through adherence (i.e.,
+almost always), we are violating this assumption.</li>
+</ul>
+</div>
+<div id="is-this-the-estimand-i-want-1" class="section level3">
+<h3>
+<span class="header-section-number">2.0.3</span> Is this the estimand I want?<a class="anchor" aria-label="anchor" href="#is-this-the-estimand-i-want-1"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li>Makes sense to intervene on <span class="math inline">\(A\)</span> but not directly on <span class="math inline">\(M\)</span>.</li>
+<li>Want to understand a natural mechanism underlying an association/ total
+effect. J. Pearl calls this <em>descriptive</em>.</li>
+<li>NDE + NIE = total effect (ATE).</li>
+<li>Okay with the assumptions.
+<!--
+NH: Should we mention cross-world indep and indentifiability issues in RCTs?
+-->
+</li>
+</ul>
+<p><em>What if our data structure involves a post-treatment confounder of the
+mediator-outcome relationship (e.g., adherence)?</em></p>
+<embed src="/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/medDAG2.pdf" width="20%" style="display: block; margin: auto;" type="application/pdf"></embed><embed src="/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/ctndag.pdf" width="50%" style="display: block; margin: auto;" type="application/pdf"></embed>
+</div>
+</div>
+<div id="interventional-direct-indirect-effects" class="section level2 unnumbered">
+<h2>Interventional direct/ indirect effects<a class="anchor" aria-label="anchor" href="#interventional-direct-indirect-effects"><i class="fas fa-link"></i></a>
+</h2>
+<ul>
+<li>Fully conditional on past</li>
+<li>Conditional SDE: <span class="math inline">\(\E(Y_{a, g_{M \mid Z, a^{\star}, W}}) - \E(Y_{a^{\star}, g_{M \mid Z, a^{\star}, W}})\)</span>
+</li>
+<li>Conditional SIE: <span class="math inline">\(\E(Y_{a, g_{M \mid Z, a, W}}) - \E(Y_{a, g_{M \mid Z, a^{\star}, W}})\)</span>
+</li>
+<li>Marginal SDE: <span class="math inline">\(\E(Y_{a, g_{M \mid a^{\star}, W}}) - \E(Y_{a^{\star}, g_{M \mid a^{\star}, W}})\)</span>
+</li>
+<li>Marginal SIE: <span class="math inline">\(\E(Y_{a, g_{M \mid a, W}}) - \E(Y_{a, g_{M \mid a^{\star}, W}})\)</span>
+</li>
+<li>Note that <span class="math inline">\(g_{M \mid Z, a^{\star}, W}\)</span>, <span class="math inline">\(g_{M \mid a^{\star}, W}\)</span> represents
+stochastic intervention on the mediator, where value <span class="math inline">\(m\)</span> is drawn with
+probability <span class="math inline">\(\P(M = m \mid Z, A = a^{\star}, W = w)\)</span>,
+<span class="math inline">\(\P(M = m \mid A = a^{\star}, W = w)\)</span>, respectively</li>
+<li>Can you think of an example when you would want the conditional versions?
+Marginal versions?</li>
+</ul>
+<embed src="/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/graphic4b.pdf" width="50%" style="display: block; margin: auto;" type="application/pdf"></embed><div id="identification-assumptions-1" class="section level3">
+<h3>
+<span class="header-section-number">2.0.4</span> Identification assumptions:<a class="anchor" aria-label="anchor" href="#identification-assumptions-1"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li><span class="math inline">\(A \indep Y_{a,m} \mid W\)</span></li>
+<li><span class="math inline">\(M \indep Y_{a,m} \mid W, A\)</span></li>
+<li><span class="math inline">\(A \indep M_a \mid W\)</span></li>
+<li>and positivity assumptions.</li>
+</ul>
+<p>Is this the estimand I want?</p>
+<ul>
+<li>Makes sense to intervene on <span class="math inline">\(A\)</span> but not directly on <span class="math inline">\(M\)</span>.</li>
+<li>Goal is to understand a natural mechanism underlying an association or total
+effect.</li>
+<li>Okay with the assumptions!</li>
+</ul>
+</div>
+</div>
+<div id="estimand-summary" class="section level2 unnumbered">
+<h2>Estimand Summary<a class="anchor" aria-label="anchor" href="#estimand-summary"><i class="fas fa-link"></i></a>
+</h2>
+<embed src="/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/table1.pdf" width="100%" style="display: block; margin: auto;" type="application/pdf"></embed>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="mediation.html"><span class="header-section-number">1</span> Causal Mediation Analysis</a></div>
+<div class="next"><a href="estimandirl.html"><span class="header-section-number">3</span> How to choose an estimand: Real world example</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#estimands"><span class="header-section-number">2</span> Path-specific casual mediation effect types</a></li>
+<li>
+<a class="nav-link" href="#controlled-direct-effects">Controlled direct effects</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#is-this-the-estimand-i-want"><span class="header-section-number">2.0.1</span> Is this the estimand I want?</a></li></ul>
+</li>
+<li>
+<a class="nav-link" href="#natural-direct-and-indirect-effects">Natural direct and indirect effects</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#identification-assumptions"><span class="header-section-number">2.0.2</span> Identification assumptions:</a></li>
+<li><a class="nav-link" href="#is-this-the-estimand-i-want-1"><span class="header-section-number">2.0.3</span> Is this the estimand I want?</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#interventional-direct-indirect-effects">Interventional direct/ indirect effects</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#identification-assumptions-1"><span class="header-section-number">2.0.4</span> Identification assumptions:</a></li></ul>
+</li>
+<li><a class="nav-link" href="#estimand-summary">Estimand Summary</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/nhejazi/ser2021_mediation_workshop/blob/master/02-roadmap.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/nhejazi/ser2021_mediation_workshop/edit/master/02-roadmap.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: April 19, 2021.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+</html>
