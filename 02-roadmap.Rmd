@@ -19,7 +19,7 @@
   + $\P(A=a \mid W) > 0 \text{  } a.e.$
 
 ```{r pressure, echo=FALSE, fig.cap="", out.width = '50%'}
-knitr::include_graphics(here::here:("img/graphic4a3.pdf"))
+knitr::include_graphics(here::here("img/graphic4a3.pdf"))
 ```
 
 ### Is this the estimand I want?
