@@ -2,10 +2,14 @@ bookdown::bs4_book:
   theme:
     primary: "#0098db"
   repo: https://github.com/nhejazi/ser2021_mediation_workshop
+  includes:
+    in_header: html_extras/mathjax_header.html
 
 bookdown::gitbook:
   css: [css/style.css, css/toc.css, css/center.css]
   dev: svg
+  includes:
+    in_header: html_extras/mathjax_header.html
   config:
     toc:
       collapse: section

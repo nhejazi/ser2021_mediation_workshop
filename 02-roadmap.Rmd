@@ -5,105 +5,134 @@
 - Interventional direct and indirect effects
 
 ## Controlled direct effects {-}
-$E(Y_{1,m}) - E(Y_{0,m})$
+
+\begin{equation*}
+  \psi_{\text{CDE}} = \E(Y_{1,m}) - \E(Y_{0,m})
+\end{equation*}
 
 - Set $M=m$ uniformly for everyone in sample
-- Assumptions:
-
-	+ $A \perp Y_{a,m} | W$ 
-	+ $M \perp Y_{a,m} | W, A$
-	+ and positivity assumptions: $P(M =m | A=a,W) > 0 \text{  } a.e.$ and $P(A=a | W) > 0 \text{  } a.e.$
+- Independence assumptions:
+  + $A \indep Y_{a,m} \mid W$
+  + $M \indep Y_{a,m} \mid W, A$
+- Positivity assumptions:
+  + $\P(M = m \mid A=a, W) > 0 \text{  } a.e.$
+  + $\P(A=a \mid W) > 0 \text{  } a.e.$
 
 ```{r pressure, echo=FALSE, fig.cap="", out.width = '50%'}
-knitr::include_graphics("img/graphic4a3.pdf")
+knitr::include_graphics(here::here:("img/graphic4a3.pdf"))
 ```
 
-- Is this the estimand I want?
-  + Makes the most sense if can intervene directly on $M$ 
-	+ and can think of a policy that would involve setting everyone to one constant level of $m$.
-	+ Pearl calls this prescriptive
-	+ Can you think of an example?
-	+ Air pollution, rescue inhaler dosage, hospital visits
+### Is this the estimand I want?
 
-_What if our research question doesn't involve intervening directly on the mediator?_
++ Makes the most sense if can intervene directly on $M$
+  + and can think of a policy that would set everyone to a single constant
+    level $m \in \mathcal{M}$.
+  + J. Pearl calls this _prescriptive_.
+  + Can you think of an example?
+  + Air pollution, rescue inhaler dosage, hospital visits
 
+_What if our research question doesn't involve intervening directly on the
+mediator?_
 
 ## Natural direct and indirect effects {-}
 
-Natural direct effect: $E(Y_{1,M_0}) - E(Y_{0,M_0})$
+Natural direct effect (NDE):
+\begin{equation*}
+  \psi_{\text{NDE}} = \E(Y_{1,M_0}) - \E(Y_{0,M_0})
+\end{equation*}
 
-Natural indirect effect: $E(Y_{1,M_1}) - E(Y_{1,M_0})$ 
+Natural indirect effect (NIE):
+\begin{equation*}
+  \psi_{\text{NIE}} = \E(Y_{1,M_1}) - \E(Y_{1,M_0})
+\end{equation*}
 
-The NDE can also be written as: $E_W \sum_m \{E(Y_{1,m}|W) - E(Y_{0,m}|W)\} P(M_{0}=m | W)$
+The NDE can also be written as: $\E_W \sum_m \{\E(Y_{1,m} \mid W) -
+\E(Y_{0,m} \mid W)\} \P(M_{0}=m \mid W)$
 
-- Weighted average of controlled direct effects at each level of $m$
-- If no interaction between $A$ and $M$ on $Y$, then CDE = NDE 
+- Weighted average of controlled direct effects at each level of $m$.
+- If no interaction between $A$ and $M$ on $Y$, then CDE = NDE.
 
 ```{r , echo=FALSE, fig.cap="", out.width = '50%'}
-knitr::include_graphics("img/graphic4a.pdf")
+knitr::include_graphics(here::here("img/graphic4a.pdf"))
 ```
 
-Identification assumptions:
+### Identification assumptions:
 
-- $A \perp Y_{a,m} | W$ 
-- $M \perp Y_{a,m} | W, A$
-- $A \perp M_a | W$ 
-- $M_{a^*} \perp Y_{a,m} | W$
+- $A \indep Y_{a,m} \mid W$
+- $M \indep Y_{a,m} \mid W, A$
+- $A \indep M_a \mid W$
+- $M_{a^{\star}} \indep Y_{a,m} \mid W$
 - and positivity assumptions
 
-What does $M_0 \perp Y_{1,m} | W$ mean?
+What does $M_0 \indep Y_{1,m} \mid W$ mean?
 
--  Conditional on $W$, knowledge of $M$ in the absence of treatment $A$ provides no information of the effect of $A$ on $Y$\footnotemark
-- Can you think of a data-generating mechanism that would violate this assumption?
-- Whenever we believe that treatment assignment works through adherence (i.e., almost always), we are violating this assumption
+- Conditional on $W$, knowledge of $M$ in the absence of treatment $A$
+  provides no information of the effect of $A$ on $Y$.
+- Can you think of a data-generating mechanism that would violate this
+  assumption?
+- Whenever we believe that treatment assignment works through adherence (i.e.,
+  almost always), we are violating this assumption.
 
-Is this the estimand I want?
+### Is this the estimand I want?
 
-- Makes sense to intervene on $A$ but not directly on $M$
-- Want to understand a natural mechanism underlying an association/ total effect. Pearl calls this descriptive.\footnotemark
-- NDE + NIE = total effect (ATE)
-- Okay with the assumptions
+- Makes sense to intervene on $A$ but not directly on $M$.
+- Want to understand a natural mechanism underlying an association/ total
+  effect. J. Pearl calls this _descriptive_.
+- NDE + NIE = total effect (ATE).
+- Okay with the assumptions.
+<!--
+NH: Should we mention cross-world indep and indentifiability issues in RCTs?
+-->
 
-_What if our data structure involves a post-treatment confounder of the mediator-outcome relationship (e.g., adherence)?_
+_What if our data structure involves a post-treatment confounder of the
+mediator-outcome relationship (e.g., adherence)?_
 
 ```{r , echo=FALSE, fig.cap="", out.width = '20%'}
-knitr::include_graphics("img/medDAG2.pdf")
+knitr::include_graphics(here::here("img/medDAG2.pdf"))
 ```
 
 ```{r , echo=FALSE, fig.cap="", out.width = '50%'}
-knitr::include_graphics("img/ctndag.pdf")
+knitr::include_graphics(here::here("img/ctndag.pdf"))
 ```
 
 ## Interventional direct/ indirect effects {-}
 
-- Fully conditional on past\footnotemark$^,$\footnotemark
- + Conditional SDE: $E(Y_{a, g_{M|Z,a*,W}}) - E(Y_{a^*, g_{M|Z,a*,W}})$
- + Conditional SIE: $E(Y_{a, g_{M|Z,a,W}}) - E(Y_{a, g_{M|Z,a*,W}})$
- + Marginal SDE: $E(Y_{a, g_{M|a*,W}}) - E(Y_{a^*, g_{M|a*,W}})$
- + Marginal SIE: $E(Y_{a, g_{M|a,W}}) - E(Y_{a, g_{M|a*,W}})$
- + $g_{M|Z,a^*,W}$, $g_{M|a^*,W}$ represents stochastic intervention on the mediator, where value $m$ is drawn with probability $P(M=m|Z, A=a^*,W=w)$, $P(M=m|A=a^*,W=w)$, respectively
- + Can you think of an example when you would want the conditional versions? Marginal versions?
+- Fully conditional on past
+ + Conditional SDE: $\E(Y_{a, g_{M \mid Z, a^{\star}, W}}) -
+   \E(Y_{a^{\star}, g_{M \mid Z, a^{\star}, W}})$
+ + Conditional SIE: $\E(Y_{a, g_{M \mid Z, a, W}}) -
+   \E(Y_{a, g_{M \mid Z, a^{\star}, W}})$
+ + Marginal SDE: $\E(Y_{a, g_{M \mid a^{\star}, W}}) -
+   \E(Y_{a^{\star}, g_{M \mid a^{\star}, W}})$
+ + Marginal SIE: $\E(Y_{a, g_{M \mid a, W}}) -
+   \E(Y_{a, g_{M \mid a^{\star}, W}})$
+ + Note that $g_{M \mid Z, a^{\star}, W}$, $g_{M \mid a^{\star}, W}$ represents
+   stochastic intervention on the mediator, where value $m$ is drawn with
+   probability $\P(M = m \mid Z, A = a^{\star}, W = w)$,
+   $\P(M = m \mid A = a^{\star}, W = w)$, respectively
+ + Can you think of an example when you would want the conditional versions?
+   Marginal versions?
 
 ```{r , echo=FALSE, fig.cap="", out.width = '50%'}
-knitr::include_graphics("img/graphic4b.pdf")
+knitr::include_graphics(here::here("img/graphic4b.pdf"))
 ```
 
-Identification assumptions:
+### Identification assumptions:
 
-- $A \perp Y_{a,m} | W$ 
-- $M \perp Y_{a,m} | W, A$
-- $A \perp M_a | W$ 
-- and positivity assumptions
+- $A \indep Y_{a,m} \mid W$
+- $M \indep Y_{a,m} \mid W, A$
+- $A \indep M_a \mid W$
+- and positivity assumptions.
 
 Is this the estimand I want?
 
-- Makes sense to intervene on $A$ but not directly on $M$
-- Want to understand a natural mechanism underlying an association/ total effect
+- Makes sense to intervene on $A$ but not directly on $M$.
+- Goal is to understand a natural mechanism underlying an association or total
+  effect.
 - Okay with the assumptions!
-
 
 ## Estimand Summary {-}
 
 ```{r , echo=FALSE, fig.cap="", out.width = '100%'}
-knitr::include_graphics("img/table1.pdf")
+knitr::include_graphics(here::here("img/table1.pdf"))
 ```
