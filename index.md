@@ -2,7 +2,7 @@
 knit: "bookdown::render_book"
 title: "[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis"
 author: "Iván Díaz, Nima Hejazi, Kara Rudolph"
-date: "updated: April 19, 2021"
+date: "updated: April 20, 2021"
 documentclass: book
 site: bookdown::bookdown_site
 bibliography: [book.bib, packages.bib]
@@ -123,8 +123,8 @@ rmarkdown::pandoc_version()`, and the following packages:
 
 |package    |version    |source                              |
 |:----------|:----------|:-----------------------------------|
-|bookdown   |0.21.7     |Github (rstudio/bookdown\@b66380e)  |
-|bslib      |0.2.4.9002 |Github (rstudio/bslib\@b2b4e55)     |
+|bookdown   |0.21.11    |Github (rstudio/bookdown\@33c4f70)  |
+|bslib      |0.2.4.9003 |Github (rstudio/bslib\@e09af88)     |
 |dagitty    |0.3-1      |CRAN (R 4.0.5)                      |
 |data.table |1.14.0     |CRAN (R 4.0.5)                      |
 |downlit    |0.2.1      |CRAN (R 4.0.5)                      |
@@ -133,17 +133,17 @@ rmarkdown::pandoc_version()`, and the following packages:
 |ggfortify  |0.4.11     |CRAN (R 4.0.5)                      |
 |ggplot2    |3.3.3      |CRAN (R 4.0.5)                      |
 |kableExtra |1.3.4      |CRAN (R 4.0.5)                      |
-|knitr      |1.31       |CRAN (R 4.0.5)                      |
-|medoutcon  |NA         |NA                                  |
+|knitr      |1.32       |CRAN (R 4.0.5)                      |
+|medoutcon  |0.1.0      |Github (nhejazi/medoutcon\@f8f14c4) |
 |medshift   |0.1.4      |Github (nhejazi/medshift\@f9e11a9)  |
 |mvtnorm    |1.1-1      |CRAN (R 4.0.5)                      |
 |origami    |1.0.3      |CRAN (R 4.0.5)                      |
 |readr      |1.4.0      |CRAN (R 4.0.5)                      |
-|rmarkdown  |2.7.4      |Github (rstudio/rmarkdown\@1450461) |
+|rmarkdown  |2.7.11     |Github (rstudio/rmarkdown\@e340d75) |
 |skimr      |2.1.3      |CRAN (R 4.0.5)                      |
-|sl3        |1.4.2      |Github (tlverse/sl3\@a119d47)       |
+|sl3        |1.4.3      |Github (tlverse/sl3\@5cddc6c)       |
 |stringr    |1.4.0      |CRAN (R 4.0.5)                      |
-|tibble     |3.1.0      |CRAN (R 4.0.5)                      |
+|tibble     |3.1.1      |CRAN (R 4.0.5)                      |
 |tidyr      |1.1.3      |CRAN (R 4.0.5)                      |
 
 ## Setup instructions {#setup}
