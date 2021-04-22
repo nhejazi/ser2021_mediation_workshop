@@ -1,5 +1,136 @@
 # Estimation of natural (in)direct effects, interventional (in)direct effects
 
+## Natural direct and indirect effects
+
+Recall:
+
+%make this pdf
+```{r pressure, echo=FALSE, fig.cap="", out.width = '50%'}
+knitr::include_graphics("meddagnoz.pdf")
+```
+
+Assuming a binary $A$, we define the natural direct effect as:
+$$NDE = E(Y_{1,M_{0}}) - E(Y_{0,M_{0}})$$, 
+
+and the natural indirect effect as:
+$$NIE = E(Y_{1,M_{1}}) - E(Y_{1,M_{0}})$$.
+
+### Simple case for intuition
+
+$O=(W, A, M, Y)$
+
+This SCM is represented in the above DAG and the following causal models: $W=f(U_W)$, $A=f(W,U_A)$, $M=f(A, W,U_M)$, and $Y=f(M,A,W,U_Y)$, where ($U_W, U_A,U_M, U_Y$) are exogenous random errors. 
+We assume $A$ is a single binary randomized treatment, $M$ is a single binary mediator. There are no restrictions on the distribution of $W$ or $Y$. 
+
+Recall that we need to assume the following to identify the above caual effects from our observed data:
+- $A \indep Y_{a,m} \mid W$
+- $M \indep Y_{a,m} \mid W, A$
+- $A \indep M_a \mid W$
+- $M_{a^{\star}} \indep Y_{a,m} \mid W$
+- and positivity assumptions
+
+### How to estimate using g-computation
+
+Let's take the NDE as an example:
+
+1. Fit a regression of $Y$ on $M,A,W$. Predict outcome values setting $A=1$. We'll call the result $\bar{Q}_Y(M,1,W)$. Predict outcome values setting $A=0$. We'll call the result $\bar{Q}_Y(M,0,W)$. 
+2. Take the difference $\bar{Q}_Y(M,1,W) - \bar{Q}_Y(M,0,W)$ and regress it on $W$ among those for whom $A=0$. This recovers the expected difference had all individuals been set to the control condition
+$A = 0$. 
+3. The sample mean of the predicted values gives the estimate. 
+
+### How to estimate using the doubly robust methods that rely on the EIF
+
+The EIC for the NDE ($\Psi_{NDE}$) is given by:
+
+$$
+\begin{align}
+    D^* &= \bigg\{ \frac{I(A=1)}{g(1|W)}\frac{Q(M|W,0)}{Q(M|W,1)} - \frac{I(A=0)}{g(0|W)}\bigg\} \times (Y-\bar{Q}_Y(M,A,W))  \\
+    &+ \frac{I(A=0)}{g(0|W)}\{ \bar{Q}_{diff} - E(\bar{Q}_{diff} | W,0) \}\\
+    &+ E(\bar{Q}_{diff} | W,0) - \Psi_{NDE}
+\end{align}
+$$
+
+### How to estimate using TMLE
+
+1. Estimate 
+\begin{equation*}
+  C_Y(Q_M, g)(O) = \Bigg\{\frac{\mathbb{I}(A = 1)}{g(1 \mid W)}
+  \frac{Q_M(M \mid 0, W)}{Q_M(M \mid 1, W)} -
+  \frac{\mathbb{I}(A = 0)}{g(0 \mid W)} \Bigg\}.
+\end{equation*}
+Breaking this down, $\frac{\mathbb{I}(A = 1)}{g(1 \mid W)}$ is the inverse
+probability weight for $A = 1$ and, likewise, $\frac{\mathbb{I}(A = 0)}{g(0
+\mid W)}$ is the inverse probability weight for $A = 0$. The middle term is the
+ratio of the mediator density when $A = 0$ to the mediator density when $A = 1$.
+
+Estimating $Q_M$ is a really hard problem when $M$ is high-dimensional. But, since we have the ratio of these conditional densitities, we can reparamterize using Bayes rule to get something that is easier to compute: 
+\begin{equation*}
+  \frac{p(A = 0 \mid M, W) g(0 \mid W)}{p(A = 1 \mid M, W) g(1 \mid W)}.
+\end{equation*}
+
+Underneath the hood, the counterfactual outcome difference
+$\bar{Q}_{\text{diff}}$ and $P(A \mid Z, W)$, the conditional probability of $A$
+given $Z$ and $W$, are used in constructing the auxiliary covariate for TML
+estimation. These nuisance parameters play an important role in the
+bias-correcting _TMLE-update step_.
+
+1a. We estimate $g_{A | W}(W)=P(A=a |W)$ from a logistic regression of $A$ on $W$, generating predicted probabilities that $A=1$ for $g(1 \mid W)$ and $A=0$ for $g(0 \mid W)$.  
+1b. We estimate $P(A=a |M,W)$ from a logistic regression of $A$ on $M,W$, generating predicted probabilities that $A=1$ for and $A=0$.  
+
+```{r, echo=TRUE,eval=FALSE}
+amodel<-"a ~ w "
+mmodel<-"m ~ a + w"
+amodel<-"a ~ m + w"
+ymodel<-"y ~ m + a*w"
+
+#make gm
+afit<-glm(formula=amodel, family="binomial", data=obsdat)
+mfit<-glm(formula=mmodel, family="binomial", data=obsdat)
+
+a1<-predict(afit, newdata=data.frame(w=obsdat$w), type="response")
+a0<-1-a1
+
+am1<-predict(amfit, newdata=data.frame(w=obsdat$w, m=obsdat$m), type="response")
+am0<-1-am1
+
+cy<-(am0*a0) / (am1*a1)
+```
+
+\bar{Q}_Y(M,a^\prime,W) - \bar{Q}_Y(M,a^\star,W)
+
+2. To obtain an estimate of $\bar{Q}_{diff} = \bar{Q}_Y(M,1,W) - \bar{Q}_Y(M,0,W)$, predict values of $Y$ from a regression of $Y$ on $M,A,W$, setting $A=1$ and $A=0$, giving $\hat{Y}(m, 1, w)$ and $\hat{Y}(m, 1, w)$. 
+
+```{r, echo=TRUE,eval=FALSE}
+qyinit<-cbind(predict(glm(formula=ymodel, family="binomial", data=data.frame(cbind(datw, a=a, m=m, y=y))), newdata=data.frame(cbind(datw, a, m)), type="response"),
+              predict(glm(formula=ymodel, family="binomial", data=data.frame(cbind(datw, a=a, m=m, y=y))), newdata=data.frame(cbind(datw, a=0, m)), type="response"),
+    predict(glm(formula=ymodel, family="binomial", data=data.frame(cbind(datw, z=z, m=m, y=y))), newdata=data.frame(cbind(datw, a=1, m)), type="response"))
+
+qbardiff<-qyinit[,3] - qyinit[,2]
+```
+
+3. Estimate $\hat{\epsilon}$ by setting $\epsilon$ as the intercept of a weighted logistic regression model of $Y$ with $logit(\hat{\bar{Q}}_{Y}(M,A,W))$ as an offset and weights $\hat{C}_{Y}$. 
+
+4. The estimates of $\bar{Q}_{Y}(M,1,W)$ and $\bar{Q}_{Y}(M,0,W)$ are updated by $ \hat{\bar{Q}}^*_{Y}(M,A,W) =  \hat{\bar{Q}}_{Y}(\epsilon_n)(M,A,W).$ This gives an updated difference: $\hat{\bar{Q}}^*_{diff}(M,A,W)$.
+
+```{r, echo=TRUE,eval=FALSE}
+
+  epsilon<-coef(glm(y ~  1 , weights=cy, offset=(qlogis(qyinit[,1])), family="quasibinomial"))
+  qyupa0<-plogis(qlogis(qyinit[,2]) + epsilon)
+  qyupa1<-plogis(qlogis(qyinit[,3]) + epsilon)
+  
+  qdiffup<-qyupa1 - qyupa0
+ 
+```
+
+5. We then regress $\hat{\bar{Q}}^*_{diff}(M,A,W)$ on $W$ among those with $A=0$. Taking the empirical mean of the predicted values gives us the TML estimate of the NDE.
+
+```{r, echo=TRUE,eval=FALSE}
+  margqdiff_fit<-glm(qdiffup ~ w, data=data.frame(qdiffup=qdiffup[a==0], w=w[a==0]))
+  margqdiff<-predict(margqdiff_fit, newdata=data.frame(qdiffup=qdiffup, w=w))
+  
+  tmlende<-mean(margqdiff)
+```
+
 ## Interventional direct and indirect effects
 
 Recall:
