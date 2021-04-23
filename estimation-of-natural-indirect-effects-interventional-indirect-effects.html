@@ -61,9 +61,161 @@
 <h1>
 <span class="header-section-number">5</span> Estimation of natural (in)direct effects, interventional (in)direct effects<a class="anchor" aria-label="anchor" href="#estimation-of-natural-indirect-effects-interventional-indirect-effects"><i class="fas fa-link"></i></a>
 </h1>
+<div id="natural-direct-and-indirect-effects-1" class="section level2">
+<h2>
+<span class="header-section-number">5.1</span> Natural direct and indirect effects<a class="anchor" aria-label="anchor" href="#natural-direct-and-indirect-effects-1"><i class="fas fa-link"></i></a>
+</h2>
+<p>Recall:</p>
+<embed src="/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/meddagnoz.pdf" width="50%" style="display: block; margin: auto;" type="application/pdf"></embed><p>Assuming a binary <span class="math inline">\(A\)</span>, we define the natural direct effect as:
+<span class="math display">\[NDE = E(Y_{1,M_{0}}) - E(Y_{0,M_{0}})\]</span>,</p>
+<p>and the natural indirect effect as:
+<span class="math display">\[NIE = E(Y_{1,M_{1}}) - E(Y_{1,M_{0}})\]</span>.</p>
+<div id="simple-case-for-intuition" class="section level3">
+<h3>
+<span class="header-section-number">5.1.1</span> Simple case for intuition<a class="anchor" aria-label="anchor" href="#simple-case-for-intuition"><i class="fas fa-link"></i></a>
+</h3>
+<p><span class="math inline">\(O=(W, A, M, Y)\)</span></p>
+<p>This SCM is represented in the above DAG and the following causal models:
+<span class="math inline">\(W=f(U_W)\)</span>, <span class="math inline">\(A=f(W,U_A)\)</span>, <span class="math inline">\(M=f(A, W,U_M)\)</span>, and <span class="math inline">\(Y=f(M,A,W,U_Y)\)</span>, where (<span class="math inline">\(U_W, U_A,U_M, U_Y\)</span>) are exogenous random errors.</p>
+<p>We assume <span class="math inline">\(A\)</span> is a single binary randomized treatment, <span class="math inline">\(M\)</span> is a single binary
+mediator. There are no restrictions on the distribution of <span class="math inline">\(W\)</span> or <span class="math inline">\(Y\)</span>.</p>
+<p>Recall that we need to assume the following to identify the above caual effects
+from our observed data:
+- <span class="math inline">\(A \indep Y_{a,m} \mid W\)</span>
+- <span class="math inline">\(M \indep Y_{a,m} \mid W, A\)</span>
+- <span class="math inline">\(A \indep M_a \mid W\)</span>
+- <span class="math inline">\(M_{a^{\star}} \indep Y_{a,m} \mid W\)</span>
+- and positivity assumptions</p>
+</div>
+<div id="how-to-estimate-using-g-computation" class="section level3">
+<h3>
+<span class="header-section-number">5.1.2</span> How to estimate using g-computation<a class="anchor" aria-label="anchor" href="#how-to-estimate-using-g-computation"><i class="fas fa-link"></i></a>
+</h3>
+<p>Let’s take the NDE as an example:</p>
+<ol style="list-style-type: decimal">
+<li>Fit a regression of <span class="math inline">\(Y\)</span> on <span class="math inline">\(M,A,W\)</span>. Predict outcome values setting <span class="math inline">\(A=1\)</span>.
+We’ll call the result <span class="math inline">\(\bar{Q}_Y(M,1,W)\)</span>. Predict outcome values setting
+<span class="math inline">\(A=0\)</span>. We’ll call the result <span class="math inline">\(\bar{Q}_Y(M,0,W)\)</span>.</li>
+<li>Take the difference <span class="math inline">\(\bar{Q}_Y(M,1,W) - \bar{Q}_Y(M,0,W)\)</span> and regress it on
+<span class="math inline">\(W\)</span> among those for whom <span class="math inline">\(A=0\)</span>. This recovers the expected difference had all
+individuals been set to the control condition <span class="math inline">\(A = 0\)</span>.</li>
+<li>The sample mean of the predicted values gives the estimate.</li>
+</ol>
+</div>
+<div id="how-to-estimate-using-the-doubly-robust-methods-that-rely-on-the-eif" class="section level3">
+<h3>
+<span class="header-section-number">5.1.3</span> How to estimate using the doubly robust methods that rely on the EIF<a class="anchor" aria-label="anchor" href="#how-to-estimate-using-the-doubly-robust-methods-that-rely-on-the-eif"><i class="fas fa-link"></i></a>
+</h3>
+<p>The EIC for the NDE (<span class="math inline">\(\Psi_{NDE}\)</span>) is given by:</p>
+<p><span class="math display">\[\begin{align}
+    D^{\star} &amp;= \bigg\{ \frac{I(A=1)}{g(1|W)}\frac{Q(M|W,0)}{Q(M|W,1)} -
+      \frac{I(A=0)}{g(0|W)}\bigg\} \times (Y-\bar{Q}_Y(M,A,W))  \\
+    &amp;+ \frac{I(A=0)}{g(0|W)}\{ \bar{Q}_{diff} - E(\bar{Q}_{diff} | W,0) \}\\
+    &amp;+ E(\bar{Q}_{diff} | W,0) - \Psi_{NDE}
+\end{align}\]</span></p>
+</div>
+<div id="how-to-estimate-using-tmle" class="section level3">
+<h3>
+<span class="header-section-number">5.1.4</span> How to estimate using TMLE<a class="anchor" aria-label="anchor" href="#how-to-estimate-using-tmle"><i class="fas fa-link"></i></a>
+</h3>
+<ol style="list-style-type: decimal">
+<li>Estimate
+<span class="math display">\[\begin{equation*}
+ C_Y(Q_M, g)(O) = \Bigg\{\frac{\I(A = 1)}{g(1 \mid W)}
+   \frac{Q_M(M \mid 0, W)}{Q_M(M \mid 1, W)} -
+   \frac{\I(A = 0)}{g(0 \mid W)} \Bigg\}.
+  \end{equation*}\]</span>
+Breaking this down, <span class="math inline">\(\frac{\I(A = 1)}{g(1 \mid W)}\)</span> is the inverse probability
+weight for <span class="math inline">\(A = 1\)</span> and, likewise, <span class="math inline">\(\frac{\I(A = 0)}{g(0 \mid W)}\)</span> is the inverse
+probability weight for <span class="math inline">\(A = 0\)</span>. The middle term is the ratio of the mediator
+density when <span class="math inline">\(A = 0\)</span> to the mediator density when <span class="math inline">\(A = 1\)</span>.</li>
+</ol>
+<p>Estimating <span class="math inline">\(Q_M\)</span> is a really hard problem when <span class="math inline">\(M\)</span> is high-dimensional. But,
+since we have the ratio of these conditional densitities, we can reparamterize
+using Bayes rule to get something that is easier to compute:
+<span class="math display">\[\begin{equation*}
+  \frac{\P(A = 0 \mid M, W) g(0 \mid W)}{\P(A = 1 \mid M, W) g(1 \mid W)}.
+\end{equation*}\]</span></p>
+<p>Underneath the hood, the counterfactual outcome difference
+<span class="math inline">\(\bar{Q}_{\text{diff}}\)</span> and <span class="math inline">\(P(A \mid Z, W)\)</span>, the conditional probability of <span class="math inline">\(A\)</span>
+given <span class="math inline">\(Z\)</span> and <span class="math inline">\(W\)</span>, are used in constructing the auxiliary covariate for TML
+estimation. These nuisance parameters play an important role in the
+bias-correcting <em>TMLE-update step</em>.</p>
+<ol style="list-style-type: decimal">
+<li>We estimate <span class="math inline">\(g_{A \mid W}(W)=P(A=a \mid W)\)</span> from a logistic regression of
+<span class="math inline">\(A\)</span> on <span class="math inline">\(W\)</span>, generating predicted probabilities that <span class="math inline">\(A=1\)</span> for <span class="math inline">\(g(1 \mid W)\)</span>
+and <span class="math inline">\(A=0\)</span> for <span class="math inline">\(g(0 \mid W)\)</span>.<br>
+</li>
+<li>We estimate <span class="math inline">\(\P(A=a \mid M, W)\)</span> from a logistic regression of <span class="math inline">\(A\)</span> on <span class="math inline">\(M, W\)</span>,
+generating predicted probabilities that <span class="math inline">\(A=1\)</span> for and <span class="math inline">\(A=0\)</span>.</li>
+</ol>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">amodel</span> <span class="op">&lt;-</span> <span class="st">"a ~ w "</span>
+<span class="va">mmodel</span> <span class="op">&lt;-</span> <span class="st">"m ~ a + w"</span>
+<span class="va">amodel</span> <span class="op">&lt;-</span> <span class="st">"a ~ m + w"</span>
+<span class="va">ymodel</span> <span class="op">&lt;-</span> <span class="st">"y ~ m + a*w"</span>
+
+<span class="co"># make gm</span>
+<span class="va">afit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">amodel</span>, family <span class="op">=</span> <span class="st">"binomial"</span>, data <span class="op">=</span> <span class="va">obsdat</span><span class="op">)</span>
+<span class="va">mfit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">mmodel</span>, family <span class="op">=</span> <span class="st">"binomial"</span>, data <span class="op">=</span> <span class="va">obsdat</span><span class="op">)</span>
+
+<span class="va">a1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">afit</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>w <span class="op">=</span> <span class="va">obsdat</span><span class="op">$</span><span class="va">w</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span>
+<span class="va">a0</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">-</span> <span class="va">a1</span>
+
+<span class="va">am1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">amfit</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>w <span class="op">=</span> <span class="va">obsdat</span><span class="op">$</span><span class="va">w</span>, m <span class="op">=</span> <span class="va">obsdat</span><span class="op">$</span><span class="va">m</span><span class="op">)</span>,
+               type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span>
+<span class="va">am0</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">-</span> <span class="va">am1</span>
+<span class="va">cy</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">am0</span> <span class="op">*</span> <span class="va">a0</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="va">am1</span> <span class="op">*</span> <span class="va">a1</span><span class="op">)</span></code></pre></div>
+<p><span class="math inline">\(\bar{Q}_Y(M,a^\prime,W) - \bar{Q}_Y(M,a^\star,W)\)</span></p>
+<ol start="3" style="list-style-type: decimal">
+<li>To obtain an estimate of <span class="math inline">\(\bar{Q}_{diff} = \bar{Q}_Y(M,1,W) - \bar{Q}_Y(M,0,W)\)</span>, predict values of <span class="math inline">\(Y\)</span> from a regression of <span class="math inline">\(Y\)</span> on <span class="math inline">\(M,A,W\)</span>,
+setting <span class="math inline">\(A=1\)</span> and <span class="math inline">\(A=0\)</span>, giving <span class="math inline">\(\hat{Y}(m, 1, w)\)</span> and <span class="math inline">\(\hat{Y}(m, 1, w)\)</span>.</li>
+</ol>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">qyinit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">ymodel</span>, family <span class="op">=</span> <span class="st">"binomial"</span>,
+              data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">datw</span>, a <span class="op">=</span> <span class="va">a</span>, m <span class="op">=</span> <span class="va">m</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
+          newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">datw</span>, <span class="va">a</span>, <span class="va">m</span><span class="op">)</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">ymodel</span>, family <span class="op">=</span> <span class="st">"binomial"</span>,
+              data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">datw</span>, a <span class="op">=</span> <span class="va">a</span>, m <span class="op">=</span> <span class="va">m</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
+          newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">datw</span>, a <span class="op">=</span> <span class="fl">0</span>, <span class="va">m</span><span class="op">)</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">ymodel</span>, family <span class="op">=</span> <span class="st">"binomial"</span>,
+              data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">datw</span>, z <span class="op">=</span> <span class="va">z</span>, m <span class="op">=</span> <span class="va">m</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
+          newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">datw</span>, a <span class="op">=</span> <span class="fl">1</span>, <span class="va">m</span><span class="op">)</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span>
+<span class="op">)</span>
+
+<span class="va">qbardiff</span> <span class="op">&lt;-</span> <span class="va">qyinit</span><span class="op">[</span>, <span class="fl">3</span><span class="op">]</span> <span class="op">-</span> <span class="va">qyinit</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span></code></pre></div>
+<ol start="4" style="list-style-type: decimal">
+<li><p>Estimate <span class="math inline">\(\hat{\epsilon}\)</span> by setting <span class="math inline">\(\epsilon\)</span> as the intercept of a
+weighted logistic regression model of <span class="math inline">\(Y\)</span> with
+<span class="math inline">\(logit(\hat{\bar{Q}}_{Y}(M,A,W))\)</span> as an offset and weights <span class="math inline">\(\hat{C}_{Y}\)</span>.</p></li>
+<li><p>The estimates of <span class="math inline">\(\bar{Q}_{Y}(M,1,W)\)</span> and <span class="math inline">\(\bar{Q}_{Y}(M,0,W)\)</span> are updated
+by <span class="math inline">\(\hat{\bar{Q}}^{\star}_{Y}(M,A,W) = \hat{\bar{Q}}_{Y}(\epsilon_n)(M,A,W)\)</span>. This gives an updated difference:
+<span class="math inline">\(\hat{\bar{Q}}^{\star}_{diff}(M,A,W)\)</span>.</p></li>
+</ol>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">epsilon</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="fl">1</span>, weights <span class="op">=</span> <span class="va">cy</span>, offset <span class="op">=</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">qlogis</a></span><span class="op">(</span><span class="va">qyinit</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,
+                    family <span class="op">=</span> <span class="st">"quasibinomial"</span><span class="op">)</span><span class="op">)</span>
+<span class="va">qyupa0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">plogis</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">qlogis</a></span><span class="op">(</span><span class="va">qyinit</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span> <span class="va">epsilon</span><span class="op">)</span>
+<span class="va">qyupa1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">plogis</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">qlogis</a></span><span class="op">(</span><span class="va">qyinit</span><span class="op">[</span>, <span class="fl">3</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span> <span class="va">epsilon</span><span class="op">)</span>
+<span class="va">qdiffup</span> <span class="op">&lt;-</span> <span class="va">qyupa1</span> <span class="op">-</span> <span class="va">qyupa0</span></code></pre></div>
+<ol start="6" style="list-style-type: decimal">
+<li>We then regress <span class="math inline">\(\hat{\bar{Q}}^{\star}_{diff}(M,A,W)\)</span> on <span class="math inline">\(W\)</span> among those
+with <span class="math inline">\(A=0\)</span>. Taking the empirical mean of the predicted values gives us the
+TML estimate of the NDE.</li>
+</ol>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">margqdiff_fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">qdiffup</span> <span class="op">~</span> <span class="va">w</span>,
+                     data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>qdiffup <span class="op">=</span> <span class="va">qdiffup</span><span class="op">[</span><span class="va">a</span> <span class="op">==</span> <span class="fl">0</span><span class="op">]</span>,
+                                       w <span class="op">=</span> <span class="va">w</span><span class="op">[</span><span class="va">a</span> <span class="op">==</span> <span class="fl">0</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>
+<span class="va">margqdiff</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">margqdiff_fit</span>,
+                     newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>qdiffup <span class="op">=</span> <span class="va">qdiffup</span>, w <span class="op">=</span> <span class="va">w</span><span class="op">)</span><span class="op">)</span>
+<span class="va">tmlende</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">margqdiff</span><span class="op">)</span></code></pre></div>
+</div>
+</div>
 <div id="interventional-direct-and-indirect-effects" class="section level2">
 <h2>
-<span class="header-section-number">5.1</span> Interventional direct and indirect effects<a class="anchor" aria-label="anchor" href="#interventional-direct-and-indirect-effects"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.2</span> Interventional direct and indirect effects<a class="anchor" aria-label="anchor" href="#interventional-direct-and-indirect-effects"><i class="fas fa-link"></i></a>
 </h2>
 <p>Recall:</p>
 <embed src="/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/medDAG2.pdf" width="50%" style="display: block; margin: auto;" type="application/pdf"></embed><p>We define the interventional direct effect as:
@@ -77,9 +229,9 @@ and the interventional indirect effect as:
     \E(Y_{a^\prime,g_{M \mid a^\star,W}}).
 \end{equation*}\]</span></p>
 </div>
-<div id="simple-case-for-intuition" class="section level2">
+<div id="simple-case-for-intuition-1" class="section level2">
 <h2>
-<span class="header-section-number">5.2</span> Simple case for intuition<a class="anchor" aria-label="anchor" href="#simple-case-for-intuition"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.3</span> Simple case for intuition<a class="anchor" aria-label="anchor" href="#simple-case-for-intuition-1"><i class="fas fa-link"></i></a>
 </h2>
 <p>Consider a simple data structure <span class="math inline">\(O=(W, A, Z, M, Y)\)</span>. This SCM is represented in
 the above DAG and the following causal models:
@@ -109,7 +261,7 @@ of <span class="math inline">\(A\)</span> and the counterfactual <span class="ma
 are the same as those for controlled direct effects.</p>
 <div id="estimation-using-g-computation" class="section level3">
 <h3>
-<span class="header-section-number">5.2.1</span> Estimation using G-Computation<a class="anchor" aria-label="anchor" href="#estimation-using-g-computation"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.3.1</span> Estimation using G-Computation<a class="anchor" aria-label="anchor" href="#estimation-using-g-computation"><i class="fas fa-link"></i></a>
 </h3>
 <p>The estimand <span class="math inline">\(E(Y_{a^\prime, \hat{g}_{M \mid a^\star,W}})\)</span> can be identified
 via sequential regression, which provides the framework for the
@@ -132,7 +284,7 @@ estimate.</li>
 </div>
 <div id="estimate-with-doubly-robust-methods-based-on-the-eif" class="section level3">
 <h3>
-<span class="header-section-number">5.2.2</span> Estimate with doubly robust methods based on the EIF<a class="anchor" aria-label="anchor" href="#estimate-with-doubly-robust-methods-based-on-the-eif"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.3.2</span> Estimate with doubly robust methods based on the EIF<a class="anchor" aria-label="anchor" href="#estimate-with-doubly-robust-methods-based-on-the-eif"><i class="fas fa-link"></i></a>
 </h3>
 <p>The EIF for the parameter <span class="math inline">\(\Psi(P)(a^{\prime}, \hat{g}_{M \mid a^{\star},W})\)</span>,
 where, again, <span class="math inline">\(\hat{g}_{M \mid a^{\star}, W}\)</span> is assumed known, is given by:
@@ -153,7 +305,7 @@ where, again, <span class="math inline">\(\hat{g}_{M \mid a^{\star}, W}\)</span>
 </div>
 <div id="estimate-using-tmle" class="section level3">
 <h3>
-<span class="header-section-number">5.2.3</span> Estimate using TMLE<a class="anchor" aria-label="anchor" href="#estimate-using-tmle"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.3.3</span> Estimate using TMLE<a class="anchor" aria-label="anchor" href="#estimate-using-tmle"><i class="fas fa-link"></i></a>
 </h3>
 <ol style="list-style-type: decimal">
 <li>We estimate <span class="math inline">\(g_{Z \mid a^{\star}, W}(W) = \P(Z=1 \mid A=a^{\star}, W)\)</span> from
@@ -162,7 +314,7 @@ a logistic regression of <span class="math inline">\(Z\)</span> on <span class="
 regression of <span class="math inline">\(M\)</span> on <span class="math inline">\(Z, W\)</span>, setting <span class="math inline">\(z=\{0,1\}\)</span>.</li>
 <li>We use these quantities to calculate <span class="math inline">\(\hat{g}_{M \mid a^{\star}, W} = \hat{g}_{M \mid z=1,W}\hat{g}_{Z \mid a^{\star}, W} + \hat{g}_{M \mid z=0,W}(1-\hat{g}_{Z|a^{\star}, W})\)</span>.</li>
 </ol>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">zmodel</span> <span class="op">&lt;-</span> <span class="st">"z ~ a + w1 "</span>
 <span class="va">mmodel</span> <span class="op">&lt;-</span> <span class="st">"m ~ z + w1"</span>
 <span class="va">ymodel</span> <span class="op">&lt;-</span> <span class="st">"y ~ m + z*w1"</span>
@@ -171,15 +323,23 @@ regression of <span class="math inline">\(M\)</span> on <span class="math inline
 <span class="va">zfit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">zmodel</span>, family <span class="op">=</span> <span class="st">"binomial"</span>, data <span class="op">=</span> <span class="va">obsdat</span><span class="op">)</span>
 <span class="va">mfit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">mmodel</span>, family <span class="op">=</span> <span class="st">"binomial"</span>, data <span class="op">=</span> <span class="va">obsdat</span><span class="op">)</span>
 
-<span class="va">za0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">zfit</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>w1 <span class="op">=</span> <span class="va">obsdat</span><span class="op">$</span><span class="va">w1</span>, a <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,
-               type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span>
-<span class="va">za1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">zfit</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>w1 <span class="op">=</span> <span class="va">obsdat</span><span class="op">$</span><span class="va">w1</span>, a <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,
-               type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span>
+<span class="va">za0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">zfit</span>,
+  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>w1 <span class="op">=</span> <span class="va">obsdat</span><span class="op">$</span><span class="va">w1</span>, a <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,
+  type <span class="op">=</span> <span class="st">"response"</span>
+<span class="op">)</span>
+<span class="va">za1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">zfit</span>,
+  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>w1 <span class="op">=</span> <span class="va">obsdat</span><span class="op">$</span><span class="va">w1</span>, a <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,
+  type <span class="op">=</span> <span class="st">"response"</span>
+<span class="op">)</span>
 
-<span class="va">mz1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">mfit</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>w1 <span class="op">=</span> <span class="va">obsdat</span><span class="op">$</span><span class="va">w1</span>, z <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,
-               type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span>
-<span class="va">mz0</span> <span class="op">&lt;</span> <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">mfit</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>w1 <span class="op">=</span> <span class="va">obsdat</span><span class="op">$</span><span class="va">w1</span>, z <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,
-               type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span>
+<span class="va">mz1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">mfit</span>,
+  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>w1 <span class="op">=</span> <span class="va">obsdat</span><span class="op">$</span><span class="va">w1</span>, z <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,
+  type <span class="op">=</span> <span class="st">"response"</span>
+<span class="op">)</span>
+<span class="va">mz0</span> <span class="op">&lt;</span> <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">mfit</span>,
+  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>w1 <span class="op">=</span> <span class="va">obsdat</span><span class="op">$</span><span class="va">w1</span>, z <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,
+  type <span class="op">=</span> <span class="st">"response"</span>
+<span class="op">)</span>
 
 <span class="va">gm0</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">mz1</span> <span class="op">*</span> <span class="va">za0</span><span class="op">)</span> <span class="op">+</span> <span class="op">(</span><span class="va">mz0</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">za0</span><span class="op">)</span><span class="op">)</span>
 <span class="va">gma1</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">mz1</span> <span class="op">*</span> <span class="va">za1</span><span class="op">)</span> <span class="op">+</span> <span class="op">(</span><span class="va">mz0</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">za1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
@@ -188,17 +348,26 @@ regression of <span class="math inline">\(M\)</span> on <span class="math inline
 regression of <span class="math inline">\(Y\)</span> on <span class="math inline">\(M,Z,W\)</span>, setting <span class="math inline">\(m=1\)</span> and <span class="math inline">\(m=0\)</span>, giving
 <span class="math inline">\(\hat{Y}(m=1, z, w)\)</span> and <span class="math inline">\(\hat{Y}(m=0, z, w)\)</span>.</li>
 </ol>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tmpdat</span><span class="op">$</span><span class="va">qyinit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span>
-  <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">ymodel</span>, family <span class="op">=</span> <span class="st">"binomial"</span>,
-              data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">datw</span>, z <span class="op">=</span> <span class="va">z</span>, m <span class="op">=</span> <span class="va">m</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
-          newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">datw</span>, z <span class="op">=</span> <span class="va">z</span>, m <span class="op">=</span> <span class="va">m</span><span class="op">)</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span>,
-  <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">ymodel</span>, family <span class="op">=</span> <span class="st">"binomial"</span>,
-              data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">datw</span>, z <span class="op">=</span> <span class="va">z</span>, m <span class="op">=</span> <span class="va">m</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
-          newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">datw</span>, z <span class="op">=</span> <span class="va">z</span>, m <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span>,
-  <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">ymodel</span>, family <span class="op">=</span> <span class="st">"binomial"</span>,
-              data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">datw</span>, z <span class="op">=</span> <span class="va">z</span>, m <span class="op">=</span> <span class="va">m</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
-          newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">datw</span>, z <span class="op">=</span> <span class="va">z</span>, m <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span>
+    formula <span class="op">=</span> <span class="va">ymodel</span>, family <span class="op">=</span> <span class="st">"binomial"</span>,
+    data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">datw</span>, z <span class="op">=</span> <span class="va">z</span>, m <span class="op">=</span> <span class="va">m</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span>
+  <span class="op">)</span>,
+  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">datw</span>, z <span class="op">=</span> <span class="va">z</span>, m <span class="op">=</span> <span class="va">m</span><span class="op">)</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"response"</span>
+  <span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span>
+    formula <span class="op">=</span> <span class="va">ymodel</span>, family <span class="op">=</span> <span class="st">"binomial"</span>,
+    data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">datw</span>, z <span class="op">=</span> <span class="va">z</span>, m <span class="op">=</span> <span class="va">m</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span>
+  <span class="op">)</span>,
+  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">datw</span>, z <span class="op">=</span> <span class="va">z</span>, m <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"response"</span>
+  <span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span>
+    formula <span class="op">=</span> <span class="va">ymodel</span>, family <span class="op">=</span> <span class="st">"binomial"</span>,
+    data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">datw</span>, z <span class="op">=</span> <span class="va">z</span>, m <span class="op">=</span> <span class="va">m</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span>
+  <span class="op">)</span>,
+  newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">datw</span>, z <span class="op">=</span> <span class="va">z</span>, m <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"response"</span>
+  <span class="op">)</span>
 <span class="op">)</span></code></pre></div>
 <ol start="5" style="list-style-type: decimal">
 <li>Estimate the weights to be used for the initial targeting step:
@@ -209,12 +378,15 @@ regression of <span class="math inline">\(Y\)</span> on <span class="math inline
 \end{equation*}\]</span>
 </li>
 </ol>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">psa1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span><span class="op">(</span><span class="va">a</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">a</span><span class="op">)</span>
 <span class="va">psa0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/AsIs.html">I</a></span><span class="op">(</span><span class="va">a</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">a</span><span class="op">)</span>
-<span class="va">mz</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">mmodel</span>, family <span class="op">=</span> <span class="st">"binomial"</span>,
-                  data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">datw</span>, z <span class="op">=</span> <span class="va">z</span>, m <span class="op">=</span> <span class="va">m</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
-              newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">datw</span>, z <span class="op">=</span> <span class="va">z</span><span class="op">)</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span>
+<span class="va">mz</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span>
+  formula <span class="op">=</span> <span class="va">mmodel</span>, family <span class="op">=</span> <span class="st">"binomial"</span>,
+  data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">datw</span>, z <span class="op">=</span> <span class="va">z</span>, m <span class="op">=</span> <span class="va">m</span><span class="op">)</span><span class="op">)</span>
+<span class="op">)</span>,
+newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">datw</span>, z <span class="op">=</span> <span class="va">z</span><span class="op">)</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"response"</span>
+<span class="op">)</span>
 <span class="va">psm</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">mz</span> <span class="op">*</span> <span class="va">m</span><span class="op">)</span> <span class="op">+</span> <span class="op">(</span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">mz</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">m</span><span class="op">)</span><span class="op">)</span>
 
 <span class="va">tmpdat</span><span class="op">$</span><span class="va">ha1gma1</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="op">(</span><span class="va">m</span> <span class="op">*</span> <span class="va">gma1</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">m</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">gma1</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="va">psm</span><span class="op">)</span> <span class="op">*</span> <span class="va">psa1</span> <span class="op">*</span> <span class="va">svywt</span>
@@ -228,25 +400,31 @@ weighted logistic regression model of <span class="math inline">\(Y\)</span> wit
 <li><p>The estimate of <span class="math inline">\(\bar{Q}_{Y}(M,Z,W)\)</span> is updated by
 <span class="math inline">\(\hat{\bar{Q}}^{\star}_{Y}(M,Z,W) = \hat{\bar{Q}}_{Y}(\epsilon_n)(M,Z,W)\)</span>.</p></li>
 </ol>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># for E(Y_{1,gmastar})</span>
-<span class="va">epsilonma1g0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="fl">1</span>, weights <span class="op">=</span> <span class="va">tmpdat</span><span class="op">$</span><span class="va">ha1gma0</span>,
-                         offset <span class="op">=</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">qlogis</a></span><span class="op">(</span><span class="va">qyinit</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,
-                         family <span class="op">=</span> <span class="st">"quasibinomial"</span>, data <span class="op">=</span> <span class="va">tmpdat</span><span class="op">)</span><span class="op">)</span>
+<span class="va">epsilonma1g0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="fl">1</span>,
+  weights <span class="op">=</span> <span class="va">tmpdat</span><span class="op">$</span><span class="va">ha1gma0</span>,
+  offset <span class="op">=</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">qlogis</a></span><span class="op">(</span><span class="va">qyinit</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,
+  family <span class="op">=</span> <span class="st">"quasibinomial"</span>, data <span class="op">=</span> <span class="va">tmpdat</span>
+<span class="op">)</span><span class="op">)</span>
 <span class="va">tmpdat</span><span class="op">$</span><span class="va">qyupm0a1g0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">plogis</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">qlogis</a></span><span class="op">(</span><span class="va">tmpdat</span><span class="op">$</span><span class="va">qyinit</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span> <span class="va">epsilonma1g0</span><span class="op">)</span>
 <span class="va">tmpdat</span><span class="op">$</span><span class="va">qyupm1a1g0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">plogis</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">qlogis</a></span><span class="op">(</span><span class="va">tmpdat</span><span class="op">$</span><span class="va">qyinit</span><span class="op">[</span>, <span class="fl">3</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span> <span class="va">epsilonma1g0</span><span class="op">)</span>
 
 <span class="co"># for E(Y_{1,gma})</span>
-<span class="va">epsilonma1g1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="fl">1</span>, weights <span class="op">=</span> <span class="va">tmpdat</span><span class="op">$</span><span class="va">ha1gma1</span>,
-                         offset <span class="op">=</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">qlogis</a></span><span class="op">(</span><span class="va">qyinit</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,
-                         family <span class="op">=</span> <span class="st">"quasibinomial"</span>, data <span class="op">=</span> <span class="va">tmpdat</span><span class="op">)</span><span class="op">)</span>
+<span class="va">epsilonma1g1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="fl">1</span>,
+  weights <span class="op">=</span> <span class="va">tmpdat</span><span class="op">$</span><span class="va">ha1gma1</span>,
+  offset <span class="op">=</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">qlogis</a></span><span class="op">(</span><span class="va">qyinit</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,
+  family <span class="op">=</span> <span class="st">"quasibinomial"</span>, data <span class="op">=</span> <span class="va">tmpdat</span>
+<span class="op">)</span><span class="op">)</span>
 <span class="va">tmpdat</span><span class="op">$</span><span class="va">qyupm0a1g1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">plogis</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">qlogis</a></span><span class="op">(</span><span class="va">tmpdat</span><span class="op">$</span><span class="va">qyinit</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span> <span class="va">epsilonma1g1</span><span class="op">)</span>
 <span class="va">tmpdat</span><span class="op">$</span><span class="va">qyupm1a1g1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">plogis</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">qlogis</a></span><span class="op">(</span><span class="va">tmpdat</span><span class="op">$</span><span class="va">qyinit</span><span class="op">[</span>, <span class="fl">3</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span> <span class="va">epsilonma1g1</span><span class="op">)</span>
 
 <span class="co"># for E(Y_{0,gmastar})</span>
-<span class="va">epsilonma0g0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="fl">1</span>, weights <span class="op">=</span> <span class="va">tmpdat</span><span class="op">$</span><span class="va">ha0gma0</span>,
-                         offset <span class="op">=</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">qlogis</a></span><span class="op">(</span><span class="va">qyinit</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,
-                         family <span class="op">=</span> <span class="st">"quasibinomial"</span>, data <span class="op">=</span> <span class="va">tmpdat</span><span class="op">)</span><span class="op">)</span>
+<span class="va">epsilonma0g0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="fl">1</span>,
+  weights <span class="op">=</span> <span class="va">tmpdat</span><span class="op">$</span><span class="va">ha0gma0</span>,
+  offset <span class="op">=</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">qlogis</a></span><span class="op">(</span><span class="va">qyinit</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>,
+  family <span class="op">=</span> <span class="st">"quasibinomial"</span>, data <span class="op">=</span> <span class="va">tmpdat</span>
+<span class="op">)</span><span class="op">)</span>
 <span class="va">tmpdat</span><span class="op">$</span><span class="va">qyupm0a0g0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">plogis</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">qlogis</a></span><span class="op">(</span><span class="va">tmpdat</span><span class="op">$</span><span class="va">qyinit</span><span class="op">[</span>, <span class="fl">2</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span> <span class="va">epsilonma0g0</span><span class="op">)</span>
 <span class="va">tmpdat</span><span class="op">$</span><span class="va">qyupm1a0g0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">plogis</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">qlogis</a></span><span class="op">(</span><span class="va">tmpdat</span><span class="op">$</span><span class="va">qyinit</span><span class="op">[</span>, <span class="fl">3</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span> <span class="va">epsilonma0g0</span><span class="op">)</span></code></pre></div>
 <ol start="8" style="list-style-type: decimal">
@@ -257,7 +435,7 @@ multiply these predicted values by their probabilities under
 <span class="math inline">\(\hat{g}_{M \mid a^{\star},W}(W)\)</span> (for <span class="math inline">\(a \in \{a, a^{\star}\}\)</span>), and add
 them together (i.e., <span class="math inline">\(\bar{Q}^{\hat{g}}_{M,n}(Z,W) = \hat{Q}^{\star}_Y(m=1, z, w) \hat{g}_{M|a^{\star},W} + \hat{Q}^{\star}_Y(m=0, z, w)(1-\hat{g}_{M|a^{\star},W})\)</span>).</li>
 </ol>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tmpdat</span><span class="op">$</span><span class="va">Qma1g0</span> <span class="op">&lt;-</span> <span class="va">tmpdat</span><span class="op">$</span><span class="va">qyupm0a1g0</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">gm</span><span class="op">)</span> <span class="op">+</span> <span class="va">tmpdat</span><span class="op">$</span><span class="va">qyupm1a1g0</span> <span class="op">*</span> <span class="va">gm</span>
 <span class="va">tmpdat</span><span class="op">$</span><span class="va">Qma1g1</span> <span class="op">&lt;-</span> <span class="va">tmpdat</span><span class="op">$</span><span class="va">qyupm0a1g1</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">gma1</span><span class="op">)</span> <span class="op">+</span> <span class="va">tmpdat</span><span class="op">$</span><span class="va">qyupm1a1g1</span> <span class="op">*</span> <span class="va">gma1</span>
 <span class="va">tmpdat</span><span class="op">$</span><span class="va">Qma0g0</span> <span class="op">&lt;-</span> <span class="va">tmpdat</span><span class="op">$</span><span class="va">qyupm0a0g0</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">gm</span><span class="op">)</span> <span class="op">+</span> <span class="va">tmpdat</span><span class="op">$</span><span class="va">qyupm1a0g0</span> <span class="op">*</span> <span class="va">gm</span></code></pre></div>
@@ -266,13 +444,19 @@ them together (i.e., <span class="math inline">\(\bar{Q}^{\hat{g}}_{M,n}(Z,W) = 
 among those with <span class="math inline">\(A=a^\prime\)</span>. We call the predicted values from this
 regression <span class="math inline">\(\hat{\bar{Q}}^{a^\prime}_{Z}(W)\)</span>.</li>
 </ol>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Qzfita1g0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Qma1g0"</span>, <span class="va">qmodel</span>, sep <span class="op">=</span> <span class="st">"~"</span><span class="op">)</span>,
-                 data <span class="op">=</span> <span class="va">tmpdat</span><span class="op">[</span><span class="va">tmpdat</span><span class="op">$</span><span class="va">a</span> <span class="op">==</span> <span class="fl">1</span>, <span class="op">]</span>, family <span class="op">=</span> <span class="st">"quasibinomial"</span><span class="op">)</span>
-<span class="va">Qzfita1g1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Qma1g1"</span>, <span class="va">qmodel</span>, sep <span class="op">=</span> <span class="st">"~"</span><span class="op">)</span>,
-                 data <span class="op">=</span> <span class="va">tmpdat</span><span class="op">[</span><span class="va">tmpdat</span><span class="op">$</span><span class="va">a</span> <span class="op">==</span> <span class="fl">1</span>, <span class="op">]</span>, family <span class="op">=</span> <span class="st">"quasibinomial"</span><span class="op">)</span>
-<span class="va">Qzfita0g0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Qma0g0"</span>, <span class="va">qmodel</span>, sep <span class="op">=</span> <span class="st">"~"</span><span class="op">)</span>,
-                 data <span class="op">=</span> <span class="va">tmpdat</span><span class="op">[</span><span class="va">tmpdat</span><span class="op">$</span><span class="va">a</span> <span class="op">==</span> <span class="fl">0</span>, <span class="op">]</span>, family <span class="op">=</span> <span class="st">"quasibinomial"</span><span class="op">)</span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">Qzfita1g0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span>
+  formula <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Qma1g0"</span>, <span class="va">qmodel</span>, sep <span class="op">=</span> <span class="st">"~"</span><span class="op">)</span>,
+  data <span class="op">=</span> <span class="va">tmpdat</span><span class="op">[</span><span class="va">tmpdat</span><span class="op">$</span><span class="va">a</span> <span class="op">==</span> <span class="fl">1</span>, <span class="op">]</span>, family <span class="op">=</span> <span class="st">"quasibinomial"</span>
+<span class="op">)</span>
+<span class="va">Qzfita1g1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span>
+  formula <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Qma1g1"</span>, <span class="va">qmodel</span>, sep <span class="op">=</span> <span class="st">"~"</span><span class="op">)</span>,
+  data <span class="op">=</span> <span class="va">tmpdat</span><span class="op">[</span><span class="va">tmpdat</span><span class="op">$</span><span class="va">a</span> <span class="op">==</span> <span class="fl">1</span>, <span class="op">]</span>, family <span class="op">=</span> <span class="st">"quasibinomial"</span>
+<span class="op">)</span>
+<span class="va">Qzfita0g0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span>
+  formula <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Qma0g0"</span>, <span class="va">qmodel</span>, sep <span class="op">=</span> <span class="st">"~"</span><span class="op">)</span>,
+  data <span class="op">=</span> <span class="va">tmpdat</span><span class="op">[</span><span class="va">tmpdat</span><span class="op">$</span><span class="va">a</span> <span class="op">==</span> <span class="fl">0</span>, <span class="op">]</span>, family <span class="op">=</span> <span class="st">"quasibinomial"</span>
+<span class="op">)</span>
 
 <span class="va">Qza1g0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">Qzfita1g0</span>, type <span class="op">=</span> <span class="st">"response"</span>, newdata <span class="op">=</span> <span class="va">tmpdat</span><span class="op">)</span>
 <span class="va">Qza1g1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">Qzfita1g1</span>, type <span class="op">=</span> <span class="st">"response"</span>, newdata <span class="op">=</span> <span class="va">tmpdat</span><span class="op">)</span>
@@ -283,7 +467,7 @@ second targeting step.)</p>
 <li>The empirical mean of these predicted values is the TML estimate of
 <span class="math inline">\(\Psi(P)(a^\prime, \hat{g}_{M \mid a^{\star}, W})\)</span>.</li>
 </ol>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tmlea1m0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">Qzupa1g0</span> <span class="op">*</span> <span class="va">svywt</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">svywt</span><span class="op">)</span>
 <span class="va">tmlea1m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">Qzupa1g1</span> <span class="op">*</span> <span class="va">svywt</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">svywt</span><span class="op">)</span>
 <span class="va">tmlea0m0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">Qzupa0g0</span> <span class="op">*</span> <span class="va">svywt</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">svywt</span><span class="op">)</span></code></pre></div>
@@ -305,14 +489,14 @@ estimate:
 can be obtained by substituting estimates of parameters
 <span class="math inline">\(\Psi(P)(a,\hat{g}_{M \mid a,W}) - \Psi(P)(a, \hat{g}_{M \mid a^{\star}, W})\)</span>.</li>
 </ol>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">nde</span> <span class="op">&lt;-</span> <span class="va">tmlea1m0</span> <span class="op">-</span> <span class="va">tmlea0m0</span>
 <span class="va">nie</span> <span class="op">&lt;-</span> <span class="va">tmlea1m1</span> <span class="op">-</span> <span class="va">tmlea1m0</span></code></pre></div>
 <ol start="13" style="list-style-type: decimal">
 <li>The variance can be estimated as the sample variance of the EIF (defined
 above, substituting in the targeted fits) divided by <span class="math inline">\(n\)</span>.</li>
 </ol>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># first get EIF</span>
 <span class="va">tmpdat</span><span class="op">$</span><span class="va">qyupa1g0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">plogis</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">qlogis</a></span><span class="op">(</span><span class="va">tmpdat</span><span class="op">$</span><span class="va">qyinit</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span> <span class="va">epsilonma1g0</span><span class="op">)</span>
 <span class="va">tmpdat</span><span class="op">$</span><span class="va">qyupa1g1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">plogis</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">qlogis</a></span><span class="op">(</span><span class="va">tmpdat</span><span class="op">$</span><span class="va">qyinit</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span> <span class="va">epsilonma1g1</span><span class="op">)</span>
@@ -343,7 +527,7 @@ above, substituting in the targeted fits) divided by <span class="math inline">\
 </div>
 <div id="the-general-case" class="section level2">
 <h2>
-<span class="header-section-number">5.3</span> The general case<a class="anchor" aria-label="anchor" href="#the-general-case"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.4</span> The general case<a class="anchor" aria-label="anchor" href="#the-general-case"><i class="fas fa-link"></i></a>
 </h2>
 <p>Actually, we would want to have the fixed parameter with the true, unknown
 <span class="math inline">\(g_{M \mid a, W}\)</span> and would like <span class="math inline">\(M\)</span> to be continuous/multi-dimensional.</p>
@@ -360,15 +544,23 @@ this next.</p>
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
 <li><a class="nav-link" href="#estimation-of-natural-indirect-effects-interventional-indirect-effects"><span class="header-section-number">5</span> Estimation of natural (in)direct effects, interventional (in)direct effects</a></li>
-<li><a class="nav-link" href="#interventional-direct-and-indirect-effects"><span class="header-section-number">5.1</span> Interventional direct and indirect effects</a></li>
 <li>
-<a class="nav-link" href="#simple-case-for-intuition"><span class="header-section-number">5.2</span> Simple case for intuition</a><ul class="nav navbar-nav">
-<li><a class="nav-link" href="#estimation-using-g-computation"><span class="header-section-number">5.2.1</span> Estimation using G-Computation</a></li>
-<li><a class="nav-link" href="#estimate-with-doubly-robust-methods-based-on-the-eif"><span class="header-section-number">5.2.2</span> Estimate with doubly robust methods based on the EIF</a></li>
-<li><a class="nav-link" href="#estimate-using-tmle"><span class="header-section-number">5.2.3</span> Estimate using TMLE</a></li>
+<a class="nav-link" href="#natural-direct-and-indirect-effects-1"><span class="header-section-number">5.1</span> Natural direct and indirect effects</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#simple-case-for-intuition"><span class="header-section-number">5.1.1</span> Simple case for intuition</a></li>
+<li><a class="nav-link" href="#how-to-estimate-using-g-computation"><span class="header-section-number">5.1.2</span> How to estimate using g-computation</a></li>
+<li><a class="nav-link" href="#how-to-estimate-using-the-doubly-robust-methods-that-rely-on-the-eif"><span class="header-section-number">5.1.3</span> How to estimate using the doubly robust methods that rely on the EIF</a></li>
+<li><a class="nav-link" href="#how-to-estimate-using-tmle"><span class="header-section-number">5.1.4</span> How to estimate using TMLE</a></li>
 </ul>
 </li>
-<li><a class="nav-link" href="#the-general-case"><span class="header-section-number">5.3</span> The general case</a></li>
+<li><a class="nav-link" href="#interventional-direct-and-indirect-effects"><span class="header-section-number">5.2</span> Interventional direct and indirect effects</a></li>
+<li>
+<a class="nav-link" href="#simple-case-for-intuition-1"><span class="header-section-number">5.3</span> Simple case for intuition</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#estimation-using-g-computation"><span class="header-section-number">5.3.1</span> Estimation using G-Computation</a></li>
+<li><a class="nav-link" href="#estimate-with-doubly-robust-methods-based-on-the-eif"><span class="header-section-number">5.3.2</span> Estimate with doubly robust methods based on the EIF</a></li>
+<li><a class="nav-link" href="#estimate-using-tmle"><span class="header-section-number">5.3.3</span> Estimate using TMLE</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#the-general-case"><span class="header-section-number">5.4</span> The general case</a></li>
 </ul>
 
       <div class="book-extra">
@@ -386,7 +578,7 @@ this next.</p>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: April 20, 2021.</p>
+    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: April 23, 2021.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

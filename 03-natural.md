@@ -46,4 +46,3 @@ $\rightarrow$ So, _not_ natural (in)direct effects.
    - Direct effect: $\E(Y_{1,g_0} - Y_{0,g_0})$
    - Indirect effect: $\E(Y_{1,g_1} - Y_{1,g_0})$
 - Need to incorporate multiple and continuous mediators
-
