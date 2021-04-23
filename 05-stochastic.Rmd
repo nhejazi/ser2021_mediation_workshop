@@ -5,7 +5,7 @@
 Recall:
 
 ```{r dag1, echo=FALSE, fig.cap="", out.width = '50%'}
-knitr::include_graphics("meddagnoz.pdf")
+knitr::include_graphics(here::here("img", "meddagnoz.pdf"))
 ```
 
 Assuming a binary $A$, we define the natural direct effect as:
@@ -164,7 +164,7 @@ tmlende <- mean(margqdiff)
 Recall:
 
 ```{r dag2, echo=FALSE, fig.cap="", out.width = '50%'}
-knitr::include_graphics(here::here("img/medDAG2.pdf"))
+knitr::include_graphics(here::here("img", "medDAG2.pdf"))
 ```
 
 We define the interventional direct effect as:

@@ -19,7 +19,7 @@
   + $\P(A=a \mid W) > 0 \text{  } a.e.$
 
 ```{r pressure, echo=FALSE, fig.cap="", out.width = '50%'}
-knitr::include_graphics(here::here("img/graphic4a3.pdf"))
+knitr::include_graphics(here::here("img", "graphic4a3.pdf"))
 ```
 
 ### Is this the estimand I want?
@@ -53,7 +53,7 @@ The NDE can also be written as: $\E_W \sum_m \{\E(Y_{1,m} \mid W) -
 - If no interaction between $A$ and $M$ on $Y$, then CDE = NDE.
 
 ```{r , echo=FALSE, fig.cap="", out.width = '50%'}
-knitr::include_graphics(here::here("img/graphic4a.pdf"))
+knitr::include_graphics(here::here("img", "graphic4a.pdf"))
 ```
 
 ### Identification assumptions:
@@ -88,11 +88,11 @@ _What if our data structure involves a post-treatment confounder of the
 mediator-outcome relationship (e.g., adherence)?_
 
 ```{r , echo=FALSE, fig.cap="", out.width = '20%'}
-knitr::include_graphics(here::here("img/medDAG2.pdf"))
+knitr::include_graphics(here::here("img", "medDAG2.pdf"))
 ```
 
 ```{r , echo=FALSE, fig.cap="", out.width = '50%'}
-knitr::include_graphics(here::here("img/ctndag.pdf"))
+knitr::include_graphics(here::here("img", "ctndag.pdf"))
 ```
 
 ## Interventional direct/ indirect effects {-}
@@ -114,7 +114,7 @@ knitr::include_graphics(here::here("img/ctndag.pdf"))
    Marginal versions?
 
 ```{r , echo=FALSE, fig.cap="", out.width = '50%'}
-knitr::include_graphics(here::here("img/graphic4b.pdf"))
+knitr::include_graphics(here::here("img", "graphic4b.pdf"))
 ```
 
 ### Identification assumptions:
@@ -134,5 +134,5 @@ Is this the estimand I want?
 ## Estimand Summary {-}
 
 ```{r , echo=FALSE, fig.cap="", out.width = '100%'}
-knitr::include_graphics(here::here("img/table1.pdf"))
+knitr::include_graphics(here::here("img", "table1.pdf"))
 ```
