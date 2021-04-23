@@ -4,7 +4,7 @@
 
 Recall:
 
-```{r pressure, echo=FALSE, fig.cap="", out.width = '50%'}
+```{r dag1, echo=FALSE, fig.cap="", out.width = '50%'}
 knitr::include_graphics("meddagnoz.pdf")
 ```
 
@@ -163,7 +163,7 @@ tmlende <- mean(margqdiff)
 
 Recall:
 
-```{r pressure, echo=FALSE, fig.cap="", out.width = '50%'}
+```{r dag2, echo=FALSE, fig.cap="", out.width = '50%'}
 knitr::include_graphics(here::here("img/medDAG2.pdf"))
 ```
 
