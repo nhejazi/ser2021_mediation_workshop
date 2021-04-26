@@ -22,6 +22,10 @@ description: "Open source, reproducible teaching materials accompanying a
   2021 Meeting]() on Monday, 24 May 2021."
 ---
 
+```{r magick, echo=FALSE}
+library(magick)
+```
+
 # Welcome to SER! {-}
 
 This open source, reproducible vignette accompanies a half-day workshop on

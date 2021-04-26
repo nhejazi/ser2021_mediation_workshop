@@ -5,3 +5,4 @@ handbook_files/*
 .Rhistory
 *.rds
 *.RData
+.DS_Store
