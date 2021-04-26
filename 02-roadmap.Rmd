@@ -1,51 +1,206 @@
 # Path-specific casual mediation effect types {#estimands}
 
+- Two mediation models
 - Controlled direct effects
 - Natural direct and indirect effects
 - Interventional direct and indirect effects
 
-## Controlled direct effects {-}
+## Mediation models
 
-\begin{equation*}
-  \psi_{\text{CDE}} = \E(Y_{1,m}) - \E(Y_{0,m})
-\end{equation*}
+In this workshopp we will use directed acyclic graphs to conceptualize
+the effects of interest. We will focus on the two types of graph:
 
-- Set $M=m$ uniformly for everyone in sample
-- Independence assumptions:
+### No intermediate confounders
+
+```{tikz, fig.cap = "Directed acylcic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment", fig.ext = 'png', cache = TRUE, echo = FALSE}
+\dimendef\prevdepth=0
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
+\usetikzlibrary{arrows,positioning}
+\tikzset{
+>=stealth',
+punkt/.style={
+rectangle,
+rounded corners,
+draw=black, very thick,
+text width=6.5em,
+minimum height=2em,
+text centered},
+pil/.style={
+->,
+thick,
+shorten <=2pt,
+shorten >=2pt,}
+}
+\newcommand{\Vertex}[2]
+{\node[minimum width=0.6cm,inner sep=0.05cm] (#2) at (#1) {$#2$};
+}
+\newcommand{\VertexR}[2]
+{\node[rectangle, draw, minimum width=0.6cm,inner sep=0.05cm] (#2) at (#1) {$#2$};
+}
+\newcommand{\ArrowR}[3]
+{ \begin{pgfonlayer}{background}
+\draw[->,#3] (#1) to[bend right=30] (#2);
+\end{pgfonlayer}
+}
+\newcommand{\ArrowL}[3]
+{ \begin{pgfonlayer}{background}
+\draw[->,#3] (#1) to[bend left=45] (#2);
+\end{pgfonlayer}
+}
+\newcommand{\EdgeL}[3]
+{ \begin{pgfonlayer}{background}
+\draw[dashed,#3] (#1) to[bend right=-45] (#2);
+\end{pgfonlayer}
+}
+\newcommand{\Arrow}[3]
+{ \begin{pgfonlayer}{background}
+\draw[->,#3] (#1) -- +(#2);
+\end{pgfonlayer}
+}
+\begin{tikzpicture}
+  \Vertex{-4, 0}{W}
+  \Vertex{0, 0}{M}
+  \Vertex{-2, 0}{A}
+  \Vertex{2, 0}{Y}
+  \Arrow{W}{A}{black}
+  \Arrow{A}{M}{black}
+  \Arrow{M}{Y}{black}
+  \ArrowL{W}{Y}{black}
+  \ArrowL{A}{Y}{black}
+  \ArrowL{W}{M}{black}
+\end{tikzpicture}
+```
+### Intermediate confounders
+
+```{tikz, fig.cap = "Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment", fig.ext = 'png', cache = TRUE, echo = FALSE}
+\dimendef\prevdepth=0
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
+\usetikzlibrary{arrows,positioning}
+\tikzset{
+>=stealth',
+punkt/.style={
+rectangle,
+rounded corners,
+draw=black, very thick,
+text width=6.5em,
+minimum height=2em,
+text centered},
+pil/.style={
+->,
+thick,
+shorten <=2pt,
+shorten >=2pt,}
+}
+\newcommand{\Vertex}[2]
+{\node[minimum width=0.6cm,inner sep=0.05cm] (#2) at (#1) {$#2$};
+}
+\newcommand{\VertexR}[2]
+{\node[rectangle, draw, minimum width=0.6cm,inner sep=0.05cm] (#2) at (#1) {$#2$};
+}
+\newcommand{\ArrowR}[3]
+{ \begin{pgfonlayer}{background}
+\draw[->,#3] (#1) to[bend right=30] (#2);
+\end{pgfonlayer}
+}
+\newcommand{\ArrowL}[3]
+{ \begin{pgfonlayer}{background}
+\draw[->,#3] (#1) to[bend left=45] (#2);
+\end{pgfonlayer}
+}
+\newcommand{\EdgeL}[3]
+{ \begin{pgfonlayer}{background}
+\draw[dashed,#3] (#1) to[bend right=-45] (#2);
+\end{pgfonlayer}
+}
+\newcommand{\Arrow}[3]
+{ \begin{pgfonlayer}{background}
+\draw[->,#3] (#1) -- +(#2);
+\end{pgfonlayer}
+}
+\begin{tikzpicture}
+  \Vertex{0, -1}{Z}
+  \Vertex{-4, 0}{W}
+  \Vertex{0, 0}{M}
+  \Vertex{-2, 0}{A}
+  \Vertex{2, 0}{Y}
+  \ArrowR{W}{Z}{black}
+  \Arrow{Z}{M}{black}
+  \Arrow{W}{A}{black}
+  \Arrow{A}{M}{black}
+  \Arrow{M}{Y}{black}
+  \Arrow{A}{Z}{black}
+  \Arrow{Z}{Y}{black}
+  \ArrowL{W}{Y}{black}
+  \ArrowL{A}{Y}{black}
+  \ArrowL{W}{M}{black}
+\end{tikzpicture}
+```
+
+## Counterfactuals
+
+In what follows, we will define all the effects of interest using
+_counterfactuals_. Counterfactuals are hypothetical random variables
+that would have been observed in a world where we would be able to
+perform interventions on the random variables of interest. For
+example, $Y_a$ is a counterfactual variable in a hypothetical world
+where $\P(A=a)=1$ with probability one. $Y_{a,m}$ is the
+counterfactual outcome in a world where $\P(A=a,M=m)=1$, and $M_a$ is
+the counterfactual variable representing the mediator in a world where
+$\P(A=a)=1$.
+
+In this workshop we use counterfactual variables as _primitives_, but
+we note that in other causal inference frameworks, such as structural
+equation models, counterfactuals are quantities _derived_ from the
+model.
+
+
+## Controlled direct effects
+
+$$  \psi_{\text{CDE}} = \E(Y_{1,m}) - \E(Y_{0,m}) $$
+
+- Set $M=m$ uniformly for everyone in the population
+- Compare $A=1$ vs $A=0$ with $M=m$ fixed
+- Confounder assumptions:
   + $A \indep Y_{a,m} \mid W$
-  + $M \indep Y_{a,m} \mid W, A$
+  + $M \indep Y_{a,m} \mid W, A, Z$
 - Positivity assumptions:
-  + $\P(M = m \mid A=a, W) > 0 \text{  } a.e.$
+  + $\P(M = m \mid Z, A=a, W) > 0 \text{  } a.e.$
   + $\P(A=a \mid W) > 0 \text{  } a.e.$
 
 ```{r pressure, echo=FALSE, fig.cap="", out.width = '50%'}
 knitr::include_graphics(here::here("img", "graphic4a3.pdf"))
 ```
 
-### Is this the estimand I want?
+### Is this the estimand I want? {-}
 
 + Makes the most sense if can intervene directly on $M$
-  + and can think of a policy that would set everyone to a single constant
+  + And can think of a policy that would set everyone to a single constant
     level $m \in \mathcal{M}$.
   + J. Pearl calls this _prescriptive_.
   + Can you think of an example?
   + Air pollution, rescue inhaler dosage, hospital visits
+  + Does not provide a decomposition of the average treatment effect into direct and indirect effects
 
 _What if our research question doesn't involve intervening directly on the
 mediator?_
 
+_What if we want to decompose the average treatment effect into its direct and indirect counterparts?_
+
 ## Natural direct and indirect effects {-}
 
 Natural direct effect (NDE):
-\begin{equation*}
-  \psi_{\text{NDE}} = \E(Y_{1,M_0}) - \E(Y_{0,M_0})
-\end{equation*}
+$$  \psi_{\text{NDE}} = \E(Y_{1,M_0}) - \E(Y_{0,M_0}) $$
 
 Natural indirect effect (NIE):
-\begin{equation*}
+$$
   \psi_{\text{NIE}} = \E(Y_{1,M_1}) - \E(Y_{1,M_0})
-\end{equation*}
+$$
 
+<!--
+ID: The below is only true if the cross-world assumption holds
+-->
 The NDE can also be written as: $\E_W \sum_m \{\E(Y_{1,m} \mid W) -
 \E(Y_{0,m} \mid W)\} \P(M_{0}=m \mid W)$
 

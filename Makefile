@@ -3,6 +3,7 @@ all: style site
 site:
 	Rscript -e "bookdown::clean_book(TRUE)"
 	Rscript -e "bookdown::render_book('index.Rmd', quiet=TRUE)"
+	rm -f *# *.log
 
 pdf:
 	Rscript -e "bookdown::clean_book(TRUE)"

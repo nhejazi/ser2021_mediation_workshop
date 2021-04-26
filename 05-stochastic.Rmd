@@ -101,8 +101,10 @@ mfit <- glm(formula = mmodel, family = "binomial", data = obsdat)
 a1 <- predict(afit, newdata = data.frame(w = obsdat$w), type = "response")
 a0 <- 1 - a1
 
-am1 <- predict(amfit, newdata = data.frame(w = obsdat$w, m = obsdat$m),
-               type = "response")
+am1 <- predict(amfit,
+  newdata = data.frame(w = obsdat$w, m = obsdat$m),
+  type = "response"
+)
 am0 <- 1 - am1
 cy <- (am0 * a0) / (am1 * a1)
 ```
@@ -115,15 +117,24 @@ $\bar{Q}_Y(M,a^\prime,W) - \bar{Q}_Y(M,a^\star,W)$
 
 ```{r, echo=TRUE,eval=FALSE}
 qyinit <- cbind(
-  predict(glm(formula = ymodel, family = "binomial",
-              data = data.frame(cbind(datw, a = a, m = m, y = y))),
-          newdata = data.frame(cbind(datw, a, m)), type = "response"),
-  predict(glm(formula = ymodel, family = "binomial",
-              data = data.frame(cbind(datw, a = a, m = m, y = y))),
-          newdata = data.frame(cbind(datw, a = 0, m)), type = "response"),
-  predict(glm(formula = ymodel, family = "binomial",
-              data = data.frame(cbind(datw, z = z, m = m, y = y))),
-          newdata = data.frame(cbind(datw, a = 1, m)), type = "response")
+  predict(glm(
+    formula = ymodel, family = "binomial",
+    data = data.frame(cbind(datw, a = a, m = m, y = y))
+  ),
+  newdata = data.frame(cbind(datw, a, m)), type = "response"
+  ),
+  predict(glm(
+    formula = ymodel, family = "binomial",
+    data = data.frame(cbind(datw, a = a, m = m, y = y))
+  ),
+  newdata = data.frame(cbind(datw, a = 0, m)), type = "response"
+  ),
+  predict(glm(
+    formula = ymodel, family = "binomial",
+    data = data.frame(cbind(datw, z = z, m = m, y = y))
+  ),
+  newdata = data.frame(cbind(datw, a = 1, m)), type = "response"
+  )
 )
 
 qbardiff <- qyinit[, 3] - qyinit[, 2]
@@ -139,8 +150,10 @@ qbardiff <- qyinit[, 3] - qyinit[, 2]
    $\hat{\bar{Q}}^{\star}_{diff}(M,A,W)$.
 
 ```{r, echo=TRUE,eval=FALSE}
-epsilon <- coef(glm(y ~ 1, weights = cy, offset = (qlogis(qyinit[, 1])),
-                    family = "quasibinomial"))
+epsilon <- coef(glm(y ~ 1,
+  weights = cy, offset = (qlogis(qyinit[, 1])),
+  family = "quasibinomial"
+))
 qyupa0 <- plogis(qlogis(qyinit[, 2]) + epsilon)
 qyupa1 <- plogis(qlogis(qyinit[, 3]) + epsilon)
 qdiffup <- qyupa1 - qyupa0
@@ -152,10 +165,14 @@ qdiffup <- qyupa1 - qyupa0
 
 ```{r, echo=TRUE,eval=FALSE}
 margqdiff_fit <- glm(qdiffup ~ w,
-                     data = data.frame(qdiffup = qdiffup[a == 0],
-                                       w = w[a == 0]))
+  data = data.frame(
+    qdiffup = qdiffup[a == 0],
+    w = w[a == 0]
+  )
+)
 margqdiff <- predict(margqdiff_fit,
-                     newdata = data.frame(qdiffup = qdiffup, w = w))
+  newdata = data.frame(qdiffup = qdiffup, w = w)
+)
 tmlende <- mean(margqdiff)
 ```
 
