@@ -1,3 +1,3 @@
-# Estimation of stochastic (in)direct effects
+# Estimating stochastic effects
 
 [TO FILL IN]
