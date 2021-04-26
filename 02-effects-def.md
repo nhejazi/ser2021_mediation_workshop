@@ -4,18 +4,17 @@
 - Natural direct and indirect effects
 - Interventional direct and indirect effects
 
-## Controlled direct effects {-}
+## Controlled direct effects
 
-\begin{equation*}
-  \psi_{\text{CDE}} = \E(Y_{1,m}) - \E(Y_{0,m})
-\end{equation*}
+$$  \psi_{\text{CDE}} = \E(Y_{1,m}) - \E(Y_{0,m}) $$
 
-- Set $M=m$ uniformly for everyone in sample
-- Independence assumptions:
+- Set $M=m$ uniformly for everyone in the population
+- Compare $A=1$ vs $A=0$ with $M=m$ fixed
+- Confounder assumptions:
   + $A \indep Y_{a,m} \mid W$
-  + $M \indep Y_{a,m} \mid W, A$
+  + $M \indep Y_{a,m} \mid W, A, Z$
 - Positivity assumptions:
-  + $\P(M = m \mid A=a, W) > 0 \text{  } a.e.$
+  + $\P(M = m \mid Z, A=a, W) > 0 \text{  } a.e.$
   + $\P(A=a \mid W) > 0 \text{  } a.e.$
 
 \begin{figure}
@@ -26,30 +25,34 @@
 
 \end{figure}
 
-### Is this the estimand I want?
+### Is this the estimand I want? {-}
 
 + Makes the most sense if can intervene directly on $M$
-  + and can think of a policy that would set everyone to a single constant
+  + And can think of a policy that would set everyone to a single constant
     level $m \in \mathcal{M}$.
   + J. Pearl calls this _prescriptive_.
   + Can you think of an example?
   + Air pollution, rescue inhaler dosage, hospital visits
+  + Does not provide a decomposition of the average treatment effect into direct and indirect effects
 
 _What if our research question doesn't involve intervening directly on the
 mediator?_
 
+_What if we want to decompose the average treatment effect into its direct and indirect counterparts?_
+
 ## Natural direct and indirect effects {-}
 
 Natural direct effect (NDE):
-\begin{equation*}
-  \psi_{\text{NDE}} = \E(Y_{1,M_0}) - \E(Y_{0,M_0})
-\end{equation*}
+$$  \psi_{\text{NDE}} = \E(Y_{1,M_0}) - \E(Y_{0,M_0}) $$
 
 Natural indirect effect (NIE):
-\begin{equation*}
+$$
   \psi_{\text{NIE}} = \E(Y_{1,M_1}) - \E(Y_{1,M_0})
-\end{equation*}
+$$
 
+<!--
+ID: The below is only true if the cross-world assumption holds
+-->
 The NDE can also be written as: $\E_W \sum_m \{\E(Y_{1,m} \mid W) -
 \E(Y_{0,m} \mid W)\} \P(M_{0}=m \mid W)$
 
@@ -160,3 +163,74 @@ Is this the estimand I want?
 }
 
 \end{figure}
+
+
+
+
+
+<!--
+ID: Kara, I copied what I had written below, feel free to reuse
+-->
+
+
+# The Interventional Direct and Indirect Effects {#interventional}
+
+## Definition of the effects
+
+Consider the following directed acyclic graph.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{02-effects-def_files/figure-latex/unnamed-chunk-6-1} 
+
+}
+
+\caption{Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-6)
+\end{figure}
+
+Here, $A$ is the treatment of interest, $M$ is the mediator of
+interest, $W$ is a pre-treatment variable containing confounders of
+$A$ on $M$ and $Y$,and $Z$ is a post-treatment variable contaning
+confounders of the mediator and the exposure which are affected by
+treatment.
+
+### Example
+[TO FILL IN]
+
+
+
+### Unidentifiability of the NDE and NIE in this setting
+
+In this example, natural direct and indirect effects are
+unidentifiable from observed data on $(W,A,Z,M,Y)$. The technical
+reason for this is that the cross-world counterfactual assumption
+
+\[Y(1,m)\indep M(0)\mid W\]
+
+does not hold in the aboce directed acyiclic graph. Intuitively, the
+reason for this is that an intervention setting $A=1$ (necessary for
+the definition of $Y(1,m)$) induces a counterfactual variable
+$Z(1)$. Likewise, an intervention setting $A=0$ (necessary for the
+definition of $M(0)$) induces a counterfactual $Z(0)$. The variables
+$Z(1)$ and $Z(0)$ are correlated because they share unmeasured common
+causes. The variable $Z(1)$ is correlated with $Y(1,m)$, and the
+variable $Z(0)$ is correlated with $M(0)$, because they are
+counterfactual outcomes in the same hypothetical worlds. Thus, to
+achieve $Y(1,m)$ independent of $M(0)$, it would be necessary to
+adjust for either $Z(1)$ or $Z(0)$. This is impossible to do since
+these variables are unmeasured.
+
+### Recovering direct and indirect effects
+
+Even though estimation of the NDE and NIE is not possible in the
+presence of confounders of the mediation-outcome relation affected by
+treatment, it is possible to redefine the effects in a way such that
+they are identifiable. Specifically:
+
+- Let $G(a)$ denote a random draw from the distribution of $M(a) \mid W$
+- Define the counterfactual $Y(1,G(0))$ as the counterfactual
+  variable in a hypothetical world where $A$ is set $A=1$ and $M$ is
+  set to $M=G(0)$ with porbability one.
+- Define $Y(0,G(0))$ and $Y(1,G(1))$ similarly
+- Then we can define:
+\[\E[Y(1,G(1)) - Y(0,G(0))]=\underbrace{\E[Y(1,G(1))-Y(1,G(0))]}_{\text{interventional indirect effect}}+\underbrace{\E[Y(1,G(0))-Y(0,G(0))]}_{\text{interventional direct effect}}\]

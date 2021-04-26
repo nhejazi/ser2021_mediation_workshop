@@ -2,7 +2,7 @@
 knit: "bookdown::render_book"
 title: "[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis"
 author: "Iván Díaz, Nima Hejazi, Kara Rudolph"
-date: "updated: April 23, 2021"
+date: "updated: April 26, 2021"
 documentclass: book
 site: bookdown::bookdown_site
 bibliography: [book.bib, packages.bib]
@@ -77,13 +77,15 @@ __NOTE: All times listed in Pacific Time.__
 
 ### Iván Díaz {-}
 
-My research focuses on the development of non-parametric statistical methods for
-causal inference from observational and randomized studies with complex
-datasets, using machine learning. This includes but is not limited to mediation
-analysis, methods for continuous exposures, longitudinal data including survival
-analysis, and efficiency guarantees with covariate adjustment in randomized
-trials. I am also interested in general semi-parametric theory, machine
-learning, and high-dimensional data.
+I am an Assistant Professor at Weill Cornel Medicine. My research
+focuses on the development of non-parametric statistical methods for
+causal inference from observational and randomized studies with
+complex datasets, using machine learning. This includes but is not
+limited to mediation analysis, methods for continuous exposures,
+longitudinal data including survival analysis, and efficiency
+guarantees with covariate adjustment in randomized trials. I am also
+interested in general semi-parametric theory, machine learning, and
+high-dimensional data.
 
 ### Nima Hejazi {-}
 
@@ -134,10 +136,12 @@ rmarkdown::pandoc_version()`, and the following packages:
 |ggplot2    |3.3.3      |CRAN (R 4.0.5)                      |
 |kableExtra |1.3.4      |CRAN (R 4.0.5)                      |
 |knitr      |1.32       |CRAN (R 4.0.5)                      |
+|magick     |2.7.1      |CRAN (R 4.0.5)                      |
 |medoutcon  |0.1.0      |Github (nhejazi/medoutcon\@f8f14c4) |
 |medshift   |0.1.4      |Github (nhejazi/medshift\@f9e11a9)  |
 |mvtnorm    |1.1-1      |CRAN (R 4.0.5)                      |
 |origami    |1.0.3      |CRAN (R 4.0.5)                      |
+|pdftools   |2.3.1      |CRAN (R 4.0.5)                      |
 |readr      |1.4.0      |CRAN (R 4.0.5)                      |
 |rmarkdown  |2.7.11     |Github (rstudio/rmarkdown\@e340d75) |
 |skimr      |2.1.3      |CRAN (R 4.0.5)                      |

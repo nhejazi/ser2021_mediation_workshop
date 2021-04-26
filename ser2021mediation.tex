@@ -243,7 +243,7 @@
 
 \title{{[}SER 2021 Workshop{]} Causal Mediation: Modern Methods for Path Analysis}
 \author{Iván Díaz, Nima Hejazi, Kara Rudolph}
-\date{updated: April 23, 2021}
+\date{updated: April 26, 2021}
 
 \begin{document}
 \maketitle
@@ -345,13 +345,15 @@ parameter estimable from the observed data distribution). Familiarity with the
 \subsection*{Iván Díaz}\label{ivuxe1n-duxedaz}}
 
 
-My research focuses on the development of non-parametric statistical methods for
-causal inference from observational and randomized studies with complex
-datasets, using machine learning. This includes but is not limited to mediation
-analysis, methods for continuous exposures, longitudinal data including survival
-analysis, and efficiency guarantees with covariate adjustment in randomized
-trials. I am also interested in general semi-parametric theory, machine
-learning, and high-dimensional data.
+I am an Assistant Professor at Weill Cornel Medicine. My research
+focuses on the development of non-parametric statistical methods for
+causal inference from observational and randomized studies with
+complex datasets, using machine learning. This includes but is not
+limited to mediation analysis, methods for continuous exposures,
+longitudinal data including survival analysis, and efficiency
+guarantees with covariate adjustment in randomized trials. I am also
+interested in general semi-parametric theory, machine learning, and
+high-dimensional data.
 
 \hypertarget{nima-hejazi}{%
 \subsection*{Nima Hejazi}\label{nima-hejazi}}
@@ -408,10 +410,12 @@ ggfortify & 0.4.11 & CRAN (R 4.0.5)\tabularnewline
 ggplot2 & 3.3.3 & CRAN (R 4.0.5)\tabularnewline
 kableExtra & 1.3.4 & CRAN (R 4.0.5)\tabularnewline
 knitr & 1.32 & CRAN (R 4.0.5)\tabularnewline
+magick & 2.7.1 & CRAN (R 4.0.5)\tabularnewline
 medoutcon & 0.1.0 & Github (nhejazi/medoutcon@f8f14c4)\tabularnewline
 medshift & 0.1.4 & Github (nhejazi/medshift@f9e11a9)\tabularnewline
 mvtnorm & 1.1-1 & CRAN (R 4.0.5)\tabularnewline
 origami & 1.0.3 & CRAN (R 4.0.5)\tabularnewline
+pdftools & 2.3.1 & CRAN (R 4.0.5)\tabularnewline
 readr & 1.4.0 & CRAN (R 4.0.5)\tabularnewline
 rmarkdown & 2.7.11 & Github (rstudio/rmarkdown@e340d75)\tabularnewline
 skimr & 2.1.3 & CRAN (R 4.0.5)\tabularnewline
@@ -558,7 +562,53 @@ Data}.
 \hypertarget{mediation}{%
 \chapter{Causal Mediation Analysis}\label{mediation}}
 
-{[}TO FILL IN{]}
+\hypertarget{mediation-models}{%
+\section{Mediation models}\label{mediation-models}}
+
+In this workshopp we will use directed acyclic graphs to conceptualize
+the effects of interest. We will focus on the two types of graph:
+
+\hypertarget{no-intermediate-confounders}{%
+\subsection{No intermediate confounders}\label{no-intermediate-confounders}}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{01-preface_files/figure-latex/unnamed-chunk-1-1} 
+
+}
+
+\caption{Directed acylcic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-1}
+\end{figure}
+
+\hypertarget{intermediate-confounders}{%
+\subsection{Intermediate confounders}\label{intermediate-confounders}}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{01-preface_files/figure-latex/unnamed-chunk-2-1} 
+
+}
+
+\caption{Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-2}
+\end{figure}
+
+\hypertarget{counterfactuals}{%
+\section{Counterfactuals}\label{counterfactuals}}
+
+In what follows, we will define all the effects of interest using
+\emph{counterfactuals}. Counterfactuals are hypothetical random variables
+that would have been observed in a world where we would be able to
+perform interventions on the random variables of interest. For
+example, \(Y_a\) is a counterfactual variable in a hypothetical world
+where \(\P(A=a)=1\) with probability one. \(Y_{a,m}\) is the
+counterfactual outcome in a world where \(\P(A=a,M=m)=1\), and \(M_a\) is
+the counterfactual variable representing the mediator in a world where
+\(\P(A=a)=1\).
+
+In this workshop we use counterfactual variables as \emph{primitives}, but
+we note that in other causal inference frameworks, such as structural
+equation models, counterfactuals are quantities \emph{derived} from the
+model.
 
 \hypertarget{estimands}{%
 \chapter{Path-specific casual mediation effect types}\label{estimands}}
@@ -574,26 +624,25 @@ Data}.
 \end{itemize}
 
 \hypertarget{controlled-direct-effects}{%
-\section*{Controlled direct effects}\label{controlled-direct-effects}}
+\section{Controlled direct effects}\label{controlled-direct-effects}}
 
-
-\begin{equation*}
-  \psi_{\text{CDE}} = \E(Y_{1,m}) - \E(Y_{0,m})
-\end{equation*}
+\[  \psi_{\text{CDE}} = \E(Y_{1,m}) - \E(Y_{0,m}) \]
 
 \begin{itemize}
 \tightlist
 \item
-  Set \(M=m\) uniformly for everyone in sample
+  Set \(M=m\) uniformly for everyone in the population
 \item
-  Independence assumptions:
+  Compare \(A=1\) vs \(A=0\) with \(M=m\) fixed
+\item
+  Confounder assumptions:
 
   \begin{itemize}
   \tightlist
   \item
     \(A \indep Y_{a,m} \mid W\)
   \item
-    \(M \indep Y_{a,m} \mid W, A\)
+    \(M \indep Y_{a,m} \mid W, A, Z\)
   \end{itemize}
 \item
   Positivity assumptions:
@@ -601,7 +650,7 @@ Data}.
   \begin{itemize}
   \tightlist
   \item
-    \(\P(M = m \mid A=a, W) > 0 \text{  } a.e.\)
+    \(\P(M = m \mid Z, A=a, W) > 0 \text{  } a.e.\)
   \item
     \(\P(A=a \mid W) > 0 \text{  } a.e.\)
   \end{itemize}
@@ -616,7 +665,8 @@ Data}.
 \end{figure}
 
 \hypertarget{is-this-the-estimand-i-want}{%
-\subsection{Is this the estimand I want?}\label{is-this-the-estimand-i-want}}
+\subsection*{Is this the estimand I want?}\label{is-this-the-estimand-i-want}}
+
 
 \begin{itemize}
 \tightlist
@@ -626,7 +676,7 @@ Data}.
   \begin{itemize}
   \tightlist
   \item
-    and can think of a policy that would set everyone to a single constant
+    And can think of a policy that would set everyone to a single constant
     level \(m \in \mathcal{M}\).
   \item
     J. Pearl calls this \emph{prescriptive}.
@@ -634,25 +684,27 @@ Data}.
     Can you think of an example?
   \item
     Air pollution, rescue inhaler dosage, hospital visits
+  \item
+    Does not provide a decomposition of the average treatment effect into direct and indirect effects
   \end{itemize}
 \end{itemize}
 
 \emph{What if our research question doesn't involve intervening directly on the
 mediator?}
 
+\emph{What if we want to decompose the average treatment effect into its direct and indirect counterparts?}
+
 \hypertarget{natural-direct-and-indirect-effects}{%
 \section*{Natural direct and indirect effects}\label{natural-direct-and-indirect-effects}}
 
 
 Natural direct effect (NDE):
-\begin{equation*}
-  \psi_{\text{NDE}} = \E(Y_{1,M_0}) - \E(Y_{0,M_0})
-\end{equation*}
+\[  \psi_{\text{NDE}} = \E(Y_{1,M_0}) - \E(Y_{0,M_0}) \]
 
 Natural indirect effect (NIE):
-\begin{equation*}
+\[
   \psi_{\text{NIE}} = \E(Y_{1,M_1}) - \E(Y_{1,M_0})
-\end{equation*}
+\]
 
 The NDE can also be written as: \(\E_W \sum_m \{\E(Y_{1,m} \mid W) - \E(Y_{0,m} \mid W)\} \P(M_{0}=m \mid W)\)
 
@@ -813,6 +865,79 @@ Is this the estimand I want?
 
 \end{figure}
 
+\hypertarget{interventional}{%
+\chapter{The Interventional Direct and Indirect Effects}\label{interventional}}
+
+\hypertarget{definition-of-the-effects}{%
+\section{Definition of the effects}\label{definition-of-the-effects}}
+
+Consider the following directed acyclic graph.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{02-effects-def_files/figure-latex/unnamed-chunk-6-1} 
+
+}
+
+\caption{Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-6}
+\end{figure}
+
+Here, \(A\) is the treatment of interest, \(M\) is the mediator of
+interest, \(W\) is a pre-treatment variable containing confounders of
+\(A\) on \(M\) and \(Y\),and \(Z\) is a post-treatment variable contaning
+confounders of the mediator and the exposure which are affected by
+treatment.
+
+\hypertarget{example}{%
+\subsection{Example}\label{example}}
+
+{[}TO FILL IN{]}
+
+\hypertarget{unidentifiability-of-the-nde-and-nie-in-this-setting}{%
+\subsection{Unidentifiability of the NDE and NIE in this setting}\label{unidentifiability-of-the-nde-and-nie-in-this-setting}}
+
+In this example, natural direct and indirect effects are
+unidentifiable from observed data on \((W,A,Z,M,Y)\). The technical
+reason for this is that the cross-world counterfactual assumption
+
+\[Y(1,m)\indep M(0)\mid W\]
+
+does not hold in the aboce directed acyiclic graph. Intuitively, the
+reason for this is that an intervention setting \(A=1\) (necessary for
+the definition of \(Y(1,m)\)) induces a counterfactual variable
+\(Z(1)\). Likewise, an intervention setting \(A=0\) (necessary for the
+definition of \(M(0)\)) induces a counterfactual \(Z(0)\). The variables
+\(Z(1)\) and \(Z(0)\) are correlated because they share unmeasured common
+causes. The variable \(Z(1)\) is correlated with \(Y(1,m)\), and the
+variable \(Z(0)\) is correlated with \(M(0)\), because they are
+counterfactual outcomes in the same hypothetical worlds. Thus, to
+achieve \(Y(1,m)\) independent of \(M(0)\), it would be necessary to
+adjust for either \(Z(1)\) or \(Z(0)\). This is impossible to do since
+these variables are unmeasured.
+
+\hypertarget{recovering-direct-and-indirect-effects}{%
+\subsection{Recovering direct and indirect effects}\label{recovering-direct-and-indirect-effects}}
+
+Even though estimation of the NDE and NIE is not possible in the
+presence of confounders of the mediation-outcome relation affected by
+treatment, it is possible to redefine the effects in a way such that
+they are identifiable. Specifically:
+
+\begin{itemize}
+\tightlist
+\item
+  Let \(G(a)\) denote a random draw from the distribution of \(M(a) \mid W\)
+\item
+  Define the counterfactual \(Y(1,G(0))\) as the counterfactual
+  variable in a hypothetical world where \(A\) is set \(A=1\) and \(M\) is
+  set to \(M=G(0)\) with porbability one.
+\item
+  Define \(Y(0,G(0))\) and \(Y(1,G(1))\) similarly
+\item
+  Then we can define:
+  \[\E[Y(1,G(1)) - Y(0,G(0))]=\underbrace{\E[Y(1,G(1))-Y(1,G(0))]}_{\text{interventional indirect effect}}+\underbrace{\E[Y(1,G(0))-Y(0,G(0))]}_{\text{interventional direct effect}}\]
+\end{itemize}
+
 \hypertarget{estimandirl}{%
 \chapter{How to choose an estimand: Real world example}\label{estimandirl}}
 
@@ -889,10 +1014,31 @@ What estimand do we want?
   Need to incorporate multiple and continuous mediators
 \end{itemize}
 
-\hypertarget{interventional}{%
-\chapter{The Interventional Direct and Indirect Effects}\label{interventional}}
+\hypertarget{stochastic}{%
+\chapter{Stochastic Direct and Indirect Effects}\label{stochastic}}
 
-{[}TO FILL IN{]}
+\hypertarget{definition-of-the-effects-1}{%
+\section{Definition of the effects}\label{definition-of-the-effects-1}}
+
+Consider the following directed acyclic graph.
+
+\textbackslash begin\{figure\}
+
+\{\centering \includegraphics[width=0.8\linewidth]{04-stochastic_files/figure-latex/unnamed-chunk-1-1}
+
+\}
+
+\textbackslash caption\{Directed acylcic graph under \emph{no intermediate confounders} of the mediator-outcome relation affected by treatment\}\label{fig:unnamed-chunk-1}
+\textbackslash end\{figure\}
+\#\# Motivation for stochastic interventions
+
+\begin{itemize}
+\tightlist
+\item
+  So far we have discussed effects for binary exposures
+\item
+  Controlled direct effects and natural effects require that \(0 < \P(A=1\mid W) < 1\)
+\end{itemize}
 
 \hypertarget{estimation-of-natural-indirect-effects-interventional-indirect-effects}{%
 \chapter{Estimation of natural (in)direct effects, interventional (in)direct effects}\label{estimation-of-natural-indirect-effects-interventional-indirect-effects}}
@@ -1025,8 +1171,10 @@ bias-correcting \emph{TMLE-update step}.
 \NormalTok{a1 <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(afit, }\DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{w =}\NormalTok{ obsdat}\OperatorTok{$}\NormalTok{w), }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{)}
 \NormalTok{a0 <-}\StringTok{ }\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{a1}
 
-\NormalTok{am1 <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(amfit, }\DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{w =}\NormalTok{ obsdat}\OperatorTok{$}\NormalTok{w, }\DataTypeTok{m =}\NormalTok{ obsdat}\OperatorTok{$}\NormalTok{m),}
-               \DataTypeTok{type =} \StringTok{"response"}\NormalTok{)}
+\NormalTok{am1 <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(amfit,}
+  \DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{w =}\NormalTok{ obsdat}\OperatorTok{$}\NormalTok{w, }\DataTypeTok{m =}\NormalTok{ obsdat}\OperatorTok{$}\NormalTok{m),}
+  \DataTypeTok{type =} \StringTok{"response"}
+\NormalTok{)}
 \NormalTok{am0 <-}\StringTok{ }\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{am1}
 \NormalTok{cy <-}\StringTok{ }\NormalTok{(am0 }\OperatorTok{*}\StringTok{ }\NormalTok{a0) }\OperatorTok{/}\StringTok{ }\NormalTok{(am1 }\OperatorTok{*}\StringTok{ }\NormalTok{a1)}
 \end{Highlighting}
@@ -1046,15 +1194,24 @@ bias-correcting \emph{TMLE-update step}.
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{qyinit <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(}
-  \KeywordTok{predict}\NormalTok{(}\KeywordTok{glm}\NormalTok{(}\DataTypeTok{formula =}\NormalTok{ ymodel, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{,}
-              \DataTypeTok{data =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{a =}\NormalTok{ a, }\DataTypeTok{m =}\NormalTok{ m, }\DataTypeTok{y =}\NormalTok{ y))),}
-          \DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, a, m)), }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{),}
-  \KeywordTok{predict}\NormalTok{(}\KeywordTok{glm}\NormalTok{(}\DataTypeTok{formula =}\NormalTok{ ymodel, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{,}
-              \DataTypeTok{data =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{a =}\NormalTok{ a, }\DataTypeTok{m =}\NormalTok{ m, }\DataTypeTok{y =}\NormalTok{ y))),}
-          \DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{a =} \DecValTok{0}\NormalTok{, m)), }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{),}
-  \KeywordTok{predict}\NormalTok{(}\KeywordTok{glm}\NormalTok{(}\DataTypeTok{formula =}\NormalTok{ ymodel, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{,}
-              \DataTypeTok{data =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{z =}\NormalTok{ z, }\DataTypeTok{m =}\NormalTok{ m, }\DataTypeTok{y =}\NormalTok{ y))),}
-          \DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{a =} \DecValTok{1}\NormalTok{, m)), }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{)}
+  \KeywordTok{predict}\NormalTok{(}\KeywordTok{glm}\NormalTok{(}
+    \DataTypeTok{formula =}\NormalTok{ ymodel, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{,}
+    \DataTypeTok{data =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{a =}\NormalTok{ a, }\DataTypeTok{m =}\NormalTok{ m, }\DataTypeTok{y =}\NormalTok{ y))}
+\NormalTok{  ),}
+  \DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, a, m)), }\DataTypeTok{type =} \StringTok{"response"}
+\NormalTok{  ),}
+  \KeywordTok{predict}\NormalTok{(}\KeywordTok{glm}\NormalTok{(}
+    \DataTypeTok{formula =}\NormalTok{ ymodel, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{,}
+    \DataTypeTok{data =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{a =}\NormalTok{ a, }\DataTypeTok{m =}\NormalTok{ m, }\DataTypeTok{y =}\NormalTok{ y))}
+\NormalTok{  ),}
+  \DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{a =} \DecValTok{0}\NormalTok{, m)), }\DataTypeTok{type =} \StringTok{"response"}
+\NormalTok{  ),}
+  \KeywordTok{predict}\NormalTok{(}\KeywordTok{glm}\NormalTok{(}
+    \DataTypeTok{formula =}\NormalTok{ ymodel, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{,}
+    \DataTypeTok{data =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{z =}\NormalTok{ z, }\DataTypeTok{m =}\NormalTok{ m, }\DataTypeTok{y =}\NormalTok{ y))}
+\NormalTok{  ),}
+  \DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{a =} \DecValTok{1}\NormalTok{, m)), }\DataTypeTok{type =} \StringTok{"response"}
+\NormalTok{  )}
 \NormalTok{)}
 
 \NormalTok{qbardiff <-}\StringTok{ }\NormalTok{qyinit[, }\DecValTok{3}\NormalTok{] }\OperatorTok{-}\StringTok{ }\NormalTok{qyinit[, }\DecValTok{2}\NormalTok{]}
@@ -1076,8 +1233,10 @@ bias-correcting \emph{TMLE-update step}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{epsilon <-}\StringTok{ }\KeywordTok{coef}\NormalTok{(}\KeywordTok{glm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\DecValTok{1}\NormalTok{, }\DataTypeTok{weights =}\NormalTok{ cy, }\DataTypeTok{offset =}\NormalTok{ (}\KeywordTok{qlogis}\NormalTok{(qyinit[, }\DecValTok{1}\NormalTok{])),}
-                    \DataTypeTok{family =} \StringTok{"quasibinomial"}\NormalTok{))}
+\NormalTok{epsilon <-}\StringTok{ }\KeywordTok{coef}\NormalTok{(}\KeywordTok{glm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\DecValTok{1}\NormalTok{,}
+  \DataTypeTok{weights =}\NormalTok{ cy, }\DataTypeTok{offset =}\NormalTok{ (}\KeywordTok{qlogis}\NormalTok{(qyinit[, }\DecValTok{1}\NormalTok{])),}
+  \DataTypeTok{family =} \StringTok{"quasibinomial"}
+\NormalTok{))}
 \NormalTok{qyupa0 <-}\StringTok{ }\KeywordTok{plogis}\NormalTok{(}\KeywordTok{qlogis}\NormalTok{(qyinit[, }\DecValTok{2}\NormalTok{]) }\OperatorTok{+}\StringTok{ }\NormalTok{epsilon)}
 \NormalTok{qyupa1 <-}\StringTok{ }\KeywordTok{plogis}\NormalTok{(}\KeywordTok{qlogis}\NormalTok{(qyinit[, }\DecValTok{3}\NormalTok{]) }\OperatorTok{+}\StringTok{ }\NormalTok{epsilon)}
 \NormalTok{qdiffup <-}\StringTok{ }\NormalTok{qyupa1 }\OperatorTok{-}\StringTok{ }\NormalTok{qyupa0}
@@ -1097,10 +1256,14 @@ bias-correcting \emph{TMLE-update step}.
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{margqdiff_fit <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(qdiffup }\OperatorTok{~}\StringTok{ }\NormalTok{w,}
-                     \DataTypeTok{data =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{qdiffup =}\NormalTok{ qdiffup[a }\OperatorTok{==}\StringTok{ }\DecValTok{0}\NormalTok{],}
-                                       \DataTypeTok{w =}\NormalTok{ w[a }\OperatorTok{==}\StringTok{ }\DecValTok{0}\NormalTok{]))}
+  \DataTypeTok{data =} \KeywordTok{data.frame}\NormalTok{(}
+    \DataTypeTok{qdiffup =}\NormalTok{ qdiffup[a }\OperatorTok{==}\StringTok{ }\DecValTok{0}\NormalTok{],}
+    \DataTypeTok{w =}\NormalTok{ w[a }\OperatorTok{==}\StringTok{ }\DecValTok{0}\NormalTok{]}
+\NormalTok{  )}
+\NormalTok{)}
 \NormalTok{margqdiff <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(margqdiff_fit,}
-                     \DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{qdiffup =}\NormalTok{ qdiffup, }\DataTypeTok{w =}\NormalTok{ w))}
+  \DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{qdiffup =}\NormalTok{ qdiffup, }\DataTypeTok{w =}\NormalTok{ w)}
+\NormalTok{)}
 \NormalTok{tmlende <-}\StringTok{ }\KeywordTok{mean}\NormalTok{(margqdiff)}
 \end{Highlighting}
 \end{Shaded}
@@ -1522,6 +1685,11 @@ Actually, we would want to have the fixed parameter with the true, unknown
 This is a pain to do by hand, but Nima made an easy-to-use package for all of us
 called \href{https://github.com/nhejazi/medoutcon}{medoutcon}! He will go through
 this next.
+
+\hypertarget{estimation-of-stochastic-indirect-effects}{%
+\chapter{Estimation of stochastic (in)direct effects}\label{estimation-of-stochastic-indirect-effects}}
+
+{[}TO FILL IN{]}
 
   \bibliography{book.bib,packages.bib}
 
