@@ -1,160 +1,8 @@
 # Path-specific casual mediation effect types {#estimands}
 
-- Two mediation models
 - Controlled direct effects
 - Natural direct and indirect effects
 - Interventional direct and indirect effects
-
-## Mediation models
-
-In this workshopp we will use directed acyclic graphs to conceptualize
-the effects of interest. We will focus on the two types of graph:
-
-### No intermediate confounders
-
-```{tikz, fig.cap = "Directed acylcic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment", fig.ext = 'png', cache = TRUE, echo = FALSE}
-\dimendef\prevdepth=0
-\pgfdeclarelayer{background}
-\pgfsetlayers{background,main}
-\usetikzlibrary{arrows,positioning}
-\tikzset{
->=stealth',
-punkt/.style={
-rectangle,
-rounded corners,
-draw=black, very thick,
-text width=6.5em,
-minimum height=2em,
-text centered},
-pil/.style={
-->,
-thick,
-shorten <=2pt,
-shorten >=2pt,}
-}
-\newcommand{\Vertex}[2]
-{\node[minimum width=0.6cm,inner sep=0.05cm] (#2) at (#1) {$#2$};
-}
-\newcommand{\VertexR}[2]
-{\node[rectangle, draw, minimum width=0.6cm,inner sep=0.05cm] (#2) at (#1) {$#2$};
-}
-\newcommand{\ArrowR}[3]
-{ \begin{pgfonlayer}{background}
-\draw[->,#3] (#1) to[bend right=30] (#2);
-\end{pgfonlayer}
-}
-\newcommand{\ArrowL}[3]
-{ \begin{pgfonlayer}{background}
-\draw[->,#3] (#1) to[bend left=45] (#2);
-\end{pgfonlayer}
-}
-\newcommand{\EdgeL}[3]
-{ \begin{pgfonlayer}{background}
-\draw[dashed,#3] (#1) to[bend right=-45] (#2);
-\end{pgfonlayer}
-}
-\newcommand{\Arrow}[3]
-{ \begin{pgfonlayer}{background}
-\draw[->,#3] (#1) -- +(#2);
-\end{pgfonlayer}
-}
-\begin{tikzpicture}
-  \Vertex{-4, 0}{W}
-  \Vertex{0, 0}{M}
-  \Vertex{-2, 0}{A}
-  \Vertex{2, 0}{Y}
-  \Arrow{W}{A}{black}
-  \Arrow{A}{M}{black}
-  \Arrow{M}{Y}{black}
-  \ArrowL{W}{Y}{black}
-  \ArrowL{A}{Y}{black}
-  \ArrowL{W}{M}{black}
-\end{tikzpicture}
-```
-### Intermediate confounders
-
-```{tikz, fig.cap = "Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment", fig.ext = 'png', cache = TRUE, echo = FALSE}
-\dimendef\prevdepth=0
-\pgfdeclarelayer{background}
-\pgfsetlayers{background,main}
-\usetikzlibrary{arrows,positioning}
-\tikzset{
->=stealth',
-punkt/.style={
-rectangle,
-rounded corners,
-draw=black, very thick,
-text width=6.5em,
-minimum height=2em,
-text centered},
-pil/.style={
-->,
-thick,
-shorten <=2pt,
-shorten >=2pt,}
-}
-\newcommand{\Vertex}[2]
-{\node[minimum width=0.6cm,inner sep=0.05cm] (#2) at (#1) {$#2$};
-}
-\newcommand{\VertexR}[2]
-{\node[rectangle, draw, minimum width=0.6cm,inner sep=0.05cm] (#2) at (#1) {$#2$};
-}
-\newcommand{\ArrowR}[3]
-{ \begin{pgfonlayer}{background}
-\draw[->,#3] (#1) to[bend right=30] (#2);
-\end{pgfonlayer}
-}
-\newcommand{\ArrowL}[3]
-{ \begin{pgfonlayer}{background}
-\draw[->,#3] (#1) to[bend left=45] (#2);
-\end{pgfonlayer}
-}
-\newcommand{\EdgeL}[3]
-{ \begin{pgfonlayer}{background}
-\draw[dashed,#3] (#1) to[bend right=-45] (#2);
-\end{pgfonlayer}
-}
-\newcommand{\Arrow}[3]
-{ \begin{pgfonlayer}{background}
-\draw[->,#3] (#1) -- +(#2);
-\end{pgfonlayer}
-}
-\begin{tikzpicture}
-  \Vertex{0, -1}{Z}
-  \Vertex{-4, 0}{W}
-  \Vertex{0, 0}{M}
-  \Vertex{-2, 0}{A}
-  \Vertex{2, 0}{Y}
-  \ArrowR{W}{Z}{black}
-  \Arrow{Z}{M}{black}
-  \Arrow{W}{A}{black}
-  \Arrow{A}{M}{black}
-  \Arrow{M}{Y}{black}
-  \Arrow{A}{Z}{black}
-  \Arrow{Z}{Y}{black}
-  \ArrowL{W}{Y}{black}
-  \ArrowL{A}{Y}{black}
-  \ArrowL{W}{M}{black}
-\end{tikzpicture}
-```
-
-## Counterfactuals
-
-In what follows, we will define all the effects of interest using
-_counterfactuals_. Counterfactuals are hypothetical random variables
-that would have been observed in a world where we would be able to
-perform interventions on the random variables of interest. For
-example, $Y_a$ is a counterfactual variable in a hypothetical world
-where $\P(A=a)=1$ with probability one. $Y_{a,m}$ is the
-counterfactual outcome in a world where $\P(A=a,M=m)=1$, and $M_a$ is
-the counterfactual variable representing the mediator in a world where
-$\P(A=a)=1$.
-
-In this workshop we use counterfactual variables as _primitives_, but
-we note that in other causal inference frameworks, such as structural
-equation models, counterfactuals are quantities _derived_ from the
-model.
-
 
 ## Controlled direct effects
 
@@ -291,3 +139,130 @@ Is this the estimand I want?
 ```{r , echo=FALSE, fig.cap="", out.width = '100%'}
 knitr::include_graphics(here::here("img", "table1.pdf"))
 ```
+
+
+
+
+
+<!--
+ID: Kara, I copied what I had written below, feel free to reuse
+-->
+
+
+# The Interventional Direct and Indirect Effects {#interventional}
+
+## Definition of the effects
+
+Consider the following directed acyclic graph.
+
+```{tikz, fig.cap = "Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment", fig.ext = 'png', cache = TRUE, echo = FALSE}
+\dimendef\prevdepth=0
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
+\usetikzlibrary{arrows,positioning}
+\tikzset{
+>=stealth',
+punkt/.style={
+rectangle,
+rounded corners,
+draw=black, very thick,
+text width=6.5em,
+minimum height=2em,
+text centered},
+pil/.style={
+->,
+thick,
+shorten <=2pt,
+shorten >=2pt,}
+}
+\newcommand{\Vertex}[2]
+{\node[minimum width=0.6cm,inner sep=0.05cm] (#2) at (#1) {$#2$};
+}
+\newcommand{\VertexR}[2]
+{\node[rectangle, draw, minimum width=0.6cm,inner sep=0.05cm] (#2) at (#1) {$#2$};
+}
+\newcommand{\ArrowR}[3]
+{ \begin{pgfonlayer}{background}
+\draw[->,#3] (#1) to[bend right=30] (#2);
+\end{pgfonlayer}
+}
+\newcommand{\ArrowL}[3]
+{ \begin{pgfonlayer}{background}
+\draw[->,#3] (#1) to[bend left=45] (#2);
+\end{pgfonlayer}
+}
+\newcommand{\EdgeL}[3]
+{ \begin{pgfonlayer}{background}
+\draw[dashed,#3] (#1) to[bend right=-45] (#2);
+\end{pgfonlayer}
+}
+\newcommand{\Arrow}[3]
+{ \begin{pgfonlayer}{background}
+\draw[->,#3] (#1) -- +(#2);
+\end{pgfonlayer}
+}
+\begin{tikzpicture}
+  \Vertex{0, -1}{Z}
+  \Vertex{-4, 0}{W}
+  \Vertex{0, 0}{M}
+  \Vertex{-2, 0}{A}
+  \Vertex{2, 0}{Y}
+  \ArrowR{W}{Z}{black}
+  \Arrow{Z}{M}{black}
+  \Arrow{W}{A}{black}
+  \Arrow{A}{M}{black}
+  \Arrow{M}{Y}{black}
+  \Arrow{A}{Z}{black}
+  \Arrow{Z}{Y}{black}
+  \ArrowL{W}{Y}{black}
+  \ArrowL{A}{Y}{black}
+  \ArrowL{W}{M}{black}
+\end{tikzpicture}
+```
+
+Here, $A$ is the treatment of interest, $M$ is the mediator of
+interest, $W$ is a pre-treatment variable containing confounders of
+$A$ on $M$ and $Y$,and $Z$ is a post-treatment variable contaning
+confounders of the mediator and the exposure which are affected by
+treatment.
+
+### Example
+[TO FILL IN]
+
+
+
+### Unidentifiability of the NDE and NIE in this setting
+
+In this example, natural direct and indirect effects are
+unidentifiable from observed data on $(W,A,Z,M,Y)$. The technical
+reason for this is that the cross-world counterfactual assumption
+
+\[Y(1,m)\indep M(0)\mid W\]
+
+does not hold in the aboce directed acyiclic graph. Intuitively, the
+reason for this is that an intervention setting $A=1$ (necessary for
+the definition of $Y(1,m)$) induces a counterfactual variable
+$Z(1)$. Likewise, an intervention setting $A=0$ (necessary for the
+definition of $M(0)$) induces a counterfactual $Z(0)$. The variables
+$Z(1)$ and $Z(0)$ are correlated because they share unmeasured common
+causes. The variable $Z(1)$ is correlated with $Y(1,m)$, and the
+variable $Z(0)$ is correlated with $M(0)$, because they are
+counterfactual outcomes in the same hypothetical worlds. Thus, to
+achieve $Y(1,m)$ independent of $M(0)$, it would be necessary to
+adjust for either $Z(1)$ or $Z(0)$. This is impossible to do since
+these variables are unmeasured.
+
+### Recovering direct and indirect effects
+
+Even though estimation of the NDE and NIE is not possible in the
+presence of confounders of the mediation-outcome relation affected by
+treatment, it is possible to redefine the effects in a way such that
+they are identifiable. Specifically:
+
+- Let $G(a)$ denote a random draw from the distribution of $M(a) \mid W$
+- Define the counterfactual $Y(1,G(0))$ as the counterfactual
+  variable in a hypothetical world where $A$ is set $A=1$ and $M$ is
+  set to $M=G(0)$ with porbability one.
+- Define $Y(0,G(0))$ and $Y(1,G(1))$ similarly
+- Then we can define:
+\[\E[Y(1,G(1)) - Y(0,G(0))]=\underbrace{\E[Y(1,G(1))-Y(1,G(0))]}_{\text{interventional indirect effect}}+\underbrace{\E[Y(1,G(0))-Y(0,G(0))]}_{\text{interventional direct effect}}\]

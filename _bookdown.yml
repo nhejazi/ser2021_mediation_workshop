@@ -14,10 +14,11 @@ language:
 rmd_files: [
   "index.Rmd",
   "01-preface.Rmd",
-  "02-roadmap.Rmd",
-  "03-natural.Rmd",
-  "04-interventional.Rmd",
-  "05-stochastic.Rmd",
+  "02-effects-def.Rmd",
+  "03-how-to-choose.Rmd",
+  "04-stochastic.Rmd",
+  "05-estimation-natural-interventional.Rmd",
+  "06-estimation-stochastic.Rmd",
   #"99-sl3_primer.Rmd",
   "references.Rmd"
 ]

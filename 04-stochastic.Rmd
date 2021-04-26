@@ -1,0 +1,69 @@
+# Stochastic Direct and Indirect Effects {#stochastic}
+
+## Definition of the effects
+
+Consider the following directed acyclic graph.
+
+```{tikz, fig.cap = "Directed acylcic graph under _no intermediate confounders_ of the mediator-outcome relation affected by treatment", fig.ext = 'png', cache = TRUE, echo = FALSE}
+\dimendef\prevdepth=0
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
+\usetikzlibrary{arrows,positioning}
+\tikzset{
+>=stealth',
+punkt/.style={
+rectangle,
+rounded corners,
+draw=black, very thick,
+text width=6.5em,
+minimum height=2em,
+text centered},
+pil/.style={
+->,
+thick,
+shorten <=2pt,
+shorten >=2pt,}
+}
+\newcommand{\Vertex}[2]
+{\node[minimum width=0.6cm,inner sep=0.05cm] (#2) at (#1) {$#2$};
+}
+\newcommand{\VertexR}[2]
+{\node[rectangle, draw, minimum width=0.6cm,inner sep=0.05cm] (#2) at (#1) {$#2$};
+}
+\newcommand{\ArrowR}[3]
+{ \begin{pgfonlayer}{background}
+\draw[->,#3] (#1) to[bend right=30] (#2);
+\end{pgfonlayer}
+}
+\newcommand{\ArrowL}[3]
+{ \begin{pgfonlayer}{background}
+\draw[->,#3] (#1) to[bend left=45] (#2);
+\end{pgfonlayer}
+}
+\newcommand{\EdgeL}[3]
+{ \begin{pgfonlayer}{background}
+\draw[dashed,#3] (#1) to[bend right=-45] (#2);
+\end{pgfonlayer}
+}
+\newcommand{\Arrow}[3]
+{ \begin{pgfonlayer}{background}
+\draw[->,#3] (#1) -- +(#2);
+\end{pgfonlayer}
+}
+\begin{tikzpicture}
+  \Vertex{-4, 0}{W}
+  \Vertex{0, 0}{M}
+  \Vertex{-2, 0}{A}
+  \Vertex{2, 0}{Y}
+  \Arrow{W}{A}{black}
+  \Arrow{A}{M}{black}
+  \Arrow{M}{Y}{black}
+  \ArrowL{W}{Y}{black}
+  \ArrowL{A}{Y}{black}
+  \ArrowL{W}{M}{black}
+\end{tikzpicture}
+```
+## Motivation for stochastic interventions
+
+- So far we have discussed effects for binary exposures
+- Controlled direct effects and natural effects require that $0 < \P(A=1\mid W) < 1$
