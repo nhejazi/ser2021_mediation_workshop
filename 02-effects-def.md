@@ -233,4 +233,9 @@ they are identifiable. Specifically:
   set to $M=G(0)$ with porbability one.
 - Define $Y(0,G(0))$ and $Y(1,G(1))$ similarly
 - Then we can define:
-\[\E[Y(1,G(1)) - Y(0,G(0))]=\underbrace{\E[Y(1,G(1))-Y(1,G(0))]}_{\text{interventional indirect effect}}+\underbrace{\E[Y(1,G(0))-Y(0,G(0))]}_{\text{interventional direct effect}}\]
+  \begin{equation*}
+    \E[Y(1,G(1)) - Y(0,G(0))] = \underbrace{\E[Y(1,G(1)) -
+      Y(1,G(0))]}_{\text{interventional indirect effect}} +
+      \underbrace{\E[Y(1,G(0)) -
+      Y(0,G(0))]}_{\text{interventional direct effect}}
+  \end{equation*}

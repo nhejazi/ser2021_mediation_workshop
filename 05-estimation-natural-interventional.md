@@ -1,6 +1,6 @@
-# Estimation of natural (in)direct effects, interventional (in)direct effects
+# Estimating natural and interventional effects
 
-## Natural direct and indirect effects
+## Natural (in)direct effects
 
 Recall:
 
@@ -37,7 +37,7 @@ from our observed data:
 - $M_{a^{\star}} \indep Y_{a,m} \mid W$
 - and positivity assumptions
 
-### How to estimate using g-computation
+### How to estimate using G-computation
 
 Let's take the NDE as an example:
 

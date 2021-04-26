@@ -935,7 +935,12 @@ they are identifiable. Specifically:
   Define \(Y(0,G(0))\) and \(Y(1,G(1))\) similarly
 \item
   Then we can define:
-  \[\E[Y(1,G(1)) - Y(0,G(0))]=\underbrace{\E[Y(1,G(1))-Y(1,G(0))]}_{\text{interventional indirect effect}}+\underbrace{\E[Y(1,G(0))-Y(0,G(0))]}_{\text{interventional direct effect}}\]
+  \begin{equation*}
+    \E[Y(1,G(1)) - Y(0,G(0))] = \underbrace{\E[Y(1,G(1)) -
+      Y(1,G(0))]}_{\text{interventional indirect effect}} +
+      \underbrace{\E[Y(1,G(0)) -
+      Y(0,G(0))]}_{\text{interventional direct effect}}
+  \end{equation*}
 \end{itemize}
 
 \hypertarget{estimandirl}{%
@@ -1030,7 +1035,9 @@ Consider the following directed acyclic graph.
 
 \textbackslash caption\{Directed acylcic graph under \emph{no intermediate confounders} of the mediator-outcome relation affected by treatment\}\label{fig:unnamed-chunk-1}
 \textbackslash end\{figure\}
-\#\# Motivation for stochastic interventions
+
+\hypertarget{motivation-for-stochastic-interventions}{%
+\section{Motivation for stochastic interventions}\label{motivation-for-stochastic-interventions}}
 
 \begin{itemize}
 \tightlist
@@ -1040,11 +1047,11 @@ Consider the following directed acyclic graph.
   Controlled direct effects and natural effects require that \(0 < \P(A=1\mid W) < 1\)
 \end{itemize}
 
-\hypertarget{estimation-of-natural-indirect-effects-interventional-indirect-effects}{%
-\chapter{Estimation of natural (in)direct effects, interventional (in)direct effects}\label{estimation-of-natural-indirect-effects-interventional-indirect-effects}}
+\hypertarget{estimating-natural-and-interventional-effects}{%
+\chapter{Estimating natural and interventional effects}\label{estimating-natural-and-interventional-effects}}
 
-\hypertarget{natural-direct-and-indirect-effects-1}{%
-\section{Natural direct and indirect effects}\label{natural-direct-and-indirect-effects-1}}
+\hypertarget{natural-indirect-effects}{%
+\section{Natural (in)direct effects}\label{natural-indirect-effects}}
 
 Recall:
 
@@ -1082,7 +1089,7 @@ from our observed data:
 - and positivity assumptions
 
 \hypertarget{how-to-estimate-using-g-computation}{%
-\subsection{How to estimate using g-computation}\label{how-to-estimate-using-g-computation}}
+\subsection{How to estimate using G-computation}\label{how-to-estimate-using-g-computation}}
 
 Let's take the NDE as an example:
 
@@ -1686,8 +1693,8 @@ This is a pain to do by hand, but Nima made an easy-to-use package for all of us
 called \href{https://github.com/nhejazi/medoutcon}{medoutcon}! He will go through
 this next.
 
-\hypertarget{estimation-of-stochastic-indirect-effects}{%
-\chapter{Estimation of stochastic (in)direct effects}\label{estimation-of-stochastic-indirect-effects}}
+\hypertarget{estimating-stochastic-effects}{%
+\chapter{Estimating stochastic effects}\label{estimating-stochastic-effects}}
 
 {[}TO FILL IN{]}
 

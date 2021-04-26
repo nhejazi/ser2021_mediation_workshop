@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Chapter 6 Estimation of natural (in)direct effects, interventional (in)direct effects | [SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</title>
+<title>Chapter 6 Estimating natural and interventional effects | [SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</title>
 <meta name="author" content="Iván Díaz, Nima Hejazi, Kara Rudolph">
 <!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.2"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.5.1/jquery-3.5.1.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
@@ -49,8 +49,8 @@
 <li><a class="" href="interventional.html"><span class="header-section-number">3</span> The Interventional Direct and Indirect Effects</a></li>
 <li><a class="" href="estimandirl.html"><span class="header-section-number">4</span> How to choose an estimand: Real world example</a></li>
 <li><a class="" href="stochastic.html"><span class="header-section-number">5</span> Stochastic Direct and Indirect Effects</a></li>
-<li><a class="active" href="estimation-of-natural-indirect-effects-interventional-indirect-effects.html"><span class="header-section-number">6</span> Estimation of natural (in)direct effects, interventional (in)direct effects</a></li>
-<li><a class="" href="estimation-of-stochastic-indirect-effects.html"><span class="header-section-number">7</span> Estimation of stochastic (in)direct effects</a></li>
+<li><a class="active" href="estimating-natural-and-interventional-effects.html"><span class="header-section-number">6</span> Estimating natural and interventional effects</a></li>
+<li><a class="" href="estimating-stochastic-effects.html"><span class="header-section-number">7</span> Estimating stochastic effects</a></li>
 <li><a class="" href="references.html">References</a></li>
 </ul>
 
@@ -59,13 +59,13 @@
         </div>
       </nav>
 </div>
-  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="estimation-of-natural-indirect-effects-interventional-indirect-effects" class="section level1">
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="estimating-natural-and-interventional-effects" class="section level1">
 <h1>
-<span class="header-section-number">6</span> Estimation of natural (in)direct effects, interventional (in)direct effects<a class="anchor" aria-label="anchor" href="#estimation-of-natural-indirect-effects-interventional-indirect-effects"><i class="fas fa-link"></i></a>
+<span class="header-section-number">6</span> Estimating natural and interventional effects<a class="anchor" aria-label="anchor" href="#estimating-natural-and-interventional-effects"><i class="fas fa-link"></i></a>
 </h1>
-<div id="natural-direct-and-indirect-effects-1" class="section level2">
+<div id="natural-indirect-effects" class="section level2">
 <h2>
-<span class="header-section-number">6.1</span> Natural direct and indirect effects<a class="anchor" aria-label="anchor" href="#natural-direct-and-indirect-effects-1"><i class="fas fa-link"></i></a>
+<span class="header-section-number">6.1</span> Natural (in)direct effects<a class="anchor" aria-label="anchor" href="#natural-indirect-effects"><i class="fas fa-link"></i></a>
 </h2>
 <p>Recall:</p>
 <embed src="/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/meddagnoz.pdf" width="50%" style="display: block; margin: auto;" type="application/pdf"></embed><p>Assuming a binary <span class="math inline">\(A\)</span>, we define the natural direct effect as:
@@ -91,7 +91,7 @@ from our observed data:
 </div>
 <div id="how-to-estimate-using-g-computation" class="section level3">
 <h3>
-<span class="header-section-number">6.1.2</span> How to estimate using g-computation<a class="anchor" aria-label="anchor" href="#how-to-estimate-using-g-computation"><i class="fas fa-link"></i></a>
+<span class="header-section-number">6.1.2</span> How to estimate using G-computation<a class="anchor" aria-label="anchor" href="#how-to-estimate-using-g-computation"><i class="fas fa-link"></i></a>
 </h3>
 <p>Let’s take the NDE as an example:</p>
 <ol style="list-style-type: decimal">
@@ -267,7 +267,7 @@ is a single binary mediator. There are no restrictions on the distribution of
 <span class="math inline">\(W\)</span> or <span class="math inline">\(Y\)</span>.</p>
 <p><span class="math inline">\(g_{M \mid a^\prime,W}\)</span> represents a stochastic draw from the counterfactual,
 conditional distribution of <span class="math inline">\(M\)</span>, as described by
-<span class="citation">(<span class="citeproc-not-found" data-reference-id="vanderweele2016mediation"><strong>???</strong></span>)</span>:
+<span class="citation">VanderWeele (<a href="references.html#ref-vanderweele2016mediation" role="doc-biblioref">2016</a>)</span>:
 <span class="math display">\[\begin{equation*}
   g_{M \mid A,W}(m, a^{\star}, W) \equiv g_{M \mid a^{\star}, W}(W) =
     \sum_{z=0}^1 \P(M=1 \mid Z=z,W) \P(Z=z \mid A=a^{\star}, W).
@@ -558,15 +558,15 @@ this next.</p>
 </div>
   <div class="chapter-nav">
 <div class="prev"><a href="stochastic.html"><span class="header-section-number">5</span> Stochastic Direct and Indirect Effects</a></div>
-<div class="next"><a href="estimation-of-stochastic-indirect-effects.html"><span class="header-section-number">7</span> Estimation of stochastic (in)direct effects</a></div>
+<div class="next"><a href="estimating-stochastic-effects.html"><span class="header-section-number">7</span> Estimating stochastic effects</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
-<li><a class="nav-link" href="#estimation-of-natural-indirect-effects-interventional-indirect-effects"><span class="header-section-number">6</span> Estimation of natural (in)direct effects, interventional (in)direct effects</a></li>
+<li><a class="nav-link" href="#estimating-natural-and-interventional-effects"><span class="header-section-number">6</span> Estimating natural and interventional effects</a></li>
 <li>
-<a class="nav-link" href="#natural-direct-and-indirect-effects-1"><span class="header-section-number">6.1</span> Natural direct and indirect effects</a><ul class="nav navbar-nav">
+<a class="nav-link" href="#natural-indirect-effects"><span class="header-section-number">6.1</span> Natural (in)direct effects</a><ul class="nav navbar-nav">
 <li><a class="nav-link" href="#simple-case-for-intuition"><span class="header-section-number">6.1.1</span> Simple case for intuition</a></li>
-<li><a class="nav-link" href="#how-to-estimate-using-g-computation"><span class="header-section-number">6.1.2</span> How to estimate using g-computation</a></li>
+<li><a class="nav-link" href="#how-to-estimate-using-g-computation"><span class="header-section-number">6.1.2</span> How to estimate using G-computation</a></li>
 <li><a class="nav-link" href="#how-to-estimate-using-the-doubly-robust-methods-that-rely-on-the-eif"><span class="header-section-number">6.1.3</span> How to estimate using the doubly robust methods that rely on the EIF</a></li>
 <li><a class="nav-link" href="#how-to-estimate-using-tmle"><span class="header-section-number">6.1.4</span> How to estimate using TMLE</a></li>
 </ul>

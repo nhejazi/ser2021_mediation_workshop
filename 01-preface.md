@@ -15,6 +15,7 @@ the effects of interest. We will focus on the two types of graph:
 
 \caption{Directed acylcic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-1)
 \end{figure}
+
 ### Intermediate confounders
 
 \begin{figure}

@@ -12,6 +12,7 @@ Consider the following directed acyclic graph.
 
 \caption{Directed acylcic graph under _no intermediate confounders_ of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-1)
 \end{figure}
+
 ## Motivation for stochastic interventions
 
 - So far we have discussed effects for binary exposures
