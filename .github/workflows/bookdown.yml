@@ -27,7 +27,7 @@ jobs:
 
       - name: Install system dependencies
         run: |
-          sudo apt install -y curl libcurl4-doc libcurl4-openssl-dev texlive-extra-utils ghostscript
+          sudo apt install -y curl libcurl4-doc libcurl4-openssl-dev libmagick++-dev texlive-extra-utils ghostscript
 
       - name: Cache R packages
         uses: actions/cache@v2
