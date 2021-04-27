@@ -4,7 +4,7 @@
 
 Consider the following directed acyclic graph.
 
-```{r, engine="tikz", fig.cap = "Directed acylcic graph under _no intermediate confounders_ of the mediator-outcome relation affected by treatment", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", echo = FALSE}
+```{r, engine="tikz", fig.cap = "Directed acylcic graph under no intermediate confounders of the mediator-outcome relation affected by treatment", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", echo = FALSE}
 \dimendef\prevdepth=0
 \pgfdeclarelayer{background}
 \pgfsetlayers{background,main}

@@ -19,6 +19,5 @@ rmd_files: [
   "04-stochastic.Rmd",
   "05-estimation-natural-interventional.Rmd",
   "06-estimation-stochastic.Rmd",
-  #"99-sl3_primer.Rmd",
   "references.Rmd"
 ]

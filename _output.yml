@@ -31,3 +31,4 @@ bookdown::pdf_book:
   highlight: tango
   toc_unnumbered: false
   toc_appendix: true
+  pandoc_args: ["--top-level-division=chapter", "--listings"]
