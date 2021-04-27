@@ -10,7 +10,7 @@ Consider the following directed acyclic graph.
 
 }
 
-\caption{Directed acylcic graph under _no intermediate confounders_ of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-1)
+\caption{Directed acylcic graph under no intermediate confounders of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-1)
 \end{figure}
 
 ## Motivation for stochastic interventions

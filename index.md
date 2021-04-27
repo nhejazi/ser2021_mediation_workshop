@@ -2,7 +2,7 @@
 knit: "bookdown::render_book"
 title: "[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis"
 author: "Iván Díaz, Nima Hejazi, Kara Rudolph"
-date: "updated: April 26, 2021"
+date: "updated: April 27, 2021"
 documentclass: book
 site: bookdown::bookdown_site
 bibliography: [book.bib, packages.bib]
@@ -11,8 +11,8 @@ fontsize: '12pt, krantz2'
 monofontoptions: "Scale=0.7"
 link-citations: yes
 colorlinks: yes
-lot: yes
-lof: yes
+lot: no
+lof: no
 always_allow_html: yes
 url: 'https\://code.nimahejazi.org/ser2021_mediation_workshop/'
 github-repo: nhejazi/ser2021_mediation_workshop

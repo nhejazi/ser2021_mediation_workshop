@@ -6,7 +6,9 @@
 
 ## Controlled direct effects
 
-$$  \psi_{\text{CDE}} = \E(Y_{1,m}) - \E(Y_{0,m}) $$
+\begin{equation*}
+  \psi_{\text{CDE}} = \E(Y_{1,m}) - \E(Y_{0,m})
+\end{equation*}
 
 - Set $M=m$ uniformly for everyone in the population
 - Compare $A=1$ vs $A=0$ with $M=m$ fixed
@@ -100,7 +102,7 @@ mediator-outcome relationship (e.g., adherence)?_
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.2\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/medDAG2} 
+{\centering \includegraphics[width=0.75\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/medDAG2} 
 
 }
 
@@ -108,7 +110,7 @@ mediator-outcome relationship (e.g., adherence)?_
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/ctndag} 
+{\centering \includegraphics[width=1\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/ctndag} 
 
 }
 
@@ -158,20 +160,15 @@ Is this the estimand I want?
 
 \begin{figure}
 
-{\centering \includegraphics[width=1\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/table1} 
+{\centering \includegraphics[width=1.25\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/table1} 
 
 }
 
 \end{figure}
 
-
-
-
-
 <!--
 ID: Kara, I copied what I had written below, feel free to reuse
 -->
-
 
 # The Interventional Direct and Indirect Effects {#interventional}
 

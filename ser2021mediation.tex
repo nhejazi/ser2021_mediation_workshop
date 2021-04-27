@@ -47,46 +47,10 @@
   urlcolor=Blue,
   pdfcreator={LaTeX via pandoc}}
 \urlstyle{same} % disable monospaced font for URLs
-\usepackage{color}
-\usepackage{fancyvrb}
-\newcommand{\VerbBar}{|}
-\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
-\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
-% Add ',fontsize=\small' for more characters per line
-\usepackage{framed}
-\definecolor{shadecolor}{RGB}{248,248,248}
-\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
-\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
-\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
-\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\BuiltInTok}[1]{#1}
-\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
-\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
-\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
-\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
-\newcommand{\ExtensionTok}[1]{#1}
-\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\ImportTok}[1]{#1}
-\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
-\newcommand{\NormalTok}[1]{#1}
-\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
-\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
-\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
-\newcommand{\RegionMarkerTok}[1]{#1}
-\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{listings}
+\newcommand{\passthrough}[1]{#1}
+\lstset{defaultdialect=[5.3]Lua}
+\lstset{defaultdialect=[x86masm]Assembler}
 \usepackage{longtable,booktabs}
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
@@ -163,8 +127,6 @@
  {\par\unskip\endMakeFramed%
  \at@end@of@kframe}
 \makeatother
-
-\renewenvironment{Shaded}{\begin{kframe}}{\end{kframe}}
 
 \usepackage{makeidx}
 \makeindex
@@ -243,7 +205,7 @@
 
 \title{{[}SER 2021 Workshop{]} Causal Mediation: Modern Methods for Path Analysis}
 \author{Iván Díaz, Nima Hejazi, Kara Rudolph}
-\date{updated: April 26, 2021}
+\date{updated: April 27, 2021}
 
 \begin{document}
 \maketitle
@@ -276,7 +238,7 @@
 
 This open source, reproducible vignette accompanies a half-day workshop on
 modern methods for \emph{causal mediation analysis}, given at the \href{}{SER 2021
-Meeting} on Monday, 24 May 2021. While we encourage use of this \texttt{bookdown}
+Meeting} on Monday, 24 May 2021. While we encourage use of this \passthrough{\lstinline!bookdown!}
 site, for convenience, we have also made these workshop materials \href{https://code.nimahejazi.org/ser2021_mediation_workshop/ser2021mediation.pdf}{available in
 PDF}.
 
@@ -294,18 +256,18 @@ identifiable in the presence of intermediate confounders affected by exposure.
 Emphasis will be placed on flexible, stochastic and interventional direct and
 indirect effects, highlighting how these may be applied to answer substantive
 epidemiological questions from real-world studies. Multiply robust,
-nonparametric estimators of these causal effects, and free and open source \texttt{R}
-packages (\href{https://github.com/nhejazi/medshift}{\texttt{medshift}} and
-\href{https://github.com/nhejazi/medoutcon}{\texttt{medoutcon}}) for their application, will
+nonparametric estimators of these causal effects, and free and open source \passthrough{\lstinline!R!}
+packages (\href{https://github.com/nhejazi/medshift}{\passthrough{\lstinline!medshift!}} and
+\href{https://github.com/nhejazi/medoutcon}{\passthrough{\lstinline!medoutcon!}}) for their application, will
 be introduced.
 
 To ensure translation to real-world data analysis, this workshop will
-incorporate hands-on \texttt{R} programming exercises to allow participants practice in
+incorporate hands-on \passthrough{\lstinline!R!} programming exercises to allow participants practice in
 implementing the statistical tools presented. It is recommended that
 participants have working knowledge of the basic notions of causal inference,
 including counterfactuals and identification (linking the causal effect to a
 parameter estimable from the observed data distribution). Familiarity with the
-\texttt{R} programming language is also recommended.
+\passthrough{\lstinline!R!} programming language is also recommended.
 
 \hypertarget{schedule}{%
 \section{Workshop schedule}\label{schedule}}
@@ -326,7 +288,7 @@ parameter estimable from the observed data distribution). Familiarity with the
   12:15P-12:45P estimation for natural direct and indirect effects,
   interventional direct and indirect effects
 \item
-  12:45P-01:15P: practice \texttt{R} code for estimation
+  12:45P-01:15P: practice \passthrough{\lstinline!R!} code for estimation
 \item
   01:15P-01:30P: estimation for stochastic interventional direct and indirect
   effects
@@ -392,7 +354,7 @@ target available policy and program resources.
 These workshop materials were written using \href{http://bookdown.org/}{bookdown},
 and the complete source is available on
 \href{https://github.com/tlverse/tlverse-handbook}{GitHub}. This version of the book
-was built with R version 4.0.5 (2021-03-31), \href{https://pandoc.org/}{pandoc} version \texttt{r\ rmarkdown::pandoc\_version()}, and the following packages:
+was built with R version 4.0.5 (2021-03-31), \href{https://pandoc.org/}{pandoc} version \passthrough{\lstinline!r rmarkdown::pandoc\_version()!}, and the following packages:
 
 \begin{longtable}[]{@{}lll@{}}
 \toprule
@@ -451,7 +413,7 @@ interactive. You need to install R before you install RStudio.
 \item
   To check which version of R you are using, start RStudio and the first thing
   that appears in the console indicates the version of R you are
-  running. Alternatively, you can type \texttt{sessionInfo()}, which will also display
+  running. Alternatively, you can type \passthrough{\lstinline!sessionInfo()!}, which will also display
   which version of R you are running. Go on the \href{https://cran.r-project.org/bin/windows/base/}{CRAN
   website} and check whether a
   more recent version is available. If so, please download and install it. You
@@ -469,7 +431,7 @@ interactive. You need to install R before you install RStudio.
   Download R from
   the \href{http://cran.r-project.org/bin/windows/base/release.htm}{CRAN website}.
 \item
-  Run the \texttt{.exe} file that was just downloaded
+  Run the \passthrough{\lstinline!.exe!} file that was just downloaded
 \item
   Go to the \href{https://www.rstudio.com/products/rstudio/download/\#download}{RStudio download
   page}
@@ -497,7 +459,7 @@ interactive. You need to install R before you install RStudio.
 \item
   To check the version of R you are using, start RStudio and the first thing
   that appears on the terminal indicates the version of R you are running.
-  Alternatively, you can type \texttt{sessionInfo()}, which will also display which
+  Alternatively, you can type \passthrough{\lstinline!sessionInfo()!}, which will also display which
   version of R you are running. Go on the \href{https://cran.r-project.org/bin/macosx/}{CRAN
   website} and check whether a more
   recent version is available. If so, please download and install it.
@@ -512,7 +474,7 @@ interactive. You need to install R before you install RStudio.
   Download R from
   the \href{http://cran.r-project.org/bin/macosx}{CRAN website}.
 \item
-  Select the \texttt{.pkg} file for the latest R version
+  Select the \passthrough{\lstinline!.pkg!} file for the latest R version
 \item
   Double click on the downloaded file to install R
 \item
@@ -541,7 +503,7 @@ interactive. You need to install R before you install RStudio.
   from \href{https://cloud.r-project.org/bin/linux}{CRAN}, they provide information
   to get the most recent version of R for common distributions. For most
   distributions, you could use your package manager (e.g., for Debian/Ubuntu run
-  \texttt{sudo\ apt-get\ install\ r-base}, and for Fedora \texttt{sudo\ yum\ install\ R}), but we
+  \passthrough{\lstinline!sudo apt-get install r-base!}, and for Fedora \passthrough{\lstinline!sudo yum install R!}), but we
   don't recommend this approach as the versions provided by this are
   usually out of date. In any case, make sure you have at least R 3.3.1.
 \item
@@ -549,7 +511,7 @@ interactive. You need to install R before you install RStudio.
   page}
 \item
   Under \emph{Installers} select the version that matches your distribution, and
-  install it with your preferred method (e.g., with Debian/Ubuntu \texttt{sudo\ dpkg\ -i\ rstudio-x.yy.zzz-amd64.deb} at the terminal).
+  install it with your preferred method (e.g., with Debian/Ubuntu \passthrough{\lstinline!sudo dpkg -i rstudio-x.yy.zzz-amd64.deb!} at the terminal).
 \item
   Once it's installed, open RStudio to make sure it works and you don't get any
   error messages.
@@ -626,7 +588,9 @@ model.
 \hypertarget{controlled-direct-effects}{%
 \section{Controlled direct effects}\label{controlled-direct-effects}}
 
-\[  \psi_{\text{CDE}} = \E(Y_{1,m}) - \E(Y_{0,m}) \]
+\begin{equation*}
+  \psi_{\text{CDE}} = \E(Y_{1,m}) - \E(Y_{0,m})
+\end{equation*}
 
 \begin{itemize}
 \tightlist
@@ -777,7 +741,7 @@ mediator-outcome relationship (e.g., adherence)?}
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.2\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/medDAG2} 
+{\centering \includegraphics[width=0.75\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/medDAG2} 
 
 }
 
@@ -785,7 +749,7 @@ mediator-outcome relationship (e.g., adherence)?}
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/ctndag} 
+{\centering \includegraphics[width=1\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/ctndag} 
 
 }
 
@@ -859,7 +823,7 @@ Is this the estimand I want?
 
 \begin{figure}
 
-{\centering \includegraphics[width=1\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/table1} 
+{\centering \includegraphics[width=1.25\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/table1} 
 
 }
 
@@ -951,7 +915,7 @@ they are identifiable. Specifically:
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/ctndag} 
+{\centering \includegraphics[width=1\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/ctndag} 
 
 }
 
@@ -1027,14 +991,14 @@ What estimand do we want?
 
 Consider the following directed acyclic graph.
 
-\textbackslash begin\{figure\}
+\begin{figure}
 
-\{\centering \includegraphics[width=0.8\linewidth]{04-stochastic_files/figure-latex/unnamed-chunk-1-1}
+{\centering \includegraphics[width=0.8\linewidth]{04-stochastic_files/figure-latex/unnamed-chunk-1-1} 
 
-\}
+}
 
-\textbackslash caption\{Directed acylcic graph under \emph{no intermediate confounders} of the mediator-outcome relation affected by treatment\}\label{fig:unnamed-chunk-1}
-\textbackslash end\{figure\}
+\caption{Directed acylcic graph under no intermediate confounders of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-1}
+\end{figure}
 
 \hypertarget{motivation-for-stochastic-interventions}{%
 \section{Motivation for stochastic interventions}\label{motivation-for-stochastic-interventions}}
@@ -1164,28 +1128,26 @@ bias-correcting \emph{TMLE-update step}.
   generating predicted probabilities that \(A=1\) for and \(A=0\).
 \end{enumerate}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{amodel <-}\StringTok{ "a ~ w "}
-\NormalTok{mmodel <-}\StringTok{ "m ~ a + w"}
-\NormalTok{amodel <-}\StringTok{ "a ~ m + w"}
-\NormalTok{ymodel <-}\StringTok{ "y ~ m + a*w"}
+\begin{lstlisting}[language=R]
+amodel <- "a ~ w "
+mmodel <- "m ~ a + w"
+amodel <- "a ~ m + w"
+ymodel <- "y ~ m + a*w"
 
-\CommentTok{# make gm}
-\NormalTok{afit <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(}\DataTypeTok{formula =}\NormalTok{ amodel, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{, }\DataTypeTok{data =}\NormalTok{ obsdat)}
-\NormalTok{mfit <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(}\DataTypeTok{formula =}\NormalTok{ mmodel, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{, }\DataTypeTok{data =}\NormalTok{ obsdat)}
+# make gm
+afit <- glm(formula = amodel, family = "binomial", data = obsdat)
+mfit <- glm(formula = mmodel, family = "binomial", data = obsdat)
 
-\NormalTok{a1 <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(afit, }\DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{w =}\NormalTok{ obsdat}\OperatorTok{$}\NormalTok{w), }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{)}
-\NormalTok{a0 <-}\StringTok{ }\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{a1}
+a1 <- predict(afit, newdata = data.frame(w = obsdat$w), type = "response")
+a0 <- 1 - a1
 
-\NormalTok{am1 <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(amfit,}
-  \DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{w =}\NormalTok{ obsdat}\OperatorTok{$}\NormalTok{w, }\DataTypeTok{m =}\NormalTok{ obsdat}\OperatorTok{$}\NormalTok{m),}
-  \DataTypeTok{type =} \StringTok{"response"}
-\NormalTok{)}
-\NormalTok{am0 <-}\StringTok{ }\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{am1}
-\NormalTok{cy <-}\StringTok{ }\NormalTok{(am0 }\OperatorTok{*}\StringTok{ }\NormalTok{a0) }\OperatorTok{/}\StringTok{ }\NormalTok{(am1 }\OperatorTok{*}\StringTok{ }\NormalTok{a1)}
-\end{Highlighting}
-\end{Shaded}
+am1 <- predict(amfit,
+  newdata = data.frame(w = obsdat$w, m = obsdat$m),
+  type = "response"
+)
+am0 <- 1 - am1
+cy <- (am0 * a0) / (am1 * a1)
+\end{lstlisting}
 
 \(\bar{Q}_Y(M,a^\prime,W) - \bar{Q}_Y(M,a^\star,W)\)
 
@@ -1198,32 +1160,30 @@ bias-correcting \emph{TMLE-update step}.
   setting \(A=1\) and \(A=0\), giving \(\hat{Y}(m, 1, w)\) and \(\hat{Y}(m, 1, w)\).
 \end{enumerate}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{qyinit <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(}
-  \KeywordTok{predict}\NormalTok{(}\KeywordTok{glm}\NormalTok{(}
-    \DataTypeTok{formula =}\NormalTok{ ymodel, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{,}
-    \DataTypeTok{data =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{a =}\NormalTok{ a, }\DataTypeTok{m =}\NormalTok{ m, }\DataTypeTok{y =}\NormalTok{ y))}
-\NormalTok{  ),}
-  \DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, a, m)), }\DataTypeTok{type =} \StringTok{"response"}
-\NormalTok{  ),}
-  \KeywordTok{predict}\NormalTok{(}\KeywordTok{glm}\NormalTok{(}
-    \DataTypeTok{formula =}\NormalTok{ ymodel, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{,}
-    \DataTypeTok{data =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{a =}\NormalTok{ a, }\DataTypeTok{m =}\NormalTok{ m, }\DataTypeTok{y =}\NormalTok{ y))}
-\NormalTok{  ),}
-  \DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{a =} \DecValTok{0}\NormalTok{, m)), }\DataTypeTok{type =} \StringTok{"response"}
-\NormalTok{  ),}
-  \KeywordTok{predict}\NormalTok{(}\KeywordTok{glm}\NormalTok{(}
-    \DataTypeTok{formula =}\NormalTok{ ymodel, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{,}
-    \DataTypeTok{data =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{z =}\NormalTok{ z, }\DataTypeTok{m =}\NormalTok{ m, }\DataTypeTok{y =}\NormalTok{ y))}
-\NormalTok{  ),}
-  \DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{a =} \DecValTok{1}\NormalTok{, m)), }\DataTypeTok{type =} \StringTok{"response"}
-\NormalTok{  )}
-\NormalTok{)}
+\begin{lstlisting}[language=R]
+qyinit <- cbind(
+  predict(glm(
+    formula = ymodel, family = "binomial",
+    data = data.frame(cbind(datw, a = a, m = m, y = y))
+  ),
+  newdata = data.frame(cbind(datw, a, m)), type = "response"
+  ),
+  predict(glm(
+    formula = ymodel, family = "binomial",
+    data = data.frame(cbind(datw, a = a, m = m, y = y))
+  ),
+  newdata = data.frame(cbind(datw, a = 0, m)), type = "response"
+  ),
+  predict(glm(
+    formula = ymodel, family = "binomial",
+    data = data.frame(cbind(datw, z = z, m = m, y = y))
+  ),
+  newdata = data.frame(cbind(datw, a = 1, m)), type = "response"
+  )
+)
 
-\NormalTok{qbardiff <-}\StringTok{ }\NormalTok{qyinit[, }\DecValTok{3}\NormalTok{] }\OperatorTok{-}\StringTok{ }\NormalTok{qyinit[, }\DecValTok{2}\NormalTok{]}
-\end{Highlighting}
-\end{Shaded}
+qbardiff <- qyinit[, 3] - qyinit[, 2]
+\end{lstlisting}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1238,17 +1198,15 @@ bias-correcting \emph{TMLE-update step}.
   \(\hat{\bar{Q}}^{\star}_{diff}(M,A,W)\).
 \end{enumerate}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{epsilon <-}\StringTok{ }\KeywordTok{coef}\NormalTok{(}\KeywordTok{glm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\DecValTok{1}\NormalTok{,}
-  \DataTypeTok{weights =}\NormalTok{ cy, }\DataTypeTok{offset =}\NormalTok{ (}\KeywordTok{qlogis}\NormalTok{(qyinit[, }\DecValTok{1}\NormalTok{])),}
-  \DataTypeTok{family =} \StringTok{"quasibinomial"}
-\NormalTok{))}
-\NormalTok{qyupa0 <-}\StringTok{ }\KeywordTok{plogis}\NormalTok{(}\KeywordTok{qlogis}\NormalTok{(qyinit[, }\DecValTok{2}\NormalTok{]) }\OperatorTok{+}\StringTok{ }\NormalTok{epsilon)}
-\NormalTok{qyupa1 <-}\StringTok{ }\KeywordTok{plogis}\NormalTok{(}\KeywordTok{qlogis}\NormalTok{(qyinit[, }\DecValTok{3}\NormalTok{]) }\OperatorTok{+}\StringTok{ }\NormalTok{epsilon)}
-\NormalTok{qdiffup <-}\StringTok{ }\NormalTok{qyupa1 }\OperatorTok{-}\StringTok{ }\NormalTok{qyupa0}
-\end{Highlighting}
-\end{Shaded}
+\begin{lstlisting}[language=R]
+epsilon <- coef(glm(y ~ 1,
+  weights = cy, offset = (qlogis(qyinit[, 1])),
+  family = "quasibinomial"
+))
+qyupa0 <- plogis(qlogis(qyinit[, 2]) + epsilon)
+qyupa1 <- plogis(qlogis(qyinit[, 3]) + epsilon)
+qdiffup <- qyupa1 - qyupa0
+\end{lstlisting}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1260,20 +1218,18 @@ bias-correcting \emph{TMLE-update step}.
   TML estimate of the NDE.
 \end{enumerate}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{margqdiff_fit <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(qdiffup }\OperatorTok{~}\StringTok{ }\NormalTok{w,}
-  \DataTypeTok{data =} \KeywordTok{data.frame}\NormalTok{(}
-    \DataTypeTok{qdiffup =}\NormalTok{ qdiffup[a }\OperatorTok{==}\StringTok{ }\DecValTok{0}\NormalTok{],}
-    \DataTypeTok{w =}\NormalTok{ w[a }\OperatorTok{==}\StringTok{ }\DecValTok{0}\NormalTok{]}
-\NormalTok{  )}
-\NormalTok{)}
-\NormalTok{margqdiff <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(margqdiff_fit,}
-  \DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{qdiffup =}\NormalTok{ qdiffup, }\DataTypeTok{w =}\NormalTok{ w)}
-\NormalTok{)}
-\NormalTok{tmlende <-}\StringTok{ }\KeywordTok{mean}\NormalTok{(margqdiff)}
-\end{Highlighting}
-\end{Shaded}
+\begin{lstlisting}[language=R]
+margqdiff_fit <- glm(qdiffup ~ w,
+  data = data.frame(
+    qdiffup = qdiffup[a == 0],
+    w = w[a == 0]
+  )
+)
+margqdiff <- predict(margqdiff_fit,
+  newdata = data.frame(qdiffup = qdiffup, w = w)
+)
+tmlende <- mean(margqdiff)
+\end{lstlisting}
 
 \hypertarget{interventional-direct-and-indirect-effects}{%
 \section{Interventional direct and indirect effects}\label{interventional-direct-and-indirect-effects}}
@@ -1395,38 +1351,36 @@ where, again, \(\hat{g}_{M \mid a^{\star}, W}\) is assumed known, is given by:
   We use these quantities to calculate \(\hat{g}_{M \mid a^{\star}, W} = \hat{g}_{M \mid z=1,W}\hat{g}_{Z \mid a^{\star}, W} + \hat{g}_{M \mid z=0,W}(1-\hat{g}_{Z|a^{\star}, W})\).
 \end{enumerate}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{zmodel <-}\StringTok{ "z ~ a + w1 "}
-\NormalTok{mmodel <-}\StringTok{ "m ~ z + w1"}
-\NormalTok{ymodel <-}\StringTok{ "y ~ m + z*w1"}
+\begin{lstlisting}[language=R]
+zmodel <- "z ~ a + w1 "
+mmodel <- "m ~ z + w1"
+ymodel <- "y ~ m + z*w1"
 
-\CommentTok{# make gm and get counterfactual predictions}
-\NormalTok{zfit <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(}\DataTypeTok{formula =}\NormalTok{ zmodel, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{, }\DataTypeTok{data =}\NormalTok{ obsdat)}
-\NormalTok{mfit <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(}\DataTypeTok{formula =}\NormalTok{ mmodel, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{, }\DataTypeTok{data =}\NormalTok{ obsdat)}
+# make gm and get counterfactual predictions
+zfit <- glm(formula = zmodel, family = "binomial", data = obsdat)
+mfit <- glm(formula = mmodel, family = "binomial", data = obsdat)
 
-\NormalTok{za0 <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(zfit,}
-  \DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{w1 =}\NormalTok{ obsdat}\OperatorTok{$}\NormalTok{w1, }\DataTypeTok{a =} \DecValTok{0}\NormalTok{),}
-  \DataTypeTok{type =} \StringTok{"response"}
-\NormalTok{)}
-\NormalTok{za1 <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(zfit,}
-  \DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{w1 =}\NormalTok{ obsdat}\OperatorTok{$}\NormalTok{w1, }\DataTypeTok{a =} \DecValTok{1}\NormalTok{),}
-  \DataTypeTok{type =} \StringTok{"response"}
-\NormalTok{)}
+za0 <- predict(zfit,
+  newdata = data.frame(w1 = obsdat$w1, a = 0),
+  type = "response"
+)
+za1 <- predict(zfit,
+  newdata = data.frame(w1 = obsdat$w1, a = 1),
+  type = "response"
+)
 
-\NormalTok{mz1 <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(mfit,}
-  \DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{w1 =}\NormalTok{ obsdat}\OperatorTok{$}\NormalTok{w1, }\DataTypeTok{z =} \DecValTok{1}\NormalTok{),}
-  \DataTypeTok{type =} \StringTok{"response"}
-\NormalTok{)}
-\NormalTok{mz0 }\OperatorTok{<}\StringTok{ }\OperatorTok{-}\KeywordTok{predict}\NormalTok{(mfit,}
-  \DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{w1 =}\NormalTok{ obsdat}\OperatorTok{$}\NormalTok{w1, }\DataTypeTok{z =} \DecValTok{0}\NormalTok{),}
-  \DataTypeTok{type =} \StringTok{"response"}
-\NormalTok{)}
+mz1 <- predict(mfit,
+  newdata = data.frame(w1 = obsdat$w1, z = 1),
+  type = "response"
+)
+mz0 < -predict(mfit,
+  newdata = data.frame(w1 = obsdat$w1, z = 0),
+  type = "response"
+)
 
-\NormalTok{gm0 <-}\StringTok{ }\NormalTok{(mz1 }\OperatorTok{*}\StringTok{ }\NormalTok{za0) }\OperatorTok{+}\StringTok{ }\NormalTok{(mz0 }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{za0))}
-\NormalTok{gma1 <-}\StringTok{ }\NormalTok{(mz1 }\OperatorTok{*}\StringTok{ }\NormalTok{za1) }\OperatorTok{+}\StringTok{ }\NormalTok{(mz0 }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{za1))}
-\end{Highlighting}
-\end{Shaded}
+gm0 <- (mz1 * za0) + (mz0 * (1 - za0))
+gma1 <- (mz1 * za1) + (mz0 * (1 - za1))
+\end{lstlisting}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1438,30 +1392,28 @@ where, again, \(\hat{g}_{M \mid a^{\star}, W}\) is assumed known, is given by:
   \(\hat{Y}(m=1, z, w)\) and \(\hat{Y}(m=0, z, w)\).
 \end{enumerate}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyinit <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(}
-  \KeywordTok{predict}\NormalTok{(}\KeywordTok{glm}\NormalTok{(}
-    \DataTypeTok{formula =}\NormalTok{ ymodel, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{,}
-    \DataTypeTok{data =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{z =}\NormalTok{ z, }\DataTypeTok{m =}\NormalTok{ m, }\DataTypeTok{y =}\NormalTok{ y))}
-\NormalTok{  ),}
-  \DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{z =}\NormalTok{ z, }\DataTypeTok{m =}\NormalTok{ m)), }\DataTypeTok{type =} \StringTok{"response"}
-\NormalTok{  ),}
-  \KeywordTok{predict}\NormalTok{(}\KeywordTok{glm}\NormalTok{(}
-    \DataTypeTok{formula =}\NormalTok{ ymodel, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{,}
-    \DataTypeTok{data =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{z =}\NormalTok{ z, }\DataTypeTok{m =}\NormalTok{ m, }\DataTypeTok{y =}\NormalTok{ y))}
-\NormalTok{  ),}
-  \DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{z =}\NormalTok{ z, }\DataTypeTok{m =} \DecValTok{0}\NormalTok{)), }\DataTypeTok{type =} \StringTok{"response"}
-\NormalTok{  ),}
-  \KeywordTok{predict}\NormalTok{(}\KeywordTok{glm}\NormalTok{(}
-    \DataTypeTok{formula =}\NormalTok{ ymodel, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{,}
-    \DataTypeTok{data =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{z =}\NormalTok{ z, }\DataTypeTok{m =}\NormalTok{ m, }\DataTypeTok{y =}\NormalTok{ y))}
-\NormalTok{  ),}
-  \DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{z =}\NormalTok{ z, }\DataTypeTok{m =} \DecValTok{1}\NormalTok{)), }\DataTypeTok{type =} \StringTok{"response"}
-\NormalTok{  )}
-\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
+\begin{lstlisting}[language=R]
+tmpdat$qyinit <- cbind(
+  predict(glm(
+    formula = ymodel, family = "binomial",
+    data = data.frame(cbind(datw, z = z, m = m, y = y))
+  ),
+  newdata = data.frame(cbind(datw, z = z, m = m)), type = "response"
+  ),
+  predict(glm(
+    formula = ymodel, family = "binomial",
+    data = data.frame(cbind(datw, z = z, m = m, y = y))
+  ),
+  newdata = data.frame(cbind(datw, z = z, m = 0)), type = "response"
+  ),
+  predict(glm(
+    formula = ymodel, family = "binomial",
+    data = data.frame(cbind(datw, z = z, m = m, y = y))
+  ),
+  newdata = data.frame(cbind(datw, z = z, m = 1)), type = "response"
+  )
+)
+\end{lstlisting}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1476,23 +1428,21 @@ where, again, \(\hat{g}_{M \mid a^{\star}, W}\) is assumed known, is given by:
   \end{equation*}
 \end{enumerate}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{psa1 <-}\StringTok{ }\KeywordTok{I}\NormalTok{(a }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{) }\OperatorTok{/}\StringTok{ }\KeywordTok{mean}\NormalTok{(a)}
-\NormalTok{psa0 <-}\StringTok{ }\KeywordTok{I}\NormalTok{(a }\OperatorTok{==}\StringTok{ }\DecValTok{0}\NormalTok{) }\OperatorTok{/}\StringTok{ }\KeywordTok{mean}\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{a)}
-\NormalTok{mz <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(}\KeywordTok{glm}\NormalTok{(}
-  \DataTypeTok{formula =}\NormalTok{ mmodel, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{,}
-  \DataTypeTok{data =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{z =}\NormalTok{ z, }\DataTypeTok{m =}\NormalTok{ m))}
-\NormalTok{),}
-\DataTypeTok{newdata =} \KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(datw, }\DataTypeTok{z =}\NormalTok{ z)), }\DataTypeTok{type =} \StringTok{"response"}
-\NormalTok{)}
-\NormalTok{psm <-}\StringTok{ }\NormalTok{(mz }\OperatorTok{*}\StringTok{ }\NormalTok{m) }\OperatorTok{+}\StringTok{ }\NormalTok{((}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{mz) }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{m))}
+\begin{lstlisting}[language=R]
+psa1 <- I(a == 1) / mean(a)
+psa0 <- I(a == 0) / mean(1 - a)
+mz <- predict(glm(
+  formula = mmodel, family = "binomial",
+  data = data.frame(cbind(datw, z = z, m = m))
+),
+newdata = data.frame(cbind(datw, z = z)), type = "response"
+)
+psm <- (mz * m) + ((1 - mz) * (1 - m))
 
-\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{ha1gma1 <-}\StringTok{ }\NormalTok{((m }\OperatorTok{*}\StringTok{ }\NormalTok{gma1 }\OperatorTok{+}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{m) }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{gma1)) }\OperatorTok{/}\StringTok{ }\NormalTok{psm) }\OperatorTok{*}\StringTok{ }\NormalTok{psa1 }\OperatorTok{*}\StringTok{ }\NormalTok{svywt}
-\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{ha1gma0 <-}\StringTok{ }\NormalTok{((m }\OperatorTok{*}\StringTok{ }\NormalTok{gm }\OperatorTok{+}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{m) }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{gm)) }\OperatorTok{/}\StringTok{ }\NormalTok{psm) }\OperatorTok{*}\StringTok{ }\NormalTok{psa1 }\OperatorTok{*}\StringTok{ }\NormalTok{svywt}
-\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{ha0gma0 <-}\StringTok{ }\NormalTok{((m }\OperatorTok{*}\StringTok{ }\NormalTok{gm }\OperatorTok{+}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{m) }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{gm)) }\OperatorTok{/}\StringTok{ }\NormalTok{psm) }\OperatorTok{*}\StringTok{ }\NormalTok{psa0 }\OperatorTok{*}\StringTok{ }\NormalTok{svywt}
-\end{Highlighting}
-\end{Shaded}
+tmpdat$ha1gma1 <- ((m * gma1 + (1 - m) * (1 - gma1)) / psm) * psa1 * svywt
+tmpdat$ha1gma0 <- ((m * gm + (1 - m) * (1 - gm)) / psm) * psa1 * svywt
+tmpdat$ha0gma0 <- ((m * gm + (1 - m) * (1 - gm)) / psm) * psa0 * svywt
+\end{lstlisting}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1507,36 +1457,34 @@ where, again, \(\hat{g}_{M \mid a^{\star}, W}\) is assumed known, is given by:
   \(\hat{\bar{Q}}^{\star}_{Y}(M,Z,W) = \hat{\bar{Q}}_{Y}(\epsilon_n)(M,Z,W)\).
 \end{enumerate}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# for E(Y_\{1,gmastar\})}
-\NormalTok{epsilonma1g0 <-}\StringTok{ }\KeywordTok{coef}\NormalTok{(}\KeywordTok{glm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\DecValTok{1}\NormalTok{,}
-  \DataTypeTok{weights =}\NormalTok{ tmpdat}\OperatorTok{$}\NormalTok{ha1gma0,}
-  \DataTypeTok{offset =}\NormalTok{ (}\KeywordTok{qlogis}\NormalTok{(qyinit[, }\DecValTok{1}\NormalTok{])),}
-  \DataTypeTok{family =} \StringTok{"quasibinomial"}\NormalTok{, }\DataTypeTok{data =}\NormalTok{ tmpdat}
-\NormalTok{))}
-\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupm0a1g0 <-}\StringTok{ }\KeywordTok{plogis}\NormalTok{(}\KeywordTok{qlogis}\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{qyinit[, }\DecValTok{2}\NormalTok{]) }\OperatorTok{+}\StringTok{ }\NormalTok{epsilonma1g0)}
-\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupm1a1g0 <-}\StringTok{ }\KeywordTok{plogis}\NormalTok{(}\KeywordTok{qlogis}\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{qyinit[, }\DecValTok{3}\NormalTok{]) }\OperatorTok{+}\StringTok{ }\NormalTok{epsilonma1g0)}
+\begin{lstlisting}[language=R]
+# for E(Y_{1,gmastar})
+epsilonma1g0 <- coef(glm(y ~ 1,
+  weights = tmpdat$ha1gma0,
+  offset = (qlogis(qyinit[, 1])),
+  family = "quasibinomial", data = tmpdat
+))
+tmpdat$qyupm0a1g0 <- plogis(qlogis(tmpdat$qyinit[, 2]) + epsilonma1g0)
+tmpdat$qyupm1a1g0 <- plogis(qlogis(tmpdat$qyinit[, 3]) + epsilonma1g0)
 
-\CommentTok{# for E(Y_\{1,gma\})}
-\NormalTok{epsilonma1g1 <-}\StringTok{ }\KeywordTok{coef}\NormalTok{(}\KeywordTok{glm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\DecValTok{1}\NormalTok{,}
-  \DataTypeTok{weights =}\NormalTok{ tmpdat}\OperatorTok{$}\NormalTok{ha1gma1,}
-  \DataTypeTok{offset =}\NormalTok{ (}\KeywordTok{qlogis}\NormalTok{(qyinit[, }\DecValTok{1}\NormalTok{])),}
-  \DataTypeTok{family =} \StringTok{"quasibinomial"}\NormalTok{, }\DataTypeTok{data =}\NormalTok{ tmpdat}
-\NormalTok{))}
-\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupm0a1g1 <-}\StringTok{ }\KeywordTok{plogis}\NormalTok{(}\KeywordTok{qlogis}\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{qyinit[, }\DecValTok{2}\NormalTok{]) }\OperatorTok{+}\StringTok{ }\NormalTok{epsilonma1g1)}
-\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupm1a1g1 <-}\StringTok{ }\KeywordTok{plogis}\NormalTok{(}\KeywordTok{qlogis}\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{qyinit[, }\DecValTok{3}\NormalTok{]) }\OperatorTok{+}\StringTok{ }\NormalTok{epsilonma1g1)}
+# for E(Y_{1,gma})
+epsilonma1g1 <- coef(glm(y ~ 1,
+  weights = tmpdat$ha1gma1,
+  offset = (qlogis(qyinit[, 1])),
+  family = "quasibinomial", data = tmpdat
+))
+tmpdat$qyupm0a1g1 <- plogis(qlogis(tmpdat$qyinit[, 2]) + epsilonma1g1)
+tmpdat$qyupm1a1g1 <- plogis(qlogis(tmpdat$qyinit[, 3]) + epsilonma1g1)
 
-\CommentTok{# for E(Y_\{0,gmastar\})}
-\NormalTok{epsilonma0g0 <-}\StringTok{ }\KeywordTok{coef}\NormalTok{(}\KeywordTok{glm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\DecValTok{1}\NormalTok{,}
-  \DataTypeTok{weights =}\NormalTok{ tmpdat}\OperatorTok{$}\NormalTok{ha0gma0,}
-  \DataTypeTok{offset =}\NormalTok{ (}\KeywordTok{qlogis}\NormalTok{(qyinit[, }\DecValTok{1}\NormalTok{])),}
-  \DataTypeTok{family =} \StringTok{"quasibinomial"}\NormalTok{, }\DataTypeTok{data =}\NormalTok{ tmpdat}
-\NormalTok{))}
-\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupm0a0g0 <-}\StringTok{ }\KeywordTok{plogis}\NormalTok{(}\KeywordTok{qlogis}\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{qyinit[, }\DecValTok{2}\NormalTok{]) }\OperatorTok{+}\StringTok{ }\NormalTok{epsilonma0g0)}
-\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupm1a0g0 <-}\StringTok{ }\KeywordTok{plogis}\NormalTok{(}\KeywordTok{qlogis}\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{qyinit[, }\DecValTok{3}\NormalTok{]) }\OperatorTok{+}\StringTok{ }\NormalTok{epsilonma0g0)}
-\end{Highlighting}
-\end{Shaded}
+# for E(Y_{0,gmastar})
+epsilonma0g0 <- coef(glm(y ~ 1,
+  weights = tmpdat$ha0gma0,
+  offset = (qlogis(qyinit[, 1])),
+  family = "quasibinomial", data = tmpdat
+))
+tmpdat$qyupm0a0g0 <- plogis(qlogis(tmpdat$qyinit[, 2]) + epsilonma0g0)
+tmpdat$qyupm1a0g0 <- plogis(qlogis(tmpdat$qyinit[, 3]) + epsilonma0g0)
+\end{lstlisting}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1551,13 +1499,11 @@ where, again, \(\hat{g}_{M \mid a^{\star}, W}\) is assumed known, is given by:
   them together (i.e., \(\bar{Q}^{\hat{g}}_{M,n}(Z,W) = \hat{Q}^{\star}_Y(m=1, z, w) \hat{g}_{M|a^{\star},W} + \hat{Q}^{\star}_Y(m=0, z, w)(1-\hat{g}_{M|a^{\star},W})\)).
 \end{enumerate}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{Qma1g0 <-}\StringTok{ }\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupm0a1g0 }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{gm) }\OperatorTok{+}\StringTok{ }\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupm1a1g0 }\OperatorTok{*}\StringTok{ }\NormalTok{gm}
-\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{Qma1g1 <-}\StringTok{ }\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupm0a1g1 }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{gma1) }\OperatorTok{+}\StringTok{ }\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupm1a1g1 }\OperatorTok{*}\StringTok{ }\NormalTok{gma1}
-\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{Qma0g0 <-}\StringTok{ }\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupm0a0g0 }\OperatorTok{*}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{gm) }\OperatorTok{+}\StringTok{ }\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupm1a0g0 }\OperatorTok{*}\StringTok{ }\NormalTok{gm}
-\end{Highlighting}
-\end{Shaded}
+\begin{lstlisting}[language=R]
+tmpdat$Qma1g0 <- tmpdat$qyupm0a1g0 * (1 - gm) + tmpdat$qyupm1a1g0 * gm
+tmpdat$Qma1g1 <- tmpdat$qyupm0a1g1 * (1 - gma1) + tmpdat$qyupm1a1g1 * gma1
+tmpdat$Qma0g0 <- tmpdat$qyupm0a0g0 * (1 - gm) + tmpdat$qyupm1a0g0 * gm
+\end{lstlisting}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1569,26 +1515,24 @@ where, again, \(\hat{g}_{M \mid a^{\star}, W}\) is assumed known, is given by:
   regression \(\hat{\bar{Q}}^{a^\prime}_{Z}(W)\).
 \end{enumerate}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{Qzfita1g0 <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(}
-  \DataTypeTok{formula =} \KeywordTok{paste}\NormalTok{(}\StringTok{"Qma1g0"}\NormalTok{, qmodel, }\DataTypeTok{sep =} \StringTok{"~"}\NormalTok{),}
-  \DataTypeTok{data =}\NormalTok{ tmpdat[tmpdat}\OperatorTok{$}\NormalTok{a }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{, ], }\DataTypeTok{family =} \StringTok{"quasibinomial"}
-\NormalTok{)}
-\NormalTok{Qzfita1g1 <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(}
-  \DataTypeTok{formula =} \KeywordTok{paste}\NormalTok{(}\StringTok{"Qma1g1"}\NormalTok{, qmodel, }\DataTypeTok{sep =} \StringTok{"~"}\NormalTok{),}
-  \DataTypeTok{data =}\NormalTok{ tmpdat[tmpdat}\OperatorTok{$}\NormalTok{a }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{, ], }\DataTypeTok{family =} \StringTok{"quasibinomial"}
-\NormalTok{)}
-\NormalTok{Qzfita0g0 <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(}
-  \DataTypeTok{formula =} \KeywordTok{paste}\NormalTok{(}\StringTok{"Qma0g0"}\NormalTok{, qmodel, }\DataTypeTok{sep =} \StringTok{"~"}\NormalTok{),}
-  \DataTypeTok{data =}\NormalTok{ tmpdat[tmpdat}\OperatorTok{$}\NormalTok{a }\OperatorTok{==}\StringTok{ }\DecValTok{0}\NormalTok{, ], }\DataTypeTok{family =} \StringTok{"quasibinomial"}
-\NormalTok{)}
+\begin{lstlisting}[language=R]
+Qzfita1g0 <- glm(
+  formula = paste("Qma1g0", qmodel, sep = "~"),
+  data = tmpdat[tmpdat$a == 1, ], family = "quasibinomial"
+)
+Qzfita1g1 <- glm(
+  formula = paste("Qma1g1", qmodel, sep = "~"),
+  data = tmpdat[tmpdat$a == 1, ], family = "quasibinomial"
+)
+Qzfita0g0 <- glm(
+  formula = paste("Qma0g0", qmodel, sep = "~"),
+  data = tmpdat[tmpdat$a == 0, ], family = "quasibinomial"
+)
 
-\NormalTok{Qza1g0 <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(Qzfita1g0, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{, }\DataTypeTok{newdata =}\NormalTok{ tmpdat)}
-\NormalTok{Qza1g1 <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(Qzfita1g1, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{, }\DataTypeTok{newdata =}\NormalTok{ tmpdat)}
-\NormalTok{Qza0g0 <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(Qzfita0g0, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{, }\DataTypeTok{newdata =}\NormalTok{ tmpdat)}
-\end{Highlighting}
-\end{Shaded}
+Qza1g0 <- predict(Qzfita1g0, type = "response", newdata = tmpdat)
+Qza1g1 <- predict(Qzfita1g1, type = "response", newdata = tmpdat)
+Qza0g0 <- predict(Qzfita0g0, type = "response", newdata = tmpdat)
+\end{lstlisting}
 
 (Note that if \(A\) were not randomly assigned, we would need to complete a
 second targeting step.)
@@ -1602,13 +1546,11 @@ second targeting step.)
   \(\Psi(P)(a^\prime, \hat{g}_{M \mid a^{\star}, W})\).
 \end{enumerate}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{tmlea1m0 <-}\StringTok{ }\KeywordTok{sum}\NormalTok{(Qzupa1g0 }\OperatorTok{*}\StringTok{ }\NormalTok{svywt) }\OperatorTok{/}\StringTok{ }\KeywordTok{sum}\NormalTok{(svywt)}
-\NormalTok{tmlea1m1 <-}\StringTok{ }\KeywordTok{sum}\NormalTok{(Qzupa1g1 }\OperatorTok{*}\StringTok{ }\NormalTok{svywt) }\OperatorTok{/}\StringTok{ }\KeywordTok{sum}\NormalTok{(svywt)}
-\NormalTok{tmlea0m0 <-}\StringTok{ }\KeywordTok{sum}\NormalTok{(Qzupa0g0 }\OperatorTok{*}\StringTok{ }\NormalTok{svywt) }\OperatorTok{/}\StringTok{ }\KeywordTok{sum}\NormalTok{(svywt)}
-\end{Highlighting}
-\end{Shaded}
+\begin{lstlisting}[language=R]
+tmlea1m0 <- sum(Qzupa1g0 * svywt) / sum(svywt)
+tmlea1m1 <- sum(Qzupa1g1 * svywt) / sum(svywt)
+tmlea0m0 <- sum(Qzupa0g0 * svywt) / sum(svywt)
+\end{lstlisting}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1636,12 +1578,10 @@ second targeting step.)
   \(\Psi(P)(a,\hat{g}_{M \mid a,W}) - \Psi(P)(a, \hat{g}_{M \mid a^{\star}, W})\).
 \end{enumerate}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{nde <-}\StringTok{ }\NormalTok{tmlea1m0 }\OperatorTok{-}\StringTok{ }\NormalTok{tmlea0m0}
-\NormalTok{nie <-}\StringTok{ }\NormalTok{tmlea1m1 }\OperatorTok{-}\StringTok{ }\NormalTok{tmlea1m0}
-\end{Highlighting}
-\end{Shaded}
+\begin{lstlisting}[language=R]
+nde <- tmlea1m0 - tmlea0m0
+nie <- tmlea1m1 - tmlea1m0
+\end{lstlisting}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1652,36 +1592,34 @@ second targeting step.)
   above, substituting in the targeted fits) divided by \(n\).
 \end{enumerate}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# first get EIF}
-\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupa1g0 <-}\StringTok{ }\KeywordTok{plogis}\NormalTok{(}\KeywordTok{qlogis}\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{qyinit[, }\DecValTok{1}\NormalTok{]) }\OperatorTok{+}\StringTok{ }\NormalTok{epsilonma1g0)}
-\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupa1g1 <-}\StringTok{ }\KeywordTok{plogis}\NormalTok{(}\KeywordTok{qlogis}\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{qyinit[, }\DecValTok{1}\NormalTok{]) }\OperatorTok{+}\StringTok{ }\NormalTok{epsilonma1g1)}
-\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupa0g0 <-}\StringTok{ }\KeywordTok{plogis}\NormalTok{(}\KeywordTok{qlogis}\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{qyinit[, }\DecValTok{1}\NormalTok{]) }\OperatorTok{+}\StringTok{ }\NormalTok{epsilonma0g0)}
+\begin{lstlisting}[language=R]
+# first get EIF
+tmpdat$qyupa1g0 <- plogis(qlogis(tmpdat$qyinit[, 1]) + epsilonma1g0)
+tmpdat$qyupa1g1 <- plogis(qlogis(tmpdat$qyinit[, 1]) + epsilonma1g1)
+tmpdat$qyupa0g0 <- plogis(qlogis(tmpdat$qyinit[, 1]) + epsilonma0g0)
 
-\NormalTok{eic1a1g0 <-}\StringTok{ }\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{ha1gma0 }\OperatorTok{*}\StringTok{ }\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{y }\OperatorTok{-}\StringTok{ }\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupa1g0)}
-\NormalTok{eic2a1g0 <-}\StringTok{ }\NormalTok{psa1 }\OperatorTok{*}\StringTok{ }\NormalTok{svywt }\OperatorTok{*}\StringTok{ }\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{Qma1g0 }\OperatorTok{-}\StringTok{ }\NormalTok{Qzupa1g0)}
-\NormalTok{eic3a1g0 <-}\StringTok{ }\NormalTok{Qzupa1g0 }\OperatorTok{-}\StringTok{ }\NormalTok{tmlea1m0}
-\NormalTok{eica1g0 <-}\StringTok{ }\NormalTok{eic1a1g0 }\OperatorTok{+}\StringTok{ }\NormalTok{eic2a1g0 }\OperatorTok{+}\StringTok{ }\NormalTok{eic3a1g0}
+eic1a1g0 <- tmpdat$ha1gma0 * (tmpdat$y - tmpdat$qyupa1g0)
+eic2a1g0 <- psa1 * svywt * (tmpdat$Qma1g0 - Qzupa1g0)
+eic3a1g0 <- Qzupa1g0 - tmlea1m0
+eica1g0 <- eic1a1g0 + eic2a1g0 + eic3a1g0
 
-\NormalTok{eic1a1g1 <-}\StringTok{ }\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{ha1gma1 }\OperatorTok{*}\StringTok{ }\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{y }\OperatorTok{-}\StringTok{ }\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupa1g1)}
-\NormalTok{eic2a1g1 <-}\StringTok{ }\NormalTok{psa1 }\OperatorTok{*}\StringTok{ }\NormalTok{svywt }\OperatorTok{*}\StringTok{ }\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{Qma1g1 }\OperatorTok{-}\StringTok{ }\NormalTok{Qzupa1g1)}
-\NormalTok{eic3a1g1 <-}\StringTok{ }\NormalTok{Qzupa1g1 }\OperatorTok{-}\StringTok{ }\NormalTok{tmlea1m1}
-\NormalTok{eica1g1 <-}\StringTok{ }\NormalTok{eic1a1g1 }\OperatorTok{+}\StringTok{ }\NormalTok{eic2a1g1 }\OperatorTok{+}\StringTok{ }\NormalTok{eic3a1g1}
+eic1a1g1 <- tmpdat$ha1gma1 * (tmpdat$y - tmpdat$qyupa1g1)
+eic2a1g1 <- psa1 * svywt * (tmpdat$Qma1g1 - Qzupa1g1)
+eic3a1g1 <- Qzupa1g1 - tmlea1m1
+eica1g1 <- eic1a1g1 + eic2a1g1 + eic3a1g1
 
-\NormalTok{eic1a0g0 <-}\StringTok{ }\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{ha0gma0 }\OperatorTok{*}\StringTok{ }\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{y }\OperatorTok{-}\StringTok{ }\NormalTok{tmpdat}\OperatorTok{$}\NormalTok{qyupa0g0)}
-\NormalTok{eic2a0g0 <-}\StringTok{ }\NormalTok{psa0 }\OperatorTok{*}\StringTok{ }\NormalTok{svywt }\OperatorTok{*}\StringTok{ }\NormalTok{(tmpdat}\OperatorTok{$}\NormalTok{Qma0g0 }\OperatorTok{-}\StringTok{ }\NormalTok{Qzupa0g0)}
-\NormalTok{eic3a0g0 <-}\StringTok{ }\NormalTok{Qzupa0g0 }\OperatorTok{-}\StringTok{ }\NormalTok{tmlea0m0}
-\NormalTok{eica0g0 <-}\StringTok{ }\NormalTok{eic1a0g0 }\OperatorTok{+}\StringTok{ }\NormalTok{eic2a0g0 }\OperatorTok{+}\StringTok{ }\NormalTok{eic3a0g0}
+eic1a0g0 <- tmpdat$ha0gma0 * (tmpdat$y - tmpdat$qyupa0g0)
+eic2a0g0 <- psa0 * svywt * (tmpdat$Qma0g0 - Qzupa0g0)
+eic3a0g0 <- Qzupa0g0 - tmlea0m0
+eica0g0 <- eic1a0g0 + eic2a0g0 + eic3a0g0
 
-\CommentTok{# estimands}
-\NormalTok{ndeeic <-}\StringTok{ }\NormalTok{eica1g0 }\OperatorTok{-}\StringTok{ }\NormalTok{eica0g0}
-\NormalTok{vareic <-}\StringTok{ }\KeywordTok{var}\NormalTok{(ndeeic) }\OperatorTok{/}\StringTok{ }\KeywordTok{nrow}\NormalTok{(tmpdat)}
+# estimands
+ndeeic <- eica1g0 - eica0g0
+vareic <- var(ndeeic) / nrow(tmpdat)
 
-\NormalTok{nieeic <-}\StringTok{ }\NormalTok{eica1g1 }\OperatorTok{-}\StringTok{ }\NormalTok{eica1g0}
-\NormalTok{varnieeic <-}\StringTok{ }\KeywordTok{var}\NormalTok{(nieeic) }\OperatorTok{/}\StringTok{ }\KeywordTok{nrow}\NormalTok{(tmpdat)}
-\end{Highlighting}
-\end{Shaded}
+nieeic <- eica1g1 - eica1g0
+varnieeic <- var(nieeic) / nrow(tmpdat)
+\end{lstlisting}
 
 \hypertarget{the-general-case}{%
 \section{The general case}\label{the-general-case}}
