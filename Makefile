@@ -12,6 +12,9 @@ pdf:
 style:
 	Rscript -e "styler::style_dir(filetype = 'rmd', recursive = FALSE)"
 
+pdf2png:
+	./pdf2png.sh
+
 code:
 	rm -f R_code/*.R
 	R CMD BATCH purl.R

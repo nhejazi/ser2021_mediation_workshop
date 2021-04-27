@@ -29,6 +29,7 @@ options(
   crayon.enabled = FALSE,
   bookdown.clean_book = TRUE,
   knitr.kable.NA = "NA",
+  knitr.graphics.auto_pdf = TRUE,
   repos = structure(c(CRAN = "https://cran.rstudio.com/"))
 )
 

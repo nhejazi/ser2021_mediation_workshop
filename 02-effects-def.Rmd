@@ -6,7 +6,13 @@
 
 ## Controlled direct effects
 
+<<<<<<< HEAD
 $$  \psi_{\text{CDE}} = \E(Y_{1,m} - Y_{0,m}) $$
+=======
+\begin{equation*}
+  \psi_{\text{CDE}} = \E(Y_{1,m}) - \E(Y_{0,m})
+\end{equation*}
+>>>>>>> 09531dec676ed4736e9decd21bc52cb0de517002
 
 - Set $M=m$ uniformly for everyone in the population
 - Compare $A=1$ vs $A=0$ with $M=m$ fixed
@@ -22,11 +28,11 @@ ID: If we are giving them the identifiability assumptions, should we not state t
   + $\P(M = m \mid Z, A=a, W) > 0 \text{  } a.e.$
   + $\P(A=a \mid W) > 0 \text{  } a.e.$
 
-```{r pressure, echo=FALSE, fig.cap="", out.width = '50%'}
-knitr::include_graphics(here::here("img", "graphic4a3.pdf"))
+```{r pressure, echo=FALSE, fig.cap="", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", out.width = "50%", results="asis"}
+knitr::include_graphics(here::here("img", "graphic4a3.png"))
 ```
 
-### Is this the estimand I want? {-}
+### Is this the estimand I want?
 
 + Makes the most sense if can intervene directly on $M$
   + And can think of a policy that would set everyone to a single constant
@@ -41,7 +47,7 @@ mediator?_
 
 _What if we want to decompose the average treatment effect into its direct and indirect counterparts?_
 
-## Natural direct and indirect effects {-}
+## Natural direct and indirect effects
 
 <!--
 ID: Should we explicitly say here that this part assumes the first model without Z?
@@ -67,8 +73,8 @@ ID: Is the below true? What do you mean here by interaction? Is that the only as
 -->
 - If no interaction between $A$ and $M$ on $Y$, then CDE = NDE.
 
-```{r , echo=FALSE, fig.cap="", out.width = '50%'}
-knitr::include_graphics(here::here("img", "graphic4a.pdf"))
+```{r , echo=FALSE, fig.cap="", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", out.width = "50%", results="asis"}
+knitr::include_graphics(here::here("img", "graphic4a.png"))
 ```
 
 ### Identification assumptions:
@@ -105,15 +111,15 @@ NH: Should we mention cross-world indep and indentifiability issues in RCTs?
 _What if our data structure involves a post-treatment confounder of the
 mediator-outcome relationship (e.g., adherence)?_
 
-```{r , echo=FALSE, fig.cap="", out.width = '20%'}
-knitr::include_graphics(here::here("img", "medDAG2.pdf"))
+```{r , echo=FALSE, fig.cap="", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", out.width = "75%", results="asis"}
+knitr::include_graphics(here::here("img", "medDAG2.png"))
 ```
 
-```{r , echo=FALSE, fig.cap="", out.width = '50%'}
-knitr::include_graphics(here::here("img", "ctndag.pdf"))
+```{r , echo=FALSE, fig.cap="", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", out.width = "100%", results="asis"}
+knitr::include_graphics(here::here("img", "ctndag.png"))
 ```
 
-## Interventional direct/ indirect effects {-}
+## Interventional (in)direct effects
 
 <!-- ID: Below I'd suggest to use the notation Y_{a, G_a'} that I used
 in the other text I added in the next page, to ease the visual burden
@@ -136,8 +142,8 @@ for people reading this
  + Can you think of an example when you would want the conditional versions?
    Marginal versions?
 
-```{r , echo=FALSE, fig.cap="", out.width = '50%'}
-knitr::include_graphics(here::here("img", "graphic4b.pdf"))
+```{r , echo=FALSE, fig.cap="", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", out.width = "50%", results="asis"}
+knitr::include_graphics(here::here("img", "graphic4b.png"))
 ```
 
 ### Identification assumptions:
@@ -154,20 +160,15 @@ Is this the estimand I want?
   effect.
 - Okay with the assumptions!
 
-## Estimand Summary {-}
+## Estimand Summary
 
-```{r , echo=FALSE, fig.cap="", out.width = '100%'}
-knitr::include_graphics(here::here("img", "table1.pdf"))
+```{r , echo=FALSE, fig.cap="", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", out.width = "125%", results="asis"}
+knitr::include_graphics(here::here("img", "table1.png"))
 ```
-
-
-
-
 
 <!--
 ID: Kara, I copied what I had written below, feel free to reuse
 -->
-
 
 # The Interventional Direct and Indirect Effects {#interventional}
 
@@ -175,7 +176,7 @@ ID: Kara, I copied what I had written below, feel free to reuse
 
 Consider the following directed acyclic graph.
 
-```{tikz, fig.cap = "Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment", fig.ext = 'png', cache = TRUE, echo = FALSE}
+```{r, engine="tikz", fig.cap = "Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", echo = FALSE}
 \dimendef\prevdepth=0
 \pgfdeclarelayer{background}
 \pgfsetlayers{background,main}
@@ -285,4 +286,9 @@ they are identifiable. Specifically:
   set to $M=G(0)$ with porbability one.
 - Define $Y(0,G(0))$ and $Y(1,G(1))$ similarly
 - Then we can define:
-\[\E[Y(1,G(1)) - Y(0,G(0))]=\underbrace{\E[Y(1,G(1))-Y(1,G(0))]}_{\text{interventional indirect effect}}+\underbrace{\E[Y(1,G(0))-Y(0,G(0))]}_{\text{interventional direct effect}}\]
+  \begin{equation*}
+    \E[Y(1,G(1)) - Y(0,G(0))] = \underbrace{\E[Y(1,G(1)) -
+      Y(1,G(0))]}_{\text{interventional indirect effect}} +
+      \underbrace{\E[Y(1,G(0)) -
+      Y(0,G(0))]}_{\text{interventional direct effect}}
+  \end{equation*}
