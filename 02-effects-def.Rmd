@@ -7,14 +7,15 @@
 ## Controlled direct effects
 
 $$  \psi_{\text{CDE}} = \E(Y_{1,m} - Y_{0,m}) $$
-za
+
 - Set $M=m$ uniformly for everyone in the population
 - Compare $A=1$ vs $A=0$ with $M=m$ fixed
 
-### Identification assumptions:
 <!--
 ID: If we are giving them the identifiability assumptions, should we not state the identification result also here?
 -->
+
+### Identification assumptions:
 - Confounder assumptions:
   + $A \indep Y_{a,m} \mid W$
   + $M \indep Y_{a,m} \mid W, A, Z$
@@ -76,7 +77,7 @@ knitr::include_graphics(here::here("img", "graphic4a.png"))
 - $A \indep Y_{a,m} \mid W$
 - $M \indep Y_{a,m} \mid W, A$
 - $A \indep M_a \mid W$
-- $M_{a^{\star}} \indep Y_{a,m} \mid W$
+- $M_0 \indep Y_{1,m} \mid W$
 - and positivity assumptions
 <!--
 ID: If we are giving them the identifiability assumptions, should we not state the identification result also here?
@@ -85,7 +86,7 @@ ID: If we are giving them the identifiability assumptions, should we not state t
 What does $M_0 \indep Y_{1,m} \mid W$ mean?
 
 - Conditional on $W$, knowledge of $M$ in the absence of treatment $A$
-za  provides no information of the effect of $A$ on $Y$.
+  provides no information of the effect of $A$ on $Y$.
 - Can you think of a data-generating mechanism that would violate this
   assumption?
 - Whenever we believe that treatment assignment works through adherence (i.e.,
@@ -115,9 +116,14 @@ knitr::include_graphics(here::here("img", "ctndag.png"))
 
 ## Interventional (in)direct effects
 
-<!-- ID: Below I'd suggest to use the notation Y_{a, G_a'} that I used
+<!--
+ID: Below I'd suggest to use the notation $Y_{a, G_a'}$ that I used
 in the other text I added in the next page, to ease the visual burden
 for people reading this
+-->
+
+<!--
+I think the distinction between fully conditional and not will be completely lost on people
 -->
 
 - Fully conditional on past
@@ -161,12 +167,12 @@ knitr::include_graphics(here::here("img", "table1.png"))
 ```
 
 <!--
-ID: Kara, I copied what I had written below, feel free to reuse
+ID: Kara, I copied what I had written below, feel free to reuse/modify
 -->
 
-za# The Interventional Direct and Indirect Effects {#interventional}
+## The Interventional Direct and Indirect Effects {#interventional}
 
-## Definition of the effects
+### Definition of the effects
 
 Consider the following directed acyclic graph.
 
@@ -269,7 +275,7 @@ these variables are unmeasured.
 
 ### Recovering direct and indirect effects
 
-zEven though estimation of the NDE and NIE is not possible in the
+Even though estimation of the NDE and NIE is not possible in the
 apresence of confounders of the mediation-outcome relation affected by
 treatment, it is possible to redefine the effects in a way such that
 they are identifiable. Specifically:
@@ -280,9 +286,11 @@ they are identifiable. Specifically:
   set to $M=G(0)$ with porbability one.
 - Define $Y(0,G(0))$ and $Y(1,G(1))$ similarly
 - Then we can define:
+\[
   \begin{equation*}
     \E[Y(1,G(1)) - Y(0,G(0))] = \underbrace{\E[Y(1,G(1)) -
       Y(1,G(0))]}_{\text{interventional indirect effect}} +
       \underbrace{\E[Y(1,G(0)) -
       Y(0,G(0))]}_{\text{interventional direct effect}}
   \end{equation*}
+\]

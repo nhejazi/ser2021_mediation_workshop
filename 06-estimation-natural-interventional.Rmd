@@ -163,6 +163,12 @@ bias-correcting _TMLE-update step_.
 2. We estimate $\P(A=a \mid M, W)$ from a logistic regression of $A$ on $M, W$,
    generating predicted probabilities that $A=1$ for and $A=0$.
 
+<!--
+ID: Kara, remind me to talk about the below code!
+E.g., do we need to go through a TMLE
+How long are we spending on this?
+-->
+
 ```{r, echo=TRUE,eval=FALSE}
 amodel <- "a ~ w "
 mmodel <- "m ~ a + w"
