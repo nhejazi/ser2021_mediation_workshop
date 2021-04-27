@@ -27,7 +27,7 @@
 
 \end{figure}
 
-### Is this the estimand I want? {-}
+### Is this the estimand I want?
 
 + Makes the most sense if can intervene directly on $M$
   + And can think of a policy that would set everyone to a single constant
@@ -42,7 +42,7 @@ mediator?_
 
 _What if we want to decompose the average treatment effect into its direct and indirect counterparts?_
 
-## Natural direct and indirect effects {-}
+## Natural direct and indirect effects
 
 Natural direct effect (NDE):
 $$  \psi_{\text{NDE}} = \E(Y_{1,M_0}) - \E(Y_{0,M_0}) $$
@@ -116,7 +116,7 @@ mediator-outcome relationship (e.g., adherence)?_
 
 \end{figure}
 
-## Interventional direct/ indirect effects {-}
+## Interventional (in)direct effects
 
 - Fully conditional on past
  + Conditional SDE: $\E(Y_{a, g_{M \mid Z, a^{\star}, W}}) -
@@ -156,7 +156,7 @@ Is this the estimand I want?
   effect.
 - Okay with the assumptions!
 
-## Estimand Summary {-}
+## Estimand Summary
 
 \begin{figure}
 
