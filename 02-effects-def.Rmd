@@ -6,14 +6,8 @@
 
 ## Controlled direct effects
 
-<<<<<<< HEAD
 $$  \psi_{\text{CDE}} = \E(Y_{1,m} - Y_{0,m}) $$
-=======
-\begin{equation*}
-  \psi_{\text{CDE}} = \E(Y_{1,m}) - \E(Y_{0,m})
-\end{equation*}
->>>>>>> 09531dec676ed4736e9decd21bc52cb0de517002
-
+za
 - Set $M=m$ uniformly for everyone in the population
 - Compare $A=1$ vs $A=0$ with $M=m$ fixed
 
@@ -91,7 +85,7 @@ ID: If we are giving them the identifiability assumptions, should we not state t
 What does $M_0 \indep Y_{1,m} \mid W$ mean?
 
 - Conditional on $W$, knowledge of $M$ in the absence of treatment $A$
-  provides no information of the effect of $A$ on $Y$.
+za  provides no information of the effect of $A$ on $Y$.
 - Can you think of a data-generating mechanism that would violate this
   assumption?
 - Whenever we believe that treatment assignment works through adherence (i.e.,
@@ -170,7 +164,7 @@ knitr::include_graphics(here::here("img", "table1.png"))
 ID: Kara, I copied what I had written below, feel free to reuse
 -->
 
-# The Interventional Direct and Indirect Effects {#interventional}
+za# The Interventional Direct and Indirect Effects {#interventional}
 
 ## Definition of the effects
 
@@ -275,8 +269,8 @@ these variables are unmeasured.
 
 ### Recovering direct and indirect effects
 
-Even though estimation of the NDE and NIE is not possible in the
-presence of confounders of the mediation-outcome relation affected by
+zEven though estimation of the NDE and NIE is not possible in the
+apresence of confounders of the mediation-outcome relation affected by
 treatment, it is possible to redefine the effects in a way such that
 they are identifiable. Specifically:
 

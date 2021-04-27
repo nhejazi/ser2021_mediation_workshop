@@ -40,7 +40,7 @@ the above confounding issues. We will focus on the two types of graph:
 
 ### No intermediate confounders
 
-```{r, engine="tikz", fig.cap = "Directed acylcic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", echo = FALSE}
+```{tikz, fig.cap = "Directed acylcic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment", fig.ext = 'png', cache = TRUE, echo = FALSE}
 \dimendef\prevdepth=0
 \pgfdeclarelayer{background}
 \pgfsetlayers{background,main}
@@ -99,10 +99,9 @@ shorten >=2pt,}
   \ArrowL{W}{M}{black}
 \end{tikzpicture}
 ```
-
 ### Intermediate confounders
 
-```{r, engine="tikz", fig.cap = "Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", echo = FALSE}
+```{tikz, fig.cap = "Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment", fig.ext = 'png', cache = TRUE, echo = FALSE}
 \dimendef\prevdepth=0
 \pgfdeclarelayer{background}
 \pgfsetlayers{background,main}
@@ -173,7 +172,7 @@ equation model_ (NPSEM), also known as _structural causal model_ (SCM):
 \[
 \begin{align*}
 W & = f_W(U_W)\\
-A & = f_A(A, U_A)\\
+A & = f_A(W, U_A)\\
 Z & = f_Z(W, A, U_Z)\\
 M & = f_M(W, A, Z, U_M)\\
 Y & = f_Y(W, A, Z, M, U_Y)
