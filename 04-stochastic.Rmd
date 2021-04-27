@@ -65,5 +65,21 @@ shorten >=2pt,}
 ```
 ## Motivation for stochastic interventions
 
-- So far we have discussed effects for binary exposures
+- So far we have discussed controlled and natural (in)direct effects
 - Controlled direct effects and natural effects require that $0 < \P(A=1\mid W) < 1$
+- Controlled direct effects are defined only for binary exposures
+-  _What can we do when the positivity assumption does not hold or the exposure is continuous?_
+- We can use stochastic effects
+
+## Definition of stochastic effects
+
+There are two possible ways of defining stochastic effects:
+
+- Consider the effect of an intervention where the exposure is drawn from a distribution (different from $g(a\mid w)$)
+- Consider the effect of an intervention where the post-intervention exposure is a function of the actually received exposure
+- In both cases $A\mid W$ is non-deterministic, thus the name _stochastic intervention_
+
+### Example: incremental propensity score interventions {-}
+
+- Assume $A$ is binary, and $\P(A=1\mid W=w) = g(1\mid w)$ is the propensity score
+- Consider an intervention in which each individual receives the intervention with probability $\pi_\delta(w)$, equal to

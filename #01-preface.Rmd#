@@ -172,7 +172,7 @@ equation model_ (NPSEM), also known as _structural causal model_ (SCM):
 \[
 \begin{align*}
 W & = f_W(U_W)\\
-A & = f_A(A, U_A)\\
+A & = f_A(W, U_A)\\
 Z & = f_Z(W, A, U_Z)\\
 M & = f_M(W, A, Z, U_M)\\
 Y & = f_Y(W, A, Z, M, U_Y)

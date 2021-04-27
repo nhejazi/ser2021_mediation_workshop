@@ -6,10 +6,15 @@
 
 ## Controlled direct effects
 
-$$  \psi_{\text{CDE}} = \E(Y_{1,m}) - \E(Y_{0,m}) $$
+$$  \psi_{\text{CDE}} = \E(Y_{1,m} - Y_{0,m}) $$
 
 - Set $M=m$ uniformly for everyone in the population
 - Compare $A=1$ vs $A=0$ with $M=m$ fixed
+
+### Identification assumptions:
+<!--
+ID: If we are giving them the identifiability assumptions, should we not state the identification result also here?
+-->
 - Confounder assumptions:
   + $A \indep Y_{a,m} \mid W$
   + $M \indep Y_{a,m} \mid W, A, Z$
@@ -38,12 +43,16 @@ _What if we want to decompose the average treatment effect into its direct and i
 
 ## Natural direct and indirect effects {-}
 
+<!--
+ID: Should we explicitly say here that this part assumes the first model without Z?
+-->
+
 Natural direct effect (NDE):
-$$  \psi_{\text{NDE}} = \E(Y_{1,M_0}) - \E(Y_{0,M_0}) $$
+$$  \psi_{\text{NDE}} = \E(Y_{1,M_0} - Y_{0,M_0}) $$
 
 Natural indirect effect (NIE):
 $$
-  \psi_{\text{NIE}} = \E(Y_{1,M_1}) - \E(Y_{1,M_0})
+  \psi_{\text{NIE}} = \E(Y_{1,M_1} - Y_{1,M_0})
 $$
 
 <!--
@@ -53,6 +62,9 @@ The NDE can also be written as: $\E_W \sum_m \{\E(Y_{1,m} \mid W) -
 \E(Y_{0,m} \mid W)\} \P(M_{0}=m \mid W)$
 
 - Weighted average of controlled direct effects at each level of $m$.
+<!--
+ID: Is the below true? What do you mean here by interaction? Is that the only assumption?
+-->
 - If no interaction between $A$ and $M$ on $Y$, then CDE = NDE.
 
 ```{r , echo=FALSE, fig.cap="", out.width = '50%'}
@@ -66,6 +78,9 @@ knitr::include_graphics(here::here("img", "graphic4a.pdf"))
 - $A \indep M_a \mid W$
 - $M_{a^{\star}} \indep Y_{a,m} \mid W$
 - and positivity assumptions
+<!--
+ID: If we are giving them the identifiability assumptions, should we not state the identification result also here?
+-->
 
 What does $M_0 \indep Y_{1,m} \mid W$ mean?
 
@@ -99,6 +114,11 @@ knitr::include_graphics(here::here("img", "ctndag.pdf"))
 ```
 
 ## Interventional direct/ indirect effects {-}
+
+<!-- ID: Below I'd suggest to use the notation Y_{a, G_a'} that I used
+in the other text I added in the next page, to ease the visual burden
+for people reading this
+-->
 
 - Fully conditional on past
  + Conditional SDE: $\E(Y_{a, g_{M \mid Z, a^{\star}, W}}) -
