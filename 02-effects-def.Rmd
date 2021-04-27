@@ -23,7 +23,7 @@
 knitr::include_graphics(here::here("img", "graphic4a3.png"))
 ```
 
-### Is this the estimand I want? {-}
+### Is this the estimand I want?
 
 + Makes the most sense if can intervene directly on $M$
   + And can think of a policy that would set everyone to a single constant
@@ -38,7 +38,7 @@ mediator?_
 
 _What if we want to decompose the average treatment effect into its direct and indirect counterparts?_
 
-## Natural direct and indirect effects {-}
+## Natural direct and indirect effects
 
 Natural direct effect (NDE):
 $$  \psi_{\text{NDE}} = \E(Y_{1,M_0}) - \E(Y_{0,M_0}) $$
@@ -100,7 +100,7 @@ knitr::include_graphics(here::here("img", "medDAG2.png"))
 knitr::include_graphics(here::here("img", "ctndag.png"))
 ```
 
-## Interventional direct/ indirect effects {-}
+## Interventional (in)direct effects
 
 - Fully conditional on past
  + Conditional SDE: $\E(Y_{a, g_{M \mid Z, a^{\star}, W}}) -
@@ -136,7 +136,7 @@ Is this the estimand I want?
   effect.
 - Okay with the assumptions!
 
-## Estimand Summary {-}
+## Estimand Summary
 
 ```{r , echo=FALSE, fig.cap="", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", out.width = "125%", results="asis"}
 knitr::include_graphics(here::here("img", "table1.png"))
