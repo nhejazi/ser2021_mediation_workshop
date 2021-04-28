@@ -1,8 +1,10 @@
-# Preliminaries on Causal Mediation Analysis {#mediation}
+# Preliminaries on causal mediation analysis {#mediation}
 
 ## Motivating studies
 
-[TO FILL IN (KARA?)]
+[TO FILL IN (KARA?). IDEALLY THESE WOULD BE TWO OR THREE EXAMPLES THAT WE CAN USE THROUGHOUT THE WORKSHOP FOR ALL EFFECTS]
+
+
 
 ## What is causal mediation analysis?
 
@@ -16,11 +18,11 @@
 - Assume you are interested in the effect of a treatment $A$ ([FILL IN FROM MOTIVATING EXAMPLE]) on an outcome $Y$ ([FILL IN]) through a mediator $M$ ([FILL IN])
 - We could fit the following models:
 \[
-\begin{align*}
+\begin{align}
 \E(Y\mid A=a) & = \alpha_0 + \alpha_1 a\\
 \E(M\mid A=a) & = \gamma_0 + \gamma_1 a\\
-\E(Y\mid M=m, A=a) & = \beta_0 + \beta_1 m + \beta_2 a\\
-\end{align*}
+\E(Y\mid M=m, A=a) & = \beta_0 + \beta_1 m + \beta_2 a
+\end{align}
 \]
 - The product $(\gamma_1\beta_1)$ has been proposed as a measure of the effect of $X$ on $Y$ through $M$
 - Causal interpretation problems with this method:
@@ -170,13 +172,13 @@ The above graphs can be interpreted as a _non-parametric structural
 equation model_ (NPSEM), also known as _structural causal model_ (SCM):
 
 \[
-\begin{align*}
+\begin{align}
 W & = f_W(U_W)\\
 A & = f_A(W, U_A)\\
 Z & = f_Z(W, A, U_Z)\\
 M & = f_M(W, A, Z, U_M)\\
 Y & = f_Y(W, A, Z, M, U_Y)
-\end{align*}
+\end{align}
 \]
 
 - Here $U=(U_W, U_A, U_Z, U_M, U_Y)$ is a vector of all unmeasured exogenous factors affecting the system
@@ -205,11 +207,11 @@ $\P(A=a)=1$.
 - In the NPSEM framework, counterfactuals are quantities _derived_ from the
 model:
 \[
-\begin{align*}
+\begin{align}
 Y_a  &= f_Y(W, a, Z, M, U_Y)\\
 Y_{a,m}  &= f_Y(W, a, Z, m, U_Y)\\
-M_a  &= f_M(W, a, Z, U_M)\\
-\end{align*}
+M_a  &= f_M(W, a, Z, U_M)
+\end{align}
 \]
 - You can also define _nested counterfactuals_
 - For example, if $A$ is binary, you can think of the following counterfactual
