@@ -7,7 +7,7 @@ site:
 
 pdf:
 	Rscript -e "bookdown::clean_book(TRUE)"
-	Rscript -e "bookdown::render_book('index.Rmd', 'bookdown::pdf_book')"
+	Rscript -e "bookdown::render_book('index.Rmd', 'bookdown::pdf_document2')"
 
 style:
 	Rscript -e "styler::style_dir(filetype = 'rmd', recursive = FALSE)"

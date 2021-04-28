@@ -7,27 +7,29 @@ documentclass: book
 site: bookdown::bookdown_site
 bibliography: [book.bib, packages.bib]
 biblio-style: apalike
-fontsize: '12pt, krantz2'
+fontsize: '12pt'
 monofontoptions: "Scale=0.7"
 link-citations: yes
 colorlinks: yes
-lot: no
-lof: no
+lot: false
+lof: false
 always_allow_html: yes
 url: 'https\://code.nimahejazi.org/ser2021_mediation_workshop/'
 github-repo: nhejazi/ser2021_mediation_workshop
 graphics: yes
 description: "Open source, reproducible teaching materials accompanying a
   workshop on modern methods for causal mediation analysis, given at the [SER
-  2021 Meeting]() on Monday, 24 May 2021."
+  2021 Meeting](https://epiresearch.org/annual-meeting/2021-meeting/workshop/)
+  on Monday, 24 May 2021."
 ---
 
 # Welcome to SER! {-}
 
 This open source, reproducible vignette accompanies a half-day workshop on
 modern methods for _causal mediation analysis_, given at the [SER 2021
-Meeting]() on Monday, 24 May 2021. While we encourage use of this `bookdown`
-site, for convenience, we have also made these workshop materials [available in
+Meeting](https://epiresearch.org/annual-meeting/2021-meeting/workshop/) on
+Monday, 24 May 2021. While we encourage use of this `bookdown` site, for
+convenience, we have also made these workshop materials [available in
 PDF](https://code.nimahejazi.org/ser2021_mediation_workshop/ser2021mediation.pdf).
 
 ## About this workshop {#about}

@@ -3,6 +3,7 @@ delete_merged_file: true
 book_filename: "ser2021mediation"
 clean: [packages.bib, ser2021mediation.bbl]
 before_chapter_script: "_common.R"
+keep_tex: true
 
 language:
   label:

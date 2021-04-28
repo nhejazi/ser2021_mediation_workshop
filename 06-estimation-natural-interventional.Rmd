@@ -4,7 +4,7 @@
 
 Recall:
 
-```{tikz, fig.cap = "Directed acylcic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment", fig.ext = 'png', cache = TRUE, echo = FALSE}
+```{r, engine="tikz", fig.cap = "Directed acylcic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", echo = FALSE}
 \dimendef\prevdepth=0
 \pgfdeclarelayer{background}
 \pgfsetlayers{background,main}
@@ -72,22 +72,19 @@ $$NIE = E(Y_{1,M_{1}} - Y_{1,M_{0}})$$.
 
 ### Simple case for intuition
 
-The observed data is
-\[O=(W, A, M, Y)\]
+The observed data is $O=(W, A, M, Y)$
 
 This SCM is represented in the above DAG and the following causal models:
-\[
 \begin{align*}
-W & = f_W(U_W)\\
-A & = f_A(W, U_A)\\
-M & = f_M(W, A, U_M)\\
-Y & = f_Y(W, A, M, U_Y),
+  W & = f_W(U_W)\\
+  A & = f_A(W, U_A)\\
+  M & = f_M(W, A, U_M)\\
+  Y & = f_Y(W, A, M, U_Y),
 \end{align*}
-\]
 where $(U_W, U_A,U_M, U_Y)$ are exogenous random errors.
 
 We assume
-- $A$ is a single binary randomized treatment (and thus $A & = f_A(U_A)$)
+- $A$ is a single binary randomized treatment (and thus $A = f_A(U_A)$)
 - $M$ is a single binary mediator
 - There are no restrictions on the distribution of $W$ or $Y$
 
@@ -261,7 +258,7 @@ tmlende <- mean(margqdiff)
 
 Recall that in the presence of a intermediate confounder natural (in)direct effects are not identified
 
-```{tikz, fig.cap = "Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment", fig.ext = 'png', cache = TRUE, echo = FALSE}
+```{r, engine="tikz", fig.cap = "Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", echo = FALSE}
 \dimendef\prevdepth=0
 \pgfdeclarelayer{background}
 \pgfsetlayers{background,main}
@@ -347,17 +344,13 @@ and the interventional indirect effect as:
 
 Consider a simple data structure $O=(W, A, Z, M, Y)$. This SCM is represented in
 the above DAG and the following causal models:
-
-\[
 \begin{align*}
 W & = f_W(U_W)\\
 A & = f_A(W, U_A)\\
 Z & = f_Z(W, A, U_Z)\\
 M & = f_M(W, A, Z, U_M)\\
-Y & = f_Y(W, A, Z, M, U_Y)
+Y & = f_Y(W, A, Z, M, U_Y),
 \end{align*}
-\]
-
 where ($U_W, U_A, U_Z, U_M, U_Y$) are exogenous random errors. We assume $A$ is
 a single binary treatment, $Z$ is a single binary intermediate confounder, $M$
 is a single binary mediator. There are no restrictions on the distribution of
@@ -368,7 +361,10 @@ conditional distribution of $M$, as described by
 @vanderweele2016mediation:
 
 <!--
-ID: The below is not a stochastic draw, it is the distribution that you are drawing from. Also, not sure about that last equality, isn't that just part of the identification strategy, of which we have not talked about? Probably confusing to put that in here.
+ID: The below is not a stochastic draw, it is the distribution that you are
+drawing from. Also, not sure about that last equality, isn't that just part of
+the identification strategy, of which we have not talked about? Probably
+confusing to put that in here.
 -->
 
 \begin{equation*}
@@ -377,7 +373,9 @@ ID: The below is not a stochastic draw, it is the distribution that you are draw
 \end{equation*}
 
 <!--
-ID: Why would we make the below assumption if we have estimators that do not require it? It will probably just confuse people to say that we make this assumption and then have software that does not make that assumption
+ID: Why would we make the below assumption if we have estimators that do not
+require it? It will probably just confuse people to say that we make this
+assumption and then have software that does not make that assumption
 -->
 
 In what follows, we are going to assume that $g_{M \mid A,W}(m, a^{\star}, W)$

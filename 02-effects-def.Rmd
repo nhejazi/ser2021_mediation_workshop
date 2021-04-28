@@ -6,13 +6,14 @@
 
 ## Controlled direct effects
 
-$$  \psi_{\text{CDE}} = \E(Y_{1,m} - Y_{0,m}) $$
+$$\psi_{\text{CDE}} = \E(Y_{1,m} - Y_{0,m}) $$
 
 - Set $M=m$ uniformly for everyone in the population
 - Compare $A=1$ vs $A=0$ with $M=m$ fixed
 
 <!--
-ID: If we are giving them the identifiability assumptions, should we not state the identification result also here?
+ID: If we are giving them the identifiability assumptions, should we not state
+the identification result also here?
 -->
 
 ### Identification assumptions:
@@ -40,22 +41,26 @@ knitr::include_graphics(here::here("img", "graphic4a3.png"))
 _What if our research question doesn't involve intervening directly on the
 mediator?_
 
-_What if we want to decompose the average treatment effect into its direct and indirect counterparts?_
+_What if we want to decompose the average treatment effect into its direct and
+indirect counterparts?_
 
 ## Natural direct and indirect effects
 
 <!--
-ID: Should we explicitly say here that this part assumes the first model without Z?
-It could also be good to show the decomposition of the ATE (e.g., show that Y_{a,M_a} = Y_a)
+ID: Should we explicitly say here that this part assumes the first model
+without Z?  It could also be good to show the decomposition of the ATE (e.g.,
+show that Y_{a,M_a} = Y_a)
 -->
 
 Natural direct effect (NDE):
-$$  \psi_{\text{NDE}} = \E(Y_{1,M_0} - Y_{0,M_0}) $$
+\begin{equation*}
+  \psi_{\text{NDE}} = \E(Y_{1,M_0} - Y_{0,M_0})
+\end{equation*}
 
 Natural indirect effect (NIE):
-$$
+\begin{equation*}
   \psi_{\text{NIE}} = \E(Y_{1,M_1} - Y_{1,M_0})
-$$
+\end{equation*}
 
 <!--
 ID: The below is only true if the cross-world assumption holds
@@ -65,8 +70,8 @@ The NDE can also be written as: $\E_W \sum_m \{\E(Y_{1,m} \mid W) -
 
 - Weighted average of controlled direct effects at each level of $m$.
 <!--
-ID: Is the below true? What do you mean here by interaction? Is that the only assumption?
--->
+ID: Is the below true? What do you mean here by interaction? Is that the only
+assumption?  -->
 - If no interaction between $A$ and $M$ on $Y$, then CDE = NDE.
 
 ```{r , echo=FALSE, fig.cap="", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", out.width = "50%", results="asis"}
@@ -81,7 +86,8 @@ knitr::include_graphics(here::here("img", "graphic4a.png"))
 - $M_0 \indep Y_{1,m} \mid W$
 - and positivity assumptions
 <!--
-ID: If we are giving them the identifiability assumptions, should we not state the identification result also here?
+ID: If we are giving them the identifiability assumptions, should we not state
+the identification result also here?
 -->
 
 What does $M_0 \indep Y_{1,m} \mid W$ mean?
@@ -90,8 +96,8 @@ What does $M_0 \indep Y_{1,m} \mid W$ mean?
   provides no information of the effect of $A$ on $Y$.
 - Can you think of a data-generating mechanism that would violate this
   assumption?
-- Whenever we believe that treatment assignment works through adherence (i.e.,
-  almost always), we are violating this assumption.
+- Whenever we believe that treatment assignment works through adherence (i.e., almost
+  always), we are violating this assumption.
 
 ### Is this the estimand I want?
 
@@ -107,7 +113,7 @@ NH: Should we mention cross-world indep and indentifiability issues in RCTs?
 _What if our data structure involves a post-treatment confounder of the
 mediator-outcome relationship (e.g., adherence)?_
 
-```{tikz, fig.cap = "Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment", fig.ext = 'png', cache = TRUE, echo = FALSE}
+```{r, engine="tikz", fig.cap = "Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", echo = FALSE}
 \dimendef\prevdepth=0
 \pgfdeclarelayer{background}
 \pgfsetlayers{background,main}
@@ -310,17 +316,17 @@ confounders of the mediator and the exposure which are affected by
 treatment.
 
 ### Example
+
 [TO FILL IN]
-
-
 
 ### Unidentifiability of the NDE and NIE in this setting
 
 In this example, natural direct and indirect effects are
 unidentifiable from observed data on $(W,A,Z,M,Y)$. The technical
 reason for this is that the cross-world counterfactual assumption
-
-\[Y(1,m)\indep M(0)\mid W\]
+\begin{equation*}
+  Y(1,m)\indep M(0)\mid W
+\end{equation*}
 
 does not hold in the aboce directed acyiclic graph. Intuitively, the
 reason for this is that an intervention setting $A=1$ (necessary for
@@ -348,9 +354,9 @@ they are identifiable. Specifically:
   set to $M=G(0)$ with porbability one.
 - Define $Y(0,G(0))$ and $Y(1,G(1))$ similarly
 - Then we can define:
-\[
+  \begin{equation*}
     \E[Y(1,G(1)) - Y(0,G(0))] = \underbrace{\E[Y(1,G(1)) -
       Y(1,G(0))]}_{\text{interventional indirect effect}} +
       \underbrace{\E[Y(1,G(0)) -
       Y(0,G(0))]}_{\text{interventional direct effect}}
-\]
+  \end{equation*}
