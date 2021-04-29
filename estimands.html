@@ -44,11 +44,11 @@
       <nav aria-label="Table of contents"><h2>Table of contents</h2>
         <ul class="book-toc list-unstyled">
 <li><a class="" href="index.html">Welcome to SER!</a></li>
-<li><a class="" href="mediation.html"><span class="header-section-number">1</span> Causal Mediation Analysis</a></li>
+<li><a class="" href="mediation.html"><span class="header-section-number">1</span> Preliminaries on causal mediation analysis</a></li>
 <li><a class="active" href="estimands.html"><span class="header-section-number">2</span> Path-specific casual mediation effect types</a></li>
-<li><a class="" href="interventional.html"><span class="header-section-number">3</span> The Interventional Direct and Indirect Effects</a></li>
-<li><a class="" href="estimandirl.html"><span class="header-section-number">4</span> How to choose an estimand: Real world example</a></li>
-<li><a class="" href="stochastic.html"><span class="header-section-number">5</span> Stochastic Direct and Indirect Effects</a></li>
+<li><a class="" href="estimandirl.html"><span class="header-section-number">3</span> How to choose an estimand: Real world example</a></li>
+<li><a class="" href="stochastic.html"><span class="header-section-number">4</span> Stochastic Direct and Indirect Effects</a></li>
+<li><a class="" href="preliminaries-on-semiparametric-estimation.html"><span class="header-section-number">5</span> Preliminaries on semiparametric estimation</a></li>
 <li><a class="" href="estimating-natural-and-interventional-effects.html"><span class="header-section-number">6</span> Estimating natural and interventional effects</a></li>
 <li><a class="" href="estimating-stochastic-effects.html"><span class="header-section-number">7</span> Estimating stochastic effects</a></li>
 <li><a class="" href="references.html">References</a></li>
@@ -72,12 +72,19 @@
 <h2>
 <span class="header-section-number">2.1</span> Controlled direct effects<a class="anchor" aria-label="anchor" href="#controlled-direct-effects"><i class="fas fa-link"></i></a>
 </h2>
-<p><span class="math display">\[\begin{equation*}
-  \psi_{\text{CDE}} = \E(Y_{1,m}) - \E(Y_{0,m})
-\end{equation*}\]</span></p>
+<p><span class="math display">\[\psi_{\text{CDE}} = \E(Y_{1,m} - Y_{0,m}) \]</span></p>
 <ul>
 <li>Set <span class="math inline">\(M=m\)</span> uniformly for everyone in the population</li>
 <li>Compare <span class="math inline">\(A=1\)</span> vs <span class="math inline">\(A=0\)</span> with <span class="math inline">\(M=m\)</span> fixed</li>
+</ul>
+<!--
+ID: If we are giving them the identifiability assumptions, should we not state
+the identification result also here?
+--><div id="identification-assumptions" class="section level3">
+<h3>
+<span class="header-section-number">2.1.1</span> Identification assumptions:<a class="anchor" aria-label="anchor" href="#identification-assumptions"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
 <li>Confounder assumptions:
 <ul>
 <li><span class="math inline">\(A \indep Y_{a,m} \mid W\)</span></li>
@@ -92,9 +99,10 @@
 </li>
 </ul>
 <div class="inline-figure"><img src="img/graphic4a3.png" width="50%" style="display: block; margin: auto;"></div>
+</div>
 <div id="is-this-the-estimand-i-want" class="section level3">
 <h3>
-<span class="header-section-number">2.1.1</span> Is this the estimand I want?<a class="anchor" aria-label="anchor" href="#is-this-the-estimand-i-want"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.1.2</span> Is this the estimand I want?<a class="anchor" aria-label="anchor" href="#is-this-the-estimand-i-want"><i class="fas fa-link"></i></a>
 </h3>
 <ul>
 <li>Makes the most sense if can intervene directly on <span class="math inline">\(M\)</span>
@@ -110,38 +118,55 @@ level <span class="math inline">\(m \in \mathcal{M}\)</span>.</li>
 </ul>
 <p><em>What if our research question doesn’t involve intervening directly on the
 mediator?</em></p>
-<p><em>What if we want to decompose the average treatment effect into its direct and indirect counterparts?</em></p>
+<p><em>What if we want to decompose the average treatment effect into its direct and
+indirect counterparts?</em></p>
 </div>
 </div>
 <div id="natural-direct-and-indirect-effects" class="section level2">
 <h2>
 <span class="header-section-number">2.2</span> Natural direct and indirect effects<a class="anchor" aria-label="anchor" href="#natural-direct-and-indirect-effects"><i class="fas fa-link"></i></a>
 </h2>
+<!--
+ID: Should we explicitly say here that this part assumes the first model
+without Z?  It could also be good to show the decomposition of the ATE (e.g.,
+show that Y_{a,M_a} = Y_a)
+-->
 <p>Natural direct effect (NDE):
-<span class="math display">\[  \psi_{\text{NDE}} = \E(Y_{1,M_0}) - \E(Y_{0,M_0}) \]</span></p>
+<span class="math display">\[\begin{equation*}
+  \psi_{\text{NDE}} = \E(Y_{1,M_0} - Y_{0,M_0})
+\end{equation*}\]</span></p>
 <p>Natural indirect effect (NIE):
-<span class="math display">\[
-  \psi_{\text{NIE}} = \E(Y_{1,M_1}) - \E(Y_{1,M_0})
-\]</span></p>
+<span class="math display">\[\begin{equation*}
+  \psi_{\text{NIE}} = \E(Y_{1,M_1} - Y_{1,M_0})
+\end{equation*}\]</span></p>
 <!--
 ID: The below is only true if the cross-world assumption holds
 -->
 <p>The NDE can also be written as: <span class="math inline">\(\E_W \sum_m \{\E(Y_{1,m} \mid W) - \E(Y_{0,m} \mid W)\} \P(M_{0}=m \mid W)\)</span></p>
 <ul>
-<li>Weighted average of controlled direct effects at each level of <span class="math inline">\(m\)</span>.</li>
+<li>Weighted average of controlled direct effects at each level of <span class="math inline">\(m\)</span>.
+<!--
+ID: Is the below true? What do you mean here by interaction? Is that the only
+assumption?  -->
+</li>
 <li>If no interaction between <span class="math inline">\(A\)</span> and <span class="math inline">\(M\)</span> on <span class="math inline">\(Y\)</span>, then CDE = NDE.</li>
 </ul>
 <div class="inline-figure"><img src="img/graphic4a.png" width="50%" style="display: block; margin: auto;"></div>
-<div id="identification-assumptions" class="section level3">
+<div id="identification-assumptions-1" class="section level3">
 <h3>
-<span class="header-section-number">2.2.1</span> Identification assumptions:<a class="anchor" aria-label="anchor" href="#identification-assumptions"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.2.1</span> Identification assumptions:<a class="anchor" aria-label="anchor" href="#identification-assumptions-1"><i class="fas fa-link"></i></a>
 </h3>
 <ul>
 <li><span class="math inline">\(A \indep Y_{a,m} \mid W\)</span></li>
 <li><span class="math inline">\(M \indep Y_{a,m} \mid W, A\)</span></li>
 <li><span class="math inline">\(A \indep M_a \mid W\)</span></li>
-<li><span class="math inline">\(M_{a^{\star}} \indep Y_{a,m} \mid W\)</span></li>
-<li>and positivity assumptions</li>
+<li><span class="math inline">\(M_0 \indep Y_{1,m} \mid W\)</span></li>
+<li>and positivity assumptions
+<!--
+ID: If we are giving them the identifiability assumptions, should we not state
+the identification result also here?
+-->
+</li>
 </ul>
 <p>What does <span class="math inline">\(M_0 \indep Y_{1,m} \mid W\)</span> mean?</p>
 <ul>
@@ -149,8 +174,8 @@ ID: The below is only true if the cross-world assumption holds
 provides no information of the effect of <span class="math inline">\(A\)</span> on <span class="math inline">\(Y\)</span>.</li>
 <li>Can you think of a data-generating mechanism that would violate this
 assumption?</li>
-<li>Whenever we believe that treatment assignment works through adherence (i.e.,
-almost always), we are violating this assumption.</li>
+<li>Whenever we believe that treatment assignment works through adherence (i.e., almost
+always), we are violating this assumption.</li>
 </ul>
 </div>
 <div id="is-this-the-estimand-i-want-1" class="section level3">
@@ -170,7 +195,12 @@ NH: Should we mention cross-world indep and indentifiability issues in RCTs?
 </ul>
 <p><em>What if our data structure involves a post-treatment confounder of the
 mediator-outcome relationship (e.g., adherence)?</em></p>
-<div class="inline-figure"><img src="img/medDAG2.png" width="75%" style="display: block; margin: auto;"></div>
+<div class="figure" style="text-align: center">
+<span id="fig:unnamed-chunk-2"></span>
+<img src="02-effects-def_files/figure-html/unnamed-chunk-2-1.png" alt="Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment" width="80%"><p class="caption">
+FIGURE 1.2: Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment
+</p>
+</div>
 <div class="inline-figure"><img src="img/ctndag.png" width="100%" style="display: block; margin: auto;"></div>
 </div>
 </div>
@@ -178,6 +208,14 @@ mediator-outcome relationship (e.g., adherence)?</em></p>
 <h2>
 <span class="header-section-number">2.3</span> Interventional (in)direct effects<a class="anchor" aria-label="anchor" href="#interventional-indirect-effects"><i class="fas fa-link"></i></a>
 </h2>
+<!--
+ID: Below I'd suggest to use the notation $Y_{a, G_a'}$ that I used
+in the other text I added in the next page, to ease the visual burden
+for people reading this
+-->
+<!--
+I think the distinction between fully conditional and not will be completely lost on people
+-->
 <ul>
 <li>Fully conditional on past</li>
 <li>Conditional SDE: <span class="math inline">\(\E(Y_{a, g_{M \mid Z, a^{\star}, W}}) - \E(Y_{a^{\star}, g_{M \mid Z, a^{\star}, W}})\)</span>
@@ -196,9 +234,9 @@ probability <span class="math inline">\(\P(M = m \mid Z, A = a^{\star}, W = w)\)
 Marginal versions?</li>
 </ul>
 <div class="inline-figure"><img src="img/graphic4b.png" width="50%" style="display: block; margin: auto;"></div>
-<div id="identification-assumptions-1" class="section level3">
+<div id="identification-assumptions-2" class="section level3">
 <h3>
-<span class="header-section-number">2.3.1</span> Identification assumptions:<a class="anchor" aria-label="anchor" href="#identification-assumptions-1"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.3.1</span> Identification assumptions:<a class="anchor" aria-label="anchor" href="#identification-assumptions-2"><i class="fas fa-link"></i></a>
 </h3>
 <ul>
 <li><span class="math inline">\(A \indep Y_{a,m} \mid W\)</span></li>
@@ -221,30 +259,117 @@ effect.</li>
 </h2>
 <div class="inline-figure"><img src="img/table1.png" width="125%" style="display: block; margin: auto;"></div>
 <!--
-ID: Kara, I copied what I had written below, feel free to reuse
+ID: Kara, I copied what I had written below, feel free to reuse/modify
 -->
+</div>
+<div id="interventional" class="section level2">
+<h2>
+<span class="header-section-number">2.5</span> The Interventional Direct and Indirect Effects<a class="anchor" aria-label="anchor" href="#interventional"><i class="fas fa-link"></i></a>
+</h2>
+<div id="definition-of-the-effects" class="section level3">
+<h3>
+<span class="header-section-number">2.5.1</span> Definition of the effects<a class="anchor" aria-label="anchor" href="#definition-of-the-effects"><i class="fas fa-link"></i></a>
+</h3>
+<p>Consider the following directed acyclic graph.</p>
+<div class="figure" style="text-align: center">
+<span id="fig:unnamed-chunk-6"></span>
+<img src="02-effects-def_files/figure-html/unnamed-chunk-6-1.png" alt="Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment" width="80%"><p class="caption">
+FIGURE 2.1: Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment
+</p>
+</div>
+<p>Here, <span class="math inline">\(A\)</span> is the treatment of interest, <span class="math inline">\(M\)</span> is the mediator of
+interest, <span class="math inline">\(W\)</span> is a pre-treatment variable containing confounders of
+<span class="math inline">\(A\)</span> on <span class="math inline">\(M\)</span> and <span class="math inline">\(Y\)</span>,and <span class="math inline">\(Z\)</span> is a post-treatment variable contaning
+confounders of the mediator and the exposure which are affected by
+treatment.</p>
+</div>
+<div id="example" class="section level3">
+<h3>
+<span class="header-section-number">2.5.2</span> Example<a class="anchor" aria-label="anchor" href="#example"><i class="fas fa-link"></i></a>
+</h3>
+<p>[TO FILL IN]</p>
+</div>
+<div id="unidentifiability-of-the-nde-and-nie-in-this-setting" class="section level3">
+<h3>
+<span class="header-section-number">2.5.3</span> Unidentifiability of the NDE and NIE in this setting<a class="anchor" aria-label="anchor" href="#unidentifiability-of-the-nde-and-nie-in-this-setting"><i class="fas fa-link"></i></a>
+</h3>
+<p>In this example, natural direct and indirect effects are
+unidentifiable from observed data on <span class="math inline">\((W,A,Z,M,Y)\)</span>. The technical
+reason for this is that the cross-world counterfactual assumption
+<span class="math display">\[\begin{equation*}
+  Y(1,m)\indep M(0)\mid W
+\end{equation*}\]</span></p>
+<p>does not hold in the aboce directed acyiclic graph. Intuitively, the
+reason for this is that an intervention setting <span class="math inline">\(A=1\)</span> (necessary for
+the definition of <span class="math inline">\(Y(1,m)\)</span>) induces a counterfactual variable
+<span class="math inline">\(Z(1)\)</span>. Likewise, an intervention setting <span class="math inline">\(A=0\)</span> (necessary for the
+definition of <span class="math inline">\(M(0)\)</span>) induces a counterfactual <span class="math inline">\(Z(0)\)</span>. The variables
+<span class="math inline">\(Z(1)\)</span> and <span class="math inline">\(Z(0)\)</span> are correlated because they share unmeasured common
+causes. The variable <span class="math inline">\(Z(1)\)</span> is correlated with <span class="math inline">\(Y(1,m)\)</span>, and the
+variable <span class="math inline">\(Z(0)\)</span> is correlated with <span class="math inline">\(M(0)\)</span>, because they are
+counterfactual outcomes in the same hypothetical worlds. Thus, to
+achieve <span class="math inline">\(Y(1,m)\)</span> independent of <span class="math inline">\(M(0)\)</span>, it would be necessary to
+adjust for either <span class="math inline">\(Z(1)\)</span> or <span class="math inline">\(Z(0)\)</span>. This is impossible to do since
+these variables are unmeasured.</p>
+</div>
+<div id="recovering-direct-and-indirect-effects" class="section level3">
+<h3>
+<span class="header-section-number">2.5.4</span> Recovering direct and indirect effects<a class="anchor" aria-label="anchor" href="#recovering-direct-and-indirect-effects"><i class="fas fa-link"></i></a>
+</h3>
+<p>Even though estimation of the NDE and NIE is not possible in the
+apresence of confounders of the mediation-outcome relation affected by
+treatment, it is possible to redefine the effects in a way such that
+they are identifiable. Specifically:</p>
+<ul>
+<li>Let <span class="math inline">\(G(a)\)</span> denote a random draw from the distribution of <span class="math inline">\(M(a) \mid W\)</span>
+</li>
+<li>Define the counterfactual <span class="math inline">\(Y(1,G(0))\)</span> as the counterfactual
+variable in a hypothetical world where <span class="math inline">\(A\)</span> is set <span class="math inline">\(A=1\)</span> and <span class="math inline">\(M\)</span> is
+set to <span class="math inline">\(M=G(0)\)</span> with porbability one.</li>
+<li>Define <span class="math inline">\(Y(0,G(0))\)</span> and <span class="math inline">\(Y(1,G(1))\)</span> similarly</li>
+<li>Then we can define:
+<span class="math display">\[\begin{equation*}
+  \E[Y(1,G(1)) - Y(0,G(0))] = \underbrace{\E[Y(1,G(1)) -
+    Y(1,G(0))]}_{\text{interventional indirect effect}} +
+    \underbrace{\E[Y(1,G(0)) -
+    Y(0,G(0))]}_{\text{interventional direct effect}}
+\end{equation*}\]</span>
+</li>
+</ul>
+</div>
 </div>
 </div>
   <div class="chapter-nav">
-<div class="prev"><a href="mediation.html"><span class="header-section-number">1</span> Causal Mediation Analysis</a></div>
-<div class="next"><a href="interventional.html"><span class="header-section-number">3</span> The Interventional Direct and Indirect Effects</a></div>
+<div class="prev"><a href="mediation.html"><span class="header-section-number">1</span> Preliminaries on causal mediation analysis</a></div>
+<div class="next"><a href="estimandirl.html"><span class="header-section-number">3</span> How to choose an estimand: Real world example</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
 <li><a class="nav-link" href="#estimands"><span class="header-section-number">2</span> Path-specific casual mediation effect types</a></li>
 <li>
-<a class="nav-link" href="#controlled-direct-effects"><span class="header-section-number">2.1</span> Controlled direct effects</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#is-this-the-estimand-i-want"><span class="header-section-number">2.1.1</span> Is this the estimand I want?</a></li></ul>
+<a class="nav-link" href="#controlled-direct-effects"><span class="header-section-number">2.1</span> Controlled direct effects</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#identification-assumptions"><span class="header-section-number">2.1.1</span> Identification assumptions:</a></li>
+<li><a class="nav-link" href="#is-this-the-estimand-i-want"><span class="header-section-number">2.1.2</span> Is this the estimand I want?</a></li>
+</ul>
 </li>
 <li>
 <a class="nav-link" href="#natural-direct-and-indirect-effects"><span class="header-section-number">2.2</span> Natural direct and indirect effects</a><ul class="nav navbar-nav">
-<li><a class="nav-link" href="#identification-assumptions"><span class="header-section-number">2.2.1</span> Identification assumptions:</a></li>
+<li><a class="nav-link" href="#identification-assumptions-1"><span class="header-section-number">2.2.1</span> Identification assumptions:</a></li>
 <li><a class="nav-link" href="#is-this-the-estimand-i-want-1"><span class="header-section-number">2.2.2</span> Is this the estimand I want?</a></li>
 </ul>
 </li>
 <li>
-<a class="nav-link" href="#interventional-indirect-effects"><span class="header-section-number">2.3</span> Interventional (in)direct effects</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#identification-assumptions-1"><span class="header-section-number">2.3.1</span> Identification assumptions:</a></li></ul>
+<a class="nav-link" href="#interventional-indirect-effects"><span class="header-section-number">2.3</span> Interventional (in)direct effects</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#identification-assumptions-2"><span class="header-section-number">2.3.1</span> Identification assumptions:</a></li></ul>
 </li>
 <li><a class="nav-link" href="#estimand-summary"><span class="header-section-number">2.4</span> Estimand Summary</a></li>
+<li>
+<a class="nav-link" href="#interventional"><span class="header-section-number">2.5</span> The Interventional Direct and Indirect Effects</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#definition-of-the-effects"><span class="header-section-number">2.5.1</span> Definition of the effects</a></li>
+<li><a class="nav-link" href="#example"><span class="header-section-number">2.5.2</span> Example</a></li>
+<li><a class="nav-link" href="#unidentifiability-of-the-nde-and-nie-in-this-setting"><span class="header-section-number">2.5.3</span> Unidentifiability of the NDE and NIE in this setting</a></li>
+<li><a class="nav-link" href="#recovering-direct-and-indirect-effects"><span class="header-section-number">2.5.4</span> Recovering direct and indirect effects</a></li>
+</ul>
+</li>
 </ul>
 
       <div class="book-extra">
@@ -262,7 +387,7 @@ ID: Kara, I copied what I had written below, feel free to reuse
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: April 27, 2021.</p>
+    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: April 29, 2021.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

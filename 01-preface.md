@@ -1,9 +1,45 @@
-# Causal Mediation Analysis {#mediation}
+# Preliminaries on causal mediation analysis {#mediation}
 
-## Mediation models
+## Motivating studies
 
-In this workshopp we will use directed acyclic graphs to conceptualize
-the effects of interest. We will focus on the two types of graph:
+[TO FILL IN (KARA?). IDEALLY THESE WOULD BE TWO OR THREE EXAMPLES THAT WE CAN
+USE THROUGHOUT THE WORKSHOP FOR ALL EFFECTS]
+
+## What is causal mediation analysis?
+
+- Like all causal analyses, _causal mediation analysis_ is different from
+  standard statistical mediation analyses
+- Statistical mediation analyses merely assess associations between the variables
+- Causal mediation analyses assess how the system behaves under interventions
+- Causal mediation analysis is thus useful to understand mechanisms
+
+### An example of a non-causal mediation analysis (product of coefficients)
+
+- Assume you are interested in the effect of a treatment $A$ ([FILL IN FROM
+  MOTIVATING EXAMPLE]) on an outcome $Y$ ([FILL IN]) through a mediator $M$
+  ([FILL IN])
+- We could fit the following models:
+    \begin{align}
+      \E(Y\mid A=a) & = \alpha_0 + \alpha_1 a\\
+      \E(M\mid A=a) & = \gamma_0 + \gamma_1 a\\
+      \E(Y\mid M=m, A=a) & = \beta_0 + \beta_1 m + \beta_2 a
+    \end{align}
+- The product $(\gamma_1\beta_1)$ has been proposed as a measure of the effect
+  of $X$ on $Y$ through $M$
+- Causal interpretation problems with this method:
+  - What happens if there are confounders of the relation between treatment and outcome?
+  - What happens if there are confounders of the relation between mediataor and outcome?
+  - What happens if there are confounders of the relation between treatment and mediator?
+  - What happens if the confounders of mediator and outcome are affected by treatment?
+- Statistical issues with this method:
+  - Assume the above confounding is not an issue
+  - Can I then interpret $(\gamma_1\beta_1)$ as the indirect effect?
+  - No: the regression models may be misspecified
+
+## Causal mediation models
+
+In this workshopp we will use directed acyclic graphs to conceptualize the above
+confounding issues. We will focus on the two types of graph:
 
 ### No intermediate confounders
 
@@ -27,19 +63,54 @@ the effects of interest. We will focus on the two types of graph:
 \caption{Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-2)
 \end{figure}
 
+The above graphs can be interpreted as a _non-parametric structural equation model_
+(NPSEM), also known as _structural causal model_ (SCM):
+
+\begin{align}
+  W & = f_W(U_W)\\
+  A & = f_A(W, U_A)\\
+  Z & = f_Z(W, A, U_Z)\\
+  M & = f_M(W, A, Z, U_M)\\
+  Y & = f_Y(W, A, Z, M, U_Y)
+\end{align}
+
+- Here $U=(U_W, U_A, U_Z, U_M, U_Y)$ is a vector of all unmeasured exogenous
+  factors affecting the system
+- The functions $f$ are assumed fixed but unknown
+- We posit this model as a system of equation that nature uses to geenrate the
+  data at hand
+- Therefore we leave the functions $f$ unspecified (i.e., we do not know the
+  true nature mechanisms)
+- Sometimes we know something: e.g., if $A$ is randomized we know $A=f_A(U_A)$
+  where $U_A$ is independent of everything.
+
 ## Counterfactuals
 
-In what follows, we will define all the effects of interest using
-_counterfactuals_. Counterfactuals are hypothetical random variables
-that would have been observed in a world where we would be able to
-perform interventions on the random variables of interest. For
-example, $Y_a$ is a counterfactual variable in a hypothetical world
-where $\P(A=a)=1$ with probability one. $Y_{a,m}$ is the
-counterfactual outcome in a world where $\P(A=a,M=m)=1$, and $M_a$ is
-the counterfactual variable representing the mediator in a world where
-$\P(A=a)=1$.
+- We define all the effects of interest using _counterfactuals_
+- Counterfactuals are hypothetical random variables that would have been
+  observed in a world where we would be able to perform interventions on the
+  random variables of interest
+- $Y_a$ is a counterfactual variable in a hypothetical world where $\P(A=a)=1$
+  with probability one
+- $Y_{a,m}$ is the counterfactual outcome in a world where $\P(A=a,M=m)=1$
+- $M_a$ is the counterfactual variable representing the mediator in a world
+  where $\P(A=a)=1$.
 
-In this workshop we use counterfactual variables as _primitives_, but
-we note that in other causal inference frameworks, such as structural
-equation models, counterfactuals are quantities _derived_ from the
-model.
+### How are counterfactuals defined?
+
+- You can use counterfactual variables as _primitives_
+- In the NPSEM framework, counterfactuals are quantities _derived_ from the
+  model:
+  \begin{align}
+    Y_a  &= f_Y(W, a, Z, M, U_Y)\\
+    Y_{a,m}  &= f_Y(W, a, Z, m, U_Y)\\
+    M_a  &= f_M(W, a, Z, U_M)
+  \end{align}
+- You can also define _nested counterfactuals_
+- For example, if $A$ is binary, you can think of the following counterfactual
+  \begin{equation*}
+    Y_{1, M_0} = f_Y(W, 1, Z, M_0, U_Y)
+  \end{equation*}
+- Interpreted as _the outcome for an individual in a hypothetical world where
+  treatment was given but the mediator was held at the value it would have
+  taken under no treatment_

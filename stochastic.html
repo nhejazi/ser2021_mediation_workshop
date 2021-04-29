@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Chapter 5 Stochastic Direct and Indirect Effects | [SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</title>
+<title>Chapter 4 Stochastic Direct and Indirect Effects | [SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</title>
 <meta name="author" content="Iván Díaz, Nima Hejazi, Kara Rudolph">
 <!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.2"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.5.1/jquery-3.5.1.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
@@ -44,11 +44,11 @@
       <nav aria-label="Table of contents"><h2>Table of contents</h2>
         <ul class="book-toc list-unstyled">
 <li><a class="" href="index.html">Welcome to SER!</a></li>
-<li><a class="" href="mediation.html"><span class="header-section-number">1</span> Causal Mediation Analysis</a></li>
+<li><a class="" href="mediation.html"><span class="header-section-number">1</span> Preliminaries on causal mediation analysis</a></li>
 <li><a class="" href="estimands.html"><span class="header-section-number">2</span> Path-specific casual mediation effect types</a></li>
-<li><a class="" href="interventional.html"><span class="header-section-number">3</span> The Interventional Direct and Indirect Effects</a></li>
-<li><a class="" href="estimandirl.html"><span class="header-section-number">4</span> How to choose an estimand: Real world example</a></li>
-<li><a class="active" href="stochastic.html"><span class="header-section-number">5</span> Stochastic Direct and Indirect Effects</a></li>
+<li><a class="" href="estimandirl.html"><span class="header-section-number">3</span> How to choose an estimand: Real world example</a></li>
+<li><a class="active" href="stochastic.html"><span class="header-section-number">4</span> Stochastic Direct and Indirect Effects</a></li>
+<li><a class="" href="preliminaries-on-semiparametric-estimation.html"><span class="header-section-number">5</span> Preliminaries on semiparametric estimation</a></li>
 <li><a class="" href="estimating-natural-and-interventional-effects.html"><span class="header-section-number">6</span> Estimating natural and interventional effects</a></li>
 <li><a class="" href="estimating-stochastic-effects.html"><span class="header-section-number">7</span> Estimating stochastic effects</a></li>
 <li><a class="" href="references.html">References</a></li>
@@ -61,11 +61,11 @@
 </div>
   </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="stochastic" class="section level1">
 <h1>
-<span class="header-section-number">5</span> Stochastic Direct and Indirect Effects<a class="anchor" aria-label="anchor" href="#stochastic"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4</span> Stochastic Direct and Indirect Effects<a class="anchor" aria-label="anchor" href="#stochastic"><i class="fas fa-link"></i></a>
 </h1>
 <div id="definition-of-the-effects-1" class="section level2">
 <h2>
-<span class="header-section-number">5.1</span> Definition of the effects<a class="anchor" aria-label="anchor" href="#definition-of-the-effects-1"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.1</span> Definition of the effects<a class="anchor" aria-label="anchor" href="#definition-of-the-effects-1"><i class="fas fa-link"></i></a>
 </h2>
 <p>Consider the following directed acyclic graph.</p>
 <div class="figure" style="text-align: center">
@@ -77,24 +77,144 @@ FIGURE 1.1: Directed acylcic graph under no intermediate confounders of the medi
 </div>
 <div id="motivation-for-stochastic-interventions" class="section level2">
 <h2>
-<span class="header-section-number">5.2</span> Motivation for stochastic interventions<a class="anchor" aria-label="anchor" href="#motivation-for-stochastic-interventions"><i class="fas fa-link"></i></a>
+<span class="header-section-number">4.2</span> Motivation for stochastic interventions<a class="anchor" aria-label="anchor" href="#motivation-for-stochastic-interventions"><i class="fas fa-link"></i></a>
 </h2>
 <ul>
-<li>So far we have discussed effects for binary exposures</li>
-<li>Controlled direct effects and natural effects require that <span class="math inline">\(0 &lt; \P(A=1\mid W) &lt; 1\)</span>
+<li>So far we have discussed controlled, natural, and interventional (in)direct effects</li>
+<li>These effects require that <span class="math inline">\(0 &lt; \P(A=1\mid W) &lt; 1\)</span>
+</li>
+<li>They are defined only for binary exposures</li>
+<li><em>What can we do when the positivity assumption does not hold or the exposure
+is continuous?</em></li>
+<li>Solution: we can use stochastic effects</li>
+</ul>
+</div>
+<div id="definition-of-stochastic-effects" class="section level2">
+<h2>
+<span class="header-section-number">4.3</span> Definition of stochastic effects<a class="anchor" aria-label="anchor" href="#definition-of-stochastic-effects"><i class="fas fa-link"></i></a>
+</h2>
+<p>There are two possible ways of defining stochastic effects:</p>
+<ul>
+<li>Consider the effect of an intervention where the exposure is drawn from a
+distribution
+<ul>
+<li>Example: [TO FILL IN]</li>
+</ul>
+</li>
+<li>Consider the effect of an intervention where the post-intervention exposure is
+a function of the actually received exposure
+<ul>
+<li>Example: [TO FILL IN]</li>
+</ul>
+</li>
+<li>In both cases <span class="math inline">\(A\mid W\)</span> is non-deterministic, thus the name <em>stochastic intervention</em>
+</li>
+</ul>
+<div id="example-incremental-propensity-score-interventions-ipsi-kennedy2018nonparametric" class="section level3 unnumbered">
+<h3>Example: incremental propensity score interventions (IPSI) <span class="citation">(Kennedy <a href="references.html#ref-kennedy2018nonparametric" role="doc-biblioref">2018</a>)</span><a class="anchor" aria-label="anchor" href="#example-incremental-propensity-score-interventions-ipsi-kennedy2018nonparametric"><i class="fas fa-link"></i></a>
+</h3>
+<div id="definition-of-the-intervention" class="section level4 unnumbered">
+<h4>Definition of the intervention<a class="anchor" aria-label="anchor" href="#definition-of-the-intervention"><i class="fas fa-link"></i></a>
+</h4>
+<ul>
+<li>Assume <span class="math inline">\(A\)</span> is binary, and <span class="math inline">\(\P(A=1\mid W=w) = g(1\mid w)\)</span> is the propensity score</li>
+<li>Consider an intervention in which each individual receives the intervention
+with probability <span class="math inline">\(g_\delta(1\mid w)\)</span>, equal to
+<span class="math display">\[\begin{equation*}
+  g_\delta(1\mid w)=\frac{\delta g(1\mid w)}{\delta g(1\mid w) +
+  1 - g(1\mid w)}
+\end{equation*}\]</span>
+</li>
+<li>e.g., draw the post-intervention exposure from a Bernoulli variable with
+probability <span class="math inline">\(g_\delta(1\mid w)\)</span>
+</li>
+<li>The value <span class="math inline">\(\delta\)</span> is user given</li>
+<li>Let <span class="math inline">\(A_\delta\)</span> denote the post-intervention distribution</li>
+<li>Some algebra shows that <span class="math inline">\(\delta\)</span> is an odds ratio comparing the pre- and
+post-intervantion distributions
+<span class="math display">\[\begin{equation*}
+  \delta = \frac{\text{odds}(A_\delta = 1\mid W=w)}
+  {\text{odds}(A = 1\mid W=w)}
+\end{equation*}\]</span>
+</li>
+<li>This gives the intervention a nice interpretation as <em>what would happen in a
+world where the odds of receiving treatment is increased by <span class="math inline">\(\delta\)</span></em>
+</li>
+<li>Let <span class="math inline">\(Y_{A_\delta}\)</span> denote the outcome in this hypothetical world</li>
+</ul>
+</div>
+</div>
+<div id="example-modified-treatment-policies" class="section level3">
+<h3>
+<span class="header-section-number">4.3.1</span> Example: modified treatment policies<a class="anchor" aria-label="anchor" href="#example-modified-treatment-policies"><i class="fas fa-link"></i></a>
+</h3>
+<div id="definition-of-the-intervention-1" class="section level4 unnumbered">
+<h4>Definition of the intervention<a class="anchor" aria-label="anchor" href="#definition-of-the-intervention-1"><i class="fas fa-link"></i></a>
+</h4>
+</div>
+</div>
+<div id="mediation-analysis-for-stochastic-interventions" class="section level3">
+<h3>
+<span class="header-section-number">4.3.2</span> Mediation analysis for stochastic interventions<a class="anchor" aria-label="anchor" href="#mediation-analysis-for-stochastic-interventions"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li>The total effect of an IPSI can be computed as a contrast of the outcome under
+intervention vs no intervention:
+<span class="math display">\[\begin{equation*}
+  \psi = \E[Y_{A_\delta} - Y]
+\end{equation*}\]</span>
+</li>
+<li>Recall the NPSEM
+<span class="math display">\[\begin{align}
+  W &amp; = f_W(U_W)\\
+  A &amp; = f_A(W, U_A)\\
+  M &amp; = f_M(W, A, U_M)\\
+  Y &amp; = f_Y(W, A, M, U_Y)
+\end{align}\]</span>
+</li>
+<li>From this we have <span class="math inline">\(Y_{A_\delta} = f_Y(W, A_\delta, M_{A_\delta}, U_Y)\)</span>
+</li>
+<li>Thus, we have <span class="math inline">\(Y_{A_\delta} = Y_{A_\delta, M_{A_\delta}}\)</span> and <span class="math inline">\(Y = Y(A,M(A))\)</span>
+</li>
+<li>Let us introduce the counterfactual <span class="math inline">\(Y_{A_\delta,M}\)</span>, interpreted as the
+outcome observed in a world where the intervention on <span class="math inline">\(A\)</span> is performed but the
+mediator is fixed at the value it would have taken under no intervention</li>
+<li>Then we can decompose the total effect into:
+<span class="math display">\[\begin{align*}
+  \E[Y&amp;_{A_\delta,M_{A_\delta}} - Y_{A,M_A}] = \\
+  &amp;\underbrace{\E[Y_{A_\delta,M_{A_\delta}} -
+    Y_{A_\delta,M_A}]}_{\text{stochastic natural indirect effect}} +
+    \underbrace{\E[Y_{A,M_{A_\delta}} -
+    Y_{A,M_A}]}_{\text{stochastic natural direct effect}}
+\end{align*}\]</span>
 </li>
 </ul>
 </div>
 </div>
+<div id="identification-of-the-effect-of-a-stochastic-intervention" class="section level2">
+<h2>
+<span class="header-section-number">4.4</span> Identification of the effect of a stochastic intervention<a class="anchor" aria-label="anchor" href="#identification-of-the-effect-of-a-stochastic-intervention"><i class="fas fa-link"></i></a>
+</h2>
+
+</div>
+</div>
   <div class="chapter-nav">
-<div class="prev"><a href="estimandirl.html"><span class="header-section-number">4</span> How to choose an estimand: Real world example</a></div>
-<div class="next"><a href="estimating-natural-and-interventional-effects.html"><span class="header-section-number">6</span> Estimating natural and interventional effects</a></div>
+<div class="prev"><a href="estimandirl.html"><span class="header-section-number">3</span> How to choose an estimand: Real world example</a></div>
+<div class="next"><a href="preliminaries-on-semiparametric-estimation.html"><span class="header-section-number">5</span> Preliminaries on semiparametric estimation</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
-<li><a class="nav-link" href="#stochastic"><span class="header-section-number">5</span> Stochastic Direct and Indirect Effects</a></li>
-<li><a class="nav-link" href="#definition-of-the-effects-1"><span class="header-section-number">5.1</span> Definition of the effects</a></li>
-<li><a class="nav-link" href="#motivation-for-stochastic-interventions"><span class="header-section-number">5.2</span> Motivation for stochastic interventions</a></li>
+<li><a class="nav-link" href="#stochastic"><span class="header-section-number">4</span> Stochastic Direct and Indirect Effects</a></li>
+<li><a class="nav-link" href="#definition-of-the-effects-1"><span class="header-section-number">4.1</span> Definition of the effects</a></li>
+<li><a class="nav-link" href="#motivation-for-stochastic-interventions"><span class="header-section-number">4.2</span> Motivation for stochastic interventions</a></li>
+<li>
+<a class="nav-link" href="#definition-of-stochastic-effects"><span class="header-section-number">4.3</span> Definition of stochastic effects</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#example-incremental-propensity-score-interventions-ipsi-kennedy2018nonparametric">Example: incremental propensity score interventions (IPSI) (Kennedy 2018)</a></li>
+<li><a class="nav-link" href="#example-modified-treatment-policies"><span class="header-section-number">4.3.1</span> Example: modified treatment policies</a></li>
+<li><a class="nav-link" href="#mediation-analysis-for-stochastic-interventions"><span class="header-section-number">4.3.2</span> Mediation analysis for stochastic interventions</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#identification-of-the-effect-of-a-stochastic-intervention"><span class="header-section-number">4.4</span> Identification of the effect of a stochastic intervention</a></li>
 </ul>
 
       <div class="book-extra">
@@ -112,7 +232,7 @@ FIGURE 1.1: Directed acylcic graph under no intermediate confounders of the medi
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: April 27, 2021.</p>
+    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: April 29, 2021.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

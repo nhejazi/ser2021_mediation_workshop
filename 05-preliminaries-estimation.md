@@ -1,0 +1,109 @@
+# Preliminaries on semiparametric estimation
+
+## Why do we need new estimation tools?
+
+- As we have seen all the mediation parameters that we consider can be
+  seen as a function of the joint probability distribution of $O=(W,A,Z,M,Y)$
+- For example, under identifiability assumptions the natural direct effect is
+  equal to
+  \begin{equation*}
+    \psi(\P) =  \sum_{m,w}\big[\E(Y\mid A=1,M=m,W=w) -
+      \E(Y\mid A=0,M=m,W=w)\big]\P(M=m\mid A=0, W=w)\P(W=w)
+  \end{equation*}
+
+- The notation $\psi(\P)$ implies that the parameter is a function of $\P$
+- This means that we can compute it for any distribution $\P$
+- For example, if we know the true $\P(W,A,M,Y)$, we can comnpute the true value
+  of the parameter by:
+  - Computing the conditional expectation $\E(Y\mid A=1,M=m,W=w)$ for all values
+    $(m,w)$
+  - Computing the probability $\P(M=m\mid A=0,W=w)$ for all values $(m,w)$
+  - Computing the probability $\P(W=w)$ for all values $w$
+  - Computing the sum over all values $(m,w)$
+- This is how you would compute the _true value_ **if you knew** the true
+  distribution $\P$
+- But we can use the same logic for estimation:
+  - Fit a regression to estimate $\E(Y\mid A=1,M=m,W=w)$
+  - Fit a regression to estimate $\P(M=m\mid A=0,W=w)$
+  - Estimate $\P(W=w)$ with the empirical distribution
+- This is known as the g-computation estimator (more on this estimator later)
+
+### How can g-estimation be implemented in practice?
+
+- There are two possible ways to do g-computation estimation:
+  - Using parametric models for the above regressions
+  - Using flexible data-adaptive regression (aka machine learning)
+
+### Pros and cons of parametric models
+
+- Pros:
+  - Easy to understand
+  - Ease of implementation (standard regression software)
+  - Can use the Delta method or the bootstrap for computation of standard errors
+
+- Cons:
+  - Unless $W$ and $M$ contain very few categorical variables, it is very easy
+    to misspecify the models
+  - This can introduce sizable bias in the estimators
+  - This bias is highly problematic
+    - We go through a thorough process to correctly specify our causal models to
+      avoid bias
+    - Overly simplisitc models introduce bias and squander those efforts
+    - The bias can be small or large and you can never know from a single data
+      analysis
+
+### Pros and cons of g-computation with data-adaptive regression
+
+- Pros:
+  - Easy to understand
+  - Alleviate model-misspecification bias
+
+- Cons:
+  - Might be harder to implement depending on the regression procedure
+  - No general approaches for computation of standard errors and confidence
+    intervals
+
+## Semiparametric estimation - an alternative to solve these problems
+
+### Bias/variance tradeoff
+
+- A lot of the recent literature in causal inference with data-adaptive
+  regression uses the following ideas
+- G-computation estimation with data-adaptive regression offers an incorrect
+  bias/variance trade-off
+- Specifically, the bias of a g-computation estimator can often be expressed as
+  \begin{equation*}
+    \psi(\hat\P) - \psi(\P) \approx -\E[D(O;\hat\P)]
+  \end{equation*}
+- The function $D(O;\P)$ is called _the efficient influence function_ (EIF)
+- The EIF must be found on a case-by-case basis or each parameter $\psi(\P)$
+- For example, for estimating the standardized mean $\psi(P)=\E[\E(Y\mid A=1,
+  W)]$, we have
+  \begin{equation*}
+    D(O,\hat\P) = \frac{A}{\hat P(A=1\mid W)}[Y - \hat\E(Y\mid A=1, W)] +
+    \hat\E(Y\mid A=1, W) - \psi(\hat\P)
+  \end{equation*}
+
+- In this workshop we will not present the specific form of $D(O;\hat\P)$ for
+  all parameters that we use
+- But the estimators we discuss and implement in the packages will be based on
+  theser EIFs
+
+### Bias-correction of g-computation estimators
+
+- There are at least two ways to use the EIF to perform a bias correction for a
+  g-computation estimator
+- The first one is the so-called _one step_ estimator:
+  \begin{equation*}
+    \psi(\hat \P) + \frac{1}{n}\sum_{i=1}^n D(O;\hat \P_i)
+  \end{equation*}
+- The idea behind the one-step estimator is simple: subtract an estimate of the
+  bias of the g-computation estimator
+- The second approach is the _targeted maximum likelihood estimator_ (TMLE)
+- TMLE is based on the principle that it is possile to construct a
+  data-adaptive estimator $\tilde \P$ such that
+  \begin{equation*}
+    \frac{1}{n}\sum_{i=1}^n D(O;\tilde \P_i)=0
+  \end{equation*}
+- Thus, for this special data-adaptive estimate $\tilde \P$, the TMLE is
+  actually just the g-computation estimator $\psi(\tilde\P)$

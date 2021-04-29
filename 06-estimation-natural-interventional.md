@@ -6,38 +6,51 @@ Recall:
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/meddagnoz} 
+{\centering \includegraphics[width=0.8\linewidth]{06-estimation-natural-interventional_files/figure-latex/unnamed-chunk-1-1} 
 
 }
 
+\caption{Directed acylcic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-1)
 \end{figure}
 
 Assuming a binary $A$, we define the natural direct effect as:
-$$NDE = E(Y_{1,M_{0}}) - E(Y_{0,M_{0}})$$,
+$$NDE = E(Y_{1,M_{0}} - Y_{0,M_{0}})$$,
 
 and the natural indirect effect as:
-$$NIE = E(Y_{1,M_{1}}) - E(Y_{1,M_{0}})$$.
+$$NIE = E(Y_{1,M_{1}} - Y_{1,M_{0}})$$.
 
 ### Simple case for intuition
 
-$O=(W, A, M, Y)$
+The observed data is $O=(W, A, M, Y)$
 
 This SCM is represented in the above DAG and the following causal models:
-$W=f(U_W)$, $A=f(W,U_A)$, $M=f(A, W,U_M)$, and $Y=f(M,A,W,U_Y)$, where ($U_W,
-U_A,U_M, U_Y$) are exogenous random errors.
+\begin{align*}
+  W & = f_W(U_W)\\
+  A & = f_A(W, U_A)\\
+  M & = f_M(W, A, U_M)\\
+  Y & = f_Y(W, A, M, U_Y),
+\end{align*}
+where $(U_W, U_A,U_M, U_Y)$ are exogenous random errors.
 
-We assume $A$ is a single binary randomized treatment, $M$ is a single binary
-mediator. There are no restrictions on the distribution of $W$ or $Y$.
+We assume
+- $A$ is a single binary randomized treatment (and thus $A = f_A(U_A)$)
+- $M$ is a single binary mediator
+- There are no restrictions on the distribution of $W$ or $Y$
 
 Recall that we need to assume the following to identify the above caual effects
 from our observed data:
+
 - $A \indep Y_{a,m} \mid W$
 - $M \indep Y_{a,m} \mid W, A$
 - $A \indep M_a \mid W$
-- $M_{a^{\star}} \indep Y_{a,m} \mid W$
+- $M_0 \indep Y_{1,m} \mid W$
 - and positivity assumptions
 
 ### How to estimate using G-computation
+
+<!--
+ID: Should we add the g-computation formula here?
+-->
 
 Let's take the NDE as an example:
 
@@ -52,6 +65,10 @@ Let's take the NDE as an example:
 ### How to estimate using the doubly robust methods that rely on the EIF
 
 The EIC for the NDE ($\Psi_{NDE}$) is given by:
+
+<!--
+ID: I'd suggest using the notation in our biometrika paper for the below
+-->
 
 \begin{align}
     D^{\star} &= \bigg\{ \frac{I(A=1)}{g(1|W)}\frac{Q(M|W,0)}{Q(M|W,1)} -
@@ -91,6 +108,12 @@ bias-correcting _TMLE-update step_.
    and $A=0$ for $g(0 \mid W)$.  
 2. We estimate $\P(A=a \mid M, W)$ from a logistic regression of $A$ on $M, W$,
    generating predicted probabilities that $A=1$ for and $A=0$.
+
+<!--
+ID: Kara, remind me to talk about the below code!
+E.g., do we need to go through a TMLE
+How long are we spending on this?
+-->
 
 
 ```r
@@ -186,25 +209,32 @@ tmlende <- mean(margqdiff)
 
 ## Interventional direct and indirect effects
 
-Recall:
+Recall that in the presence of a intermediate confounder natural (in)direct effects are not identified
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/medDAG2} 
+{\centering \includegraphics[width=0.8\linewidth]{06-estimation-natural-interventional_files/figure-latex/unnamed-chunk-6-1} 
 
 }
 
+\caption{Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-6)
 \end{figure}
+
+<!--
+ID: I suggest using the Y_{a, G_a'} notation I used in the other page to define these effects
+-->
 
 We define the interventional direct effect as:
 \begin{equation*}
-  \psi_{\text{PIDE}} = \E(Y_{a^\prime,g_{M \mid a^\star,W}}) -
-    \E(Y_{a\star,g_{M \mid a^\star,W}}),
+  \psi_{\text{PIDE}} = \E(Y_{a^\prime,g_{M \mid a^\star,W}} -
+    Y_{a\star,g_{M \mid a^\star,W}}),
 \end{equation*}
+
 and the interventional indirect effect as:
+
 \begin{equation*}
-  \psi_{\text{PIIE}} = \E(Y_{a^\prime,g_{M \mid a^\prime,W}}) -
-    \E(Y_{a^\prime,g_{M \mid a^\star,W}}).
+  \psi_{\text{PIIE}} = \E(Y_{a^\prime,g_{M \mid a^\prime,W}} -
+    Y_{a^\prime,g_{M \mid a^\star,W}}).
 \end{equation*}
 
 ## Simple case for intuition
@@ -212,11 +242,11 @@ and the interventional indirect effect as:
 Consider a simple data structure $O=(W, A, Z, M, Y)$. This SCM is represented in
 the above DAG and the following causal models:
 \begin{align*}
-  W &= f(U_W)\\
-  A &= f(U_A)\\
-  Z &= f(A, W, U_Z)\\
-  M &= f(Z, A, W, U_M)\\
-  Y &= f(M, Z, A, W, U_Y),
+W & = f_W(U_W)\\
+A & = f_A(W, U_A)\\
+Z & = f_Z(W, A, U_Z)\\
+M & = f_M(W, A, Z, U_M)\\
+Y & = f_Y(W, A, Z, M, U_Y),
 \end{align*}
 where ($U_W, U_A, U_Z, U_M, U_Y$) are exogenous random errors. We assume $A$ is
 a single binary treatment, $Z$ is a single binary intermediate confounder, $M$
@@ -226,10 +256,25 @@ $W$ or $Y$.
 $g_{M \mid a^\prime,W}$ represents a stochastic draw from the counterfactual,
 conditional distribution of $M$, as described by
 @vanderweele2016mediation:
+
+<!--
+ID: The below is not a stochastic draw, it is the distribution that you are
+drawing from. Also, not sure about that last equality, isn't that just part of
+the identification strategy, of which we have not talked about? Probably
+confusing to put that in here.
+-->
+
 \begin{equation*}
   g_{M \mid A,W}(m, a^{\star}, W) \equiv g_{M \mid a^{\star}, W}(W) =
     \sum_{z=0}^1 \P(M=1 \mid Z=z,W) \P(Z=z \mid A=a^{\star}, W).
 \end{equation*}
+
+<!--
+ID: Why would we make the below assumption if we have estimators that do not
+require it? It will probably just confuse people to say that we make this
+assumption and then have software that does not make that assumption
+-->
+
 In what follows, we are going to assume that $g_{M \mid A,W}(m, a^{\star}, W)$
 is known, estimated from observed data, which we call
 $\hat{g}_{M \mid a^{\star}, W}$. This is going to slightly alter the usual

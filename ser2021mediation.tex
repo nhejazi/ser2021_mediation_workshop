@@ -4,7 +4,7 @@
 \PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
 %
 \documentclass[
-  12pt, krantz2,
+  12pt,
 ]{book}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
@@ -199,13 +199,14 @@
 \DeclareMathOperator*{\argmin}{\arg\!\min}
 \DeclarePairedDelimiterX{\norm}[1]{\lVert}{\rVert}{#1}
 
+% setting bookdown frontmatter option
 \frontmatter
 \usepackage[]{natbib}
 \bibliographystyle{apalike}
 
 \title{{[}SER 2021 Workshop{]} Causal Mediation: Modern Methods for Path Analysis}
 \author{Iván Díaz, Nima Hejazi, Kara Rudolph}
-\date{updated: April 27, 2021}
+\date{updated: April 29, 2021}
 
 \begin{document}
 \maketitle
@@ -218,28 +219,29 @@
 \thispagestyle{empty}
 
 \begin{center}
-
 %\includegraphics{images/dedication.pdf}
 \end{center}
 
 \setlength{\abovedisplayskip}{-5pt}
 \setlength{\abovedisplayshortskip}{-5pt}
 
+% setting bookdown mainmatter (e.g., arabic numerals for page numbering)
+\mainmatter
+
 {
 \hypersetup{linkcolor=}
 \setcounter{tocdepth}{2}
 \tableofcontents
 }
-\listoftables
-\listoffigures
 \hypertarget{welcome-to-ser}{%
 \chapter*{Welcome to SER!}\label{welcome-to-ser}}
 
 
 This open source, reproducible vignette accompanies a half-day workshop on
-modern methods for \emph{causal mediation analysis}, given at the \href{}{SER 2021
-Meeting} on Monday, 24 May 2021. While we encourage use of this \passthrough{\lstinline!bookdown!}
-site, for convenience, we have also made these workshop materials \href{https://code.nimahejazi.org/ser2021_mediation_workshop/ser2021mediation.pdf}{available in
+modern methods for \emph{causal mediation analysis}, given at the \href{https://epiresearch.org/annual-meeting/2021-meeting/workshop/}{SER 2021
+Meeting} on
+Monday, 24 May 2021. While we encourage use of this \passthrough{\lstinline!bookdown!} site, for
+convenience, we have also made these workshop materials \href{https://code.nimahejazi.org/ser2021_mediation_workshop/ser2021mediation.pdf}{available in
 PDF}.
 
 \hypertarget{about}{%
@@ -522,13 +524,82 @@ for Data Analysis and Visualization of Ecological
 Data}.
 
 \hypertarget{mediation}{%
-\chapter{Causal Mediation Analysis}\label{mediation}}
+\chapter{Preliminaries on causal mediation analysis}\label{mediation}}
 
-\hypertarget{mediation-models}{%
-\section{Mediation models}\label{mediation-models}}
+\hypertarget{motivating-studies}{%
+\section{Motivating studies}\label{motivating-studies}}
 
-In this workshopp we will use directed acyclic graphs to conceptualize
-the effects of interest. We will focus on the two types of graph:
+{[}TO FILL IN (KARA?). IDEALLY THESE WOULD BE TWO OR THREE EXAMPLES THAT WE CAN
+USE THROUGHOUT THE WORKSHOP FOR ALL EFFECTS{]}
+
+\hypertarget{what-is-causal-mediation-analysis}{%
+\section{What is causal mediation analysis?}\label{what-is-causal-mediation-analysis}}
+
+\begin{itemize}
+\tightlist
+\item
+  Like all causal analyses, \emph{causal mediation analysis} is different from
+  standard statistical mediation analyses
+\item
+  Statistical mediation analyses merely assess associations between the variables
+\item
+  Causal mediation analyses assess how the system behaves under interventions
+\item
+  Causal mediation analysis is thus useful to understand mechanisms
+\end{itemize}
+
+\hypertarget{an-example-of-a-non-causal-mediation-analysis-product-of-coefficients}{%
+\subsection{An example of a non-causal mediation analysis (product of coefficients)}\label{an-example-of-a-non-causal-mediation-analysis-product-of-coefficients}}
+
+\begin{itemize}
+\tightlist
+\item
+  Assume you are interested in the effect of a treatment \(A\) ({[}FILL IN FROM
+  MOTIVATING EXAMPLE{]}) on an outcome \(Y\) ({[}FILL IN{]}) through a mediator \(M\)
+  ({[}FILL IN{]})
+\item
+  We could fit the following models:
+  \begin{align}
+      \E(Y\mid A=a) & = \alpha_0 + \alpha_1 a\\
+      \E(M\mid A=a) & = \gamma_0 + \gamma_1 a\\
+      \E(Y\mid M=m, A=a) & = \beta_0 + \beta_1 m + \beta_2 a
+    \end{align}
+\item
+  The product \((\gamma_1\beta_1)\) has been proposed as a measure of the effect
+  of \(X\) on \(Y\) through \(M\)
+\item
+  Causal interpretation problems with this method:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    What happens if there are confounders of the relation between treatment and outcome?
+  \item
+    What happens if there are confounders of the relation between mediataor and outcome?
+  \item
+    What happens if there are confounders of the relation between treatment and mediator?
+  \item
+    What happens if the confounders of mediator and outcome are affected by treatment?
+  \end{itemize}
+\item
+  Statistical issues with this method:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Assume the above confounding is not an issue
+  \item
+    Can I then interpret \((\gamma_1\beta_1)\) as the indirect effect?
+  \item
+    No: the regression models may be misspecified
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{causal-mediation-models}{%
+\section{Causal mediation models}\label{causal-mediation-models}}
+
+In this workshopp we will use directed acyclic graphs to conceptualize the above
+confounding issues. We will focus on the two types of graph:
 
 \hypertarget{no-intermediate-confounders}{%
 \subsection{No intermediate confounders}\label{no-intermediate-confounders}}
@@ -554,23 +625,83 @@ the effects of interest. We will focus on the two types of graph:
 \caption{Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-2}
 \end{figure}
 
+The above graphs can be interpreted as a \emph{non-parametric structural equation model}
+(NPSEM), also known as \emph{structural causal model} (SCM):
+
+\begin{align}
+  W & = f_W(U_W)\\
+  A & = f_A(W, U_A)\\
+  Z & = f_Z(W, A, U_Z)\\
+  M & = f_M(W, A, Z, U_M)\\
+  Y & = f_Y(W, A, Z, M, U_Y)
+\end{align}
+
+\begin{itemize}
+\tightlist
+\item
+  Here \(U=(U_W, U_A, U_Z, U_M, U_Y)\) is a vector of all unmeasured exogenous
+  factors affecting the system
+\item
+  The functions \(f\) are assumed fixed but unknown
+\item
+  We posit this model as a system of equation that nature uses to geenrate the
+  data at hand
+\item
+  Therefore we leave the functions \(f\) unspecified (i.e., we do not know the
+  true nature mechanisms)
+\item
+  Sometimes we know something: e.g., if \(A\) is randomized we know \(A=f_A(U_A)\)
+  where \(U_A\) is independent of everything.
+\end{itemize}
+
 \hypertarget{counterfactuals}{%
 \section{Counterfactuals}\label{counterfactuals}}
 
-In what follows, we will define all the effects of interest using
-\emph{counterfactuals}. Counterfactuals are hypothetical random variables
-that would have been observed in a world where we would be able to
-perform interventions on the random variables of interest. For
-example, \(Y_a\) is a counterfactual variable in a hypothetical world
-where \(\P(A=a)=1\) with probability one. \(Y_{a,m}\) is the
-counterfactual outcome in a world where \(\P(A=a,M=m)=1\), and \(M_a\) is
-the counterfactual variable representing the mediator in a world where
-\(\P(A=a)=1\).
+\begin{itemize}
+\tightlist
+\item
+  We define all the effects of interest using \emph{counterfactuals}
+\item
+  Counterfactuals are hypothetical random variables that would have been
+  observed in a world where we would be able to perform interventions on the
+  random variables of interest
+\item
+  \(Y_a\) is a counterfactual variable in a hypothetical world where \(\P(A=a)=1\)
+  with probability one
+\item
+  \(Y_{a,m}\) is the counterfactual outcome in a world where \(\P(A=a,M=m)=1\)
+\item
+  \(M_a\) is the counterfactual variable representing the mediator in a world
+  where \(\P(A=a)=1\).
+\end{itemize}
 
-In this workshop we use counterfactual variables as \emph{primitives}, but
-we note that in other causal inference frameworks, such as structural
-equation models, counterfactuals are quantities \emph{derived} from the
-model.
+\hypertarget{how-are-counterfactuals-defined}{%
+\subsection{How are counterfactuals defined?}\label{how-are-counterfactuals-defined}}
+
+\begin{itemize}
+\tightlist
+\item
+  You can use counterfactual variables as \emph{primitives}
+\item
+  In the NPSEM framework, counterfactuals are quantities \emph{derived} from the
+  model:
+  \begin{align}
+    Y_a  &= f_Y(W, a, Z, M, U_Y)\\
+    Y_{a,m}  &= f_Y(W, a, Z, m, U_Y)\\
+    M_a  &= f_M(W, a, Z, U_M)
+  \end{align}
+\item
+  You can also define \emph{nested counterfactuals}
+\item
+  For example, if \(A\) is binary, you can think of the following counterfactual
+  \begin{equation*}
+    Y_{1, M_0} = f_Y(W, 1, Z, M_0, U_Y)
+  \end{equation*}
+\item
+  Interpreted as \emph{the outcome for an individual in a hypothetical world where
+  treatment was given but the mediator was held at the value it would have
+  taken under no treatment}
+\end{itemize}
 
 \hypertarget{estimands}{%
 \chapter{Path-specific casual mediation effect types}\label{estimands}}
@@ -588,9 +719,7 @@ model.
 \hypertarget{controlled-direct-effects}{%
 \section{Controlled direct effects}\label{controlled-direct-effects}}
 
-\begin{equation*}
-  \psi_{\text{CDE}} = \E(Y_{1,m}) - \E(Y_{0,m})
-\end{equation*}
+\[\psi_{\text{CDE}} = \E(Y_{1,m} - Y_{0,m}) \]
 
 \begin{itemize}
 \tightlist
@@ -598,6 +727,13 @@ model.
   Set \(M=m\) uniformly for everyone in the population
 \item
   Compare \(A=1\) vs \(A=0\) with \(M=m\) fixed
+\end{itemize}
+
+\hypertarget{identification-assumptions}{%
+\subsection{Identification assumptions:}\label{identification-assumptions}}
+
+\begin{itemize}
+\tightlist
 \item
   Confounder assumptions:
 
@@ -655,18 +791,21 @@ model.
 \emph{What if our research question doesn't involve intervening directly on the
 mediator?}
 
-\emph{What if we want to decompose the average treatment effect into its direct and indirect counterparts?}
+\emph{What if we want to decompose the average treatment effect into its direct and
+indirect counterparts?}
 
 \hypertarget{natural-direct-and-indirect-effects}{%
 \section{Natural direct and indirect effects}\label{natural-direct-and-indirect-effects}}
 
 Natural direct effect (NDE):
-\[  \psi_{\text{NDE}} = \E(Y_{1,M_0}) - \E(Y_{0,M_0}) \]
+\begin{equation*}
+  \psi_{\text{NDE}} = \E(Y_{1,M_0} - Y_{0,M_0})
+\end{equation*}
 
 Natural indirect effect (NIE):
-\[
-  \psi_{\text{NIE}} = \E(Y_{1,M_1}) - \E(Y_{1,M_0})
-\]
+\begin{equation*}
+  \psi_{\text{NIE}} = \E(Y_{1,M_1} - Y_{1,M_0})
+\end{equation*}
 
 The NDE can also be written as: \(\E_W \sum_m \{\E(Y_{1,m} \mid W) - \E(Y_{0,m} \mid W)\} \P(M_{0}=m \mid W)\)
 
@@ -686,8 +825,8 @@ The NDE can also be written as: \(\E_W \sum_m \{\E(Y_{1,m} \mid W) - \E(Y_{0,m} 
 
 \end{figure}
 
-\hypertarget{identification-assumptions}{%
-\subsection{Identification assumptions:}\label{identification-assumptions}}
+\hypertarget{identification-assumptions-1}{%
+\subsection{Identification assumptions:}\label{identification-assumptions-1}}
 
 \begin{itemize}
 \tightlist
@@ -698,7 +837,7 @@ The NDE can also be written as: \(\E_W \sum_m \{\E(Y_{1,m} \mid W) - \E(Y_{0,m} 
 \item
   \(A \indep M_a \mid W\)
 \item
-  \(M_{a^{\star}} \indep Y_{a,m} \mid W\)
+  \(M_0 \indep Y_{1,m} \mid W\)
 \item
   and positivity assumptions
 \end{itemize}
@@ -714,8 +853,8 @@ What does \(M_0 \indep Y_{1,m} \mid W\) mean?
   Can you think of a data-generating mechanism that would violate this
   assumption?
 \item
-  Whenever we believe that treatment assignment works through adherence (i.e.,
-  almost always), we are violating this assumption.
+  Whenever we believe that treatment assignment works through adherence (i.e., almost
+  always), we are violating this assumption.
 \end{itemize}
 
 \hypertarget{is-this-the-estimand-i-want-1}{%
@@ -739,10 +878,11 @@ mediator-outcome relationship (e.g., adherence)?}
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.75\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/medDAG2} 
+{\centering \includegraphics[width=0.8\linewidth]{02-effects-def_files/figure-latex/unnamed-chunk-2-1} 
 
 }
 
+\caption{Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-2}
 \end{figure}
 
 \begin{figure}
@@ -786,8 +926,8 @@ mediator-outcome relationship (e.g., adherence)?}
 
 \end{figure}
 
-\hypertarget{identification-assumptions-1}{%
-\subsection{Identification assumptions:}\label{identification-assumptions-1}}
+\hypertarget{identification-assumptions-2}{%
+\subsection{Identification assumptions:}\label{identification-assumptions-2}}
 
 \begin{itemize}
 \tightlist
@@ -826,10 +966,10 @@ Is this the estimand I want?
 \end{figure}
 
 \hypertarget{interventional}{%
-\chapter{The Interventional Direct and Indirect Effects}\label{interventional}}
+\section{The Interventional Direct and Indirect Effects}\label{interventional}}
 
 \hypertarget{definition-of-the-effects}{%
-\section{Definition of the effects}\label{definition-of-the-effects}}
+\subsection{Definition of the effects}\label{definition-of-the-effects}}
 
 Consider the following directed acyclic graph.
 
@@ -859,8 +999,9 @@ treatment.
 In this example, natural direct and indirect effects are
 unidentifiable from observed data on \((W,A,Z,M,Y)\). The technical
 reason for this is that the cross-world counterfactual assumption
-
-\[Y(1,m)\indep M(0)\mid W\]
+\begin{equation*}
+  Y(1,m)\indep M(0)\mid W
+\end{equation*}
 
 does not hold in the aboce directed acyiclic graph. Intuitively, the
 reason for this is that an intervention setting \(A=1\) (necessary for
@@ -879,7 +1020,7 @@ these variables are unmeasured.
 \subsection{Recovering direct and indirect effects}\label{recovering-direct-and-indirect-effects}}
 
 Even though estimation of the NDE and NIE is not possible in the
-presence of confounders of the mediation-outcome relation affected by
+apresence of confounders of the mediation-outcome relation affected by
 treatment, it is possible to redefine the effects in a way such that
 they are identifiable. Specifically:
 
@@ -931,9 +1072,9 @@ nonhomeless participants.
 \hypertarget{getting-specific-about-the-question}{%
 \subsection{Getting specific about the question}\label{getting-specific-about-the-question}}
 
-To what extent does the indirect effect through mediators of adherence, pain,
-and depressive symptoms explain the differences in treatment effects on OUD
-relapse for homeless and nonhomeless individuals?
+To what extent does the indirect effect through mediators of adherence, pain, and
+depressive symptoms explain the differences in treatment effects on OUD relapse
+for homeless and nonhomeless individuals?
 
 What estimand do we want?
 
@@ -1002,9 +1143,343 @@ Consider the following directed acyclic graph.
 \begin{itemize}
 \tightlist
 \item
-  So far we have discussed effects for binary exposures
+  So far we have discussed controlled, natural, and interventional (in)direct effects
 \item
-  Controlled direct effects and natural effects require that \(0 < \P(A=1\mid W) < 1\)
+  These effects require that \(0 < \P(A=1\mid W) < 1\)
+\item
+  They are defined only for binary exposures
+\item
+  \emph{What can we do when the positivity assumption does not hold or the exposure
+  is continuous?}
+\item
+  Solution: we can use stochastic effects
+\end{itemize}
+
+\hypertarget{definition-of-stochastic-effects}{%
+\section{Definition of stochastic effects}\label{definition-of-stochastic-effects}}
+
+There are two possible ways of defining stochastic effects:
+
+\begin{itemize}
+\tightlist
+\item
+  Consider the effect of an intervention where the exposure is drawn from a
+  distribution
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Example: {[}TO FILL IN{]}
+  \end{itemize}
+\item
+  Consider the effect of an intervention where the post-intervention exposure is
+  a function of the actually received exposure
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Example: {[}TO FILL IN{]}
+  \end{itemize}
+\item
+  In both cases \(A\mid W\) is non-deterministic, thus the name \emph{stochastic intervention}
+\end{itemize}
+
+\hypertarget{example-incremental-propensity-score-interventions-ipsi-kennedy2018nonparametric}{%
+\subsection*{\texorpdfstring{Example: incremental propensity score interventions (IPSI) \citep{kennedy2018nonparametric}}{Example: incremental propensity score interventions (IPSI) {[}@kennedy2018nonparametric{]}}}\label{example-incremental-propensity-score-interventions-ipsi-kennedy2018nonparametric}}
+
+
+\hypertarget{definition-of-the-intervention}{%
+\subsubsection*{Definition of the intervention}\label{definition-of-the-intervention}}
+
+
+\begin{itemize}
+\tightlist
+\item
+  Assume \(A\) is binary, and \(\P(A=1\mid W=w) = g(1\mid w)\) is the propensity score
+\item
+  Consider an intervention in which each individual receives the intervention
+  with probability \(g_\delta(1\mid w)\), equal to
+  \begin{equation*}
+    g_\delta(1\mid w)=\frac{\delta g(1\mid w)}{\delta g(1\mid w) +
+    1 - g(1\mid w)}
+  \end{equation*}
+\item
+  e.g., draw the post-intervention exposure from a Bernoulli variable with
+  probability \(g_\delta(1\mid w)\)
+\item
+  The value \(\delta\) is user given
+\item
+  Let \(A_\delta\) denote the post-intervention distribution
+\item
+  Some algebra shows that \(\delta\) is an odds ratio comparing the pre- and
+  post-intervantion distributions
+  \begin{equation*}
+    \delta = \frac{\text{odds}(A_\delta = 1\mid W=w)}
+    {\text{odds}(A = 1\mid W=w)}
+  \end{equation*}
+\item
+  This gives the intervention a nice interpretation as \emph{what would happen in a
+  world where the odds of receiving treatment is increased by \(\delta\)}
+\item
+  Let \(Y_{A_\delta}\) denote the outcome in this hypothetical world
+\end{itemize}
+
+\hypertarget{example-modified-treatment-policies}{%
+\subsection{Example: modified treatment policies}\label{example-modified-treatment-policies}}
+
+\hypertarget{definition-of-the-intervention-1}{%
+\subsubsection*{Definition of the intervention}\label{definition-of-the-intervention-1}}
+
+
+\hypertarget{mediation-analysis-for-stochastic-interventions}{%
+\subsection{Mediation analysis for stochastic interventions}\label{mediation-analysis-for-stochastic-interventions}}
+
+\begin{itemize}
+\tightlist
+\item
+  The total effect of an IPSI can be computed as a contrast of the outcome under
+  intervention vs no intervention:
+  \begin{equation*}
+    \psi = \E[Y_{A_\delta} - Y]
+  \end{equation*}
+\item
+  Recall the NPSEM
+  \begin{align}
+    W & = f_W(U_W)\\
+    A & = f_A(W, U_A)\\
+    M & = f_M(W, A, U_M)\\
+    Y & = f_Y(W, A, M, U_Y)
+  \end{align}
+\item
+  From this we have \(Y_{A_\delta} = f_Y(W, A_\delta, M_{A_\delta}, U_Y)\)
+\item
+  Thus, we have \(Y_{A_\delta} = Y_{A_\delta, M_{A_\delta}}\) and \(Y = Y(A,M(A))\)
+\item
+  Let us introduce the counterfactual \(Y_{A_\delta,M}\), interpreted as the
+  outcome observed in a world where the intervention on \(A\) is performed but the
+  mediator is fixed at the value it would have taken under no intervention
+\item
+  Then we can decompose the total effect into:
+  \begin{align*}
+    \E[Y&_{A_\delta,M_{A_\delta}} - Y_{A,M_A}] = \\
+    &\underbrace{\E[Y_{A_\delta,M_{A_\delta}} -
+      Y_{A_\delta,M_A}]}_{\text{stochastic natural indirect effect}} +
+      \underbrace{\E[Y_{A,M_{A_\delta}} -
+      Y_{A,M_A}]}_{\text{stochastic natural direct effect}}
+  \end{align*}
+\end{itemize}
+
+\hypertarget{identification-of-the-effect-of-a-stochastic-intervention}{%
+\section{Identification of the effect of a stochastic intervention}\label{identification-of-the-effect-of-a-stochastic-intervention}}
+
+\hypertarget{preliminaries-on-semiparametric-estimation}{%
+\chapter{Preliminaries on semiparametric estimation}\label{preliminaries-on-semiparametric-estimation}}
+
+\hypertarget{why-do-we-need-new-estimation-tools}{%
+\section{Why do we need new estimation tools?}\label{why-do-we-need-new-estimation-tools}}
+
+\begin{itemize}
+\item
+  As we have seen all the mediation parameters that we consider can be
+  seen as a function of the joint probability distribution of \(O=(W,A,Z,M,Y)\)
+\item
+  For example, under identifiability assumptions the natural direct effect is
+  equal to
+  \begin{equation*}
+    \psi(\P) =  \sum_{m,w}\big[\E(Y\mid A=1,M=m,W=w) -
+      \E(Y\mid A=0,M=m,W=w)\big]\P(M=m\mid A=0, W=w)\P(W=w)
+  \end{equation*}
+\item
+  The notation \(\psi(\P)\) implies that the parameter is a function of \(\P\)
+\item
+  This means that we can compute it for any distribution \(\P\)
+\item
+  For example, if we know the true \(\P(W,A,M,Y)\), we can comnpute the true value
+  of the parameter by:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Computing the conditional expectation \(\E(Y\mid A=1,M=m,W=w)\) for all values
+    \((m,w)\)
+  \item
+    Computing the probability \(\P(M=m\mid A=0,W=w)\) for all values \((m,w)\)
+  \item
+    Computing the probability \(\P(W=w)\) for all values \(w\)
+  \item
+    Computing the sum over all values \((m,w)\)
+  \end{itemize}
+\item
+  This is how you would compute the \emph{true value} \textbf{if you knew} the true
+  distribution \(\P\)
+\item
+  But we can use the same logic for estimation:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Fit a regression to estimate \(\E(Y\mid A=1,M=m,W=w)\)
+  \item
+    Fit a regression to estimate \(\P(M=m\mid A=0,W=w)\)
+  \item
+    Estimate \(\P(W=w)\) with the empirical distribution
+  \end{itemize}
+\item
+  This is known as the g-computation estimator (more on this estimator later)
+\end{itemize}
+
+\hypertarget{how-can-g-estimation-be-implemented-in-practice}{%
+\subsection{How can g-estimation be implemented in practice?}\label{how-can-g-estimation-be-implemented-in-practice}}
+
+\begin{itemize}
+\tightlist
+\item
+  There are two possible ways to do g-computation estimation:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Using parametric models for the above regressions
+  \item
+    Using flexible data-adaptive regression (aka machine learning)
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{pros-and-cons-of-parametric-models}{%
+\subsection{Pros and cons of parametric models}\label{pros-and-cons-of-parametric-models}}
+
+\begin{itemize}
+\tightlist
+\item
+  Pros:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Easy to understand
+  \item
+    Ease of implementation (standard regression software)
+  \item
+    Can use the Delta method or the bootstrap for computation of standard errors
+  \end{itemize}
+\item
+  Cons:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Unless \(W\) and \(M\) contain very few categorical variables, it is very easy
+    to misspecify the models
+  \item
+    This can introduce sizable bias in the estimators
+  \item
+    This bias is highly problematic
+
+    \begin{itemize}
+    \tightlist
+    \item
+      We go through a thorough process to correctly specify our causal models to
+      avoid bias
+    \item
+      Overly simplisitc models introduce bias and squander those efforts
+    \item
+      The bias can be small or large and you can never know from a single data
+      analysis
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{pros-and-cons-of-g-computation-with-data-adaptive-regression}{%
+\subsection{Pros and cons of g-computation with data-adaptive regression}\label{pros-and-cons-of-g-computation-with-data-adaptive-regression}}
+
+\begin{itemize}
+\tightlist
+\item
+  Pros:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Easy to understand
+  \item
+    Alleviate model-misspecification bias
+  \end{itemize}
+\item
+  Cons:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Might be harder to implement depending on the regression procedure
+  \item
+    No general approaches for computation of standard errors and confidence
+    intervals
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{semiparametric-estimation---an-alternative-to-solve-these-problems}{%
+\section{Semiparametric estimation - an alternative to solve these problems}\label{semiparametric-estimation---an-alternative-to-solve-these-problems}}
+
+\hypertarget{biasvariance-tradeoff}{%
+\subsection{Bias/variance tradeoff}\label{biasvariance-tradeoff}}
+
+\begin{itemize}
+\item
+  A lot of the recent literature in causal inference with data-adaptive
+  regression uses the following ideas
+\item
+  G-computation estimation with data-adaptive regression offers an incorrect
+  bias/variance trade-off
+\item
+  Specifically, the bias of a g-computation estimator can often be expressed as
+  \begin{equation*}
+    \psi(\hat\P) - \psi(\P) \approx -\E[D(O;\hat\P)]
+  \end{equation*}
+\item
+  The function \(D(O;\P)\) is called \emph{the efficient influence function} (EIF)
+\item
+  The EIF must be found on a case-by-case basis or each parameter \(\psi(\P)\)
+\item
+  For example, for estimating the standardized mean \(\psi(P)=\E[\E(Y\mid A=1, W)]\), we have
+  \begin{equation*}
+    D(O,\hat\P) = \frac{A}{\hat P(A=1\mid W)}[Y - \hat\E(Y\mid A=1, W)] +
+    \hat\E(Y\mid A=1, W) - \psi(\hat\P)
+  \end{equation*}
+\item
+  In this workshop we will not present the specific form of \(D(O;\hat\P)\) for
+  all parameters that we use
+\item
+  But the estimators we discuss and implement in the packages will be based on
+  theser EIFs
+\end{itemize}
+
+\hypertarget{bias-correction-of-g-computation-estimators}{%
+\subsection{Bias-correction of g-computation estimators}\label{bias-correction-of-g-computation-estimators}}
+
+\begin{itemize}
+\tightlist
+\item
+  There are at least two ways to use the EIF to perform a bias correction for a
+  g-computation estimator
+\item
+  The first one is the so-called \emph{one step} estimator:
+  \begin{equation*}
+    \psi(\hat \P) + \frac{1}{n}\sum_{i=1}^n D(O;\hat \P_i)
+  \end{equation*}
+\item
+  The idea behind the one-step estimator is simple: subtract an estimate of the
+  bias of the g-computation estimator
+\item
+  The second approach is the \emph{targeted maximum likelihood estimator} (TMLE)
+\item
+  TMLE is based on the principle that it is possile to construct a
+  data-adaptive estimator \(\tilde \P\) such that
+  \begin{equation*}
+    \frac{1}{n}\sum_{i=1}^n D(O;\tilde \P_i)=0
+  \end{equation*}
+\item
+  Thus, for this special data-adaptive estimate \(\tilde \P\), the TMLE is
+  actually just the g-computation estimator \(\psi(\tilde\P)\)
 \end{itemize}
 
 \hypertarget{estimating-natural-and-interventional-effects}{%
@@ -1017,36 +1492,54 @@ Recall:
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/meddagnoz} 
+{\centering \includegraphics[width=0.8\linewidth]{06-estimation-natural-interventional_files/figure-latex/unnamed-chunk-1-1} 
 
 }
 
+\caption{Directed acylcic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-1}
 \end{figure}
 
 Assuming a binary \(A\), we define the natural direct effect as:
-\[NDE = E(Y_{1,M_{0}}) - E(Y_{0,M_{0}})\],
+\[NDE = E(Y_{1,M_{0}} - Y_{0,M_{0}})\],
 
 and the natural indirect effect as:
-\[NIE = E(Y_{1,M_{1}}) - E(Y_{1,M_{0}})\].
+\[NIE = E(Y_{1,M_{1}} - Y_{1,M_{0}})\].
 
 \hypertarget{simple-case-for-intuition}{%
 \subsection{Simple case for intuition}\label{simple-case-for-intuition}}
 
-\(O=(W, A, M, Y)\)
+The observed data is \(O=(W, A, M, Y)\)
 
 This SCM is represented in the above DAG and the following causal models:
-\(W=f(U_W)\), \(A=f(W,U_A)\), \(M=f(A, W,U_M)\), and \(Y=f(M,A,W,U_Y)\), where (\(U_W, U_A,U_M, U_Y\)) are exogenous random errors.
+\begin{align*}
+  W & = f_W(U_W)\\
+  A & = f_A(W, U_A)\\
+  M & = f_M(W, A, U_M)\\
+  Y & = f_Y(W, A, M, U_Y),
+\end{align*}
+where \((U_W, U_A,U_M, U_Y)\) are exogenous random errors.
 
-We assume \(A\) is a single binary randomized treatment, \(M\) is a single binary
-mediator. There are no restrictions on the distribution of \(W\) or \(Y\).
+We assume
+- \(A\) is a single binary randomized treatment (and thus \(A = f_A(U_A)\))
+- \(M\) is a single binary mediator
+- There are no restrictions on the distribution of \(W\) or \(Y\)
 
 Recall that we need to assume the following to identify the above caual effects
 from our observed data:
-- \(A \indep Y_{a,m} \mid W\)
-- \(M \indep Y_{a,m} \mid W, A\)
-- \(A \indep M_a \mid W\)
-- \(M_{a^{\star}} \indep Y_{a,m} \mid W\)
-- and positivity assumptions
+
+\begin{itemize}
+\tightlist
+\item
+  \(A \indep Y_{a,m} \mid W\)
+\item
+  \(M \indep Y_{a,m} \mid W, A\)
+\item
+  \(A \indep M_a \mid W\)
+\item
+  \(M_0 \indep Y_{1,m} \mid W\)
+\item
+  and positivity assumptions
+\end{itemize}
 
 \hypertarget{how-to-estimate-using-g-computation}{%
 \subsection{How to estimate using G-computation}\label{how-to-estimate-using-g-computation}}
@@ -1230,25 +1723,28 @@ tmlende <- mean(margqdiff)
 \hypertarget{interventional-direct-and-indirect-effects}{%
 \section{Interventional direct and indirect effects}\label{interventional-direct-and-indirect-effects}}
 
-Recall:
+Recall that in the presence of a intermediate confounder natural (in)direct effects are not identified
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/medDAG2} 
+{\centering \includegraphics[width=0.8\linewidth]{06-estimation-natural-interventional_files/figure-latex/unnamed-chunk-6-1} 
 
 }
 
+\caption{Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-6}
 \end{figure}
 
 We define the interventional direct effect as:
 \begin{equation*}
-  \psi_{\text{PIDE}} = \E(Y_{a^\prime,g_{M \mid a^\star,W}}) -
-    \E(Y_{a\star,g_{M \mid a^\star,W}}),
+  \psi_{\text{PIDE}} = \E(Y_{a^\prime,g_{M \mid a^\star,W}} -
+    Y_{a\star,g_{M \mid a^\star,W}}),
 \end{equation*}
+
 and the interventional indirect effect as:
+
 \begin{equation*}
-  \psi_{\text{PIIE}} = \E(Y_{a^\prime,g_{M \mid a^\prime,W}}) -
-    \E(Y_{a^\prime,g_{M \mid a^\star,W}}).
+  \psi_{\text{PIIE}} = \E(Y_{a^\prime,g_{M \mid a^\prime,W}} -
+    Y_{a^\prime,g_{M \mid a^\star,W}}).
 \end{equation*}
 
 \hypertarget{simple-case-for-intuition-1}{%
@@ -1257,11 +1753,11 @@ and the interventional indirect effect as:
 Consider a simple data structure \(O=(W, A, Z, M, Y)\). This SCM is represented in
 the above DAG and the following causal models:
 \begin{align*}
-  W &= f(U_W)\\
-  A &= f(U_A)\\
-  Z &= f(A, W, U_Z)\\
-  M &= f(Z, A, W, U_M)\\
-  Y &= f(M, Z, A, W, U_Y),
+W & = f_W(U_W)\\
+A & = f_A(W, U_A)\\
+Z & = f_Z(W, A, U_Z)\\
+M & = f_M(W, A, Z, U_M)\\
+Y & = f_Y(W, A, Z, M, U_Y),
 \end{align*}
 where (\(U_W, U_A, U_Z, U_M, U_Y\)) are exogenous random errors. We assume \(A\) is
 a single binary treatment, \(Z\) is a single binary intermediate confounder, \(M\)
@@ -1271,10 +1767,12 @@ is a single binary mediator. There are no restrictions on the distribution of
 \(g_{M \mid a^\prime,W}\) represents a stochastic draw from the counterfactual,
 conditional distribution of \(M\), as described by
 \citet{vanderweele2016mediation}:
+
 \begin{equation*}
   g_{M \mid A,W}(m, a^{\star}, W) \equiv g_{M \mid a^{\star}, W}(W) =
     \sum_{z=0}^1 \P(M=1 \mid Z=z,W) \P(Z=z \mid A=a^{\star}, W).
 \end{equation*}
+
 In what follows, we are going to assume that \(g_{M \mid A,W}(m, a^{\star}, W)\)
 is known, estimated from observed data, which we call
 \(\hat{g}_{M \mid a^{\star}, W}\). This is going to slightly alter the usual

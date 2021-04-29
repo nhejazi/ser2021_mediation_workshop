@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 5 Preliminaries on semiparametric estimation | [SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</title>
+<meta name="author" content="Iván Díaz, Nima Hejazi, Kara Rudolph">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.2"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.5.1/jquery-3.5.1.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.2.4.9003/tabs.js"></script><script src="libs/bs3compat-0.2.4.9003/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+</head>
+<body>
+<span class="math inline">
+  \(\DeclareMathOperator{\expit}{expit}\)
+  \(\DeclareMathOperator{\logit}{logit}\)
+  \(\DeclareMathOperator*{\argmin}{\arg\!\min}\)
+  \(\newcommand{\indep}{\perp\!\!\!\perp}\)
+  \(\newcommand{\coloneqq}{\mathrel{=}}\)
+  \(\newcommand{\R}{\mathbb{R}}\)
+  \(\newcommand{\E}{\mathbb{E}}\)
+  \(\newcommand{\M}{\mathcal{M}}\)
+  \(\renewcommand{\P}{\mathbb{P}}\)
+  \(\newcommand{\I}{\mathbb{I}}\)
+  \(\newcommand{\1}{\mathbbm{1}}\)
+  </span>
+    <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/mark.js@8.11.1/dist/mark.min.js"></script><!-- CSS --><div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Welcome to SER!</a></li>
+<li><a class="" href="mediation.html"><span class="header-section-number">1</span> Preliminaries on causal mediation analysis</a></li>
+<li><a class="" href="estimands.html"><span class="header-section-number">2</span> Path-specific casual mediation effect types</a></li>
+<li><a class="" href="estimandirl.html"><span class="header-section-number">3</span> How to choose an estimand: Real world example</a></li>
+<li><a class="" href="stochastic.html"><span class="header-section-number">4</span> Stochastic Direct and Indirect Effects</a></li>
+<li><a class="active" href="preliminaries-on-semiparametric-estimation.html"><span class="header-section-number">5</span> Preliminaries on semiparametric estimation</a></li>
+<li><a class="" href="estimating-natural-and-interventional-effects.html"><span class="header-section-number">6</span> Estimating natural and interventional effects</a></li>
+<li><a class="" href="estimating-stochastic-effects.html"><span class="header-section-number">7</span> Estimating stochastic effects</a></li>
+<li><a class="" href="references.html">References</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/nhejazi/ser2021_mediation_workshop">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="preliminaries-on-semiparametric-estimation" class="section level1">
+<h1>
+<span class="header-section-number">5</span> Preliminaries on semiparametric estimation<a class="anchor" aria-label="anchor" href="#preliminaries-on-semiparametric-estimation"><i class="fas fa-link"></i></a>
+</h1>
+<div id="why-do-we-need-new-estimation-tools" class="section level2">
+<h2>
+<span class="header-section-number">5.1</span> Why do we need new estimation tools?<a class="anchor" aria-label="anchor" href="#why-do-we-need-new-estimation-tools"><i class="fas fa-link"></i></a>
+</h2>
+<ul>
+<li><p>As we have seen all the mediation parameters that we consider can be
+seen as a function of the joint probability distribution of <span class="math inline">\(O=(W,A,Z,M,Y)\)</span></p></li>
+<li><p>For example, under identifiability assumptions the natural direct effect is
+equal to
+<span class="math display">\[\begin{equation*}
+  \psi(\P) =  \sum_{m,w}\big[\E(Y\mid A=1,M=m,W=w) -
+    \E(Y\mid A=0,M=m,W=w)\big]\P(M=m\mid A=0, W=w)\P(W=w)
+\end{equation*}\]</span></p></li>
+<li><p>The notation <span class="math inline">\(\psi(\P)\)</span> implies that the parameter is a function of <span class="math inline">\(\P\)</span></p></li>
+<li><p>This means that we can compute it for any distribution <span class="math inline">\(\P\)</span></p></li>
+<li>
+<p>For example, if we know the true <span class="math inline">\(\P(W,A,M,Y)\)</span>, we can comnpute the true value
+of the parameter by:</p>
+<ul>
+<li>Computing the conditional expectation <span class="math inline">\(\E(Y\mid A=1,M=m,W=w)\)</span> for all values
+<span class="math inline">\((m,w)\)</span>
+</li>
+<li>Computing the probability <span class="math inline">\(\P(M=m\mid A=0,W=w)\)</span> for all values <span class="math inline">\((m,w)\)</span>
+</li>
+<li>Computing the probability <span class="math inline">\(\P(W=w)\)</span> for all values <span class="math inline">\(w\)</span>
+</li>
+<li>Computing the sum over all values <span class="math inline">\((m,w)\)</span>
+</li>
+</ul>
+</li>
+<li><p>This is how you would compute the <em>true value</em> <strong>if you knew</strong> the true
+distribution <span class="math inline">\(\P\)</span></p></li>
+<li>
+<p>But we can use the same logic for estimation:</p>
+<ul>
+<li>Fit a regression to estimate <span class="math inline">\(\E(Y\mid A=1,M=m,W=w)\)</span>
+</li>
+<li>Fit a regression to estimate <span class="math inline">\(\P(M=m\mid A=0,W=w)\)</span>
+</li>
+<li>Estimate <span class="math inline">\(\P(W=w)\)</span> with the empirical distribution</li>
+</ul>
+</li>
+<li><p>This is known as the g-computation estimator (more on this estimator later)</p></li>
+</ul>
+<div id="how-can-g-estimation-be-implemented-in-practice" class="section level3">
+<h3>
+<span class="header-section-number">5.1.1</span> How can g-estimation be implemented in practice?<a class="anchor" aria-label="anchor" href="#how-can-g-estimation-be-implemented-in-practice"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li>There are two possible ways to do g-computation estimation:
+<ul>
+<li>Using parametric models for the above regressions</li>
+<li>Using flexible data-adaptive regression (aka machine learning)</li>
+</ul>
+</li>
+</ul>
+</div>
+<div id="pros-and-cons-of-parametric-models" class="section level3">
+<h3>
+<span class="header-section-number">5.1.2</span> Pros and cons of parametric models<a class="anchor" aria-label="anchor" href="#pros-and-cons-of-parametric-models"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li>Pros:
+<ul>
+<li>Easy to understand</li>
+<li>Ease of implementation (standard regression software)</li>
+<li>Can use the Delta method or the bootstrap for computation of standard errors</li>
+</ul>
+</li>
+<li>Cons:
+<ul>
+<li>Unless <span class="math inline">\(W\)</span> and <span class="math inline">\(M\)</span> contain very few categorical variables, it is very easy
+to misspecify the models</li>
+<li>This can introduce sizable bias in the estimators</li>
+<li>This bias is highly problematic
+<ul>
+<li>We go through a thorough process to correctly specify our causal models to
+avoid bias</li>
+<li>Overly simplisitc models introduce bias and squander those efforts</li>
+<li>The bias can be small or large and you can never know from a single data
+analysis</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div id="pros-and-cons-of-g-computation-with-data-adaptive-regression" class="section level3">
+<h3>
+<span class="header-section-number">5.1.3</span> Pros and cons of g-computation with data-adaptive regression<a class="anchor" aria-label="anchor" href="#pros-and-cons-of-g-computation-with-data-adaptive-regression"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li>Pros:
+<ul>
+<li>Easy to understand</li>
+<li>Alleviate model-misspecification bias</li>
+</ul>
+</li>
+<li>Cons:
+<ul>
+<li>Might be harder to implement depending on the regression procedure</li>
+<li>No general approaches for computation of standard errors and confidence
+intervals</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="semiparametric-estimation---an-alternative-to-solve-these-problems" class="section level2">
+<h2>
+<span class="header-section-number">5.2</span> Semiparametric estimation - an alternative to solve these problems<a class="anchor" aria-label="anchor" href="#semiparametric-estimation---an-alternative-to-solve-these-problems"><i class="fas fa-link"></i></a>
+</h2>
+<div id="biasvariance-tradeoff" class="section level3">
+<h3>
+<span class="header-section-number">5.2.1</span> Bias/variance tradeoff<a class="anchor" aria-label="anchor" href="#biasvariance-tradeoff"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li><p>A lot of the recent literature in causal inference with data-adaptive
+regression uses the following ideas</p></li>
+<li><p>G-computation estimation with data-adaptive regression offers an incorrect
+bias/variance trade-off</p></li>
+<li><p>Specifically, the bias of a g-computation estimator can often be expressed as
+<span class="math display">\[\begin{equation*}
+  \psi(\hat\P) - \psi(\P) \approx -\E[D(O;\hat\P)]
+\end{equation*}\]</span></p></li>
+<li><p>The function <span class="math inline">\(D(O;\P)\)</span> is called <em>the efficient influence function</em> (EIF)</p></li>
+<li><p>The EIF must be found on a case-by-case basis or each parameter <span class="math inline">\(\psi(\P)\)</span></p></li>
+<li><p>For example, for estimating the standardized mean <span class="math inline">\(\psi(P)=\E[\E(Y\mid A=1, W)]\)</span>, we have
+<span class="math display">\[\begin{equation*}
+  D(O,\hat\P) = \frac{A}{\hat P(A=1\mid W)}[Y - \hat\E(Y\mid A=1, W)] +
+  \hat\E(Y\mid A=1, W) - \psi(\hat\P)
+\end{equation*}\]</span></p></li>
+<li><p>In this workshop we will not present the specific form of <span class="math inline">\(D(O;\hat\P)\)</span> for
+all parameters that we use</p></li>
+<li><p>But the estimators we discuss and implement in the packages will be based on
+theser EIFs</p></li>
+</ul>
+</div>
+<div id="bias-correction-of-g-computation-estimators" class="section level3">
+<h3>
+<span class="header-section-number">5.2.2</span> Bias-correction of g-computation estimators<a class="anchor" aria-label="anchor" href="#bias-correction-of-g-computation-estimators"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li>There are at least two ways to use the EIF to perform a bias correction for a
+g-computation estimator</li>
+<li>The first one is the so-called <em>one step</em> estimator:
+<span class="math display">\[\begin{equation*}
+  \psi(\hat \P) + \frac{1}{n}\sum_{i=1}^n D(O;\hat \P_i)
+\end{equation*}\]</span>
+</li>
+<li>The idea behind the one-step estimator is simple: subtract an estimate of the
+bias of the g-computation estimator</li>
+<li>The second approach is the <em>targeted maximum likelihood estimator</em> (TMLE)</li>
+<li>TMLE is based on the principle that it is possile to construct a
+data-adaptive estimator <span class="math inline">\(\tilde \P\)</span> such that
+<span class="math display">\[\begin{equation*}
+  \frac{1}{n}\sum_{i=1}^n D(O;\tilde \P_i)=0
+\end{equation*}\]</span>
+</li>
+<li>Thus, for this special data-adaptive estimate <span class="math inline">\(\tilde \P\)</span>, the TMLE is
+actually just the g-computation estimator <span class="math inline">\(\psi(\tilde\P)\)</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="stochastic.html"><span class="header-section-number">4</span> Stochastic Direct and Indirect Effects</a></div>
+<div class="next"><a href="estimating-natural-and-interventional-effects.html"><span class="header-section-number">6</span> Estimating natural and interventional effects</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#preliminaries-on-semiparametric-estimation"><span class="header-section-number">5</span> Preliminaries on semiparametric estimation</a></li>
+<li>
+<a class="nav-link" href="#why-do-we-need-new-estimation-tools"><span class="header-section-number">5.1</span> Why do we need new estimation tools?</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#how-can-g-estimation-be-implemented-in-practice"><span class="header-section-number">5.1.1</span> How can g-estimation be implemented in practice?</a></li>
+<li><a class="nav-link" href="#pros-and-cons-of-parametric-models"><span class="header-section-number">5.1.2</span> Pros and cons of parametric models</a></li>
+<li><a class="nav-link" href="#pros-and-cons-of-g-computation-with-data-adaptive-regression"><span class="header-section-number">5.1.3</span> Pros and cons of g-computation with data-adaptive regression</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#semiparametric-estimation---an-alternative-to-solve-these-problems"><span class="header-section-number">5.2</span> Semiparametric estimation - an alternative to solve these problems</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#biasvariance-tradeoff"><span class="header-section-number">5.2.1</span> Bias/variance tradeoff</a></li>
+<li><a class="nav-link" href="#bias-correction-of-g-computation-estimators"><span class="header-section-number">5.2.2</span> Bias-correction of g-computation estimators</a></li>
+</ul>
+</li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/nhejazi/ser2021_mediation_workshop/blob/master/05-preliminaries-estimation.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/nhejazi/ser2021_mediation_workshop/edit/master/05-preliminaries-estimation.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: April 29, 2021.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+</html>

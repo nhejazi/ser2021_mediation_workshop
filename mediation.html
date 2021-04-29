@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Chapter 1 Causal Mediation Analysis | [SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</title>
+<title>Chapter 1 Preliminaries on causal mediation analysis | [SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</title>
 <meta name="author" content="Iván Díaz, Nima Hejazi, Kara Rudolph">
 <!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.2"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.5.1/jquery-3.5.1.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
@@ -44,11 +44,11 @@
       <nav aria-label="Table of contents"><h2>Table of contents</h2>
         <ul class="book-toc list-unstyled">
 <li><a class="" href="index.html">Welcome to SER!</a></li>
-<li><a class="active" href="mediation.html"><span class="header-section-number">1</span> Causal Mediation Analysis</a></li>
+<li><a class="active" href="mediation.html"><span class="header-section-number">1</span> Preliminaries on causal mediation analysis</a></li>
 <li><a class="" href="estimands.html"><span class="header-section-number">2</span> Path-specific casual mediation effect types</a></li>
-<li><a class="" href="interventional.html"><span class="header-section-number">3</span> The Interventional Direct and Indirect Effects</a></li>
-<li><a class="" href="estimandirl.html"><span class="header-section-number">4</span> How to choose an estimand: Real world example</a></li>
-<li><a class="" href="stochastic.html"><span class="header-section-number">5</span> Stochastic Direct and Indirect Effects</a></li>
+<li><a class="" href="estimandirl.html"><span class="header-section-number">3</span> How to choose an estimand: Real world example</a></li>
+<li><a class="" href="stochastic.html"><span class="header-section-number">4</span> Stochastic Direct and Indirect Effects</a></li>
+<li><a class="" href="preliminaries-on-semiparametric-estimation.html"><span class="header-section-number">5</span> Preliminaries on semiparametric estimation</a></li>
 <li><a class="" href="estimating-natural-and-interventional-effects.html"><span class="header-section-number">6</span> Estimating natural and interventional effects</a></li>
 <li><a class="" href="estimating-stochastic-effects.html"><span class="header-section-number">7</span> Estimating stochastic effects</a></li>
 <li><a class="" href="references.html">References</a></li>
@@ -61,17 +61,71 @@
 </div>
   </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="mediation" class="section level1">
 <h1>
-<span class="header-section-number">1</span> Causal Mediation Analysis<a class="anchor" aria-label="anchor" href="#mediation"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1</span> Preliminaries on causal mediation analysis<a class="anchor" aria-label="anchor" href="#mediation"><i class="fas fa-link"></i></a>
 </h1>
-<div id="mediation-models" class="section level2">
+<div id="motivating-studies" class="section level2">
 <h2>
-<span class="header-section-number">1.1</span> Mediation models<a class="anchor" aria-label="anchor" href="#mediation-models"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.1</span> Motivating studies<a class="anchor" aria-label="anchor" href="#motivating-studies"><i class="fas fa-link"></i></a>
 </h2>
-<p>In this workshopp we will use directed acyclic graphs to conceptualize
-the effects of interest. We will focus on the two types of graph:</p>
+<p>[TO FILL IN (KARA?). IDEALLY THESE WOULD BE TWO OR THREE EXAMPLES THAT WE CAN
+USE THROUGHOUT THE WORKSHOP FOR ALL EFFECTS]</p>
+</div>
+<div id="what-is-causal-mediation-analysis" class="section level2">
+<h2>
+<span class="header-section-number">1.2</span> What is causal mediation analysis?<a class="anchor" aria-label="anchor" href="#what-is-causal-mediation-analysis"><i class="fas fa-link"></i></a>
+</h2>
+<ul>
+<li>Like all causal analyses, <em>causal mediation analysis</em> is different from
+standard statistical mediation analyses</li>
+<li>Statistical mediation analyses merely assess associations between the variables</li>
+<li>Causal mediation analyses assess how the system behaves under interventions</li>
+<li>Causal mediation analysis is thus useful to understand mechanisms</li>
+</ul>
+<div id="an-example-of-a-non-causal-mediation-analysis-product-of-coefficients" class="section level3">
+<h3>
+<span class="header-section-number">1.2.1</span> An example of a non-causal mediation analysis (product of coefficients)<a class="anchor" aria-label="anchor" href="#an-example-of-a-non-causal-mediation-analysis-product-of-coefficients"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li>Assume you are interested in the effect of a treatment <span class="math inline">\(A\)</span> ([FILL IN FROM
+MOTIVATING EXAMPLE]) on an outcome <span class="math inline">\(Y\)</span> ([FILL IN]) through a mediator <span class="math inline">\(M\)</span>
+([FILL IN])</li>
+<li>We could fit the following models:
+<span class="math display">\[\begin{align}
+    \E(Y\mid A=a) &amp; = \alpha_0 + \alpha_1 a\\
+    \E(M\mid A=a) &amp; = \gamma_0 + \gamma_1 a\\
+    \E(Y\mid M=m, A=a) &amp; = \beta_0 + \beta_1 m + \beta_2 a
+  \end{align}\]</span>
+</li>
+<li>The product <span class="math inline">\((\gamma_1\beta_1)\)</span> has been proposed as a measure of the effect
+of <span class="math inline">\(X\)</span> on <span class="math inline">\(Y\)</span> through <span class="math inline">\(M\)</span>
+</li>
+<li>Causal interpretation problems with this method:
+<ul>
+<li>What happens if there are confounders of the relation between treatment and outcome?</li>
+<li>What happens if there are confounders of the relation between mediataor and outcome?</li>
+<li>What happens if there are confounders of the relation between treatment and mediator?</li>
+<li>What happens if the confounders of mediator and outcome are affected by treatment?</li>
+</ul>
+</li>
+<li>Statistical issues with this method:
+<ul>
+<li>Assume the above confounding is not an issue</li>
+<li>Can I then interpret <span class="math inline">\((\gamma_1\beta_1)\)</span> as the indirect effect?</li>
+<li>No: the regression models may be misspecified</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="causal-mediation-models" class="section level2">
+<h2>
+<span class="header-section-number">1.3</span> Causal mediation models<a class="anchor" aria-label="anchor" href="#causal-mediation-models"><i class="fas fa-link"></i></a>
+</h2>
+<p>In this workshopp we will use directed acyclic graphs to conceptualize the above
+confounding issues. We will focus on the two types of graph:</p>
 <div id="no-intermediate-confounders" class="section level3">
 <h3>
-<span class="header-section-number">1.1.1</span> No intermediate confounders<a class="anchor" aria-label="anchor" href="#no-intermediate-confounders"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.3.1</span> No intermediate confounders<a class="anchor" aria-label="anchor" href="#no-intermediate-confounders"><i class="fas fa-link"></i></a>
 </h3>
 <div class="figure" style="text-align: center">
 <span id="fig:unnamed-chunk-1"></span>
@@ -82,7 +136,7 @@ FIGURE 1.1: Directed acylcic graph under <em>no intermediate confounders</em> of
 </div>
 <div id="intermediate-confounders" class="section level3">
 <h3>
-<span class="header-section-number">1.1.2</span> Intermediate confounders<a class="anchor" aria-label="anchor" href="#intermediate-confounders"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.3.2</span> Intermediate confounders<a class="anchor" aria-label="anchor" href="#intermediate-confounders"><i class="fas fa-link"></i></a>
 </h3>
 <div class="figure" style="text-align: center">
 <span id="fig:unnamed-chunk-2"></span>
@@ -90,26 +144,76 @@ FIGURE 1.1: Directed acylcic graph under <em>no intermediate confounders</em> of
 FIGURE 1.2: Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment
 </p>
 </div>
+<p>The above graphs can be interpreted as a <em>non-parametric structural equation model</em>
+(NPSEM), also known as <em>structural causal model</em> (SCM):</p>
+<p><span class="math display">\[\begin{align}
+  W &amp; = f_W(U_W)\\
+  A &amp; = f_A(W, U_A)\\
+  Z &amp; = f_Z(W, A, U_Z)\\
+  M &amp; = f_M(W, A, Z, U_M)\\
+  Y &amp; = f_Y(W, A, Z, M, U_Y)
+\end{align}\]</span></p>
+<ul>
+<li>Here <span class="math inline">\(U=(U_W, U_A, U_Z, U_M, U_Y)\)</span> is a vector of all unmeasured exogenous
+factors affecting the system</li>
+<li>The functions <span class="math inline">\(f\)</span> are assumed fixed but unknown</li>
+<li>We posit this model as a system of equation that nature uses to geenrate the
+data at hand</li>
+<li>Therefore we leave the functions <span class="math inline">\(f\)</span> unspecified (i.e., we do not know the
+true nature mechanisms)</li>
+<li>Sometimes we know something: e.g., if <span class="math inline">\(A\)</span> is randomized we know <span class="math inline">\(A=f_A(U_A)\)</span>
+where <span class="math inline">\(U_A\)</span> is independent of everything.</li>
+</ul>
 </div>
 </div>
 <div id="counterfactuals" class="section level2">
 <h2>
-<span class="header-section-number">1.2</span> Counterfactuals<a class="anchor" aria-label="anchor" href="#counterfactuals"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.4</span> Counterfactuals<a class="anchor" aria-label="anchor" href="#counterfactuals"><i class="fas fa-link"></i></a>
 </h2>
-<p>In what follows, we will define all the effects of interest using
-<em>counterfactuals</em>. Counterfactuals are hypothetical random variables
-that would have been observed in a world where we would be able to
-perform interventions on the random variables of interest. For
-example, <span class="math inline">\(Y_a\)</span> is a counterfactual variable in a hypothetical world
-where <span class="math inline">\(\P(A=a)=1\)</span> with probability one. <span class="math inline">\(Y_{a,m}\)</span> is the
-counterfactual outcome in a world where <span class="math inline">\(\P(A=a,M=m)=1\)</span>, and <span class="math inline">\(M_a\)</span> is
-the counterfactual variable representing the mediator in a world where
-<span class="math inline">\(\P(A=a)=1\)</span>.</p>
-<p>In this workshop we use counterfactual variables as <em>primitives</em>, but
-we note that in other causal inference frameworks, such as structural
-equation models, counterfactuals are quantities <em>derived</em> from the
-model.</p>
-
+<ul>
+<li>We define all the effects of interest using <em>counterfactuals</em>
+</li>
+<li>Counterfactuals are hypothetical random variables that would have been
+observed in a world where we would be able to perform interventions on the
+random variables of interest</li>
+<li>
+<span class="math inline">\(Y_a\)</span> is a counterfactual variable in a hypothetical world where <span class="math inline">\(\P(A=a)=1\)</span>
+with probability one</li>
+<li>
+<span class="math inline">\(Y_{a,m}\)</span> is the counterfactual outcome in a world where <span class="math inline">\(\P(A=a,M=m)=1\)</span>
+</li>
+<li>
+<span class="math inline">\(M_a\)</span> is the counterfactual variable representing the mediator in a world
+where <span class="math inline">\(\P(A=a)=1\)</span>.</li>
+</ul>
+<div id="how-are-counterfactuals-defined" class="section level3">
+<h3>
+<span class="header-section-number">1.4.1</span> How are counterfactuals defined?<a class="anchor" aria-label="anchor" href="#how-are-counterfactuals-defined"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li>You can use counterfactual variables as <em>primitives</em>
+</li>
+<li>In the NPSEM framework, counterfactuals are quantities <em>derived</em> from the
+model:
+<span class="math display">\[\begin{align}
+  Y_a  &amp;= f_Y(W, a, Z, M, U_Y)\\
+  Y_{a,m}  &amp;= f_Y(W, a, Z, m, U_Y)\\
+  M_a  &amp;= f_M(W, a, Z, U_M)
+\end{align}\]</span>
+</li>
+<li>You can also define <em>nested counterfactuals</em>
+</li>
+<li>For example, if <span class="math inline">\(A\)</span> is binary, you can think of the following counterfactual
+<span class="math display">\[\begin{equation*}
+  Y_{1, M_0} = f_Y(W, 1, Z, M_0, U_Y)
+\end{equation*}\]</span>
+</li>
+<li>Interpreted as <em>the outcome for an individual in a hypothetical world where
+treatment was given but the mediator was held at the value it would have
+taken under no treatment</em>
+</li>
+</ul>
+</div>
 </div>
 </div>
   <div class="chapter-nav">
@@ -118,14 +222,20 @@ model.</p>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
-<li><a class="nav-link" href="#mediation"><span class="header-section-number">1</span> Causal Mediation Analysis</a></li>
+<li><a class="nav-link" href="#mediation"><span class="header-section-number">1</span> Preliminaries on causal mediation analysis</a></li>
+<li><a class="nav-link" href="#motivating-studies"><span class="header-section-number">1.1</span> Motivating studies</a></li>
 <li>
-<a class="nav-link" href="#mediation-models"><span class="header-section-number">1.1</span> Mediation models</a><ul class="nav navbar-nav">
-<li><a class="nav-link" href="#no-intermediate-confounders"><span class="header-section-number">1.1.1</span> No intermediate confounders</a></li>
-<li><a class="nav-link" href="#intermediate-confounders"><span class="header-section-number">1.1.2</span> Intermediate confounders</a></li>
+<a class="nav-link" href="#what-is-causal-mediation-analysis"><span class="header-section-number">1.2</span> What is causal mediation analysis?</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#an-example-of-a-non-causal-mediation-analysis-product-of-coefficients"><span class="header-section-number">1.2.1</span> An example of a non-causal mediation analysis (product of coefficients)</a></li></ul>
+</li>
+<li>
+<a class="nav-link" href="#causal-mediation-models"><span class="header-section-number">1.3</span> Causal mediation models</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#no-intermediate-confounders"><span class="header-section-number">1.3.1</span> No intermediate confounders</a></li>
+<li><a class="nav-link" href="#intermediate-confounders"><span class="header-section-number">1.3.2</span> Intermediate confounders</a></li>
 </ul>
 </li>
-<li><a class="nav-link" href="#counterfactuals"><span class="header-section-number">1.2</span> Counterfactuals</a></li>
+<li>
+<a class="nav-link" href="#counterfactuals"><span class="header-section-number">1.4</span> Counterfactuals</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#how-are-counterfactuals-defined"><span class="header-section-number">1.4.1</span> How are counterfactuals defined?</a></li></ul>
+</li>
 </ul>
 
       <div class="book-extra">
@@ -143,7 +253,7 @@ model.</p>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: April 27, 2021.</p>
+    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: April 29, 2021.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

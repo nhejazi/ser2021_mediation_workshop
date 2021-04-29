@@ -6,12 +6,17 @@
 
 ## Controlled direct effects
 
-\begin{equation*}
-  \psi_{\text{CDE}} = \E(Y_{1,m}) - \E(Y_{0,m})
-\end{equation*}
+$$\psi_{\text{CDE}} = \E(Y_{1,m} - Y_{0,m}) $$
 
 - Set $M=m$ uniformly for everyone in the population
 - Compare $A=1$ vs $A=0$ with $M=m$ fixed
+
+<!--
+ID: If we are giving them the identifiability assumptions, should we not state
+the identification result also here?
+-->
+
+### Identification assumptions:
 - Confounder assumptions:
   + $A \indep Y_{a,m} \mid W$
   + $M \indep Y_{a,m} \mid W, A, Z$
@@ -40,17 +45,26 @@
 _What if our research question doesn't involve intervening directly on the
 mediator?_
 
-_What if we want to decompose the average treatment effect into its direct and indirect counterparts?_
+_What if we want to decompose the average treatment effect into its direct and
+indirect counterparts?_
 
 ## Natural direct and indirect effects
 
+<!--
+ID: Should we explicitly say here that this part assumes the first model
+without Z?  It could also be good to show the decomposition of the ATE (e.g.,
+show that Y_{a,M_a} = Y_a)
+-->
+
 Natural direct effect (NDE):
-$$  \psi_{\text{NDE}} = \E(Y_{1,M_0}) - \E(Y_{0,M_0}) $$
+\begin{equation*}
+  \psi_{\text{NDE}} = \E(Y_{1,M_0} - Y_{0,M_0})
+\end{equation*}
 
 Natural indirect effect (NIE):
-$$
-  \psi_{\text{NIE}} = \E(Y_{1,M_1}) - \E(Y_{1,M_0})
-$$
+\begin{equation*}
+  \psi_{\text{NIE}} = \E(Y_{1,M_1} - Y_{1,M_0})
+\end{equation*}
 
 <!--
 ID: The below is only true if the cross-world assumption holds
@@ -59,6 +73,9 @@ The NDE can also be written as: $\E_W \sum_m \{\E(Y_{1,m} \mid W) -
 \E(Y_{0,m} \mid W)\} \P(M_{0}=m \mid W)$
 
 - Weighted average of controlled direct effects at each level of $m$.
+<!--
+ID: Is the below true? What do you mean here by interaction? Is that the only
+assumption?  -->
 - If no interaction between $A$ and $M$ on $Y$, then CDE = NDE.
 
 \begin{figure}
@@ -74,8 +91,12 @@ The NDE can also be written as: $\E_W \sum_m \{\E(Y_{1,m} \mid W) -
 - $A \indep Y_{a,m} \mid W$
 - $M \indep Y_{a,m} \mid W, A$
 - $A \indep M_a \mid W$
-- $M_{a^{\star}} \indep Y_{a,m} \mid W$
+- $M_0 \indep Y_{1,m} \mid W$
 - and positivity assumptions
+<!--
+ID: If we are giving them the identifiability assumptions, should we not state
+the identification result also here?
+-->
 
 What does $M_0 \indep Y_{1,m} \mid W$ mean?
 
@@ -83,8 +104,8 @@ What does $M_0 \indep Y_{1,m} \mid W$ mean?
   provides no information of the effect of $A$ on $Y$.
 - Can you think of a data-generating mechanism that would violate this
   assumption?
-- Whenever we believe that treatment assignment works through adherence (i.e.,
-  almost always), we are violating this assumption.
+- Whenever we believe that treatment assignment works through adherence (i.e., almost
+  always), we are violating this assumption.
 
 ### Is this the estimand I want?
 
@@ -102,10 +123,11 @@ mediator-outcome relationship (e.g., adherence)?_
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.75\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/medDAG2} 
+{\centering \includegraphics[width=0.8\linewidth]{02-effects-def_files/figure-latex/unnamed-chunk-2-1} 
 
 }
 
+\caption{Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-2)
 \end{figure}
 
 \begin{figure}
@@ -117,6 +139,16 @@ mediator-outcome relationship (e.g., adherence)?_
 \end{figure}
 
 ## Interventional (in)direct effects
+
+<!--
+ID: Below I'd suggest to use the notation $Y_{a, G_a'}$ that I used
+in the other text I added in the next page, to ease the visual burden
+for people reading this
+-->
+
+<!--
+I think the distinction between fully conditional and not will be completely lost on people
+-->
 
 - Fully conditional on past
  + Conditional SDE: $\E(Y_{a, g_{M \mid Z, a^{\star}, W}}) -
@@ -167,12 +199,12 @@ Is this the estimand I want?
 \end{figure}
 
 <!--
-ID: Kara, I copied what I had written below, feel free to reuse
+ID: Kara, I copied what I had written below, feel free to reuse/modify
 -->
 
-# The Interventional Direct and Indirect Effects {#interventional}
+## The Interventional Direct and Indirect Effects {#interventional}
 
-## Definition of the effects
+### Definition of the effects
 
 Consider the following directed acyclic graph.
 
@@ -192,17 +224,17 @@ confounders of the mediator and the exposure which are affected by
 treatment.
 
 ### Example
+
 [TO FILL IN]
-
-
 
 ### Unidentifiability of the NDE and NIE in this setting
 
 In this example, natural direct and indirect effects are
 unidentifiable from observed data on $(W,A,Z,M,Y)$. The technical
 reason for this is that the cross-world counterfactual assumption
-
-\[Y(1,m)\indep M(0)\mid W\]
+\begin{equation*}
+  Y(1,m)\indep M(0)\mid W
+\end{equation*}
 
 does not hold in the aboce directed acyiclic graph. Intuitively, the
 reason for this is that an intervention setting $A=1$ (necessary for
@@ -220,7 +252,7 @@ these variables are unmeasured.
 ### Recovering direct and indirect effects
 
 Even though estimation of the NDE and NIE is not possible in the
-presence of confounders of the mediation-outcome relation affected by
+apresence of confounders of the mediation-outcome relation affected by
 treatment, it is possible to redefine the effects in a way such that
 they are identifiable. Specifically:
 

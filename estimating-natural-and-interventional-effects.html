@@ -44,11 +44,11 @@
       <nav aria-label="Table of contents"><h2>Table of contents</h2>
         <ul class="book-toc list-unstyled">
 <li><a class="" href="index.html">Welcome to SER!</a></li>
-<li><a class="" href="mediation.html"><span class="header-section-number">1</span> Causal Mediation Analysis</a></li>
+<li><a class="" href="mediation.html"><span class="header-section-number">1</span> Preliminaries on causal mediation analysis</a></li>
 <li><a class="" href="estimands.html"><span class="header-section-number">2</span> Path-specific casual mediation effect types</a></li>
-<li><a class="" href="interventional.html"><span class="header-section-number">3</span> The Interventional Direct and Indirect Effects</a></li>
-<li><a class="" href="estimandirl.html"><span class="header-section-number">4</span> How to choose an estimand: Real world example</a></li>
-<li><a class="" href="stochastic.html"><span class="header-section-number">5</span> Stochastic Direct and Indirect Effects</a></li>
+<li><a class="" href="estimandirl.html"><span class="header-section-number">3</span> How to choose an estimand: Real world example</a></li>
+<li><a class="" href="stochastic.html"><span class="header-section-number">4</span> Stochastic Direct and Indirect Effects</a></li>
+<li><a class="" href="preliminaries-on-semiparametric-estimation.html"><span class="header-section-number">5</span> Preliminaries on semiparametric estimation</a></li>
 <li><a class="active" href="estimating-natural-and-interventional-effects.html"><span class="header-section-number">6</span> Estimating natural and interventional effects</a></li>
 <li><a class="" href="estimating-stochastic-effects.html"><span class="header-section-number">7</span> Estimating stochastic effects</a></li>
 <li><a class="" href="references.html">References</a></li>
@@ -68,32 +68,50 @@
 <span class="header-section-number">6.1</span> Natural (in)direct effects<a class="anchor" aria-label="anchor" href="#natural-indirect-effects"><i class="fas fa-link"></i></a>
 </h2>
 <p>Recall:</p>
-<div class="inline-figure"><img src="img/meddagnoz.png" width="50%" style="display: block; margin: auto;"></div>
+<div class="figure" style="text-align: center">
+<span id="fig:unnamed-chunk-1"></span>
+<img src="06-estimation-natural-interventional_files/figure-html/unnamed-chunk-1-1.png" alt="Directed acylcic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment" width="80%"><p class="caption">
+FIGURE 1.1: Directed acylcic graph under <em>no intermediate confounders</em> of the mediator-outcome relation affected by treatment
+</p>
+</div>
 <p>Assuming a binary <span class="math inline">\(A\)</span>, we define the natural direct effect as:
-<span class="math display">\[NDE = E(Y_{1,M_{0}}) - E(Y_{0,M_{0}})\]</span>,</p>
+<span class="math display">\[NDE = E(Y_{1,M_{0}} - Y_{0,M_{0}})\]</span>,</p>
 <p>and the natural indirect effect as:
-<span class="math display">\[NIE = E(Y_{1,M_{1}}) - E(Y_{1,M_{0}})\]</span>.</p>
+<span class="math display">\[NIE = E(Y_{1,M_{1}} - Y_{1,M_{0}})\]</span>.</p>
 <div id="simple-case-for-intuition" class="section level3">
 <h3>
 <span class="header-section-number">6.1.1</span> Simple case for intuition<a class="anchor" aria-label="anchor" href="#simple-case-for-intuition"><i class="fas fa-link"></i></a>
 </h3>
-<p><span class="math inline">\(O=(W, A, M, Y)\)</span></p>
+<p>The observed data is <span class="math inline">\(O=(W, A, M, Y)\)</span></p>
 <p>This SCM is represented in the above DAG and the following causal models:
-<span class="math inline">\(W=f(U_W)\)</span>, <span class="math inline">\(A=f(W,U_A)\)</span>, <span class="math inline">\(M=f(A, W,U_M)\)</span>, and <span class="math inline">\(Y=f(M,A,W,U_Y)\)</span>, where (<span class="math inline">\(U_W, U_A,U_M, U_Y\)</span>) are exogenous random errors.</p>
-<p>We assume <span class="math inline">\(A\)</span> is a single binary randomized treatment, <span class="math inline">\(M\)</span> is a single binary
-mediator. There are no restrictions on the distribution of <span class="math inline">\(W\)</span> or <span class="math inline">\(Y\)</span>.</p>
+<span class="math display">\[\begin{align*}
+  W &amp; = f_W(U_W)\\
+  A &amp; = f_A(W, U_A)\\
+  M &amp; = f_M(W, A, U_M)\\
+  Y &amp; = f_Y(W, A, M, U_Y),
+\end{align*}\]</span>
+where <span class="math inline">\((U_W, U_A,U_M, U_Y)\)</span> are exogenous random errors.</p>
+<p>We assume
+- <span class="math inline">\(A\)</span> is a single binary randomized treatment (and thus <span class="math inline">\(A = f_A(U_A)\)</span>)
+- <span class="math inline">\(M\)</span> is a single binary mediator
+- There are no restrictions on the distribution of <span class="math inline">\(W\)</span> or <span class="math inline">\(Y\)</span></p>
 <p>Recall that we need to assume the following to identify the above caual effects
-from our observed data:
-- <span class="math inline">\(A \indep Y_{a,m} \mid W\)</span>
-- <span class="math inline">\(M \indep Y_{a,m} \mid W, A\)</span>
-- <span class="math inline">\(A \indep M_a \mid W\)</span>
-- <span class="math inline">\(M_{a^{\star}} \indep Y_{a,m} \mid W\)</span>
-- and positivity assumptions</p>
+from our observed data:</p>
+<ul>
+<li><span class="math inline">\(A \indep Y_{a,m} \mid W\)</span></li>
+<li><span class="math inline">\(M \indep Y_{a,m} \mid W, A\)</span></li>
+<li><span class="math inline">\(A \indep M_a \mid W\)</span></li>
+<li><span class="math inline">\(M_0 \indep Y_{1,m} \mid W\)</span></li>
+<li>and positivity assumptions</li>
+</ul>
 </div>
 <div id="how-to-estimate-using-g-computation" class="section level3">
 <h3>
 <span class="header-section-number">6.1.2</span> How to estimate using G-computation<a class="anchor" aria-label="anchor" href="#how-to-estimate-using-g-computation"><i class="fas fa-link"></i></a>
 </h3>
+<!--
+ID: Should we add the g-computation formula here?
+-->
 <p>Let’s take the NDE as an example:</p>
 <ol style="list-style-type: decimal">
 <li>Fit a regression of <span class="math inline">\(Y\)</span> on <span class="math inline">\(M,A,W\)</span>. Predict outcome values setting <span class="math inline">\(A=1\)</span>.
@@ -110,6 +128,9 @@ individuals been set to the control condition <span class="math inline">\(A = 0\
 <span class="header-section-number">6.1.3</span> How to estimate using the doubly robust methods that rely on the EIF<a class="anchor" aria-label="anchor" href="#how-to-estimate-using-the-doubly-robust-methods-that-rely-on-the-eif"><i class="fas fa-link"></i></a>
 </h3>
 <p>The EIC for the NDE (<span class="math inline">\(\Psi_{NDE}\)</span>) is given by:</p>
+<!--
+ID: I'd suggest using the notation in our biometrika paper for the below
+-->
 <p><span class="math display">\[\begin{align}
     D^{\star} &amp;= \bigg\{ \frac{I(A=1)}{g(1|W)}\frac{Q(M|W,0)}{Q(M|W,1)} -
       \frac{I(A=0)}{g(0|W)}\bigg\} \times (Y-\bar{Q}_Y(M,A,W))  \\
@@ -152,7 +173,11 @@ and <span class="math inline">\(A=0\)</span> for <span class="math inline">\(g(0
 <li>We estimate <span class="math inline">\(\P(A=a \mid M, W)\)</span> from a logistic regression of <span class="math inline">\(A\)</span> on <span class="math inline">\(M, W\)</span>,
 generating predicted probabilities that <span class="math inline">\(A=1\)</span> for and <span class="math inline">\(A=0\)</span>.</li>
 </ol>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<!--
+ID: Kara, remind me to talk about the below code!
+E.g., do we need to go through a TMLE
+How long are we spending on this?
+--><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">amodel</span> <span class="op">&lt;-</span> <span class="st">"a ~ w "</span>
 <span class="va">mmodel</span> <span class="op">&lt;-</span> <span class="st">"m ~ a + w"</span>
 <span class="va">amodel</span> <span class="op">&lt;-</span> <span class="st">"a ~ m + w"</span>
@@ -237,17 +262,25 @@ TML estimate of the NDE.</li>
 <h2>
 <span class="header-section-number">6.2</span> Interventional direct and indirect effects<a class="anchor" aria-label="anchor" href="#interventional-direct-and-indirect-effects"><i class="fas fa-link"></i></a>
 </h2>
-<p>Recall:</p>
-<div class="inline-figure"><img src="img/medDAG2.png" width="50%" style="display: block; margin: auto;"></div>
+<p>Recall that in the presence of a intermediate confounder natural (in)direct effects are not identified</p>
+<div class="figure" style="text-align: center">
+<span id="fig:unnamed-chunk-6"></span>
+<img src="06-estimation-natural-interventional_files/figure-html/unnamed-chunk-6-1.png" alt="Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment" width="80%"><p class="caption">
+FIGURE 2.1: Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment
+</p>
+</div>
+<!--
+ID: I suggest using the Y_{a, G_a'} notation I used in the other page to define these effects
+-->
 <p>We define the interventional direct effect as:
 <span class="math display">\[\begin{equation*}
-  \psi_{\text{PIDE}} = \E(Y_{a^\prime,g_{M \mid a^\star,W}}) -
-    \E(Y_{a\star,g_{M \mid a^\star,W}}),
-\end{equation*}\]</span>
-and the interventional indirect effect as:
-<span class="math display">\[\begin{equation*}
-  \psi_{\text{PIIE}} = \E(Y_{a^\prime,g_{M \mid a^\prime,W}}) -
-    \E(Y_{a^\prime,g_{M \mid a^\star,W}}).
+  \psi_{\text{PIDE}} = \E(Y_{a^\prime,g_{M \mid a^\star,W}} -
+    Y_{a\star,g_{M \mid a^\star,W}}),
+\end{equation*}\]</span></p>
+<p>and the interventional indirect effect as:</p>
+<p><span class="math display">\[\begin{equation*}
+  \psi_{\text{PIIE}} = \E(Y_{a^\prime,g_{M \mid a^\prime,W}} -
+    Y_{a^\prime,g_{M \mid a^\star,W}}).
 \end{equation*}\]</span></p>
 </div>
 <div id="simple-case-for-intuition-1" class="section level2">
@@ -257,11 +290,11 @@ and the interventional indirect effect as:
 <p>Consider a simple data structure <span class="math inline">\(O=(W, A, Z, M, Y)\)</span>. This SCM is represented in
 the above DAG and the following causal models:
 <span class="math display">\[\begin{align*}
-  W &amp;= f(U_W)\\
-  A &amp;= f(U_A)\\
-  Z &amp;= f(A, W, U_Z)\\
-  M &amp;= f(Z, A, W, U_M)\\
-  Y &amp;= f(M, Z, A, W, U_Y),
+W &amp; = f_W(U_W)\\
+A &amp; = f_A(W, U_A)\\
+Z &amp; = f_Z(W, A, U_Z)\\
+M &amp; = f_M(W, A, Z, U_M)\\
+Y &amp; = f_Y(W, A, Z, M, U_Y),
 \end{align*}\]</span>
 where (<span class="math inline">\(U_W, U_A, U_Z, U_M, U_Y\)</span>) are exogenous random errors. We assume <span class="math inline">\(A\)</span> is
 a single binary treatment, <span class="math inline">\(Z\)</span> is a single binary intermediate confounder, <span class="math inline">\(M\)</span>
@@ -269,12 +302,23 @@ is a single binary mediator. There are no restrictions on the distribution of
 <span class="math inline">\(W\)</span> or <span class="math inline">\(Y\)</span>.</p>
 <p><span class="math inline">\(g_{M \mid a^\prime,W}\)</span> represents a stochastic draw from the counterfactual,
 conditional distribution of <span class="math inline">\(M\)</span>, as described by
-<span class="citation">VanderWeele (<a href="references.html#ref-vanderweele2016mediation" role="doc-biblioref">2016</a>)</span>:
-<span class="math display">\[\begin{equation*}
+<span class="citation">VanderWeele (<a href="references.html#ref-vanderweele2016mediation" role="doc-biblioref">2016</a>)</span>:</p>
+<!--
+ID: The below is not a stochastic draw, it is the distribution that you are
+drawing from. Also, not sure about that last equality, isn't that just part of
+the identification strategy, of which we have not talked about? Probably
+confusing to put that in here.
+-->
+<p><span class="math display">\[\begin{equation*}
   g_{M \mid A,W}(m, a^{\star}, W) \equiv g_{M \mid a^{\star}, W}(W) =
     \sum_{z=0}^1 \P(M=1 \mid Z=z,W) \P(Z=z \mid A=a^{\star}, W).
-\end{equation*}\]</span>
-In what follows, we are going to assume that <span class="math inline">\(g_{M \mid A,W}(m, a^{\star}, W)\)</span>
+\end{equation*}\]</span></p>
+<!--
+ID: Why would we make the below assumption if we have estimators that do not
+require it? It will probably just confuse people to say that we make this
+assumption and then have software that does not make that assumption
+-->
+<p>In what follows, we are going to assume that <span class="math inline">\(g_{M \mid A,W}(m, a^{\star}, W)\)</span>
 is known, estimated from observed data, which we call
 <span class="math inline">\(\hat{g}_{M \mid a^{\star}, W}\)</span>. This is going to slightly alter the usual
 identification assumptions such that we no longer need to assume exchangeability
@@ -559,7 +603,7 @@ this next.</p>
 </div>
 </div>
   <div class="chapter-nav">
-<div class="prev"><a href="stochastic.html"><span class="header-section-number">5</span> Stochastic Direct and Indirect Effects</a></div>
+<div class="prev"><a href="preliminaries-on-semiparametric-estimation.html"><span class="header-section-number">5</span> Preliminaries on semiparametric estimation</a></div>
 <div class="next"><a href="estimating-stochastic-effects.html"><span class="header-section-number">7</span> Estimating stochastic effects</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
@@ -586,8 +630,8 @@ this next.</p>
 
       <div class="book-extra">
         <ul class="list-unstyled">
-<li><a id="book-source" href="https://github.com/nhejazi/ser2021_mediation_workshop/blob/master/05-estimation-natural-interventional.Rmd">View source <i class="fab fa-github"></i></a></li>
-          <li><a id="book-edit" href="https://github.com/nhejazi/ser2021_mediation_workshop/edit/master/05-estimation-natural-interventional.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+<li><a id="book-source" href="https://github.com/nhejazi/ser2021_mediation_workshop/blob/master/06-estimation-natural-interventional.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/nhejazi/ser2021_mediation_workshop/edit/master/06-estimation-natural-interventional.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
         </ul>
 </div>
     </nav>
@@ -599,7 +643,7 @@ this next.</p>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: April 27, 2021.</p>
+    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: April 29, 2021.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

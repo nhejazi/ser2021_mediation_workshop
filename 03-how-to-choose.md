@@ -23,9 +23,9 @@ nonhomeless participants.
 
 ### Getting specific about the question
 
-To what extent does the indirect effect through mediators of adherence, pain,
-and depressive symptoms explain the differences in treatment effects on OUD
-relapse for homeless and nonhomeless individuals?
+To what extent does the indirect effect through mediators of adherence, pain, and
+depressive symptoms explain the differences in treatment effects on OUD relapse
+for homeless and nonhomeless individuals?
 
 What estimand do we want?
 
