@@ -10,7 +10,7 @@ Recall:
 
 }
 
-\caption{Directed acylcic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-1)
+\caption{Directed acyclic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-1)
 \end{figure}
 
 Assuming a binary $A$, we define the natural direct effect as:
@@ -217,7 +217,7 @@ Recall that in the presence of a intermediate confounder natural (in)direct effe
 
 }
 
-\caption{Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-6)
+\caption{Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-6)
 \end{figure}
 
 <!--

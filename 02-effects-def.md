@@ -4,6 +4,15 @@
 - Natural direct and indirect effects
 - Interventional direct and indirect effects
 
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{02-effects-def_files/figure-latex/unnamed-chunk-1-1} 
+
+}
+
+\caption{Directed acyclic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-1)
+\end{figure}
+
 ## Controlled direct effects
 
 $$\psi_{\text{CDE}} = \E(Y_{1,m} - Y_{0,m}) $$
@@ -14,7 +23,10 @@ $$\psi_{\text{CDE}} = \E(Y_{1,m} - Y_{0,m}) $$
 <!--
 ID: If we are giving them the identifiability assumptions, should we not state
 the identification result also here?
+KER: sure! 
 -->
+Under the below identification assumptions, the controlled direct can be identified:
+$$ \E(Y_{1,m} - Y_{0,m}) = \E_w\{\E(Y \mid 1, m, w) - \E(Y \mid 0, m, w)\}$$
 
 ### Identification assumptions:
 - Confounder assumptions:
@@ -50,11 +62,7 @@ indirect counterparts?_
 
 ## Natural direct and indirect effects
 
-<!--
-ID: Should we explicitly say here that this part assumes the first model
-without Z?  It could also be good to show the decomposition of the ATE (e.g.,
-show that Y_{a,M_a} = Y_a)
--->
+Still using the same DAG as above,
 
 Natural direct effect (NDE):
 \begin{equation*}
@@ -66,11 +74,8 @@ Natural indirect effect (NIE):
   \psi_{\text{NIE}} = \E(Y_{1,M_1} - Y_{1,M_0})
 \end{equation*}
 
-<!--
-ID: The below is only true if the cross-world assumption holds
--->
-The NDE can also be written as: $\E_W \sum_m \{\E(Y_{1,m} \mid W) -
-\E(Y_{0,m} \mid W)\} \P(M_{0}=m \mid W)$
+If the cross-world assumption holds (defined below), the NDE can also be written
+as: $\E_W \sum_m \{\E(Y_{1,m} \mid W) - \E(Y_{0,m} \mid W)\} \P(M_{0}=m \mid W)$
 
 - Weighted average of controlled direct effects at each level of $m$.
 <!--
@@ -85,6 +90,12 @@ assumption?  -->
 }
 
 \end{figure}
+Under the below identification assumptions, the natural direct effect can be identified:
+\begin{equation*}
+\E(Y_{1,M_0} - Y_{0,M_0}) =
+  \E_w\{\sum_m \{\E(Y \mid 1, m, w) - \E(Y \mid 0, m, w)\} P(M=m \mid A=0,w)\}
+\end{equation*}
+(The natural indirect effect can be identified similarly.)
 
 ### Identification assumptions:
 
@@ -123,11 +134,11 @@ mediator-outcome relationship (e.g., adherence)?_
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.8\linewidth]{02-effects-def_files/figure-latex/unnamed-chunk-2-1} 
+{\centering \includegraphics[width=0.8\linewidth]{02-effects-def_files/figure-latex/unnamed-chunk-3-1} 
 
 }
 
-\caption{Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-2)
+\caption{Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-3)
 \end{figure}
 
 \begin{figure}
@@ -137,6 +148,29 @@ mediator-outcome relationship (e.g., adherence)?_
 }
 
 \end{figure}
+
+### Unidentifiability of the NDE and NIE in this setting
+
+In this example, natural direct and indirect effects are
+unidentifiable from observed data on $(W,A,Z,M,Y)$. The technical
+reason for this is that the cross-world counterfactual assumption
+\begin{equation*}
+  Y(1,m)\indep M(0)\mid W
+\end{equation*}
+
+does not hold in the above directed acyiclic graph. Intuitively, the
+reason for this is that an intervention setting $A=1$ (necessary for
+the definition of $Y(1,m)$) induces a counterfactual variable
+$Z(1)$. Likewise, an intervention setting $A=0$ (necessary for the
+definition of $M(0)$) induces a counterfactual $Z(0)$. The variables
+$Z(1)$ and $Z(0)$ are correlated because they share unmeasured common
+causes. The variable $Z(1)$ is correlated with $Y(1,m)$, and the
+variable $Z(0)$ is correlated with $M(0)$, because they are
+counterfactual outcomes in the same hypothetical worlds. Thus, to
+achieve $Y(1,m)$ independent of $M(0)$, it would be necessary to
+adjust for either $Z(1)$ or $Z(0)$. This is impossible to do since
+these variables are unmeasured.
+
 
 ## Interventional (in)direct effects
 
@@ -150,19 +184,32 @@ for people reading this
 I think the distinction between fully conditional and not will be completely lost on people
 -->
 
-- Fully conditional on past
- + Conditional SDE: $\E(Y_{a, g_{M \mid Z, a^{\star}, W}}) -
-   \E(Y_{a^{\star}, g_{M \mid Z, a^{\star}, W}})$
- + Conditional SIE: $\E(Y_{a, g_{M \mid Z, a, W}}) -
-   \E(Y_{a, g_{M \mid Z, a^{\star}, W}})$
- + Marginal SDE: $\E(Y_{a, g_{M \mid a^{\star}, W}}) -
-   \E(Y_{a^{\star}, g_{M \mid a^{\star}, W}})$
- + Marginal SIE: $\E(Y_{a, g_{M \mid a, W}}) -
-   \E(Y_{a, g_{M \mid a^{\star}, W}})$
- + Note that $g_{M \mid Z, a^{\star}, W}$, $g_{M \mid a^{\star}, W}$ represents
+- Let $G_{M \mid a, W}$ denote a random draw from the distribution of $M(a) \mid W$
+- Define the counterfactual $Y(1,G_{M \mid 0, W})$ as the counterfactual
+  variable in a hypothetical world where $A$ is set $A=1$ and $M$ is
+  set to $M=G_{M \mid 0, W}$ with porbability one.
+- Define $Y(0,G_{M \mid 0, W})$ and $Y(1,G_{M \mid 1, W})$ similarly
+- Then we can define:
+  \begin{equation*}
+    \E[Y(1,G_{M \mid 1, W}) - Y(0,G_{M \mid 0, W})] = \underbrace{\E[Y(1,G_{M \mid 1, W}) -
+      Y(1,G_{M \mid 0, W})]}_{\text{interventional indirect effect}} +
+      \underbrace{\E[Y(1,G_{M \mid 0, W}) -
+      Y(0,G_{M \mid 0, W})]}_{\text{interventional direct effect}}
+  \end{equation*}
+
+
+ + Note that $G_{M \mid a^{\star}, W}$ represents a
    stochastic intervention on the mediator, where value $m$ is drawn with
-   probability $\P(M = m \mid Z, A = a^{\star}, W = w)$,
-   $\P(M = m \mid A = a^{\star}, W = w)$, respectively
+   probability $\P(M = m \mid A = a^{\star}, W = w)$
+
+ + Marginal PIDE: $\E(Y_{a, g_{M \mid a^{\star}, W}}) -
+   \E(Y_{a^{\star}, g_{M \mid a^{\star}, W}})$
+ + Marginal PIIE: $\E(Y_{a, g_{M \mid a, W}}) -
+   \E(Y_{a, g_{M \mid a^{\star}, W}})$
+ + Conditional PIDE: $\E(Y_{a, g_{M \mid Z, a^{\star}, W}}) -
+   \E(Y_{a^{\star}, g_{M \mid Z, a^{\star}, W}})$
+ + Conditional PIIE: $\E(Y_{a, g_{M \mid Z, a, W}}) -
+   \E(Y_{a, g_{M \mid Z, a^{\star}, W}})$
  + Can you think of an example when you would want the conditional versions?
    Marginal versions?
 
@@ -173,6 +220,13 @@ I think the distinction between fully conditional and not will be completely los
 }
 
 \end{figure}
+
+Under the following identification assumptions, the population interventional direct effect is identified:
+\begin{equation*}
+\E(Y_{1, g_{M \mid 0, W}}) - \E(Y_{0, g_{M \mid 0, W}}) = \E_w \{\sum_{z,m}
+  \{\E(Y \mid 1, z, m, w) P(z \mid 1, w) - \E(Y \mid 1, z, m, w)
+  P(z \mid 0, w)\} P(m \mid A=0, w) \}
+\end{equation*}
 
 ### Identification assumptions:
 
@@ -188,6 +242,7 @@ Is this the estimand I want?
   effect.
 - Okay with the assumptions!
 
+
 ## Estimand Summary
 
 \begin{figure}
@@ -197,74 +252,3 @@ Is this the estimand I want?
 }
 
 \end{figure}
-
-<!--
-ID: Kara, I copied what I had written below, feel free to reuse/modify
--->
-
-## The Interventional Direct and Indirect Effects {#interventional}
-
-### Definition of the effects
-
-Consider the following directed acyclic graph.
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.8\linewidth]{02-effects-def_files/figure-latex/unnamed-chunk-6-1} 
-
-}
-
-\caption{Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-6)
-\end{figure}
-
-Here, $A$ is the treatment of interest, $M$ is the mediator of
-interest, $W$ is a pre-treatment variable containing confounders of
-$A$ on $M$ and $Y$,and $Z$ is a post-treatment variable contaning
-confounders of the mediator and the exposure which are affected by
-treatment.
-
-### Example
-
-[TO FILL IN]
-
-### Unidentifiability of the NDE and NIE in this setting
-
-In this example, natural direct and indirect effects are
-unidentifiable from observed data on $(W,A,Z,M,Y)$. The technical
-reason for this is that the cross-world counterfactual assumption
-\begin{equation*}
-  Y(1,m)\indep M(0)\mid W
-\end{equation*}
-
-does not hold in the aboce directed acyiclic graph. Intuitively, the
-reason for this is that an intervention setting $A=1$ (necessary for
-the definition of $Y(1,m)$) induces a counterfactual variable
-$Z(1)$. Likewise, an intervention setting $A=0$ (necessary for the
-definition of $M(0)$) induces a counterfactual $Z(0)$. The variables
-$Z(1)$ and $Z(0)$ are correlated because they share unmeasured common
-causes. The variable $Z(1)$ is correlated with $Y(1,m)$, and the
-variable $Z(0)$ is correlated with $M(0)$, because they are
-counterfactual outcomes in the same hypothetical worlds. Thus, to
-achieve $Y(1,m)$ independent of $M(0)$, it would be necessary to
-adjust for either $Z(1)$ or $Z(0)$. This is impossible to do since
-these variables are unmeasured.
-
-### Recovering direct and indirect effects
-
-Even though estimation of the NDE and NIE is not possible in the
-apresence of confounders of the mediation-outcome relation affected by
-treatment, it is possible to redefine the effects in a way such that
-they are identifiable. Specifically:
-
-- Let $G(a)$ denote a random draw from the distribution of $M(a) \mid W$
-- Define the counterfactual $Y(1,G(0))$ as the counterfactual
-  variable in a hypothetical world where $A$ is set $A=1$ and $M$ is
-  set to $M=G(0)$ with porbability one.
-- Define $Y(0,G(0))$ and $Y(1,G(1))$ similarly
-- Then we can define:
-  \begin{equation*}
-    \E[Y(1,G(1)) - Y(0,G(0))] = \underbrace{\E[Y(1,G(1)) -
-      Y(1,G(0))]}_{\text{interventional indirect effect}} +
-      \underbrace{\E[Y(1,G(0)) -
-      Y(0,G(0))]}_{\text{interventional direct effect}}
-  \end{equation*}

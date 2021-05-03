@@ -1,9 +1,16 @@
 # Preliminaries on causal mediation analysis {#mediation}
 
-## Motivating studies
+## Motivating study
 
-[TO FILL IN (KARA?). IDEALLY THESE WOULD BE TWO OR THREE EXAMPLES THAT WE CAN
-USE THROUGHOUT THE WORKSHOP FOR ALL EFFECTS]
+Do differences in the effects of treatment (comparing two medications for opioid use disorder, naltrexone vs buprenorphine) on risk of relapse operate through  mediators of adherence, opioid use, pain, and depressive symptoms? [@rudolph2020explaining]
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/ctndag} 
+
+}
+
+\end{figure}
 
 ## What is causal mediation analysis?
 
@@ -15,9 +22,8 @@ USE THROUGHOUT THE WORKSHOP FOR ALL EFFECTS]
 
 ### An example of a non-causal mediation analysis (product of coefficients)
 
-- Assume you are interested in the effect of a treatment $A$ ([FILL IN FROM
-  MOTIVATING EXAMPLE]) on an outcome $Y$ ([FILL IN]) through a mediator $M$
-  ([FILL IN])
+- Assume you are interested in the effect of a treatment $A$ (naltrexone vs. buprenorphine) on an outcome $Y$ (risk of relapse) through mediators $M$
+  (adherence, opioid use, pain, depressive symptoms)
 - We could fit the following models:
     \begin{align}
       \E(Y\mid A=a) & = \alpha_0 + \alpha_1 a\\
@@ -25,7 +31,7 @@ USE THROUGHOUT THE WORKSHOP FOR ALL EFFECTS]
       \E(Y\mid M=m, A=a) & = \beta_0 + \beta_1 m + \beta_2 a
     \end{align}
 - The product $(\gamma_1\beta_1)$ has been proposed as a measure of the effect
-  of $X$ on $Y$ through $M$
+  of $A$ on $Y$ through $M$
 - Causal interpretation problems with this method:
   - What happens if there are confounders of the relation between treatment and outcome?
   - What happens if there are confounders of the relation between mediataor and outcome?
@@ -45,22 +51,22 @@ confounding issues. We will focus on the two types of graph:
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.8\linewidth]{01-preface_files/figure-latex/unnamed-chunk-1-1} 
+{\centering \includegraphics[width=0.8\linewidth]{01-preface_files/figure-latex/unnamed-chunk-2-1} 
 
 }
 
-\caption{Directed acylcic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-1)
+\caption{Directed acyclic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-2)
 \end{figure}
 
 ### Intermediate confounders
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.8\linewidth]{01-preface_files/figure-latex/unnamed-chunk-2-1} 
+{\centering \includegraphics[width=0.8\linewidth]{01-preface_files/figure-latex/unnamed-chunk-3-1} 
 
 }
 
-\caption{Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-2)
+\caption{Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-3)
 \end{figure}
 
 The above graphs can be interpreted as a _non-parametric structural equation model_
