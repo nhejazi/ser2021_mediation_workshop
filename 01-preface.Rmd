@@ -5,7 +5,7 @@
 Do differences in the effects of treatment (comparing two medications for opioid use disorder, naltrexone vs buprenorphine) on risk of relapse operate through  mediators of adherence, opioid use, pain, and depressive symptoms? [@rudolph2020explaining]
 
 ```{r, echo=FALSE, fig.cap="", out.width = '50%'}
-knitr::include_graphics("ctndag.pdf")
+knitr::include_graphics(here::here("img", "ctndag.png"))
 ```
 
 ## What is causal mediation analysis?
