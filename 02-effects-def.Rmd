@@ -4,7 +4,7 @@
 - Natural direct and indirect effects
 - Interventional direct and indirect effects
 
-```{r, engine="tikz", fig.cap = "Directed acylcic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", echo = FALSE}
+```{r, engine="tikz", fig.cap = "Directed acyclic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", echo = FALSE}
 \dimendef\prevdepth=0
 \pgfdeclarelayer{background}
 \pgfsetlayers{background,main}
@@ -109,7 +109,7 @@ indirect counterparts?_
 
 ## Natural direct and indirect effects
 
-Still using the same DAG as above, 
+Still using the same DAG as above,
 
 Natural direct effect (NDE):
 \begin{equation*}
@@ -121,8 +121,8 @@ Natural indirect effect (NIE):
   \psi_{\text{NIE}} = \E(Y_{1,M_1} - Y_{1,M_0})
 \end{equation*}
 
-If the cross-world assumption holds (defined below), the NDE can also be written as: $\E_W \sum_m \{\E(Y_{1,m} \mid W) -
-\E(Y_{0,m} \mid W)\} \P(M_{0}=m \mid W)$
+If the cross-world assumption holds (defined below), the NDE can also be written
+as: $\E_W \sum_m \{\E(Y_{1,m} \mid W) - \E(Y_{0,m} \mid W)\} \P(M_{0}=m \mid W)$
 
 - Weighted average of controlled direct effects at each level of $m$.
 <!--
@@ -134,7 +134,10 @@ assumption?  -->
 knitr::include_graphics(here::here("img", "graphic4a.png"))
 ```
 Under the below identification assumptions, the natural direct effect can be identified:
-$$ \E(Y_{1,M_0} - Y_{0,M_0}) = \E_w\{\sum_m\[\E(Y \mid 1, m, w) - \E(Y \mid 0, m, w)\]P(M=m | A=0,w)\}$$
+\begin{equation*}
+\E(Y_{1,M_0} - Y_{0,M_0}) =
+  \E_w\{\sum_m \{\E(Y \mid 1, m, w) - \E(Y \mid 0, m, w)\} P(M=m \mid A=0,w)\}
+\end{equation*}
 (The natural indirect effect can be identified similarly.)
 
 ### Identification assumptions:
@@ -172,7 +175,7 @@ NH: Should we mention cross-world indep and indentifiability issues in RCTs?
 _What if our data structure involves a post-treatment confounder of the
 mediator-outcome relationship (e.g., adherence)?_
 
-```{r, engine="tikz", fig.cap = "Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", echo = FALSE}
+```{r, engine="tikz", fig.cap = "Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", echo = FALSE}
 \dimendef\prevdepth=0
 \pgfdeclarelayer{background}
 \pgfsetlayers{background,main}
@@ -288,12 +291,12 @@ I think the distinction between fully conditional and not will be completely los
       \underbrace{\E[Y(1,G_{M \mid 0, W}) -
       Y(0,G_{M \mid 0, W})]}_{\text{interventional direct effect}}
   \end{equation*}
-  
+
 
  + Note that $G_{M \mid a^{\star}, W}$ represents a
    stochastic intervention on the mediator, where value $m$ is drawn with
    probability $\P(M = m \mid A = a^{\star}, W = w)$
-   
+
  + Marginal PIDE: $\E(Y_{a, g_{M \mid a^{\star}, W}}) -
    \E(Y_{a^{\star}, g_{M \mid a^{\star}, W}})$
  + Marginal PIIE: $\E(Y_{a, g_{M \mid a, W}}) -
@@ -309,9 +312,12 @@ I think the distinction between fully conditional and not will be completely los
 knitr::include_graphics(here::here("img", "graphic4b.png"))
 ```
 
-Under the following identification assumptions, the population interventional direct effect is identified: 
-$$ \E(Y_{1, g_{M \mid 0, W}}) -
-   \E(Y_{0, g_{M \mid 0, W}}) = \E_w \{ \sum_{z,m} \[\E(Y | 1, z, m, w)P(z | 1, w) - \E(Y | 1, z, m, w)P(z | 0, w)\] P(m | A=0, w) \} $$
+Under the following identification assumptions, the population interventional direct effect is identified:
+\begin{equation*}
+\E(Y_{1, g_{M \mid 0, W}}) - \E(Y_{0, g_{M \mid 0, W}}) = \E_w \{\sum_{z,m}
+  \{\E(Y \mid 1, z, m, w) P(z \mid 1, w) - \E(Y \mid 1, z, m, w)
+  P(z \mid 0, w)\} P(m \mid A=0, w) \}
+\end{equation*}
 
 ### Identification assumptions:
 

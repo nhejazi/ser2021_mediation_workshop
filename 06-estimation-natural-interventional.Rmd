@@ -4,7 +4,7 @@
 
 Recall:
 
-```{r, engine="tikz", fig.cap = "Directed acylcic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", echo = FALSE}
+```{r, engine="tikz", fig.cap = "Directed acyclic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", echo = FALSE}
 \dimendef\prevdepth=0
 \pgfdeclarelayer{background}
 \pgfsetlayers{background,main}
@@ -258,7 +258,7 @@ tmlende <- mean(margqdiff)
 
 Recall that in the presence of a intermediate confounder natural (in)direct effects are not identified
 
-```{r, engine="tikz", fig.cap = "Directed acylcic graph under intermediate confounders of the mediator-outcome relation affected by treatment", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", echo = FALSE}
+```{r, engine="tikz", fig.cap = "Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", echo = FALSE}
 \dimendef\prevdepth=0
 \pgfdeclarelayer{background}
 \pgfsetlayers{background,main}
