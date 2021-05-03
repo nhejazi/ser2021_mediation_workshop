@@ -27,7 +27,7 @@ knitr::include_graphics("ctndag.pdf")
       \E(Y\mid M=m, A=a) & = \beta_0 + \beta_1 m + \beta_2 a
     \end{align}
 - The product $(\gamma_1\beta_1)$ has been proposed as a measure of the effect
-  of $X$ on $Y$ through $M$
+  of $A$ on $Y$ through $M$
 - Causal interpretation problems with this method:
   - What happens if there are confounders of the relation between treatment and outcome?
   - What happens if there are confounders of the relation between mediataor and outcome?
