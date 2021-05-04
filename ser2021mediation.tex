@@ -206,7 +206,7 @@
 
 \title{{[}SER 2021 Workshop{]} Causal Mediation: Modern Methods for Path Analysis}
 \author{Iván Díaz, Nima Hejazi, Kara Rudolph}
-\date{updated: May 03, 2021}
+\date{updated: May 04, 2021}
 
 \begin{document}
 \maketitle
@@ -835,7 +835,7 @@ as: \(\E_W \sum_m \{\E(Y_{1,m} \mid W) - \E(Y_{0,m} \mid W)\} \P(M_{0}=m \mid W)
 \item
   Weighted average of controlled direct effects at each level of \(m\).
 \item
-  If no interaction between \(A\) and \(M\) on \(Y\), then CDE = NDE.
+  If no effect modification of the effect of \(A\) on \(Y\) by \(M\) (i.e., no interaction between \(A\) and \(M\)), then CDE = NDE.
 \end{itemize}
 
 \begin{figure}
@@ -943,6 +943,8 @@ counterfactual outcomes in the same hypothetical worlds. Thus, to
 achieve \(Y(1,m)\) independent of \(M(0)\), it would be necessary to
 adjust for either \(Z(1)\) or \(Z(0)\). This is impossible to do since
 these variables are unmeasured.
+
+Note: CDEs are still identified in this setting. They can be estimated similarly to two-time-point intervention.
 
 \hypertarget{interventional-indirect-effects}{%
 \section{Interventional (in)direct effects}\label{interventional-indirect-effects}}

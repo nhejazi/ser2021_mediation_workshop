@@ -83,11 +83,7 @@ FIGURE 2.1: Directed acyclic graph under <em>no intermediate confounders</em> of
 <li>Set <span class="math inline">\(M=m\)</span> uniformly for everyone in the population</li>
 <li>Compare <span class="math inline">\(A=1\)</span> vs <span class="math inline">\(A=0\)</span> with <span class="math inline">\(M=m\)</span> fixed</li>
 </ul>
-<!--
-ID: If we are giving them the identifiability assumptions, should we not state
-the identification result also here?
-KER: sure! 
---><p>Under the below identification assumptions, the controlled direct can be identified:
+<p>Under the below identification assumptions, the controlled direct can be identified:
 <span class="math display">\[ \E(Y_{1,m} - Y_{0,m}) = \E_w\{\E(Y \mid 1, m, w) - \E(Y \mid 0, m, w)\}\]</span></p>
 <div id="identification-assumptions" class="section level3">
 <h3>
@@ -152,7 +148,7 @@ as: <span class="math inline">\(\E_W \sum_m \{\E(Y_{1,m} \mid W) - \E(Y_{0,m} \m
 ID: Is the below true? What do you mean here by interaction? Is that the only
 assumption?  -->
 </li>
-<li>If no interaction between <span class="math inline">\(A\)</span> and <span class="math inline">\(M\)</span> on <span class="math inline">\(Y\)</span>, then CDE = NDE.</li>
+<li>If no effect modification of the effect of <span class="math inline">\(A\)</span> on <span class="math inline">\(Y\)</span> by <span class="math inline">\(M\)</span> (i.e., no interaction between <span class="math inline">\(A\)</span> and <span class="math inline">\(M\)</span>), then CDE = NDE.</li>
 </ul>
 <p><img src="img/graphic4a.png" width="50%" style="display: block; margin: auto;">
 Under the below identification assumptions, the natural direct effect can be identified:
@@ -170,12 +166,7 @@ Under the below identification assumptions, the natural direct effect can be ide
 <li><span class="math inline">\(M \indep Y_{a,m} \mid W, A\)</span></li>
 <li><span class="math inline">\(A \indep M_a \mid W\)</span></li>
 <li><span class="math inline">\(M_0 \indep Y_{1,m} \mid W\)</span></li>
-<li>and positivity assumptions
-<!--
-ID: If we are giving them the identifiability assumptions, should we not state
-the identification result also here?
--->
-</li>
+<li>and positivity assumptions</li>
 </ul>
 <p>What does <span class="math inline">\(M_0 \indep Y_{1,m} \mid W\)</span> mean?</p>
 <ul>
@@ -234,6 +225,7 @@ counterfactual outcomes in the same hypothetical worlds. Thus, to
 achieve <span class="math inline">\(Y(1,m)\)</span> independent of <span class="math inline">\(M(0)\)</span>, it would be necessary to
 adjust for either <span class="math inline">\(Z(1)\)</span> or <span class="math inline">\(Z(0)\)</span>. This is impossible to do since
 these variables are unmeasured.</p>
+<p>Note: CDEs are still identified in this setting. They can be estimated similarly to two-time-point intervention.</p>
 </div>
 </div>
 <div id="interventional-indirect-effects" class="section level2">
@@ -346,7 +338,7 @@ effect.</li>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: May 03, 2021.</p>
+    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: May 04, 2021.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
