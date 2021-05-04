@@ -1566,8 +1566,8 @@ The EIC for the NDE (\(\Psi_{NDE}\)) is given by:
     &+ E(\bar{Q}_{diff} | W,0) - \Psi_{NDE}
 \end{align}
 
-\hypertarget{how-to-estimate-using-tmle}{%
-\subsection{How to estimate using TMLE}\label{how-to-estimate-using-tmle}}
+\hypertarget{how-to-estimate-using-the-one-step-estimator-essentially-a-iptw}{%
+\subsection{How to estimate using the one-step estimator (essentially A-IPTW)}\label{how-to-estimate-using-the-one-step-estimator-essentially-a-iptw}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1591,12 +1591,6 @@ using Bayes rule to get something that is easier to compute:
 \begin{equation*}
   \frac{\P(A = 0 \mid M, W) g(0 \mid W)}{\P(A = 1 \mid M, W) g(1 \mid W)}.
 \end{equation*}
-
-Underneath the hood, the counterfactual outcome difference
-\(\bar{Q}_{\text{diff}}\) and \(P(A \mid Z, W)\), the conditional probability of \(A\)
-given \(Z\) and \(W\), are used in constructing the auxiliary covariate for TML
-estimation. These nuisance parameters play an important role in the
-bias-correcting \emph{TMLE-update step}.
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1669,25 +1663,24 @@ qbardiff <- qyinit[, 3] - qyinit[, 2]
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{3}
+\setcounter{enumi}{4}
+\tightlist
 \item
-  Estimate \(\hat{\epsilon}\) by setting \(\epsilon\) as the intercept of a
-  weighted logistic regression model of \(Y\) with
-  \(logit(\hat{\bar{Q}}_{Y}(M,A,W))\) as an offset and weights \(\hat{C}_{Y}\).
-\item
-  The estimates of \(\bar{Q}_{Y}(M,1,W)\) and \(\bar{Q}_{Y}(M,0,W)\) are updated
-  by \(\hat{\bar{Q}}^{\star}_{Y}(M,A,W) = \hat{\bar{Q}}_{Y}(\epsilon_n)(M,A,W)\). This gives an updated difference:
-  \(\hat{\bar{Q}}^{\star}_{diff}(M,A,W)\).
+  We then regress \(\hat{\bar{Q}}_{diff}(M,A,W)\) on \(W\) among those
+  with \(A=0\) and take the mean.
 \end{enumerate}
 
 \begin{lstlisting}[language=R]
-epsilon <- coef(glm(y ~ 1,
-  weights = cy, offset = (qlogis(qyinit[, 1])),
-  family = "quasibinomial"
-))
-qyupa0 <- plogis(qlogis(qyinit[, 2]) + epsilon)
-qyupa1 <- plogis(qlogis(qyinit[, 3]) + epsilon)
-qdiffup <- qyupa1 - qyupa0
+margqdiff_fit <- glm(qbardiff ~ w,
+  data = data.frame(
+    qbardiff = qbardiff[a == 0],
+    w = w[a == 0]
+  )
+)
+margqdiff <- predict(margqdiff_fit,
+  newdata = data.frame(qbardiff = qbardiffup, w = w)
+)
+meanmargqdiff<- mean(margqdiff)
 \end{lstlisting}
 
 \begin{enumerate}
@@ -1695,22 +1688,12 @@ qdiffup <- qyupa1 - qyupa0
 \setcounter{enumi}{5}
 \tightlist
 \item
-  We then regress \(\hat{\bar{Q}}^{\star}_{diff}(M,A,W)\) on \(W\) among those
-  with \(A=0\). Taking the empirical mean of the predicted values gives us the
-  TML estimate of the NDE.
+  Plug in the estimates of these nuisance parameters to the EIC, set it equal to 0, and solve. This gives an estimate of the NDE.
 \end{enumerate}
 
 \begin{lstlisting}[language=R]
-margqdiff_fit <- glm(qdiffup ~ w,
-  data = data.frame(
-    qdiffup = qdiffup[a == 0],
-    w = w[a == 0]
-  )
-)
-margqdiff <- predict(margqdiff_fit,
-  newdata = data.frame(qdiffup = qdiffup, w = w)
-)
-tmlende <- mean(margqdiff)
+
+os_nde <- cy*(y-qyinit[,1]) + (a0/am0)*(qbardiff - meanmargqdiff) + meanmargqdiff
 \end{lstlisting}
 
 \hypertarget{interventional-direct-and-indirect-effects}{%
@@ -1720,11 +1703,11 @@ Recall that in the presence of a intermediate confounder natural (in)direct effe
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.8\linewidth]{06-estimation-natural-interventional_files/figure-latex/unnamed-chunk-6-1} 
+{\centering \includegraphics[width=0.8\linewidth]{06-estimation-natural-interventional_files/figure-latex/unnamed-chunk-7-1} 
 
 }
 
-\caption{Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-6}
+\caption{Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-7}
 \end{figure}
 
 We define the interventional direct effect as:
@@ -1757,7 +1740,7 @@ a single binary treatment, \(Z\) is a single binary intermediate confounder, \(M
 is a single binary mediator. There are no restrictions on the distribution of
 \(W\) or \(Y\).
 
-\(g_{M \mid a^\prime,W}\) represents a stochastic draw from the counterfactual,
+\(g_{M \mid a^\prime,W}\) represents the counterfactual,
 conditional distribution of \(M\), as described by
 \citet{vanderweele2016mediation}:
 
@@ -1805,6 +1788,8 @@ G-computation-based estimator. The procedure is as follows
 \hypertarget{estimate-with-doubly-robust-methods-based-on-the-eif}{%
 \subsection{Estimate with doubly robust methods based on the EIF}\label{estimate-with-doubly-robust-methods-based-on-the-eif}}
 
+We are showing the one-step estimator (generalization of A-IPW)
+
 The EIF for the parameter \(\Psi(P)(a^{\prime}, \hat{g}_{M \mid a^{\star},W})\),
 where, again, \(\hat{g}_{M \mid a^{\star}, W}\) is assumed known, is given by:
 \begin{align*}
@@ -1821,9 +1806,6 @@ where, again, \(\hat{g}_{M \mid a^{\star}, W}\) is assumed known, is given by:
       I(M=0)(1-\hat{g}_{M \mid a^{\star}, W}) \}}{\P(A=a^{\prime}}
       &\times (Y-\bar{Q}_{Y(M,Z,W)}).
 \end{align*}
-
-\hypertarget{estimate-using-tmle}{%
-\subsection{Estimate using TMLE}\label{estimate-using-tmle}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1907,7 +1889,7 @@ tmpdat$qyinit <- cbind(
 \setcounter{enumi}{4}
 \tightlist
 \item
-  Estimate the weights to be used for the initial targeting step:
+  Estimate the weights :
   \begin{equation*}
      h_1(a) = \frac{I(A=a)\{I(M=1)\hat{g}_{M \mid a^{\star}, W} +
        I(M=0)(1-\hat{g}_{M \mid a^{\star}, W}) \}}{\P(A=a)\{I(M=1)
@@ -1926,78 +1908,36 @@ newdata = data.frame(cbind(datw, z = z)), type = "response"
 )
 psm <- (mz * m) + ((1 - mz) * (1 - m))
 
-tmpdat$ha1gma1 <- ((m * gma1 + (1 - m) * (1 - gma1)) / psm) * psa1 * svywt
-tmpdat$ha1gma0 <- ((m * gm + (1 - m) * (1 - gm)) / psm) * psa1 * svywt
-tmpdat$ha0gma0 <- ((m * gm + (1 - m) * (1 - gm)) / psm) * psa0 * svywt
+tmpdat$ha1gma1 <- ((m * gma1 + (1 - m) * (1 - gma1)) / psm) * psa1 
+tmpdat$ha1gma0 <- ((m * gm + (1 - m) * (1 - gm)) / psm) * psa1 
+tmpdat$ha0gma0 <- ((m * gm + (1 - m) * (1 - gm)) / psm) * psa0 
 \end{lstlisting}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{5}
-\item
-  Estimate \(\hat{\epsilon}\) by setting \(\epsilon\) as the intercept of a
-  weighted logistic regression model of \(Y\) with
-  \(\text{logit}(\hat{\bar{Q}}_{Y}(M,Z,W))\) as an offset and weights
-  \(\hat{h}_{1}(a)\). (Note that this is just one possible TMLE.)
-\item
-  The estimate of \(\bar{Q}_{Y}(M,Z,W)\) is updated by
-  \(\hat{\bar{Q}}^{\star}_{Y}(M,Z,W) = \hat{\bar{Q}}_{Y}(\epsilon_n)(M,Z,W)\).
-\end{enumerate}
-
-\begin{lstlisting}[language=R]
-# for E(Y_{1,gmastar})
-epsilonma1g0 <- coef(glm(y ~ 1,
-  weights = tmpdat$ha1gma0,
-  offset = (qlogis(qyinit[, 1])),
-  family = "quasibinomial", data = tmpdat
-))
-tmpdat$qyupm0a1g0 <- plogis(qlogis(tmpdat$qyinit[, 2]) + epsilonma1g0)
-tmpdat$qyupm1a1g0 <- plogis(qlogis(tmpdat$qyinit[, 3]) + epsilonma1g0)
-
-# for E(Y_{1,gma})
-epsilonma1g1 <- coef(glm(y ~ 1,
-  weights = tmpdat$ha1gma1,
-  offset = (qlogis(qyinit[, 1])),
-  family = "quasibinomial", data = tmpdat
-))
-tmpdat$qyupm0a1g1 <- plogis(qlogis(tmpdat$qyinit[, 2]) + epsilonma1g1)
-tmpdat$qyupm1a1g1 <- plogis(qlogis(tmpdat$qyinit[, 3]) + epsilonma1g1)
-
-# for E(Y_{0,gmastar})
-epsilonma0g0 <- coef(glm(y ~ 1,
-  weights = tmpdat$ha0gma0,
-  offset = (qlogis(qyinit[, 1])),
-  family = "quasibinomial", data = tmpdat
-))
-tmpdat$qyupm0a0g0 <- plogis(qlogis(tmpdat$qyinit[, 2]) + epsilonma0g0)
-tmpdat$qyupm1a0g0 <- plogis(qlogis(tmpdat$qyinit[, 3]) + epsilonma0g0)
-\end{lstlisting}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{7}
 \tightlist
 \item
-  We next integrate out \(M\) from \(\bar{Q}^{\star}_{Y}(M,Z,W)\). First, we
-  estimate \(\bar{Q}^{\star}_{Y,n}(M,Z,W)\) setting \(m=1\) and \(m=0\), giving
-  \(\bar{Q}^{\star}_Y(m=1, z, w)\) and \(\bar{Q}^{\star}_Y(m=0, z, w)\). Then,
+  We next integrate out \(M\) from \(\bar{Q}_{Y}(M,Z,W)\). First, we
+  estimate \(\bar{Q}_{Y,n}(M,Z,W)\) setting \(m=1\) and \(m=0\), giving
+  \(\bar{Q}_Y(m=1, z, w)\) and \(\bar{Q}_Y(m=0, z, w)\). Then,
   multiply these predicted values by their probabilities under
   \(\hat{g}_{M \mid a^{\star},W}(W)\) (for \(a \in \{a, a^{\star}\}\)), and add
   them together (i.e., \(\bar{Q}^{\hat{g}}_{M,n}(Z,W) = \hat{Q}^{\star}_Y(m=1, z, w) \hat{g}_{M|a^{\star},W} + \hat{Q}^{\star}_Y(m=0, z, w)(1-\hat{g}_{M|a^{\star},W})\)).
 \end{enumerate}
 
 \begin{lstlisting}[language=R]
-tmpdat$Qma1g0 <- tmpdat$qyupm0a1g0 * (1 - gm) + tmpdat$qyupm1a1g0 * gm
-tmpdat$Qma1g1 <- tmpdat$qyupm0a1g1 * (1 - gma1) + tmpdat$qyupm1a1g1 * gma1
-tmpdat$Qma0g0 <- tmpdat$qyupm0a0g0 * (1 - gm) + tmpdat$qyupm1a0g0 * gm
+tmpdat$Qma1g0 <- tmpdat$qyinit[, 2] * (1 - gm) + tmpdat$qyinit[, 3] * gm
+tmpdat$Qma1g1 <- tmpdat$qyinit[, 2] * (1 - gma1) + tmpdat$qyinit[, 3] * gma1
+tmpdat$Qma0g0 <- tmpdat$qyinit[, 2]* (1 - gm) + tmpdat$qyinit[, 3] * gm
 \end{lstlisting}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{8}
+\setcounter{enumi}{6}
 \tightlist
 \item
-  We now fit a regression of \(\bar{Q}^{\hat{g},\star}_{M,n}(Z,W)\) on \(W\)
+  We now fit a regression of \(\bar{Q}^{\hat{g}}_{M,n}(Z,W)\) on \(W\)
   among those with \(A=a^\prime\). We call the predicted values from this
   regression \(\hat{\bar{Q}}^{a^\prime}_{Z}(W)\).
 \end{enumerate}
@@ -2026,23 +1966,22 @@ second targeting step.)
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{9}
+\setcounter{enumi}{7}
 \tightlist
 \item
-  The empirical mean of these predicted values is the TML estimate of
+  Take the empirical mean of these predicted values
   \(\Psi(P)(a^\prime, \hat{g}_{M \mid a^{\star}, W})\).
 \end{enumerate}
 
 \begin{lstlisting}[language=R]
-tmlea1m0 <- sum(Qzupa1g0 * svywt) / sum(svywt)
-tmlea1m1 <- sum(Qzupa1g1 * svywt) / sum(svywt)
-tmlea0m0 <- sum(Qzupa0g0 * svywt) / sum(svywt)
+meanQza1m0 <- mean(Qza1g0)
+meanQza1m1 <- mean(Qza1g1)
+meanQza0m0 <- mean(Qza0g0)
 \end{lstlisting}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{10}
-\tightlist
+\setcounter{enumi}{8}
 \item
   Repeat the above steps for each of the interventions. For example, for
   binary \(A\), we would execute these steps a total of three times to
@@ -2059,53 +1998,38 @@ tmlea0m0 <- sum(Qzupa0g0 * svywt) / sum(svywt)
     \(\Psi(P)(0,\hat{g}_{M \mid 0, W})\).
   \end{enumerate}
 \item
-  The PIDE can then be obtained by substituting estimates of parameters
-  \(\Psi(P)(a,\hat{g}_{M \mid a^{\star}, W}) - \Psi(P)(a^{\star},\hat{g}_{M \mid a^{\star}, W})\) and the PIIE
-  can be obtained by substituting estimates of parameters
-  \(\Psi(P)(a,\hat{g}_{M \mid a,W}) - \Psi(P)(a, \hat{g}_{M \mid a^{\star}, W})\).
-\end{enumerate}
-
-\begin{lstlisting}[language=R]
-nde <- tmlea1m0 - tmlea0m0
-nie <- tmlea1m1 - tmlea1m0
-\end{lstlisting}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{12}
-\tightlist
+  Plug in all of the nuisance parameter estimates to the EIC, set it equal to zero and solve. This is the one-step estimate of the PIDE and PIIE.
 \item
   The variance can be estimated as the sample variance of the EIF (defined
-  above, substituting in the targeted fits) divided by \(n\).
+  above) divided by \(n\).
 \end{enumerate}
 
 \begin{lstlisting}[language=R]
 # first get EIF
-tmpdat$qyupa1g0 <- plogis(qlogis(tmpdat$qyinit[, 1]) + epsilonma1g0)
-tmpdat$qyupa1g1 <- plogis(qlogis(tmpdat$qyinit[, 1]) + epsilonma1g1)
-tmpdat$qyupa0g0 <- plogis(qlogis(tmpdat$qyinit[, 1]) + epsilonma0g0)
-
-eic1a1g0 <- tmpdat$ha1gma0 * (tmpdat$y - tmpdat$qyupa1g0)
-eic2a1g0 <- psa1 * svywt * (tmpdat$Qma1g0 - Qzupa1g0)
-eic3a1g0 <- Qzupa1g0 - tmlea1m0
+eic1a1g0 <- tmpdat$ha1gma0 * (tmpdat$y - tmpdat$qyinit[,1])
+eic2a1g0 <- psa1 * (tmpdat$Qma1g0 - Qza1g0)
+eic3a1g0 <- Qza1g0 - meanQza1m0
 eica1g0 <- eic1a1g0 + eic2a1g0 + eic3a1g0
 
-eic1a1g1 <- tmpdat$ha1gma1 * (tmpdat$y - tmpdat$qyupa1g1)
-eic2a1g1 <- psa1 * svywt * (tmpdat$Qma1g1 - Qzupa1g1)
-eic3a1g1 <- Qzupa1g1 - tmlea1m1
+eic1a1g1 <- tmpdat$ha1gma1 * (tmpdat$y - tmpdat$qyinit[,1])
+eic2a1g1 <- psa1 * (tmpdat$Qma1g1 - Qza1g1)
+eic3a1g1 <- Qza1g1 - meanQza1m1
 eica1g1 <- eic1a1g1 + eic2a1g1 + eic3a1g1
 
-eic1a0g0 <- tmpdat$ha0gma0 * (tmpdat$y - tmpdat$qyupa0g0)
-eic2a0g0 <- psa0 * svywt * (tmpdat$Qma0g0 - Qzupa0g0)
-eic3a0g0 <- Qzupa0g0 - tmlea0m0
+eic1a0g0 <- tmpdat$ha0gma0 * (tmpdat$y - tmpdat$qyinit[,1)
+eic2a0g0 <- psa0 * (tmpdat$Qma0g0 - Qza0g0)
+eic3a0g0 <- Qzupa0g0 - meanQza0m0
 eica0g0 <- eic1a0g0 + eic2a0g0 + eic3a0g0
 
-# estimands
-ndeeic <- eica1g0 - eica0g0
-vareic <- var(ndeeic) / nrow(tmpdat)
+pide <- mean(eica1g0 - eica0g0)
+piie <- mean(eica1g1 - eica1g0)
 
-nieeic <- eica1g1 - eica1g0
-varnieeic <- var(nieeic) / nrow(tmpdat)
+# estimands
+pideeic <- eica1g0 - eica0g0
+vareic <- var(pideeic) / nrow(tmpdat)
+
+piieeic <- eica1g1 - eica1g0
+varpiieeic <- var(piieeic) / nrow(tmpdat)
 \end{lstlisting}
 
 \hypertarget{the-general-case}{%

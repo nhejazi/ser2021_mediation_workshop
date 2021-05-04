@@ -77,7 +77,7 @@ ID: I'd suggest using the notation in our biometrika paper for the below
     &+ E(\bar{Q}_{diff} | W,0) - \Psi_{NDE}
 \end{align}
 
-### How to estimate using TMLE
+### How to estimate using the one-step estimator (essentially A-IPTW)
 
 1. Estimate
   \begin{equation*}
@@ -97,23 +97,17 @@ using Bayes rule to get something that is easier to compute:
   \frac{\P(A = 0 \mid M, W) g(0 \mid W)}{\P(A = 1 \mid M, W) g(1 \mid W)}.
 \end{equation*}
 
-Underneath the hood, the counterfactual outcome difference
-$\bar{Q}_{\text{diff}}$ and $P(A \mid Z, W)$, the conditional probability of $A$
+<!--Underneath the hood, the counterfactual outcome difference,
+$\bar{Q}_{\text{diff}}$, and $P(A \mid Z, W)$, the conditional probability of $A$
 given $Z$ and $W$, are used in constructing the auxiliary covariate for TML
 estimation. These nuisance parameters play an important role in the
-bias-correcting _TMLE-update step_.
+bias-correcting _TMLE-update step_.-->
 
 1. We estimate $g_{A \mid W}(W)=P(A=a \mid W)$ from a logistic regression of
    $A$ on $W$, generating predicted probabilities that $A=1$ for $g(1 \mid W)$
    and $A=0$ for $g(0 \mid W)$.  
 2. We estimate $\P(A=a \mid M, W)$ from a logistic regression of $A$ on $M, W$,
    generating predicted probabilities that $A=1$ for and $A=0$.
-
-<!--
-ID: Kara, remind me to talk about the below code!
-E.g., do we need to go through a TMLE
-How long are we spending on this?
--->
 
 
 ```r
@@ -169,11 +163,37 @@ qyinit <- cbind(
 qbardiff <- qyinit[, 3] - qyinit[, 2]
 ```
 
-4. Estimate $\hat{\epsilon}$ by setting $\epsilon$ as the intercept of a
-   weighted logistic regression model of $Y$ with
-   $logit(\hat{\bar{Q}}_{Y}(M,A,W))$ as an offset and weights $\hat{C}_{Y}$.
+5. We then regress $\hat{\bar{Q}}_{diff}(M,A,W)$ on $W$ among those
+   with $A=0$ and take the mean.
 
-5. The estimates of $\bar{Q}_{Y}(M,1,W)$ and $\bar{Q}_{Y}(M,0,W)$ are updated
+
+```r
+margqdiff_fit <- glm(qbardiff ~ w,
+  data = data.frame(
+    qbardiff = qbardiff[a == 0],
+    w = w[a == 0]
+  )
+)
+margqdiff <- predict(margqdiff_fit,
+  newdata = data.frame(qbardiff = qbardiffup, w = w)
+)
+meanmargqdiff<- mean(margqdiff)
+```
+
+<!--4. Estimate $\hat{\epsilon}$ by setting $\epsilon$ as the intercept of a
+   weighted logistic regression model of $Y$ with
+   $logit(\hat{\bar{Q}}_{Y}(M,A,W))$ as an offset and weights $\hat{C}_{Y}$.-->
+
+6. Plug in the estimates of these nuisance parameters to the EIC, set it equal to 0, and solve. This gives an estimate of the NDE.
+    
+
+```r
+
+os_nde <- cy*(y-qyinit[,1]) + (a0/am0)*(qbardiff - meanmargqdiff) + meanmargqdiff
+
+```
+
+<!--6. The estimates of $\bar{Q}_{Y}(M,1,W)$ and $\bar{Q}_{Y}(M,0,W)$ are updated
    by $\hat{\bar{Q}}^{\star}_{Y}(M,A,W) =
    \hat{\bar{Q}}_{Y}(\epsilon_n)(M,A,W)$. This gives an updated difference:
    $\hat{\bar{Q}}^{\star}_{diff}(M,A,W)$.
@@ -188,24 +208,8 @@ qyupa0 <- plogis(qlogis(qyinit[, 2]) + epsilon)
 qyupa1 <- plogis(qlogis(qyinit[, 3]) + epsilon)
 qdiffup <- qyupa1 - qyupa0
 ```
+-->
 
-6. We then regress $\hat{\bar{Q}}^{\star}_{diff}(M,A,W)$ on $W$ among those
-   with $A=0$. Taking the empirical mean of the predicted values gives us the
-   TML estimate of the NDE.
-
-
-```r
-margqdiff_fit <- glm(qdiffup ~ w,
-  data = data.frame(
-    qdiffup = qdiffup[a == 0],
-    w = w[a == 0]
-  )
-)
-margqdiff <- predict(margqdiff_fit,
-  newdata = data.frame(qdiffup = qdiffup, w = w)
-)
-tmlende <- mean(margqdiff)
-```
 
 ## Interventional direct and indirect effects
 
@@ -213,11 +217,11 @@ Recall that in the presence of a intermediate confounder natural (in)direct effe
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.8\linewidth]{06-estimation-natural-interventional_files/figure-latex/unnamed-chunk-6-1} 
+{\centering \includegraphics[width=0.8\linewidth]{06-estimation-natural-interventional_files/figure-latex/unnamed-chunk-7-1} 
 
 }
 
-\caption{Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-6)
+\caption{Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-7)
 \end{figure}
 
 <!--
@@ -253,7 +257,7 @@ a single binary treatment, $Z$ is a single binary intermediate confounder, $M$
 is a single binary mediator. There are no restrictions on the distribution of
 $W$ or $Y$.
 
-$g_{M \mid a^\prime,W}$ represents a stochastic draw from the counterfactual,
+$g_{M \mid a^\prime,W}$ represents the counterfactual,
 conditional distribution of $M$, as described by
 @vanderweele2016mediation:
 
@@ -303,6 +307,7 @@ G-computation-based estimator. The procedure is as follows
    estimate.
 
 ### Estimate with doubly robust methods based on the EIF
+We are showing the one-step estimator (generalization of A-IPW)
 
 The EIF for the parameter $\Psi(P)(a^{\prime}, \hat{g}_{M \mid a^{\star},W})$,
 where, again, $\hat{g}_{M \mid a^{\star}, W}$ is assumed known, is given by:
@@ -321,7 +326,7 @@ where, again, $\hat{g}_{M \mid a^{\star}, W}$ is assumed known, is given by:
       &\times (Y-\bar{Q}_{Y(M,Z,W)}).
 \end{align*}
 
-### Estimate using TMLE
+<!---### Estimate using TMLE-->
 
 1. We estimate $g_{Z \mid a^{\star}, W}(W) = \P(Z=1 \mid A=a^{\star}, W)$ from
    a logistic regression of $Z$ on $A, W$ setting $A=a^{\star}$.
@@ -391,7 +396,7 @@ tmpdat$qyinit <- cbind(
 )
 ```
 
-5. Estimate the weights to be used for the initial targeting step:
+5. Estimate the weights <!--to be used for the initial targeting step-->:
    \begin{equation*}
       h_1(a) = \frac{I(A=a)\{I(M=1)\hat{g}_{M \mid a^{\star}, W} +
         I(M=0)(1-\hat{g}_{M \mid a^{\star}, W}) \}}{\P(A=a)\{I(M=1)
@@ -410,16 +415,17 @@ newdata = data.frame(cbind(datw, z = z)), type = "response"
 )
 psm <- (mz * m) + ((1 - mz) * (1 - m))
 
-tmpdat$ha1gma1 <- ((m * gma1 + (1 - m) * (1 - gma1)) / psm) * psa1 * svywt
-tmpdat$ha1gma0 <- ((m * gm + (1 - m) * (1 - gm)) / psm) * psa1 * svywt
-tmpdat$ha0gma0 <- ((m * gm + (1 - m) * (1 - gm)) / psm) * psa0 * svywt
+tmpdat$ha1gma1 <- ((m * gma1 + (1 - m) * (1 - gma1)) / psm) * psa1 
+tmpdat$ha1gma0 <- ((m * gm + (1 - m) * (1 - gm)) / psm) * psa1 
+tmpdat$ha0gma0 <- ((m * gm + (1 - m) * (1 - gm)) / psm) * psa0 
 ```
 
+<!--
 6. Estimate $\hat{\epsilon}$ by setting $\epsilon$ as the intercept of a
    weighted logistic regression model of $Y$ with
    $\text{logit}(\hat{\bar{Q}}_{Y}(M,Z,W))$ as an offset and weights
    $\hat{h}_{1}(a)$. (Note that this is just one possible TMLE.)
-
+<!--
 7. The estimate of $\bar{Q}_{Y}(M,Z,W)$ is updated by
    $\hat{\bar{Q}}^{\star}_{Y}(M,Z,W) =  \hat{\bar{Q}}_{Y}(\epsilon_n)(M,Z,W)$.
 
@@ -452,10 +458,11 @@ epsilonma0g0 <- coef(glm(y ~ 1,
 tmpdat$qyupm0a0g0 <- plogis(qlogis(tmpdat$qyinit[, 2]) + epsilonma0g0)
 tmpdat$qyupm1a0g0 <- plogis(qlogis(tmpdat$qyinit[, 3]) + epsilonma0g0)
 ```
+-->
 
-8. We next integrate out $M$ from $\bar{Q}^{\star}_{Y}(M,Z,W)$. First, we
-   estimate $\bar{Q}^{\star}_{Y,n}(M,Z,W)$ setting $m=1$ and $m=0$, giving
-   $\bar{Q}^{\star}_Y(m=1, z, w)$ and $\bar{Q}^{\star}_Y(m=0, z, w)$. Then,
+6. We next integrate out $M$ from $\bar{Q}_{Y}(M,Z,W)$. First, we
+   estimate $\bar{Q}_{Y,n}(M,Z,W)$ setting $m=1$ and $m=0$, giving
+   $\bar{Q}_Y(m=1, z, w)$ and $\bar{Q}_Y(m=0, z, w)$. Then,
    multiply these predicted values by their probabilities under
    $\hat{g}_{M \mid a^{\star},W}(W)$ (for $a \in \{a, a^{\star}\}$), and add
    them together (i.e., $\bar{Q}^{\hat{g}}_{M,n}(Z,W) =
@@ -464,12 +471,12 @@ tmpdat$qyupm1a0g0 <- plogis(qlogis(tmpdat$qyinit[, 3]) + epsilonma0g0)
 
 
 ```r
-tmpdat$Qma1g0 <- tmpdat$qyupm0a1g0 * (1 - gm) + tmpdat$qyupm1a1g0 * gm
-tmpdat$Qma1g1 <- tmpdat$qyupm0a1g1 * (1 - gma1) + tmpdat$qyupm1a1g1 * gma1
-tmpdat$Qma0g0 <- tmpdat$qyupm0a0g0 * (1 - gm) + tmpdat$qyupm1a0g0 * gm
+tmpdat$Qma1g0 <- tmpdat$qyinit[, 2] * (1 - gm) + tmpdat$qyinit[, 3] * gm
+tmpdat$Qma1g1 <- tmpdat$qyinit[, 2] * (1 - gma1) + tmpdat$qyinit[, 3] * gma1
+tmpdat$Qma0g0 <- tmpdat$qyinit[, 2]* (1 - gm) + tmpdat$qyinit[, 3] * gm
 ```
 
-9. We now fit a regression of $\bar{Q}^{\hat{g},\star}_{M,n}(Z,W)$ on $W$
+7. We now fit a regression of $\bar{Q}^{\hat{g}}_{M,n}(Z,W)$ on $W$
    among those with $A=a^\prime$. We call the predicted values from this
    regression $\hat{\bar{Q}}^{a^\prime}_{Z}(W)$.
 
@@ -496,24 +503,58 @@ Qza0g0 <- predict(Qzfita0g0, type = "response", newdata = tmpdat)
 (Note that if $A$ were not randomly assigned, we would need to complete a
 second targeting step.)
 
-10. The empirical mean of these predicted values is the TML estimate of
+8. Take the empirical mean of these predicted values
    $\Psi(P)(a^\prime, \hat{g}_{M \mid a^{\star}, W})$.
 
 
 ```r
-tmlea1m0 <- sum(Qzupa1g0 * svywt) / sum(svywt)
-tmlea1m1 <- sum(Qzupa1g1 * svywt) / sum(svywt)
-tmlea0m0 <- sum(Qzupa0g0 * svywt) / sum(svywt)
+meanQza1m0 <- mean(Qza1g0)
+meanQza1m1 <- mean(Qza1g1)
+meanQza0m0 <- mean(Qza0g0)
 ```
 
-11. Repeat the above steps for each of the interventions. For example, for
+9. Repeat the above steps for each of the interventions. For example, for
     binary $A$, we would execute these steps a total of three times to
     estimate:
     1. $\Psi(P)(1,\hat{g}_{M \mid 1, W})$,
     2. $\Psi(P)(1,\hat{g}_{M \mid 0, W})$, and
     3. $\Psi(P)(0,\hat{g}_{M \mid 0, W})$.
+ 
+10. Plug in all of the nuisance parameter estimates to the EIC, set it equal to zero and solve. This is the one-step estimate of the PIDE and PIIE.
 
-12. The PIDE can then be obtained by substituting estimates of parameters
+11. The variance can be estimated as the sample variance of the EIF (defined
+    above) divided by $n$.
+    
+
+```r
+# first get EIF
+eic1a1g0 <- tmpdat$ha1gma0 * (tmpdat$y - tmpdat$qyinit[,1])
+eic2a1g0 <- psa1 * (tmpdat$Qma1g0 - Qza1g0)
+eic3a1g0 <- Qza1g0 - meanQza1m0
+eica1g0 <- eic1a1g0 + eic2a1g0 + eic3a1g0
+
+eic1a1g1 <- tmpdat$ha1gma1 * (tmpdat$y - tmpdat$qyinit[,1])
+eic2a1g1 <- psa1 * (tmpdat$Qma1g1 - Qza1g1)
+eic3a1g1 <- Qza1g1 - meanQza1m1
+eica1g1 <- eic1a1g1 + eic2a1g1 + eic3a1g1
+
+eic1a0g0 <- tmpdat$ha0gma0 * (tmpdat$y - tmpdat$qyinit[,1)
+eic2a0g0 <- psa0 * (tmpdat$Qma0g0 - Qza0g0)
+eic3a0g0 <- Qzupa0g0 - meanQza0m0
+eica0g0 <- eic1a0g0 + eic2a0g0 + eic3a0g0
+
+pide <- mean(eica1g0 - eica0g0)
+piie <- mean(eica1g1 - eica1g0)
+
+# estimands
+pideeic <- eica1g0 - eica0g0
+vareic <- var(pideeic) / nrow(tmpdat)
+
+piieeic <- eica1g1 - eica1g0
+varpiieeic <- var(piieeic) / nrow(tmpdat)
+```
+
+<!--12. The PIDE can then be obtained by substituting estimates of parameters
     $\Psi(P)(a,\hat{g}_{M \mid a^{\star}, W}) -
     \Psi(P)(a^{\star},\hat{g}_{M \mid a^{\star}, W})$ and the PIIE
     can be obtained by substituting estimates of parameters
@@ -525,39 +566,7 @@ tmlea0m0 <- sum(Qzupa0g0 * svywt) / sum(svywt)
 nde <- tmlea1m0 - tmlea0m0
 nie <- tmlea1m1 - tmlea1m0
 ```
-
-13. The variance can be estimated as the sample variance of the EIF (defined
-    above, substituting in the targeted fits) divided by $n$.
-
-
-```r
-# first get EIF
-tmpdat$qyupa1g0 <- plogis(qlogis(tmpdat$qyinit[, 1]) + epsilonma1g0)
-tmpdat$qyupa1g1 <- plogis(qlogis(tmpdat$qyinit[, 1]) + epsilonma1g1)
-tmpdat$qyupa0g0 <- plogis(qlogis(tmpdat$qyinit[, 1]) + epsilonma0g0)
-
-eic1a1g0 <- tmpdat$ha1gma0 * (tmpdat$y - tmpdat$qyupa1g0)
-eic2a1g0 <- psa1 * svywt * (tmpdat$Qma1g0 - Qzupa1g0)
-eic3a1g0 <- Qzupa1g0 - tmlea1m0
-eica1g0 <- eic1a1g0 + eic2a1g0 + eic3a1g0
-
-eic1a1g1 <- tmpdat$ha1gma1 * (tmpdat$y - tmpdat$qyupa1g1)
-eic2a1g1 <- psa1 * svywt * (tmpdat$Qma1g1 - Qzupa1g1)
-eic3a1g1 <- Qzupa1g1 - tmlea1m1
-eica1g1 <- eic1a1g1 + eic2a1g1 + eic3a1g1
-
-eic1a0g0 <- tmpdat$ha0gma0 * (tmpdat$y - tmpdat$qyupa0g0)
-eic2a0g0 <- psa0 * svywt * (tmpdat$Qma0g0 - Qzupa0g0)
-eic3a0g0 <- Qzupa0g0 - tmlea0m0
-eica0g0 <- eic1a0g0 + eic2a0g0 + eic3a0g0
-
-# estimands
-ndeeic <- eica1g0 - eica0g0
-vareic <- var(ndeeic) / nrow(tmpdat)
-
-nieeic <- eica1g1 - eica1g0
-varnieeic <- var(nieeic) / nrow(tmpdat)
-```
+-->
 
 ## The general case
 
