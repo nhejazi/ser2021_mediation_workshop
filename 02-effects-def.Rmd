@@ -71,11 +71,6 @@ $$\psi_{\text{CDE}} = \E(Y_{1,m} - Y_{0,m}) $$
 - Set $M=m$ uniformly for everyone in the population
 - Compare $A=1$ vs $A=0$ with $M=m$ fixed
 
-<!--
-ID: If we are giving them the identifiability assumptions, should we not state
-the identification result also here?
-KER: sure! 
--->
 Under the below identification assumptions, the controlled direct can be identified:
 $$ \E(Y_{1,m} - Y_{0,m}) = \E_w\{\E(Y \mid 1, m, w) - \E(Y \mid 0, m, w)\}$$
 
@@ -128,7 +123,7 @@ as: $\E_W \sum_m \{\E(Y_{1,m} \mid W) - \E(Y_{0,m} \mid W)\} \P(M_{0}=m \mid W)$
 <!--
 ID: Is the below true? What do you mean here by interaction? Is that the only
 assumption?  -->
-- If no interaction between $A$ and $M$ on $Y$, then CDE = NDE.
+- If no effect modification of the effect of $A$ on $Y$ by $M$ (i.e., no interaction between $A$ and $M$), then CDE = NDE.
 
 ```{r , echo=FALSE, fig.cap="", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", out.width = "50%", results="asis"}
 knitr::include_graphics(here::here("img", "graphic4a.png"))
@@ -147,10 +142,6 @@ Under the below identification assumptions, the natural direct effect can be ide
 - $A \indep M_a \mid W$
 - $M_0 \indep Y_{1,m} \mid W$
 - and positivity assumptions
-<!--
-ID: If we are giving them the identifiability assumptions, should we not state
-the identification result also here?
--->
 
 What does $M_0 \indep Y_{1,m} \mid W$ mean?
 
@@ -266,6 +257,7 @@ achieve $Y(1,m)$ independent of $M(0)$, it would be necessary to
 adjust for either $Z(1)$ or $Z(0)$. This is impossible to do since
 these variables are unmeasured.
 
+Note: CDEs are still identified in this setting. They can be estimated similarly to two-time-point intervention.
 
 ## Interventional (in)direct effects
 
