@@ -206,7 +206,7 @@
 
 \title{{[}SER 2021 Workshop{]} Causal Mediation: Modern Methods for Path Analysis}
 \author{Iván Díaz, Nima Hejazi, Kara Rudolph}
-\date{updated: May 04, 2021}
+\date{updated: May 07, 2021}
 
 \begin{document}
 \maketitle
@@ -581,24 +581,57 @@ Do differences in the effects of treatment (comparing two medications for opioid
   \item
     What happens if there are confounders of the relation between treatment and outcome?
   \item
-    What happens if there are confounders of the relation between mediataor and outcome?
+    What happens if there are confounders of the relation between mediator and outcome?
   \item
     What happens if there are confounders of the relation between treatment and mediator?
   \item
     What happens if the confounders of mediator and outcome are affected by treatment?
+    \#\#\# Example:
   \end{itemize}
 \item
-  Statistical issues with this method:
+  Assume we have a pre-treamtment confounder of \(Y\) and \(M\), denote it with \(W\)
+\item
+  For simplicity, assume \(A\) is randomized
+\item
+  We'll generate a really large sample from a data generating mechanism so that we are not concerned with sampling errors
+\end{itemize}
 
-  \begin{itemize}
-  \tightlist
-  \item
-    Assume the above confounding is not an issue
-  \item
-    Can I then interpret \((\gamma_1\beta_1)\) as the indirect effect?
-  \item
-    No: the regression models may be misspecified
-  \end{itemize}
+\begin{lstlisting}[language=R]
+n <- 1e7
+w <- rnorm(n)
+a <- rbinom(n, 1, 0.5)
+m <- rnorm(n, w + a)
+y <- rnorm(n, w - a)
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  Note that the indirect effect (i.e., the effect through \(M\)) in this example is zero
+\item
+  Let's see what the product of coefficients method would say:
+\end{itemize}
+
+\begin{lstlisting}[language=R]
+lm_y <- lm(y ~ m + a)
+lm_m <- lm(m ~ a)
+## product of coefficients
+coef(lm_y)[2] * coef(lm_m)[2]
+#>       m 
+#> 0.50107
+\end{lstlisting}
+
+\hypertarget{statistical-issues-with-this-method}{%
+\subsection{Statistical issues with this method:}\label{statistical-issues-with-this-method}}
+
+\begin{itemize}
+\tightlist
+\item
+  Assume the above confounding is not an issue
+\item
+  Can I then interpret \((\gamma_1\beta_1)\) as the indirect effect?
+\item
+  No: the regression models may be misspecified
 \end{itemize}
 
 \hypertarget{causal-mediation-models}{%
@@ -612,11 +645,11 @@ confounding issues. We will focus on the two types of graph:
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.8\linewidth]{01-preface_files/figure-latex/unnamed-chunk-2-1} 
+{\centering \includegraphics[width=0.8\linewidth]{01-preface_files/figure-latex/unnamed-chunk-4-1} 
 
 }
 
-\caption{Directed acyclic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-2}
+\caption{Directed acyclic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-4}
 \end{figure}
 
 \hypertarget{intermediate-confounders}{%
@@ -624,11 +657,11 @@ confounding issues. We will focus on the two types of graph:
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.8\linewidth]{01-preface_files/figure-latex/unnamed-chunk-3-1} 
+{\centering \includegraphics[width=0.8\linewidth]{01-preface_files/figure-latex/unnamed-chunk-5-1} 
 
 }
 
-\caption{Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-3}
+\caption{Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-5}
 \end{figure}
 
 The above graphs can be interpreted as a \emph{non-parametric structural equation model}
@@ -657,7 +690,7 @@ The above graphs can be interpreted as a \emph{non-parametric structural equatio
   true nature mechanisms)
 \item
   Sometimes we know something: e.g., if \(A\) is randomized we know \(A=f_A(U_A)\)
-  where \(U_A\) is independent of everything.
+  where \(U_A\) is the flip of a coin (i.e., independent of everything).
 \end{itemize}
 
 \hypertarget{counterfactuals}{%
@@ -690,23 +723,29 @@ The above graphs can be interpreted as a \emph{non-parametric structural equatio
   You can use counterfactual variables as \emph{primitives}
 \item
   In the NPSEM framework, counterfactuals are quantities \emph{derived} from the
-  model:
+  model.
+\item
+  Take as example the DAG in Figure 1.2:
   \begin{align}
-    Y_a  &= f_Y(W, a, Z, M, U_Y)\\
-    Y_{a,m}  &= f_Y(W, a, Z, m, U_Y)\\
-    M_a  &= f_M(W, a, Z, U_M)
+    Y_a  &= f_Y(W, a, Z_a, M_a, U_Y)\\
+    Y_{a,m}  &= f_Y(W, a, Z_a, m, U_Y)\\
+    M_a  &= f_M(W, a, Z_a, U_M)
   \end{align}
 \item
   You can also define \emph{nested counterfactuals}
 \item
   For example, if \(A\) is binary, you can think of the following counterfactual
   \begin{equation*}
-    Y_{1, M_0} = f_Y(W, 1, Z, M_0, U_Y)
+    Y_{1, M_0} = f_Y(W, 1, Z_1, M_0, U_Y)
   \end{equation*}
 \item
   Interpreted as \emph{the outcome for an individual in a hypothetical world where
   treatment was given but the mediator was held at the value it would have
   taken under no treatment}
+\item
+  Causal effects are defined in terms of the distribution of these counterfactuals
+\item
+  I.e., causal effects give you information about what would happen \emph{under intervention}
 \end{itemize}
 
 \hypertarget{estimands}{%
@@ -734,18 +773,15 @@ The above graphs can be interpreted as a \emph{non-parametric structural equatio
 \hypertarget{controlled-direct-effects}{%
 \section{Controlled direct effects}\label{controlled-direct-effects}}
 
-\[\psi_{\text{CDE}} = \E(Y_{1,m} - Y_{0,m}) \]
-
 \begin{itemize}
 \tightlist
 \item
-  Set \(M=m\) uniformly for everyone in the population
+  Set the mediator to a reference value \(M=m\) uniformly for everyone in the population
 \item
   Compare \(A=1\) vs \(A=0\) with \(M=m\) fixed
 \end{itemize}
 
-Under the below identification assumptions, the controlled direct can be identified:
-\[ \E(Y_{1,m} - Y_{0,m}) = \E_w\{\E(Y \mid 1, m, w) - \E(Y \mid 0, m, w)\}\]
+\[\psi_{\text{CDE}} = \E(Y_{1,m} - Y_{0,m}) \]
 
 \hypertarget{identification-assumptions}{%
 \subsection{Identification assumptions:}\label{identification-assumptions}}
@@ -760,7 +796,7 @@ Under the below identification assumptions, the controlled direct can be identif
   \item
     \(A \indep Y_{a,m} \mid W\)
   \item
-    \(M \indep Y_{a,m} \mid W, A, Z\)
+    \(M \indep Y_{a,m} \mid W, A\)
   \end{itemize}
 \item
   Positivity assumptions:
@@ -768,11 +804,63 @@ Under the below identification assumptions, the controlled direct can be identif
   \begin{itemize}
   \tightlist
   \item
-    \(\P(M = m \mid Z, A=a, W) > 0 \text{  } a.e.\)
+    \(\P(M = m \mid A=a, W) > 0 \text{  } a.e.\)
   \item
     \(\P(A=a \mid W) > 0 \text{  } a.e.\)
   \end{itemize}
 \end{itemize}
+
+Under the above identification assumptions, the controlled direct can be identified:
+\[ \E(Y_{1,m} - Y_{0,m}) = \E\{\color{ForestGreen}{\E(Y \mid A=1, M=m, W) - \E(Y \mid A=0, M=m, W)}\}\]
+
+\begin{itemize}
+\tightlist
+\item
+  For intuition about this formula in R, let's continue with our toy example, where we now add an indirect effect
+\end{itemize}
+
+\begin{lstlisting}[language=R]
+n <- 1e7
+w <- rnorm(n)
+a <- rbinom(n, 1, 0.5)
+m <- rnorm(n, w + a)
+y <- rnorm(n, w - a + m)
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  First we fit a correct model for the outcome
+\end{itemize}
+
+\begin{lstlisting}[language=R]
+lm_y <- lm(y ~ m + a + w)
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  Assume we would like the CDE at \(m=0\)
+\item
+  Then we generate predictions \[\color{ForestGreen}{\E(Y \mid A=1, M=m, W)} \text{ and }\color{ForestGreen}{\E(Y \mid A=0, M=m, W)}:\]
+\end{itemize}
+
+\begin{lstlisting}[language=R]
+pred_y1 <- predict(lm_y, newdata = data.frame(a = 1, m = 0, w = w))
+pred_y0 <- predict(lm_y, newdata = data.frame(a = 0, m = 0, w = w))
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  Then we compute the difference between the predicted values \(\color{ForestGreen}{\E(Y \mid A=1, M=m, W) - \E(Y \mid A=0, M=m, W)}\), and average across values of \(W\)
+\end{itemize}
+
+\begin{lstlisting}[language=R]
+## CDE at m = 0
+mean(pred_y1 - pred_y0)
+#> [1] -0.99974
+\end{lstlisting}
 
 \begin{figure}
 
@@ -817,23 +905,47 @@ indirect counterparts?}
 
 Still using the same DAG as above,
 
-Natural direct effect (NDE):
+\begin{itemize}
+\tightlist
+\item
+  Recall the definition of the nested counterfactual
+\end{itemize}
+
 \begin{equation*}
-  \psi_{\text{NDE}} = \E(Y_{1,M_0} - Y_{0,M_0})
+    Y_{1, M_0} = f_Y(W, 1, Z_1, M_0, U_Y)
 \end{equation*}
 
-Natural indirect effect (NIE):
-\begin{equation*}
-  \psi_{\text{NIE}} = \E(Y_{1,M_1} - Y_{1,M_0})
-\end{equation*}
+\begin{itemize}
+\item
+  Interpreted as \emph{the outcome for an individual in a hypothetical world where
+  treatment was given but the mediator was held at the value it would have
+  taken under no treatment}
+\item
+  Recal that, because of the definition of counterfactuals
+  \begin{equation*}
+  Y_{1, M_1} = Y_1
+  \end{equation*}
+\end{itemize}
 
-If the cross-world assumption holds (defined below), the NDE can also be written
-as: \(\E_W \sum_m \{\E(Y_{1,m} \mid W) - \E(Y_{0,m} \mid W)\} \P(M_{0}=m \mid W)\)
+Then we can decompose the \emph{average treatment effect} \(E(Y_1-Y_0)\) as follows
+
+\begin{equation*}
+\E[Y_{1,M_1} - Y_{0,M_0}] = \underbrace{\E[Y_{\color{red}{1},\color{blue}{M_1}} -
+    Y_{\color{red}{1},\color{blue}{M_0}}]}_{\text{natural indirect effect}} +
+    \underbrace{\E[Y_{\color{blue}{1},\color{red}{M_0}} -
+    Y_{\color{blue}{0},\color{red}{M_0}}]}_{\text{natural direct effect}}
+\end{equation*}
 
 \begin{itemize}
 \tightlist
 \item
-  Weighted average of controlled direct effects at each level of \(m\).
+  Natural direct effect (NDE): Varying treatment while keeping the mediator fixed at the value it would have taken under no treatment
+\item
+  Natural indirect effect (NIE): Varying the mediator from the value it would have taken under treatment to the value it would have taken under control, while keeping treatment fixed
+\end{itemize}
+
+\begin{itemize}
+\tightlist
 \item
   If no effect modification of the effect of \(A\) on \(Y\) by \(M\) (i.e., no interaction between \(A\) and \(M\)), then CDE = NDE.
 \end{itemize}
@@ -845,13 +957,6 @@ as: \(\E_W \sum_m \{\E(Y_{1,m} \mid W) - \E(Y_{0,m} \mid W)\} \P(M_{0}=m \mid W)
 }
 
 \end{figure}
-
-Under the below identification assumptions, the natural direct effect can be identified:
-\begin{equation*}
-\E(Y_{1,M_0} - Y_{0,M_0}) =
-  \E_w\{\sum_m \{\E(Y \mid 1, m, w) - \E(Y \mid 0, m, w)\} P(M=m \mid A=0,w)\}
-\end{equation*}
-(The natural indirect effect can be identified similarly.)
 
 \hypertarget{identification-assumptions-1}{%
 \subsection{Identification assumptions:}\label{identification-assumptions-1}}
@@ -870,19 +975,110 @@ Under the below identification assumptions, the natural direct effect can be ide
   and positivity assumptions
 \end{itemize}
 
+Note: If the cross-world assumption holds (defined below), the NDE can also be written
+as \[\E \sum_m \{\E(Y_{1,m} \mid W) - \E(Y_{0,m} \mid W)\} \P(M_{0}=m \mid W)\]
+
+\begin{itemize}
+\tightlist
+\item
+  Weighted average of controlled direct effects at each level of \(M=m\).
+\end{itemize}
+
+\hypertarget{identification-formula}{%
+\subsection{Identification formula:}\label{identification-formula}}
+
+\begin{itemize}
+\tightlist
+\item
+  Under the above identification assumptions, the natural direct effect can be identified:
+\end{itemize}
+
+\begin{equation*}
+\E(Y_{1,M_0} - Y_{0,M_0}) =
+  \E[\color{Goldenrod}{\E\{}\color{ForestGreen}{\E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)}\color{Goldenrod}{\mid A=0,W\}}]
+\end{equation*}
+
+\begin{itemize}
+\item
+  The natural indirect effect can be identified similarly.
+\item
+  Let's dissect this formula in R:
+\end{itemize}
+
+\begin{lstlisting}[language=R]
+n <- 1e7
+w <- rnorm(n)
+a <- rbinom(n, 1, 0.5)
+m <- rnorm(n, w + a)
+y <- rnorm(n, w - a + m)
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  First we fit a correct model for the outcome
+\end{itemize}
+
+\begin{lstlisting}[language=R]
+lm_y <- lm(y ~ m + a + w)
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  Then we generate predictions
+  \[\color{ForestGreen}{\E(Y \mid A=1, M, W)} \text{ and }\color{ForestGreen}{\E(Y \mid A=0, M, W)}\] with \(A\) fixed but letting \(M\) and \(W\) take their observed values
+\end{itemize}
+
+\begin{lstlisting}[language=R]
+pred_y1 <- predict(lm_y, newdata = data.frame(a = 1, m = m, w = w))
+pred_y0 <- predict(lm_y, newdata = data.frame(a = 0, m = m, w = w))
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  Then we compute the difference between the predicted values
+  \[\color{ForestGreen}{\E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)},\]
+\item
+  and use this difference as a pseudo-outcome in a regression on \(A\) and \(W\):
+  \[\color{Goldenrod}{\E\{}\color{ForestGreen}{\E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)}\color{Goldenrod}{\mid A=0,W\}}\]
+\end{itemize}
+
+\begin{lstlisting}[language=R]
+pseudo <- pred_y1 - pred_y0
+lm_pseudo <- lm(pseudo ~ a + m)
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  Now we predict the value of this pseudo-outcome under \(A=0\), and average the result
+\end{itemize}
+
+\begin{lstlisting}[language=R]
+pred_pseudo <- predict(lm_pseudo, newdata = data.frame(a = 0, w = w))
+## NDE:
+mean(pred_pseudo)
+#> [1] -1.0011
+\end{lstlisting}
+
+\hypertarget{cross-world-independence-assumption}{%
+\subsection{Cross-world independence assumption}\label{cross-world-independence-assumption}}
+
 What does \(M_0 \indep Y_{1,m} \mid W\) mean?
 
 \begin{itemize}
 \tightlist
 \item
-  Conditional on \(W\), knowledge of \(M\) in the absence of treatment \(A\)
-  provides no information of the effect of \(A\) on \(Y\).
+  Conditional on \(W\), knowledge of the mediator value in the absence of treatment, \(M_0\),
+  provides no information about the outcome under treatment, \(Y_{1,m}\).
 \item
   Can you think of a data-generating mechanism that would violate this
   assumption?
 \item
-  Whenever we believe that treatment assignment works through adherence (i.e., almost
-  always), we are violating this assumption.
+  Example: in a randomized study, whenever we believe that treatment assignment works through adherence (i.e., almost
+  always), we are violating this assumption (more on this later).
 \end{itemize}
 
 \hypertarget{is-this-the-estimand-i-want-1}{%
@@ -906,11 +1102,11 @@ mediator-outcome relationship (e.g., adherence)?}
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.8\linewidth]{02-effects-def_files/figure-latex/unnamed-chunk-3-1} 
+{\centering \includegraphics[width=0.8\linewidth]{02-effects-def_files/figure-latex/unnamed-chunk-12-1} 
 
 }
 
-\caption{Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-3}
+\caption{Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-12}
 \end{figure}
 
 \begin{figure}
@@ -924,52 +1120,74 @@ mediator-outcome relationship (e.g., adherence)?}
 \hypertarget{unidentifiability-of-the-nde-and-nie-in-this-setting}{%
 \subsection{Unidentifiability of the NDE and NIE in this setting}\label{unidentifiability-of-the-nde-and-nie-in-this-setting}}
 
-In this example, natural direct and indirect effects are
-unidentifiable from observed data on \((W,A,Z,M,Y)\). The technical
-reason for this is that the cross-world counterfactual assumption
-\begin{equation*}
-  Y(1,m)\indep M(0)\mid W
-\end{equation*}
+\begin{itemize}
+\tightlist
+\item
+  In this example, natural direct and indirect effects are
+  unidentifiable from observed data on \((W,A,Z,M,Y)\).
+\item
+  The technical
+  reason for this is that the cross-world counterfactual assumption
+  \begin{equation*}
+  Y_{1,m}\indep M_0\mid W
+  \end{equation*}
+  does not hold in the above directed acyiclic graph.
+\item
+  Technically, the
+  reason for this is that an intervention setting \(A=1\) (necessary for
+  the definition of \(Y_{1,m}\)) induces a counterfactual variable
+  \(Z_1\).
+\item
+  Likewise, an intervention setting \(A=0\) (necessary for the
+  definition of \(M_0\)) induces a counterfactual \(Z_0\).
+\item
+  The variables \(Z_1\) and \(Z_0\) are correlated because they share unmeasured common
+  causes.
+\item
+  The variable \(Z_1\) is correlated with \(Y_{1,m}\), and the
+  variable \(Z_0\) is correlated with \(M_0\), because they are
+  counterfactual outcomes in the same hypothetical worlds.
+\item
+  To see this in the definition of counterfactual from a causal structural model:
+  \begin{align*}
+  Y_{1,m} &= f_Y(W, 1, Z_1, m, U_Y), \text{ and }\\
+  M_0 &= f_M(W, 0, Z_0, U_M)\\
+  \end{align*}
+  are correlated even after adjusting for \(W\) by virtue of \(Z_1\) and \(Z_0\) being correlated.
+\end{itemize}
 
-does not hold in the above directed acyiclic graph. Intuitively, the
-reason for this is that an intervention setting \(A=1\) (necessary for
-the definition of \(Y(1,m)\)) induces a counterfactual variable
-\(Z(1)\). Likewise, an intervention setting \(A=0\) (necessary for the
-definition of \(M(0)\)) induces a counterfactual \(Z(0)\). The variables
-\(Z(1)\) and \(Z(0)\) are correlated because they share unmeasured common
-causes. The variable \(Z(1)\) is correlated with \(Y(1,m)\), and the
-variable \(Z(0)\) is correlated with \(M(0)\), because they are
-counterfactual outcomes in the same hypothetical worlds. Thus, to
-achieve \(Y(1,m)\) independent of \(M(0)\), it would be necessary to
-adjust for either \(Z(1)\) or \(Z(0)\). This is impossible to do since
-these variables are unmeasured.
+Intuitively:
 
-Note: CDEs are still identified in this setting. They can be estimated similarly to two-time-point intervention.
+\begin{itemize}
+\tightlist
+\item
+  \(Z\) is a confounder of the relation \(M \rightarrow Y\), which requires adjustment
+\item
+  But \(Z\) is on the pathway \(A\rightarrow Y\), which precludes adjustment
+\end{itemize}
+
+Note: CDEs are still identified in this setting. They can be identified and estimated similarly to a longitudinal data sructure with a two-time-point intervention.
 
 \hypertarget{interventional-indirect-effects}{%
 \section{Interventional (in)direct effects}\label{interventional-indirect-effects}}
 
 \begin{itemize}
 \item
-  Let \(G_{M \mid a, W}\) denote a random draw from the distribution of \(M(a) \mid W\)
+  Let \(G_a\) denote a random draw from the distribution of \(M(a) \mid W\)
 \item
-  Define the counterfactual \(Y(1,G_{M \mid 0, W})\) as the counterfactual
+  Define the counterfactual \(Y(1,G_0)\) as the counterfactual
   variable in a hypothetical world where \(A\) is set \(A=1\) and \(M\) is
-  set to \(M=G_{M \mid 0, W}\) with porbability one.
+  set to \(M=G_0\) with probability one.
 \item
-  Define \(Y(0,G_{M \mid 0, W})\) and \(Y(1,G_{M \mid 1, W})\) similarly
+  Define \(Y(0,G_0)\) and \(Y(1,G_1)\) similarly
 \item
   Then we can define:
   \begin{equation*}
-    \E[Y(1,G_{M \mid 1, W}) - Y(0,G_{M \mid 0, W})] = \underbrace{\E[Y(1,G_{M \mid 1, W}) -
-      Y(1,G_{M \mid 0, W})]}_{\text{interventional indirect effect}} +
-      \underbrace{\E[Y(1,G_{M \mid 0, W}) -
-      Y(0,G_{M \mid 0, W})]}_{\text{interventional direct effect}}
+    \E[Y(1,G_1) - Y(0,G_0)] = \underbrace{\E[Y(1,G_1) -
+      Y(1,G_0)]}_{\text{interventional indirect effect}} +
+      \underbrace{\E[Y(1,G_0) -
+      Y(0,G_0)]}_{\text{interventional direct effect}}
   \end{equation*}
-\item
-  Note that \(G_{M \mid a^{\star}, W}\) represents a
-  stochastic intervention on the mediator, where value \(m\) is drawn with
-  probability \(\P(M = m \mid A = a^{\star}, W = w)\)
 \item
   Marginal PIDE: \(\E(Y_{a, g_{M \mid a^{\star}, W}}) - \E(Y_{a^{\star}, g_{M \mid a^{\star}, W}})\)
 \item
@@ -991,22 +1209,18 @@ Note: CDEs are still identified in this setting. They can be estimated similarly
 
 \end{figure}
 
-Under the following identification assumptions, the population interventional direct effect is identified:
-\begin{equation*}
-\E(Y_{1, g_{M \mid 0, W}}) - \E(Y_{0, g_{M \mid 0, W}}) = \E_w \{\sum_{z,m}
-  \{\E(Y \mid 1, z, m, w) P(z \mid 1, w) - \E(Y \mid 1, z, m, w)
-  P(z \mid 0, w)\} P(m \mid A=0, w) \}
-\end{equation*}
-
-\hypertarget{identification-assumptions-2}{%
-\subsection{Identification assumptions:}\label{identification-assumptions-2}}
+Under the following identification assumptions, the population interventional direct and indirect effect is identified:
+\[
+\E(Y_{a, G_{a'}}) = \E\left[\E\left\{\sum_z\E(Y \mid A=a, Z=z, M, W) P(Z=z \mid A=a, w)\mid A=a', W\right\}\right]
+\]
+\#\#\# Identification assumptions:
 
 \begin{itemize}
 \tightlist
 \item
   \(A \indep Y_{a,m} \mid W\)
 \item
-  \(M \indep Y_{a,m} \mid W, A\)
+  \(M \indep Y_{a,m} \mid W, A, Z\)
 \item
   \(A \indep M_a \mid W\)
 \item

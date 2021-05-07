@@ -3,6 +3,9 @@
 ## Motivating study
 
 Do differences in the effects of treatment (comparing two medications for opioid use disorder, naltrexone vs buprenorphine) on risk of relapse operate through  mediators of adherence, opioid use, pain, and depressive symptoms? [@rudolph2020explaining]
+<!--
+ID: Need to fix format of the following figure
+-->
 
 \begin{figure}
 
@@ -34,10 +37,35 @@ Do differences in the effects of treatment (comparing two medications for opioid
   of $A$ on $Y$ through $M$
 - Causal interpretation problems with this method:
   - What happens if there are confounders of the relation between treatment and outcome?
-  - What happens if there are confounders of the relation between mediataor and outcome?
+  - What happens if there are confounders of the relation between mediator and outcome?
   - What happens if there are confounders of the relation between treatment and mediator?
   - What happens if the confounders of mediator and outcome are affected by treatment?
-- Statistical issues with this method:
+### Example:
+- Assume we have a pre-treamtment confounder of $Y$ and $M$, denote it with $W$
+- For simplicity, assume $A$ is randomized
+- We'll generate a really large sample from a data generating mechanism so that we are not concerned with sampling errors
+
+```r
+n <- 1e7
+w <- rnorm(n)
+a <- rbinom(n, 1, 0.5)
+m <- rnorm(n, w + a)
+y <- rnorm(n, w - a)
+```
+- Note that the indirect effect (i.e., the effect through $M$) in this example is zero
+- Let's see what the product of coefficients method would say:
+
+```r
+lm_y <- lm(y ~ m + a)
+lm_m <- lm(m ~ a)
+## product of coefficients
+coef(lm_y)[2] * coef(lm_m)[2]
+#>       m 
+#> 0.50107
+```
+
+
+### Statistical issues with this method:
   - Assume the above confounding is not an issue
   - Can I then interpret $(\gamma_1\beta_1)$ as the indirect effect?
   - No: the regression models may be misspecified
@@ -51,22 +79,22 @@ confounding issues. We will focus on the two types of graph:
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.8\linewidth]{01-preface_files/figure-latex/unnamed-chunk-2-1} 
+{\centering \includegraphics[width=0.8\linewidth]{01-preface_files/figure-latex/unnamed-chunk-4-1} 
 
 }
 
-\caption{Directed acyclic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-2)
+\caption{Directed acyclic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-4)
 \end{figure}
 
 ### Intermediate confounders
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.8\linewidth]{01-preface_files/figure-latex/unnamed-chunk-3-1} 
+{\centering \includegraphics[width=0.8\linewidth]{01-preface_files/figure-latex/unnamed-chunk-5-1} 
 
 }
 
-\caption{Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-3)
+\caption{Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-5)
 \end{figure}
 
 The above graphs can be interpreted as a _non-parametric structural equation model_
@@ -88,7 +116,7 @@ The above graphs can be interpreted as a _non-parametric structural equation mod
 - Therefore we leave the functions $f$ unspecified (i.e., we do not know the
   true nature mechanisms)
 - Sometimes we know something: e.g., if $A$ is randomized we know $A=f_A(U_A)$
-  where $U_A$ is independent of everything.
+  where $U_A$ is the flip of a coin (i.e., independent of everything).
 
 ## Counterfactuals
 
@@ -106,17 +134,21 @@ The above graphs can be interpreted as a _non-parametric structural equation mod
 
 - You can use counterfactual variables as _primitives_
 - In the NPSEM framework, counterfactuals are quantities _derived_ from the
-  model:
+  model.
+- Take as example the DAG in Figure 1.2:
   \begin{align}
-    Y_a  &= f_Y(W, a, Z, M, U_Y)\\
-    Y_{a,m}  &= f_Y(W, a, Z, m, U_Y)\\
-    M_a  &= f_M(W, a, Z, U_M)
+    Y_a  &= f_Y(W, a, Z_a, M_a, U_Y)\\
+    Y_{a,m}  &= f_Y(W, a, Z_a, m, U_Y)\\
+    M_a  &= f_M(W, a, Z_a, U_M)
   \end{align}
 - You can also define _nested counterfactuals_
 - For example, if $A$ is binary, you can think of the following counterfactual
   \begin{equation*}
-    Y_{1, M_0} = f_Y(W, 1, Z, M_0, U_Y)
+    Y_{1, M_0} = f_Y(W, 1, Z_1, M_0, U_Y)
   \end{equation*}
 - Interpreted as _the outcome for an individual in a hypothetical world where
   treatment was given but the mediator was held at the value it would have
   taken under no treatment_
+- Causal effects are defined in terms of the distribution of these counterfactuals
+- I.e., causal effects give you information about what would happen _under intervention_
+
