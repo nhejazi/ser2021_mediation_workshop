@@ -66,21 +66,49 @@ shorten >=2pt,}
 
 ## Controlled direct effects
 
-$$\psi_{\text{CDE}} = \E(Y_{1,m} - Y_{0,m}) $$
-
-- Set $M=m$ uniformly for everyone in the population
+- Set the mediator to a reference value $M=m$ uniformly for everyone in the population
 - Compare $A=1$ vs $A=0$ with $M=m$ fixed
 
-Under the below identification assumptions, the controlled direct can be identified:
-$$ \E(Y_{1,m} - Y_{0,m}) = \E_w\{\E(Y \mid 1, m, w) - \E(Y \mid 0, m, w)\}$$
+$$\psi_{\text{CDE}} = \E(Y_{1,m} - Y_{0,m}) $$
 
 ### Identification assumptions:
 - Confounder assumptions:
   + $A \indep Y_{a,m} \mid W$
-  + $M \indep Y_{a,m} \mid W, A, Z$
+  + $M \indep Y_{a,m} \mid W, A$
 - Positivity assumptions:
-  + $\P(M = m \mid Z, A=a, W) > 0 \text{  } a.e.$
+  + $\P(M = m \mid A=a, W) > 0 \text{  } a.e.$
   + $\P(A=a \mid W) > 0 \text{  } a.e.$
+
+Under the above identification assumptions, the controlled direct can be identified:
+$$ \E(Y_{1,m} - Y_{0,m}) = \E\{\color{ForestGreen}{\E(Y \mid A=1, M=m, W) - \E(Y \mid A=0, M=m, W)}\}$$
+
+- For intuition about this formula in R, let's continue with our toy example, where we now add an indirect effect
+```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+n <- 1e7
+w <- rnorm(n)
+a <- rbinom(n, 1, 0.5)
+m <- rnorm(n, w + a)
+y <- rnorm(n, w - a + m)
+```
+- First we fit a correct model for the outcome
+```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+lm_y <- lm(y ~ m + a + w)
+```
+- Assume we would like the CDE at $m=0$
+- Then we generate predictions \[\color{ForestGreen}{\E(Y \mid A=1, M=m, W)} \text{ and }\color{ForestGreen}{\E(Y \mid A=0, M=m, W)}:\]
+```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+pred_y1 <- predict(lm_y, newdata = data.frame(a = 1, m = 0, w = w))
+pred_y0 <- predict(lm_y, newdata = data.frame(a = 0, m = 0, w = w))
+```
+- Then we compute the difference between the predicted values $\color{ForestGreen}{\E(Y \mid A=1, M=m, W) - \E(Y \mid A=0, M=m, W)}$, and average across values of $W$
+```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+## CDE at m = 0
+mean(pred_y1 - pred_y0)
+```
+
+<!--
+ID: Reminder to ask Kara about the purpose of these cartoons
+-->
 
 ```{r pressure, echo=FALSE, fig.cap="", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", out.width = "50%", results="asis"}
 knitr::include_graphics(here::here("img", "graphic4a3.png"))
@@ -106,34 +134,42 @@ indirect counterparts?_
 
 Still using the same DAG as above,
 
-Natural direct effect (NDE):
+- Recall the definition of the nested counterfactual
+
 \begin{equation*}
-  \psi_{\text{NDE}} = \E(Y_{1,M_0} - Y_{0,M_0})
+    Y_{1, M_0} = f_Y(W, 1, Z_1, M_0, U_Y)
 \end{equation*}
 
-Natural indirect effect (NIE):
+- Interpreted as _the outcome for an individual in a hypothetical world where
+  treatment was given but the mediator was held at the value it would have
+  taken under no treatment_
+  
+- Recal that, because of the definition of counterfactuals
 \begin{equation*}
-  \psi_{\text{NIE}} = \E(Y_{1,M_1} - Y_{1,M_0})
+  Y_{1, M_1} = Y_1
 \end{equation*}
 
-If the cross-world assumption holds (defined below), the NDE can also be written
-as: $\E_W \sum_m \{\E(Y_{1,m} \mid W) - \E(Y_{0,m} \mid W)\} \P(M_{0}=m \mid W)$
+Then we can decompose the _average treatment effect_ $E(Y_1-Y_0)$ as follows
 
-- Weighted average of controlled direct effects at each level of $m$.
+\begin{equation*}
+\E[Y_{1,M_1} - Y_{0,M_0}] = \underbrace{\E[Y_{\color{red}{1},\color{blue}{M_1}} -
+    Y_{\color{red}{1},\color{blue}{M_0}}]}_{\text{natural indirect effect}} +
+    \underbrace{\E[Y_{\color{blue}{1},\color{red}{M_0}} -
+    Y_{\color{blue}{0},\color{red}{M_0}}]}_{\text{natural direct effect}}
+\end{equation*}
+
+- Natural direct effect (NDE): Varying treatment while keeping the mediator fixed at the value it would have taken under no treatment
+- Natural indirect effect (NIE): Varying the mediator from the value it would have taken under treatment to the value it would have taken under control, while keeping treatment fixed
+
 <!--
-ID: Is the below true? What do you mean here by interaction? Is that the only
-assumption?  -->
+ID: I still think the below is wrong. M could not possibly be an effect modifier of A -> Y because it comes after Y
+I suggest we delete this
+-->
 - If no effect modification of the effect of $A$ on $Y$ by $M$ (i.e., no interaction between $A$ and $M$), then CDE = NDE.
 
 ```{r , echo=FALSE, fig.cap="", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", out.width = "50%", results="asis"}
 knitr::include_graphics(here::here("img", "graphic4a.png"))
 ```
-Under the below identification assumptions, the natural direct effect can be identified:
-\begin{equation*}
-\E(Y_{1,M_0} - Y_{0,M_0}) =
-  \E_w\{\sum_m \{\E(Y \mid 1, m, w) - \E(Y \mid 0, m, w)\} P(M=m \mid A=0,w)\}
-\end{equation*}
-(The natural indirect effect can be identified similarly.)
 
 ### Identification assumptions:
 
@@ -143,14 +179,65 @@ Under the below identification assumptions, the natural direct effect can be ide
 - $M_0 \indep Y_{1,m} \mid W$
 - and positivity assumptions
 
+Note: If the cross-world assumption holds (defined below), the NDE can also be written
+as \[\E \sum_m \{\E(Y_{1,m} \mid W) - \E(Y_{0,m} \mid W)\} \P(M_{0}=m \mid W)\]
+
+- Weighted average of controlled direct effects at each level of $M=m$.
+
+### Identification formula:
+
+- Under the above identification assumptions, the natural direct effect can be identified:
+
+\begin{equation*}
+\E(Y_{1,M_0} - Y_{0,M_0}) =
+  \E[\color{Goldenrod}{\E\{}\color{ForestGreen}{\E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)}\color{Goldenrod}{\mid A=0,W\}}]
+\end{equation*}
+
+- The natural indirect effect can be identified similarly.
+
+- Let's dissect this formula in R:
+```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+n <- 1e7
+w <- rnorm(n)
+a <- rbinom(n, 1, 0.5)
+m <- rnorm(n, w + a)
+y <- rnorm(n, w - a + m)
+```
+- First we fit a correct model for the outcome
+```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+lm_y <- lm(y ~ m + a + w)
+```
+- Then we generate predictions
+\[\color{ForestGreen}{\E(Y \mid A=1, M, W)} \text{ and }\color{ForestGreen}{\E(Y \mid A=0, M, W)}\] with $A$ fixed but letting $M$ and $W$ take their observed values 
+```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+pred_y1 <- predict(lm_y, newdata = data.frame(a = 1, m = m, w = w))
+pred_y0 <- predict(lm_y, newdata = data.frame(a = 0, m = m, w = w))
+```
+- Then we compute the difference between the predicted values
+\[\color{ForestGreen}{\E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)},\]
+- and use this difference as a pseudo-outcome in a regression on $A$ and $W$:
+\[\color{Goldenrod}{\E\{}\color{ForestGreen}{\E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)}\color{Goldenrod}{\mid A=0,W\}}\]
+```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+pseudo <- pred_y1 - pred_y0
+lm_pseudo <- lm(pseudo ~ a + m)
+```
+- Now we predict the value of this pseudo-outcome under $A=0$, and average the result
+```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+pred_pseudo <- predict(lm_pseudo, newdata = data.frame(a = 0, w = w))
+## NDE:
+mean(pred_pseudo)
+```
+
+### Cross-world independence assumption
+
 What does $M_0 \indep Y_{1,m} \mid W$ mean?
 
-- Conditional on $W$, knowledge of $M$ in the absence of treatment $A$
-  provides no information of the effect of $A$ on $Y$.
+- Conditional on $W$, knowledge of the mediator value in the absence of treatment, $M_0$,
+  provides no information about the outcome under treatment, $Y_{1,m}$.
 - Can you think of a data-generating mechanism that would violate this
   assumption?
-- Whenever we believe that treatment assignment works through adherence (i.e., almost
-  always), we are violating this assumption.
+- Example: in a randomized study, whenever we believe that treatment assignment works through adherence (i.e., almost
+  always), we are violating this assumption (more on this later). 
 
 ### Is this the estimand I want?
 
@@ -237,27 +324,38 @@ knitr::include_graphics(here::here("img", "ctndag.png"))
 
 ### Unidentifiability of the NDE and NIE in this setting
 
-In this example, natural direct and indirect effects are
-unidentifiable from observed data on $(W,A,Z,M,Y)$. The technical
+- In this example, natural direct and indirect effects are
+unidentifiable from observed data on $(W,A,Z,M,Y)$.
+- The technical
 reason for this is that the cross-world counterfactual assumption
 \begin{equation*}
-  Y(1,m)\indep M(0)\mid W
+  Y_{1,m}\indep M_0\mid W
 \end{equation*}
-
-does not hold in the above directed acyiclic graph. Intuitively, the
+does not hold in the above directed acyiclic graph.
+- Technically, the
 reason for this is that an intervention setting $A=1$ (necessary for
-the definition of $Y(1,m)$) induces a counterfactual variable
-$Z(1)$. Likewise, an intervention setting $A=0$ (necessary for the
-definition of $M(0)$) induces a counterfactual $Z(0)$. The variables
-$Z(1)$ and $Z(0)$ are correlated because they share unmeasured common
-causes. The variable $Z(1)$ is correlated with $Y(1,m)$, and the
-variable $Z(0)$ is correlated with $M(0)$, because they are
-counterfactual outcomes in the same hypothetical worlds. Thus, to
-achieve $Y(1,m)$ independent of $M(0)$, it would be necessary to
-adjust for either $Z(1)$ or $Z(0)$. This is impossible to do since
-these variables are unmeasured.
+the definition of $Y_{1,m}$) induces a counterfactual variable
+$Z_1$.
+- Likewise, an intervention setting $A=0$ (necessary for the
+definition of $M_0$) induces a counterfactual $Z_0$.
+- The variables $Z_1$ and $Z_0$ are correlated because they share unmeasured common
+causes.
+- The variable $Z_1$ is correlated with $Y_{1,m}$, and the
+variable $Z_0$ is correlated with $M_0$, because they are
+counterfactual outcomes in the same hypothetical worlds.
+- To see this in the definition of counterfactual from a causal structural model:
+\begin{align*}
+Y_{1,m} &= f_Y(W, 1, Z_1, m, U_Y), \text{ and }\\
+M_0 &= f_M(W, 0, Z_0, U_M)\\
+\end{align*}
+are correlated even after adjusting for $W$ by virtue of $Z_1$ and $Z_0$ being correlated.
 
-Note: CDEs are still identified in this setting. They can be estimated similarly to two-time-point intervention.
+Intuitively:
+
+- $Z$ is a confounder of the relation $M \rightarrow Y$, which requires adjustment
+- But $Z$ is on the pathway $A\rightarrow Y$, which precludes adjustment
+
+Note: CDEs are still identified in this setting. They can be identified and estimated similarly to a longitudinal data sructure with a two-time-point intervention.
 
 ## Interventional (in)direct effects
 
@@ -271,23 +369,18 @@ for people reading this
 I think the distinction between fully conditional and not will be completely lost on people
 -->
 
-- Let $G_{M \mid a, W}$ denote a random draw from the distribution of $M(a) \mid W$
-- Define the counterfactual $Y(1,G_{M \mid 0, W})$ as the counterfactual
+- Let $G_a$ denote a random draw from the distribution of $M(a) \mid W$
+- Define the counterfactual $Y(1,G_0)$ as the counterfactual
   variable in a hypothetical world where $A$ is set $A=1$ and $M$ is
-  set to $M=G_{M \mid 0, W}$ with porbability one.
-- Define $Y(0,G_{M \mid 0, W})$ and $Y(1,G_{M \mid 1, W})$ similarly
+  set to $M=G_0$ with probability one.
+- Define $Y(0,G_0)$ and $Y(1,G_1)$ similarly
 - Then we can define:
   \begin{equation*}
-    \E[Y(1,G_{M \mid 1, W}) - Y(0,G_{M \mid 0, W})] = \underbrace{\E[Y(1,G_{M \mid 1, W}) -
-      Y(1,G_{M \mid 0, W})]}_{\text{interventional indirect effect}} +
-      \underbrace{\E[Y(1,G_{M \mid 0, W}) -
-      Y(0,G_{M \mid 0, W})]}_{\text{interventional direct effect}}
+    \E[Y(1,G_1) - Y(0,G_0)] = \underbrace{\E[Y(1,G_1) -
+      Y(1,G_0)]}_{\text{interventional indirect effect}} +
+      \underbrace{\E[Y(1,G_0) -
+      Y(0,G_0)]}_{\text{interventional direct effect}}
   \end{equation*}
-
-
- + Note that $G_{M \mid a^{\star}, W}$ represents a
-   stochastic intervention on the mediator, where value $m$ is drawn with
-   probability $\P(M = m \mid A = a^{\star}, W = w)$
 
  + Marginal PIDE: $\E(Y_{a, g_{M \mid a^{\star}, W}}) -
    \E(Y_{a^{\star}, g_{M \mid a^{\star}, W}})$
@@ -297,6 +390,11 @@ I think the distinction between fully conditional and not will be completely los
    \E(Y_{a^{\star}, g_{M \mid Z, a^{\star}, W}})$
  + Conditional PIIE: $\E(Y_{a, g_{M \mid Z, a, W}}) -
    \E(Y_{a, g_{M \mid Z, a^{\star}, W}})$
+<!--
+ID: I don't follow this discussion about marginal vs conditional
+What you call the conditional effects are not really direct effects as they do not consider the pathway A>Z>M>Y
+I would completely omit that discussion 
+-->
  + Can you think of an example when you would want the conditional versions?
    Marginal versions?
 
@@ -304,17 +402,18 @@ I think the distinction between fully conditional and not will be completely los
 knitr::include_graphics(here::here("img", "graphic4b.png"))
 ```
 
-Under the following identification assumptions, the population interventional direct effect is identified:
-\begin{equation*}
-\E(Y_{1, g_{M \mid 0, W}}) - \E(Y_{0, g_{M \mid 0, W}}) = \E_w \{\sum_{z,m}
-  \{\E(Y \mid 1, z, m, w) P(z \mid 1, w) - \E(Y \mid 1, z, m, w)
-  P(z \mid 0, w)\} P(m \mid A=0, w) \}
-\end{equation*}
-
+Under the following identification assumptions, the population interventional direct and indirect effect is identified:
+\[
+\E(Y_{a, G_{a'}}) = \E\left[\E\left\{\sum_z\E(Y \mid A=a, Z=z, M, W) P(Z=z \mid A=a, w)\mid A=a', W\right\}\right]
+\]
+<!--
+ID: We should probably spend a good chunk of time going through these identification formulas and teaching people what they mean algorithmically
+For example, we could have a step by step R code chunck here where we implement a g-computation estimator for them... this would go a long way in building intuition i think
+-->
 ### Identification assumptions:
 
 - $A \indep Y_{a,m} \mid W$
-- $M \indep Y_{a,m} \mid W, A$
+- $M \indep Y_{a,m} \mid W, A, Z$
 - $A \indep M_a \mid W$
 - and positivity assumptions.
 
@@ -327,7 +426,9 @@ Is this the estimand I want?
 
 
 ## Estimand Summary
-
+<!--
+ID: Can we redo the below table fixing the G notation? Also, is it possible to fix the formatting? (currently not very amenable to a presentation I think)
+-->
 ```{r , echo=FALSE, fig.cap="", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", out.width = "125%", results="asis"}
 knitr::include_graphics(here::here("img", "table1.png"))
 ```
