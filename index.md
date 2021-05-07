@@ -132,14 +132,14 @@ rmarkdown::pandoc_version()`, and the following packages:
 |dagitty    |0.3-1      |CRAN (R 4.0.5)                      |
 |data.table |1.14.0     |CRAN (R 4.0.5)                      |
 |downlit    |0.2.1      |CRAN (R 4.0.5)                      |
-|dplyr      |1.0.5      |CRAN (R 4.0.5)                      |
+|dplyr      |1.0.6      |CRAN (R 4.0.5)                      |
 |ggdag      |0.2.3      |CRAN (R 4.0.5)                      |
 |ggfortify  |0.4.11     |CRAN (R 4.0.5)                      |
 |ggplot2    |3.3.3      |CRAN (R 4.0.5)                      |
 |kableExtra |1.3.4      |CRAN (R 4.0.5)                      |
 |knitr      |1.32       |CRAN (R 4.0.5)                      |
 |magick     |2.7.1      |CRAN (R 4.0.5)                      |
-|medoutcon  |0.1.0      |Github (nhejazi/medoutcon\@f8f14c4) |
+|medoutcon  |0.1.5      |Github (nhejazi/medoutcon\@39820e2) |
 |medshift   |0.1.4      |Github (nhejazi/medshift\@f9e11a9)  |
 |mvtnorm    |1.1-1      |CRAN (R 4.0.5)                      |
 |origami    |1.0.3      |CRAN (R 4.0.5)                      |
