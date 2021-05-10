@@ -79,11 +79,11 @@ There are two possible ways of defining stochastic effects:
 
 - Consider the effect of an intervention where the exposure is drawn from a
   distribution
-  - Example: [TO FILL IN]
+  - For example incremental propensity score interventions
 - Consider the effect of an intervention where the post-intervention exposure is
   a function of the actually received exposure
-  - Example: [TO FILL IN]
-- In both cases $A\mid W$ is non-deterministic, thus the name _stochastic intervention_
+  - For example modified treatment policies
+- In both cases $A\mid W$ is non-deterministic post-intervention, thus the name _stochastic intervention_
 
 ### Example: incremental propensity score interventions (IPSI) [@kennedy2018nonparametric] {-}
 
@@ -110,7 +110,15 @@ There are two possible ways of defining stochastic effects:
   world where the odds of receiving treatment is increased by $\delta$_
 - Let $Y_{A_\delta}$ denote the outcome in this hypothetical world
 
-### Example: modified treatment policies
+#### Illustrative application for IPSIs
+
+- Consider the effect of participation in a sports team on children's BMI
+- Mediation through behavioral covariates such as snacking, exercising, etc.
+- Intervention: for each individual, increase the odds of participating in a sports team by $\delta=2$.
+
+### Example: modified treatment policies (MTP) []
+
+#### Definition of the intervention 
 
 #### Definition of the intervention {-}
 

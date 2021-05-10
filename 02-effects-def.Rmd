@@ -179,10 +179,13 @@ knitr::include_graphics(here::here("img", "graphic4a.png"))
 - $M_0 \indep Y_{1,m} \mid W$
 - and positivity assumptions
 
-Note: If the cross-world assumption holds (defined below), the NDE can also be written
-as \[\E \sum_m \{\E(Y_{1,m} \mid W) - \E(Y_{0,m} \mid W)\} \P(M_{0}=m \mid W)\]
+### An alternative parameter of interest: the weighted average of controlled direct effects at each level of $M=m$.
 
-- Weighted average of controlled direct effects at each level of $M=m$.
+\[\E \sum_m \{\E(Y_{1,m} \mid W) - \E(Y_{0,m} \mid W)\} \P(M_{0}=m
+\mid W)\]
+
+- If the cross-world assumption holds, this weighted average is equal to the NDE
+- The average may be an interest parameter even if cross-world assumption does not hold
 
 ### Identification formula:
 
@@ -360,28 +363,22 @@ Note: CDEs are still identified in this setting. They can be identified and esti
 ## Interventional (in)direct effects
 
 <!--
-ID: Below I'd suggest to use the notation $Y_{a, G_a'}$ that I used
-in the other text I added in the next page, to ease the visual burden
-for people reading this
--->
-
-<!--
 I think the distinction between fully conditional and not will be completely lost on people
 -->
 
-- Let $G_a$ denote a random draw from the distribution of $M(a) \mid W$
-- Define the counterfactual $Y(1,G_0)$ as the counterfactual
+- Let $G_a$ denote a random draw from the distribution of $M_a \mid W$
+- Define the counterfactual $Y_{1,G_0}$ as the counterfactual
   variable in a hypothetical world where $A$ is set $A=1$ and $M$ is
   set to $M=G_0$ with probability one.
-- Define $Y(0,G_0)$ and $Y(1,G_1)$ similarly
+- Define $Y_{0,G_0}$ and $Y_{1,G_1}$ similarly
 - Then we can define:
-  \begin{equation*}
-    \E[Y(1,G_1) - Y(0,G_0)] = \underbrace{\E[Y(1,G_1) -
-      Y(1,G_0)]}_{\text{interventional indirect effect}} +
-      \underbrace{\E[Y(1,G_0) -
-      Y(0,G_0)]}_{\text{interventional direct effect}}
-  \end{equation*}
-
+\begin{equation*}
+\E[Y_{1,G_1} - Y_{0,G_0}] = \underbrace{\E[Y_{\color{red}{1},\color{blue}{G_1}} -
+    Y_{\color{red}{1},\color{blue}{G_0}}]}_{\text{interventional indirect effect}} +
+    \underbrace{\E[Y_{\color{blue}{1},\color{red}{G_0}} -
+    Y_{\color{blue}{0},\color{red}{G_0}}]}_{\text{interventional direct effect}}
+\end{equation*}
+<!--
  + Marginal PIDE: $\E(Y_{a, g_{M \mid a^{\star}, W}}) -
    \E(Y_{a^{\star}, g_{M \mid a^{\star}, W}})$
  + Marginal PIIE: $\E(Y_{a, g_{M \mid a, W}}) -
@@ -390,26 +387,14 @@ I think the distinction between fully conditional and not will be completely los
    \E(Y_{a^{\star}, g_{M \mid Z, a^{\star}, W}})$
  + Conditional PIIE: $\E(Y_{a, g_{M \mid Z, a, W}}) -
    \E(Y_{a, g_{M \mid Z, a^{\star}, W}})$
-<!--
-ID: I don't follow this discussion about marginal vs conditional
-What you call the conditional effects are not really direct effects as they do not consider the pathway A>Z>M>Y
-I would completely omit that discussion 
--->
  + Can you think of an example when you would want the conditional versions?
    Marginal versions?
+-->
 
 ```{r , echo=FALSE, fig.cap="", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", out.width = "50%", results="asis"}
 knitr::include_graphics(here::here("img", "graphic4b.png"))
 ```
 
-Under the following identification assumptions, the population interventional direct and indirect effect is identified:
-\[
-\E(Y_{a, G_{a'}}) = \E\left[\E\left\{\sum_z\E(Y \mid A=a, Z=z, M, W) P(Z=z \mid A=a, w)\mid A=a', W\right\}\right]
-\]
-<!--
-ID: We should probably spend a good chunk of time going through these identification formulas and teaching people what they mean algorithmically
-For example, we could have a step by step R code chunck here where we implement a g-computation estimator for them... this would go a long way in building intuition i think
--->
 ### Identification assumptions:
 
 - $A \indep Y_{a,m} \mid W$
@@ -417,7 +402,63 @@ For example, we could have a step by step R code chunck here where we implement 
 - $A \indep M_a \mid W$
 - and positivity assumptions.
 
-Is this the estimand I want?
+Under these assumptions, the population interventional direct and indirect effect is identified:
+\begin{align*}
+\E&(Y_{a, G_{a'}}) = \\
+&\E\left[\color{Purple}{\E\left\{\color{Goldenrod}{\sum_z}\color{ForestGreen}{\E(Y \mid A=a, Z=z, M, W)} \color{Goldenrod}{\P(Z=z \mid A=a, W)}\mid A=a', W\right\}}\right]
+\end{align*}
+
+- Let's dissect this formula in R:
+
+```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+n <- 1e7
+w <- rnorm(n)
+a <- rbinom(n, 1, 0.5)
+z <- rbinom(n, 1, 0.5 + 0.2 * a)
+m <- rnorm(n, w + a - z)
+y <- rnorm(n, w - a + z + m)
+```
+
+- Let us compute $\E(Y_{1, G_0})$ (so that $a = 1$, and $a'=0$).
+- Firs, fit a regression model for the outcome, and compute
+\[\color{ForestGreen}{\E(Y \mid A=a, Z=z, M, W)}\]
+for all values of $z$
+```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+lm_y <- lm(y ~ m + a + z + w)
+pred_a1z0 <- predict(lm_y, newdata = data.frame(m = m, a = 1, z = 0, w = w))
+pred_a1z1 <- predict(lm_y, newdata = data.frame(m = m, a = 1, z = 1, w = w))
+```
+- Now we fit the true model for $Z\mid A, W$ and get the conditional probability that $Z=1$ fixing $A=1$
+```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+prob_z <- lm(z ~ a)
+pred_z <- predict(prob_z, newdata = data.frame(a = 1))
+```
+- Now we compute the following pseudo-outcome:
+\[\color{Goldenrod}{\sum_z}\color{ForestGreen}{\E(Y \mid A=a, Z=z, M, W)} \color{Goldenrod}{\P(Z=z \mid A=a, w)}\]
+```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+pseudo_out <- pred_a1z0 * (1 - pred_z) + pred_a1z1 * pred_z
+```
+- Now we regress this pseudo-outcome on $A,W$, and compute the predictions setting $A=0$, that is
+\[\color{Purple}{\E\left\{\color{Goldenrod}{\sum_z}\color{ForestGreen}{\E(Y \mid A=a, Z=z, M, W)} \color{Goldenrod}{\P(Z=z \mid A=a, w)}\mid A=a', W\right\}}\]
+```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+fit_pseudo <- lm(pseudo_out ~ a + w)
+pred_pseudo <- predict(fit_pseudo, data.frame(a = 0, w = w))
+```
+- And finally, just average those predictions!
+```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+## Mean(Y(1, G(0)))
+mean(pred_pseudo)
+```
+- This was for $(a,a')=(1,0)$. Can do the same with $(a,a')=(1,1)$, and $(a,a')=(0,0)$ to obtain an effect decomposition
+
+\begin{equation*}
+\E[Y_{1,G_1} - Y_{0,G_0}] = \underbrace{\E[Y_{\color{red}{1},\color{blue}{G_1}} -
+    Y_{\color{red}{1},\color{blue}{G_0}}]}_{\text{interventional indirect effect}} +
+    \underbrace{\E[Y_{\color{blue}{1},\color{red}{G_0}} -
+    Y_{\color{blue}{0},\color{red}{G_0}}]}_{\text{interventional direct effect}}
+\end{equation*}
+
+### Is this the estimand I want?
 
 - Makes sense to intervene on $A$ but not directly on $M$.
 - Goal is to understand a natural mechanism underlying an association or total
