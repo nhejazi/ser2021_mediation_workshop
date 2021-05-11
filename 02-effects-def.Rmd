@@ -71,6 +71,15 @@ shorten >=2pt,}
 
 $$\psi_{\text{CDE}} = \E(Y_{1,m} - Y_{0,m}) $$
 
+<!--
+ID: Reminder to ask Kara about the purpose of these cartoons
+KER: !!
+-->
+
+```{r pressure, echo=FALSE, fig.cap="", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", out.width = "50%", results="asis"}
+knitr::include_graphics(here::here("img", "graphic4a3.png"))
+```
+
 ### Identification assumptions:
 - Confounder assumptions:
   + $A \indep Y_{a,m} \mid W$
@@ -106,13 +115,6 @@ pred_y0 <- predict(lm_y, newdata = data.frame(a = 0, m = 0, w = w))
 mean(pred_y1 - pred_y0)
 ```
 
-<!--
-ID: Reminder to ask Kara about the purpose of these cartoons
--->
-
-```{r pressure, echo=FALSE, fig.cap="", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", out.width = "50%", results="asis"}
-knitr::include_graphics(here::here("img", "graphic4a3.png"))
-```
 
 ### Is this the estimand I want?
 
@@ -144,7 +146,11 @@ Still using the same DAG as above,
   treatment was given but the mediator was held at the value it would have
   taken under no treatment_
   
-- Recal that, because of the definition of counterfactuals
+  ```{r , echo=FALSE, fig.cap="", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", out.width = "50%", results="asis"}
+knitr::include_graphics(here::here("img", "graphic4a.png"))
+```
+
+- Recall that, because of the definition of counterfactuals
 \begin{equation*}
   Y_{1, M_1} = Y_1
 \end{equation*}
@@ -161,16 +167,6 @@ Then we can decompose the _average treatment effect_ $E(Y_1-Y_0)$ as follows
 - Natural direct effect (NDE): Varying treatment while keeping the mediator fixed at the value it would have taken under no treatment
 - Natural indirect effect (NIE): Varying the mediator from the value it would have taken under treatment to the value it would have taken under control, while keeping treatment fixed
 
-<!--
-ID: I still think the below is wrong. M could not possibly be an effect modifier of A -> Y because it comes after Y
-I suggest we delete this
--->
-- If no effect modification of the effect of $A$ on $Y$ by $M$ (i.e., no interaction between $A$ and $M$), then CDE = NDE.
-
-```{r , echo=FALSE, fig.cap="", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", out.width = "50%", results="asis"}
-knitr::include_graphics(here::here("img", "graphic4a.png"))
-```
-
 ### Identification assumptions:
 
 <!--
@@ -183,13 +179,17 @@ ID: For all the effects, we should add a discussion of identification assumption
 - $M_0 \indep Y_{1,m} \mid W$
 - and positivity assumptions
 
-### An alternative parameter of interest: the weighted average of controlled direct effects at each level of $M=m$.
+### If the cross-world assumption holds, can write the NDE as a weighted average of controlled direct effects at each level of $M=m$.
 
 \[\E \sum_m \{\E(Y_{1,m} \mid W) - \E(Y_{0,m} \mid W)\} \P(M_{0}=m
 \mid W)\]
+<!--
+ID: I still think the below is wrong. M could not possibly be an effect modifier of A -> Y because it comes after Y
+I suggest we delete this
+KER:I don't know what you mean
+-->
+- If no effect modification of the effect of $A$ on $Y$ by $M$ (i.e., no interaction between $A$ and $M$), then CDE = NDE.
 
-- If the cross-world assumption holds, this weighted average is equal to the NDE
-- The average may be an interest parameter even if cross-world assumption does not hold
 
 ### Identification formula:
 
@@ -224,10 +224,16 @@ pred_y0 <- predict(lm_y, newdata = data.frame(a = 0, m = m, w = w))
 \[\color{ForestGreen}{\E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)},\]
 - and use this difference as a pseudo-outcome in a regression on $A$ and $W$:
 \[\color{Goldenrod}{\E\{}\color{ForestGreen}{\E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)}\color{Goldenrod}{\mid A=0,W\}}\]
+
+<!--
+KER: for some reason, when i look at the website it is showing pseudo ~ a + m instead of what is below
+-->
+
 ```{r, echo = TRUE, eval = TRUE, cache = TRUE}
 pseudo <- pred_y1 - pred_y0
 lm_pseudo <- lm(pseudo ~ a + w)
 ```
+
 - Now we predict the value of this pseudo-outcome under $A=0$, and average the result
 ```{r, echo = TRUE, eval = TRUE, cache = TRUE}
 pred_pseudo <- predict(lm_pseudo, newdata = data.frame(a = 0, w = w))
@@ -388,7 +394,13 @@ I think the distinction between fully conditional and not will be completely los
 - Note that $\E[Y_{1,G_1} - Y_{0,G_0}]$ is still a _total effect_ of treatment, even if it is different from the ATE \E[Y_{1} - Y_{0}]
 - We gain in the ability to solve a problem, but lose in terms of interpretation of the causal effect (cannot decompose the ATE)
 
+```{r , echo=FALSE, fig.cap="", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", out.width = "50%", results="asis"}
+knitr::include_graphics(here::here("img", "graphic4b.png"))
+```
 
+<!--
+KER: I see that you commented all of this out and I don't feel that strongly about it, but i think it is interesting and it is relevant and it is important for folks to think about.
+-->
 <!--
  + Marginal PIDE: $\E(Y_{a, g_{M \mid a^{\star}, W}}) -
    \E(Y_{a^{\star}, g_{M \mid a^{\star}, W}})$
@@ -401,10 +413,6 @@ I think the distinction between fully conditional and not will be completely los
  + Can you think of an example when you would want the conditional versions?
    Marginal versions?
 -->
-
-```{r , echo=FALSE, fig.cap="", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", out.width = "50%", results="asis"}
-knitr::include_graphics(here::here("img", "graphic4b.png"))
-```
 
 ### Identification assumptions:
 
@@ -431,7 +439,7 @@ y <- rnorm(n, w + a + z + m)
 ```
 
 - Let us compute $\E(Y_{1, G_0})$ (so that $a = 1$, and $a'=0$).
-- Firs, fit a regression model for the outcome, and compute
+- First, fit a regression model for the outcome, and compute
 \[\color{ForestGreen}{\E(Y \mid A=a, Z=z, M, W)}\]
 for all values of $z$
 ```{r, echo = TRUE, eval = TRUE, cache = TRUE}
