@@ -114,13 +114,16 @@ There are two possible ways of defining stochastic effects:
 
 - Consider the effect of participation in a sports team on children's BMI
 - Mediation through behavioral covariates such as snacking, exercising, etc.
-- Intervention: for each individual, increase the odds of participating in a sports team by $\delta=2$.
+- Intervention: for each individual, increase the odds of participating in a sports team by $\delta=2$
+- The post-intervention exposure is a draw $A_\delta$ from a Bernoulli distribution with probability $g_\delta(1\mid w)$
 
-### Example: modified treatment policies (MTP) []
-
-#### Definition of the intervention 
+### Example: modified treatment policies (MTP) [@diaz2020causal] {-}
 
 #### Definition of the intervention {-}
+
+- Consider a continuous exposure $A$ taking values in the real numbers
+- Consider an intervention that assigns exposure as $A_\delta = A - \delta$
+- Example: $A$ is pollution measured as $PM_{2.5}$ and you are interested in an intervention that reduces $PM_{2.5}$ concentration by some amount $\delta$
 
 ### Mediation analysis for stochastic interventions
 
@@ -136,18 +139,131 @@ There are two possible ways of defining stochastic effects:
     M & = f_M(W, A, U_M)\\
     Y & = f_Y(W, A, M, U_Y)
   \end{align}
-- From this we have $Y_{A_\delta} = f_Y(W, A_\delta, M_{A_\delta}, U_Y)$
-- Thus, we have $Y_{A_\delta} = Y_{A_\delta, M_{A_\delta}}$ and $Y = Y(A,M(A))$
-- Let us introduce the counterfactual $Y_{A_\delta,M}$, interpreted as the
+- From this we have
+\begin{align*}
+M_{A_\delta} & = f_M(W, A_\delta, U_M)\\
+Y_{A_\delta} & = f_Y(W, A_\delta, M_{A_\delta}, U_Y)
+\end{align*}
+
+- Thus, we have $Y_{A_\delta} = Y_{A_\delta, M_{A_\delta}}$ and $Y = Y_{A,M_{A}}$
+- Let us introduce the counterfactual $Y_{A_\delta, M}$, interpreted as the
   outcome observed in a world where the intervention on $A$ is performed but the
-  mediator is fixed at the value it would have taken under no intervention
+  mediator is fixed at the value it would have taken under no intervention:
+  \[Y_{A_\delta, M}  = f_Y(W, A_\delta, M_{A_\delta}, U_Y)\]
 - Then we can decompose the total effect into:
   \begin{align*}
     \E[Y&_{A_\delta,M_{A_\delta}} - Y_{A,M_A}] = \\
-    &\underbrace{\E[Y_{A_\delta,M_{A_\delta}} -
-      Y_{A_\delta,M_A}]}_{\text{stochastic natural indirect effect}} +
-      \underbrace{\E[Y_{A,M_{A_\delta}} -
-      Y_{A,M_A}]}_{\text{stochastic natural direct effect}}
+    &\underbrace{\E[Y_{\color{red}{A_\delta},\color{blue}{M_{A_\delta}}} -
+      Y_{\color{red}{A_\delta},\color{blue}{M}}]}_{\text{stochastic natural indirect effect}} +
+      \underbrace{\E[Y_{\color{blue}{A_\delta},\color{red}{M}} -
+      Y_{\color{blue}{A},\color{red}{M}}]}_{\text{stochastic natural direct effect}}
   \end{align*}
 
-## Identification of the effect of a stochastic intervention
+## Identification assumptions
+
+- Confounder assumptions:
+  + $A \indep Y_{a,m} \mid W$
+  + $M \indep Y_{a,m} \mid W, A$
+- No confounder of $M\rightarrow Y$ affected by $A$
+- Positivity assumptions:
+  + If $g_\delta(a \mid w)>0$ then $g(a \mid w)>0$
+  + If $\P(Z=z\mid W=w)>0$ then $\P(Z=z\mid A=a,W=w)>0$
+
+Under these assumptions, stochastic effects are identified as follows
+
+- The indirect effect can be identified as follows
+\begin{align*}
+\E&(Y_{A_\delta} - Y_{A_\delta, M}) =\\
+&\E\left[\color{Goldenrod}{\sum_{a}\color{ForestGreen}{\{\E(Y\mid A=a, W)-\E(Y\mid A=a, M, W)\}}g_\delta(a\mid W)}\right]
+\end{align*}
+
+- The direct effect can be identified as follows
+\begin{align*}
+\E&(Y_{A_\delta} - Y_{A_\delta, M}) =\\
+&\E\left[\color{Goldenrod}{\sum_{a}\color{ForestGreen}{\{\E(Y\mid A=a, M, W) - Y\}}g_\delta(a\mid W)}\right]
+\end{align*}
+
+- Let's dissect the formula for the indirect effect in R:
+```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+n <- 1e6
+w <- rnorm(n)
+a <- rbinom(n, 1, plogis(1 + w))
+m <- rnorm(n, w + a)
+y <- rnorm(n, w + a + m)
+```
+
+- First, fit regressions of the outcome on $(A,W)$ and $(M,A,W)$:
+```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+fit_y1 <- lm(y ~ m + a + w)
+fit_y2 <- lm(y ~ a + w)
+```
+
+- Get predictions fixing $A=a$ for all possible values $a$
+```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+pred_y1_a1 <- predict(fit_y1, newdata = data.frame(a = 1, m, w))
+pred_y1_a0 <- predict(fit_y1, newdata = data.frame(a = 0, m, w))
+pred_y2_a1 <- predict(fit_y2, newdata = data.frame(a = 1, w))
+pred_y2_a0 <- predict(fit_y2, newdata = data.frame(a = 0, w))
+```
+- Compute
+\[\color{ForestGreen}{\{\E(Y\mid A=a, W)-\E(Y\mid A=a, M, W)\}}\]
+for each value $a$
+```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+pseudo_a1 <- pred_y2_a1 - pred_y1_a1
+pseudo_a0 <- pred_y2_a0 - pred_y1_a0
+```
+
+- Estimate the propensity score $g(1\mid w)$ and evaluate the post-intervention propensity score $g_\delta(1\mid w)$
+```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+pscore_fit <- glm(a ~ w, family = binomial())
+pscore <- predict(pscore_fit, type = 'response')
+## How do the intervention vs observed propensity score compare
+pscore_delta <- 2 * pscore / (2 * pscore + 1 - pscore)
+plot(pscore, pscore_delta, xlab = 'Observed prop. score', ylab = 'Prop. score under intervention')
+abline(0, 1)
+## What are the odds of exposure under intervention vs real world?
+odds <- (pscore_delta / (1 - pscore_delta)) / (pscore / (1 - pscore))
+summary(odds)
+```
+
+- Compute the sum
+\[\color{Goldenrod}{\sum_{a}\color{ForestGreen}{\{\E(Y\mid A=a, W)-\E(Y\mid A=a, M, W)\}}g_\delta(a\mid W)}\]
+
+```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+indirect <- pseudo_a1 * pscore_delta + pseudo_a0 * (1 - pscore_delta)
+```
+
+- The average of this value is the indirect effect
+```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+## E[Y(Adelta) - Y(Adelta, M)]
+mean(indirect)
+```
+
+- The direct effect is
+\begin{align*}
+\E&(Y_{A_\delta} - Y_{A_\delta, M}) =\\
+&\E\left[\color{Goldenrod}{\sum_{a}\color{ForestGreen}{\{\E(Y\mid A=a, M, W) - Y\}}g_\delta(a\mid W)}\right]
+\end{align*}
+
+- Which can be computed as
+```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+direct <- (pred_y1_a1 - y) * pscore_delta +
+       (pred_y1_a0 - y) * (1 - pscore_delta)
+mean(direct)
+```
+
+## Summary
+
+- Stochastic (in)direct effects
+  - Relax the positivity assumption
+  - Can be defined for non-binary exposures
+  - Do not require a cross-world assumption
+
+- Still require the abscence of intermediate confounders
+  - But, compared to the NDE and NIE, we can design a randomized study where identifiability assumptions hold, at least in principle
+  - There is a version of these effects that can accomodate intermediate confounders [@hejazi2020nonparametric]
+  - R implementation to be released soon, stay tuned!
+
+<!--
+ID: Should I add: continuous interventions, and/or the definitions of effects with intermediate confounders?
+-->

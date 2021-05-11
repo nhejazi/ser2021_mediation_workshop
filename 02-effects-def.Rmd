@@ -84,11 +84,11 @@ $$ \E(Y_{1,m} - Y_{0,m}) = \E\{\color{ForestGreen}{\E(Y \mid A=1, M=m, W) - \E(Y
 
 - For intuition about this formula in R, let's continue with our toy example, where we now add an indirect effect
 ```{r, echo = TRUE, eval = TRUE, cache = TRUE}
-n <- 1e7
+n <- 1e6
 w <- rnorm(n)
 a <- rbinom(n, 1, 0.5)
 m <- rnorm(n, w + a)
-y <- rnorm(n, w - a + m)
+y <- rnorm(n, w + a + m)
 ```
 - First we fit a correct model for the outcome
 ```{r, echo = TRUE, eval = TRUE, cache = TRUE}
@@ -173,6 +173,10 @@ knitr::include_graphics(here::here("img", "graphic4a.png"))
 
 ### Identification assumptions:
 
+<!--
+ID: For all the effects, we should add a discussion of identification assumptions: what they mean and try to teach people to identify when they are violated. We can do this in the context of our motivating examples. 
+-->
+
 - $A \indep Y_{a,m} \mid W$
 - $M \indep Y_{a,m} \mid W, A$
 - $A \indep M_a \mid W$
@@ -199,12 +203,12 @@ knitr::include_graphics(here::here("img", "graphic4a.png"))
 - The natural indirect effect can be identified similarly.
 
 - Let's dissect this formula in R:
-```{r, echo = TRUE, eval = TRUE, cache = TRUE}
-n <- 1e7
+```{r, echo = TRUE, eval = FALSE, cache = TRUE}
+n <- 1e6
 w <- rnorm(n)
 a <- rbinom(n, 1, 0.5)
 m <- rnorm(n, w + a)
-y <- rnorm(n, w - a + m)
+y <- rnorm(n, w + a + m)
 ```
 - First we fit a correct model for the outcome
 ```{r, echo = TRUE, eval = TRUE, cache = TRUE}
@@ -222,7 +226,7 @@ pred_y0 <- predict(lm_y, newdata = data.frame(a = 0, m = m, w = w))
 \[\color{Goldenrod}{\E\{}\color{ForestGreen}{\E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)}\color{Goldenrod}{\mid A=0,W\}}\]
 ```{r, echo = TRUE, eval = TRUE, cache = TRUE}
 pseudo <- pred_y1 - pred_y0
-lm_pseudo <- lm(pseudo ~ a + m)
+lm_pseudo <- lm(pseudo ~ a + w)
 ```
 - Now we predict the value of this pseudo-outcome under $A=0$, and average the result
 ```{r, echo = TRUE, eval = TRUE, cache = TRUE}
@@ -241,6 +245,9 @@ What does $M_0 \indep Y_{1,m} \mid W$ mean?
   assumption?
 - Example: in a randomized study, whenever we believe that treatment assignment works through adherence (i.e., almost
   always), we are violating this assumption (more on this later). 
+- Cross-world assumptions are problematic for other reasons, including:
+  - You can never design a randomized study where the assumption holds by design
+
 
 ### Is this the estimand I want?
 
@@ -378,6 +385,10 @@ I think the distinction between fully conditional and not will be completely los
     \underbrace{\E[Y_{\color{blue}{1},\color{red}{G_0}} -
     Y_{\color{blue}{0},\color{red}{G_0}}]}_{\text{interventional direct effect}}
 \end{equation*}
+- Note that $\E[Y_{1,G_1} - Y_{0,G_0}]$ is still a _total effect_ of treatment, even if it is different from the ATE \E[Y_{1} - Y_{0}]
+- We gain in the ability to solve a problem, but lose in terms of interpretation of the causal effect (cannot decompose the ATE)
+
+
 <!--
  + Marginal PIDE: $\E(Y_{a, g_{M \mid a^{\star}, W}}) -
    \E(Y_{a^{\star}, g_{M \mid a^{\star}, W}})$
@@ -411,12 +422,12 @@ Under these assumptions, the population interventional direct and indirect effec
 - Let's dissect this formula in R:
 
 ```{r, echo = TRUE, eval = TRUE, cache = TRUE}
-n <- 1e7
+n <- 1e6
 w <- rnorm(n)
 a <- rbinom(n, 1, 0.5)
 z <- rbinom(n, 1, 0.5 + 0.2 * a)
 m <- rnorm(n, w + a - z)
-y <- rnorm(n, w - a + z + m)
+y <- rnorm(n, w + a + z + m)
 ```
 
 - Let us compute $\E(Y_{1, G_0})$ (so that $a = 1$, and $a'=0$).

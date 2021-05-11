@@ -1,6 +1,6 @@
 {
   "R": {
-    "Version": "4.0.5",
+    "Version": "4.0.2",
     "Repositories": [
       {
         "Name": "CRAN",
@@ -22,6 +22,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "e4c04affc2cac20c8fec18385cd14691"
+    },
+    "Formula": {
+      "Package": "Formula",
+      "Version": "1.2-4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "cc8c8c4d61346cde1ca60030ff9c241f"
     },
     "KernSmooth": {
       "Package": "KernSmooth",
@@ -141,6 +148,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "664b1c3ade05bd5afbd5ca5609c78bf1"
+    },
+    "TeachingDemos": {
+      "Package": "TeachingDemos",
+      "Version": "2.12",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "41e566d7eab7307a31b3dee3b203c7e0"
     },
     "V8": {
       "Package": "V8",
@@ -267,10 +281,10 @@
     },
     "cli": {
       "Package": "cli",
-      "Version": "2.5.0",
+      "Version": "2.4.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "a94ba44cee3ea571e813721e64184172"
+      "Hash": "be982c9bcbfbe9e59c0225b0ed37d47e"
     },
     "clipr": {
       "Package": "clipr",
@@ -288,10 +302,10 @@
     },
     "colorspace": {
       "Package": "colorspace",
-      "Version": "2.0-1",
+      "Version": "2.0-0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "6cab523af06ac301e7a40c5529d45882"
+      "Hash": "abea3384649ef37f60ef51ce002f3547"
     },
     "cpp11": {
       "Package": "cpp11",
@@ -370,17 +384,24 @@
     },
     "dplyr": {
       "Package": "dplyr",
-      "Version": "1.0.6",
+      "Version": "1.0.5",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "19e84500b64bc7e589cb1e2550e25832"
+      "Hash": "d0d76c11ec807eb3f000eba4e3eb0f68"
+    },
+    "earth": {
+      "Package": "earth",
+      "Version": "5.3.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "65afb8404e57d5e634ff1d1c82d750c0"
     },
     "ellipsis": {
       "Package": "ellipsis",
-      "Version": "0.3.2",
+      "Version": "0.3.1",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "bb0eec2fe32e88d9e2836c2f73ea2077"
+      "Hash": "fd2844b3a43ae2d27e70ece2df1b4e2a"
     },
     "evaluate": {
       "Package": "evaluate",
@@ -734,23 +755,23 @@
     },
     "medoutcon": {
       "Package": "medoutcon",
-      "Version": "0.1.5",
+      "Version": "0.1.0",
       "Source": "GitHub",
-      "Remotes": "github::tlverse/hal9001@devel, github::tlverse/sl3@devel",
       "RemoteType": "github",
+      "Remotes": "github::tlverse/sl3@master",
       "RemoteHost": "api.github.com",
       "RemoteRepo": "medoutcon",
       "RemoteUsername": "nhejazi",
-      "RemoteRef": "au_naturel",
-      "RemoteSha": "39820e2893ae50807c7bcafe886627d1948a2ee2",
-      "Hash": "120b29a78e2fb4d3fd1369f7fa2505ad"
+      "RemoteRef": "HEAD",
+      "RemoteSha": "f8f14c4df01e6d5b6771bbb1839ff25c28af0216",
+      "Hash": "f51e9ac1cf356902365893030f3fdcc4"
     },
     "medshift": {
       "Package": "medshift",
       "Version": "0.1.4",
       "Source": "GitHub",
-      "Remotes": "github::tlverse/sl3@master, github::tlverse/tmle3@master",
       "RemoteType": "github",
+      "Remotes": "github::tlverse/sl3@master, github::tlverse/tmle3@master",
       "RemoteHost": "api.github.com",
       "RemoteRepo": "medshift",
       "RemoteUsername": "nhejazi",
@@ -837,10 +858,10 @@
     },
     "parallelly": {
       "Package": "parallelly",
-      "Version": "1.25.0",
+      "Version": "1.24.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "bc53006c11a08ba955ccbf85b586875f"
+      "Hash": "3d77980bde8c8fe48dc0c24dcb014b39"
     },
     "pdftools": {
       "Package": "pdftools",
@@ -862,6 +883,20 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "01f28d4278f15c76cddbea05899c5d6f"
+    },
+    "plotmo": {
+      "Package": "plotmo",
+      "Version": "3.6.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "a96bcc5873e53a44cd97b5251939f792"
+    },
+    "plotrix": {
+      "Package": "plotrix",
+      "Version": "3.8-1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "cd2248636c86e6716cd7ae086536cecc"
     },
     "plyr": {
       "Package": "plyr",
@@ -991,10 +1026,10 @@
     },
     "rlang": {
       "Package": "rlang",
-      "Version": "0.4.11",
+      "Version": "0.4.10",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "515f341d3affe0de9e4a7f762efb0456"
+      "Hash": "599df23c40a4fce9c7b4764f28c37857"
     },
     "rmarkdown": {
       "Package": "rmarkdown",
@@ -1175,10 +1210,10 @@
     },
     "tidyselect": {
       "Package": "tidyselect",
-      "Version": "1.1.1",
+      "Version": "1.1.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "7243004a708d06d4716717fa1ff5b2fe"
+      "Hash": "6ea435c354e8448819627cf686f66e0a"
     },
     "timeDate": {
       "Package": "timeDate",
@@ -1198,8 +1233,8 @@
       "Package": "tmle3",
       "Version": "0.2.0",
       "Source": "GitHub",
-      "Remotes": "github::tlverse/sl3",
       "RemoteType": "github",
+      "Remotes": "github::tlverse/sl3",
       "RemoteHost": "api.github.com",
       "RemoteRepo": "tmle3",
       "RemoteUsername": "tlverse",
@@ -1237,10 +1272,10 @@
     },
     "vctrs": {
       "Package": "vctrs",
-      "Version": "0.3.8",
+      "Version": "0.3.7",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "ecf749a1b39ea72bd9b51b76292261f1"
+      "Hash": "5540dc30a203a43a1ce5dc6a89532b3b"
     },
     "viridis": {
       "Package": "viridis",
@@ -1297,13 +1332,6 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "2826c5d9efb0a88f657c7a679c7106db"
-    },
-    "zeallot": {
-      "Package": "zeallot",
-      "Version": "0.1.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "ee9b643aa8331c45d8d82eb3a137c9bc"
     }
   }
 }
