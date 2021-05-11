@@ -4,16 +4,14 @@
 
 - We have arrived at identification formulas that express quantities that we care about in terms of observable quantities
 - This required **causal assumptions**
-  - Many of these assumptions are empirically unverifiable, and cannot be relaxed without losing something
+  - Many of these assumptions are empirically unverifiable
   - We saw an example where we could relax the cross-world assumption, at the cost of changing the parameter interpretation
 - The resulting estimation problem can be tackled using **statistical assumptions** of various degrees of strength
   - Most of these assumptions are verifiable (e.g., a linear model)
   - Thus, most are unnecessary (except for convenience)
-  - The estimation approach we advocate for uses modern statistical learning to reduce the risk of misleading conclusions due to inappropriate statistical assumptions
+  - The estimation approach we use reduces reliance on these statistical assumptions
    
-## Why do we need new estimation tools?
-
-- As we have seen all the mediation parameters that we consider can be
+- The mediation parameters that we consider can be
   seen as a function of the joint probability distribution of $O=(W,A,Z,M,Y)$
 - For example, under identifiability assumptions the natural direct effect is
   equal to
@@ -58,13 +56,7 @@
   - Unless $W$ and $M$ contain very few categorical variables, it is very easy
     to misspecify the models
   - This can introduce sizable bias in the estimators
-  - This bias is highly problematic
-    - We go through a thorough process to correctly specify our causal models to
-      avoid bias
-    - Overly simplisitc models introduce bias and squander those efforts
-    - The bias can be small or large and you can never know its magnitude from a single data
-      analysis
-
+  
 ### An example of the bias of a g-computation estimator of the natural direct effect
 
 - The following R chunk provides simulation code to exemplify the bias of a g-computation estimator in a simple situation
@@ -141,7 +133,7 @@ text(450, 0.01, paste0(
   bias/variance trade-off
 
 
-## Solution: Semiparametric estimation
+## Semiparametric estimation
 
 - The bias of a g-computation estimator can often be expressed as
   \begin{equation*}
@@ -163,17 +155,19 @@ text(450, 0.01, paste0(
 - And the specific form of the EIF may be found in papers in the references
 
 ### Bias-correction of g-computation estimators
-
+<!--
+KER: I don't find the below helpful
+-->
 - There are at least two ways to use the EIF to perform a bias correction for a
   g-computation estimator
-- The first one is the so-called _one step_ estimator:
+1. _one step_ estimator:
   \begin{equation*}
     \psi(\hat \P) + \frac{1}{n}\sum_{i=1}^n D(O;\hat \P_i)
   \end{equation*}
-- The idea behind the one-step estimator is simple: subtract an estimate of the
+- Idea: subtract an estimate of the
   bias of the g-computation estimator
-- The second approach is the _targeted maximum likelihood estimator_ (TMLE)
-- TMLE is based on the principle that it is possile to construct a
+2. _targeted maximum likelihood estimator_ (TMLE)
+- TMLE is based on the principle that it is possible to construct a
   data-adaptive estimator $\tilde \P$ such that
   \begin{equation*}
     \frac{1}{n}\sum_{i=1}^n D(O;\tilde \P_i)=0
