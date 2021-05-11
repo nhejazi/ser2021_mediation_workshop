@@ -12,15 +12,16 @@ knitr::include_graphics(here::here("img", "ctndag.png"))
 ```
 
 ## What is causal mediation analysis?
+<!--
+KER: I think the tone can come off as smug sometimes, so I'd like to delete some of this. I also made some edits, but I still think it's worth thinking about what is crucial to include vs not. 
+-->
+- Causal mediation analyses assess how the paths behave under interventions
+- Statistical mediation analyses assess associations between the variables
+<!--- Causal mediation analysis is thus useful to understand mechanisms-->
 
-- Like all causal analyses, _causal mediation analysis_ is different from
-  standard statistical mediation analyses
-- Statistical mediation analyses merely assess associations between the variables
-- Causal mediation analyses assess how the system behaves under interventions
-- Causal mediation analysis is thus useful to understand mechanisms
-
-### An example of a non-causal mediation analysis (product of coefficients)
-
+<!--
+### An example of a non-causal mediation analysis (product of coefficients)-->
+<!--
 - Assume you are interested in the effect of a treatment $A$ (naltrexone vs. buprenorphine) on an outcome $Y$ (risk of relapse) through mediators $M$
   (adherence, opioid use, pain, depressive symptoms)
 - We could fit the following models:
@@ -47,25 +48,30 @@ a <- rbinom(n, 1, 0.5)
 m <- rnorm(n, w + a)
 y <- rnorm(n, w - a)
 ```
+-->
+
+<!--
+KER: why are you not conditioning on w? if you don't do that, then the models are wrong so why is it surprising that you are getting the wrong answe-->
+<!--
 - Note that the indirect effect (i.e., the effect through $M$) in this example is zero
 - Let's see what the product of coefficients method would say:
-```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+-->
+<!--```{r, echo = TRUE, eval = TRUE, cache = TRUE}
 lm_y <- lm(y ~ m + a)
 lm_m <- lm(m ~ a)
 ## product of coefficients
 coef(lm_y)[2] * coef(lm_m)[2]
 ```
-
-
+-->
+<!--
 ### Statistical issues with this method:
   - Assume the above confounding is not an issue
   - Can I then interpret $(\gamma_1\beta_1)$ as the indirect effect?
   - No: the regression models may be misspecified
-
+-->
 ## Causal mediation models
 
-In this workshopp we will use directed acyclic graphs to conceptualize the above
-confounding issues. We will focus on the two types of graph:
+In this workshop we will use directed acyclic graphs. We will focus on the two types of graph:
 
 ### No intermediate confounders
 
@@ -210,8 +216,8 @@ The above graphs can be interpreted as a _non-parametric structural equation mod
 - Here $U=(U_W, U_A, U_Z, U_M, U_Y)$ is a vector of all unmeasured exogenous
   factors affecting the system
 - The functions $f$ are assumed fixed but unknown
-- We posit this model as a system of equation that nature uses to geenrate the
-  data at hand
+- We posit this model as a system of equations that nature uses to geenrate the
+  data
 - Therefore we leave the functions $f$ unspecified (i.e., we do not know the
   true nature mechanisms)
 - Sometimes we know something: e.g., if $A$ is randomized we know $A=f_A(U_A)$
@@ -221,8 +227,8 @@ The above graphs can be interpreted as a _non-parametric structural equation mod
 
 - We define all the effects of interest using _counterfactuals_
 - Counterfactuals are hypothetical random variables that would have been
-  observed in a world where we would be able to perform interventions on the
-  random variables of interest
+  observed in an alternative world where something had happened, possibly contrary to fact <!--we would be able to perform interventions on the
+  random variables of interest-->
 - $Y_a$ is a counterfactual variable in a hypothetical world where $\P(A=a)=1$
   with probability one
 - $Y_{a,m}$ is the counterfactual outcome in a world where $\P(A=a,M=m)=1$
@@ -231,7 +237,7 @@ The above graphs can be interpreted as a _non-parametric structural equation mod
 
 ### How are counterfactuals defined?
 
-- You can use counterfactual variables as _primitives_
+<!-- - You can use counterfactual variables as _primitives_ -->
 - In the NPSEM framework, counterfactuals are quantities _derived_ from the
   model.
 - Take as example the DAG in Figure 1.2:
@@ -249,5 +255,5 @@ The above graphs can be interpreted as a _non-parametric structural equation mod
   treatment was given but the mediator was held at the value it would have
   taken under no treatment_
 - Causal effects are defined in terms of the distribution of these counterfactuals
-- I.e., causal effects give you information about what would happen _under intervention_
+- I.e., causal effects give you information about what would have happened _in some hypothetical world_
 
