@@ -238,7 +238,7 @@ pred_y0 <- predict(lm_y, newdata = data.frame(a = 0, m = m, w = w))
 KER: for some reason, when i look at the website it is showing pseudo ~ a + m instead of what is below
 -->
 
-```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+```{r, echo = TRUE, eval = FALSE}
 pseudo <- pred_y1 - pred_y0
 lm_pseudo <- lm(pseudo ~ a + w)
 ```
