@@ -16,10 +16,9 @@ rmd_files: [
   "index.Rmd",
   "01-preface.Rmd",
   "02-effects-def.Rmd",
-  "03-how-to-choose.Rmd",
-  "04-stochastic.Rmd",
+  "03-stochastic.Rmd",
+  "04-how-to-choose.Rmd",
   "05-preliminaries-estimation.Rmd",
   "06-estimation-natural-interventional.Rmd",
-  "07-estimation-stochastic.Rmd",
   "references.Rmd"
 ]

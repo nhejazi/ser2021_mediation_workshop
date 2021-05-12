@@ -62,8 +62,10 @@ A <- weight_behavior_complete$sports
 Z <- weight_behavior_complete %>%
   select(snack, exercises, overweigh)
 W <- weight_behavior_complete %>%
-  select(age, sex, race, numpeople, car, gotosch, tvhours, cmpthours,
-         cellhours, sweat)
+  select(
+    age, sex, race, numpeople, car, gotosch, tvhours, cmpthours,
+    cellhours, sweat
+  )
 ```
 
 Finally, in our analysis, we consider an incremental propensity score
@@ -90,30 +92,48 @@ using a handful of popular machine learning algorithms below
 ```{r make_sl1, message=FALSE, warning=FALSE, eval=FALSE}
 # SL learners used for continuous data (the nuisance parameter M)
 xgb_contin_lrnr <- Lrnr_xgboost$new(nrounds = 50, objective = "reg:linear")
-enet_contin_lrnr <- Lrnr_glmnet$new(alpha = 0.5, family = "gaussian",
-                                    nfolds = 3)
-lasso_contin_lrnr <- Lrnr_glmnet$new(alpha = 1, family = "gaussian",
-                                     nfolds = 3)
+enet_contin_lrnr <- Lrnr_glmnet$new(
+  alpha = 0.5, family = "gaussian",
+  nfolds = 3
+)
+lasso_contin_lrnr <- Lrnr_glmnet$new(
+  alpha = 1, family = "gaussian",
+  nfolds = 3
+)
 fglm_contin_lrnr <- Lrnr_glm_fast$new(family = gaussian())
-contin_lrnr_lib <- Stack$new(enet_contin_lrnr, lasso_contin_lrnr,
-                             fglm_contin_lrnr, xgb_contin_lrnr)
-sl_contin_lrnr <- Lrnr_sl$new(learners = contin_lrnr_lib,
-                              metalearner = Lrnr_nnls$new())
+contin_lrnr_lib <- Stack$new(
+  enet_contin_lrnr, lasso_contin_lrnr,
+  fglm_contin_lrnr, xgb_contin_lrnr
+)
+sl_contin_lrnr <- Lrnr_sl$new(
+  learners = contin_lrnr_lib,
+  metalearner = Lrnr_nnls$new()
+)
 
 # SL learners used for binary data (nuisance parameters G and E in this case)
 xgb_binary_lrnr <- Lrnr_xgboost$new(nrounds = 50, objective = "reg:logistic")
-enet_binary_lrnr <- Lrnr_glmnet$new(alpha = 0.5, family = "binomial",
-                                    nfolds = 3)
-lasso_binary_lrnr <- Lrnr_glmnet$new(alpha = 1, family = "binomial",
-                                     nfolds = 3)
+enet_binary_lrnr <- Lrnr_glmnet$new(
+  alpha = 0.5, family = "binomial",
+  nfolds = 3
+)
+lasso_binary_lrnr <- Lrnr_glmnet$new(
+  alpha = 1, family = "binomial",
+  nfolds = 3
+)
 fglm_binary_lrnr <- Lrnr_glm_fast$new(family = binomial())
-binary_lrnr_lib <- Stack$new(enet_binary_lrnr, lasso_binary_lrnr,
-                             fglm_binary_lrnr, xgb_binary_lrnr)
-logistic_metalearner <- make_learner(Lrnr_solnp,
-                                     metalearner_logistic_binomial,
-                                     loss_loglik_binomial)
-sl_binary_lrnr <- Lrnr_sl$new(learners = binary_lrnr_lib,
-                              metalearner = logistic_metalearner)
+binary_lrnr_lib <- Stack$new(
+  enet_binary_lrnr, lasso_binary_lrnr,
+  fglm_binary_lrnr, xgb_binary_lrnr
+)
+logistic_metalearner <- make_learner(
+  Lrnr_solnp,
+  metalearner_logistic_binomial,
+  loss_loglik_binomial
+)
+sl_binary_lrnr <- Lrnr_sl$new(
+  learners = binary_lrnr_lib,
+  metalearner = logistic_metalearner
+)
 ```
 
 ## Decomposing the population intervention effect
@@ -174,14 +194,16 @@ estimator $\hat{\theta}(\delta)$ below
 
 ```{r efficient_est, message=FALSE, warning=FALSE, eval=FALSE}
 # let's compute the parameter where A (but not Z) are shifted
-theta_eff <- medshift(W = W, A = A, Z = Z, Y = Y,
-                      delta = delta_shift_ipsi,
-                      g_learners = sl_binary_lrnr,
-                      e_learners = sl_binary_lrnr,
-                      m_learners = sl_contin_lrnr,
-                      phi_learners = Lrnr_hal9001$new(),
-                      estimator = "onestep",
-                      estimator_args = list(cv_folds = 3))
+theta_eff <- medshift(
+  W = W, A = A, Z = Z, Y = Y,
+  delta = delta_shift_ipsi,
+  g_learners = sl_binary_lrnr,
+  e_learners = sl_binary_lrnr,
+  m_learners = sl_contin_lrnr,
+  phi_learners = Lrnr_hal9001$new(),
+  estimator = "onestep",
+  estimator_args = list(cv_folds = 3)
+)
 summary(theta_eff)
 ```
 
@@ -511,8 +533,10 @@ bound_lrnr <- Lrnr_bound$new(bound = 1e-6)
 hal_bounded_lrnr <- Pipeline$new(hal_gaussian_lrnr, bound_lrnr)
 
 # create learner library and instantiate super learner ensemble
-lrnr_lib <- Stack$new(mean_lrnr, fglm_lrnr, enet_lrnr, lasso_lrnr,
-                      rf_lrnr, hal_bounded_lrnr)
+lrnr_lib <- Stack$new(
+  mean_lrnr, fglm_lrnr, enet_lrnr, lasso_lrnr,
+  rf_lrnr, hal_bounded_lrnr
+)
 sl_lrnr <- Lrnr_sl$new(learners = lrnr_lib, metalearner = Lrnr_nnls$new())
 ```
 
@@ -564,19 +588,21 @@ method to each of the one-step estimators (and EIFs) for these contrasts.
 
 ```{r de_os, message=FALSE, warning=FALSE, eval=FALSE}
 # compute one-step estimate of the interventional direct effect
-os_de <- medoutcon(W = example_data[, ..w_names],
-                   A = example_data$A,
-                   Z = example_data$Z,
-                   M = example_data[, ..m_names],
-                   Y = example_data$Y,
-                   g_learners = sl_lrnr,
-                   h_learners = sl_lrnr,
-                   b_learners = sl_lrnr,
-                   q_learners = sl_lrnr,
-                   r_learners = sl_lrnr,
-                   effect = "direct",
-                   estimator = "onestep",
-                   estimator_args = list(cv_folds = 2))
+os_de <- medoutcon(
+  W = example_data[, ..w_names],
+  A = example_data$A,
+  Z = example_data$Z,
+  M = example_data[, ..m_names],
+  Y = example_data$Y,
+  g_learners = sl_lrnr,
+  h_learners = sl_lrnr,
+  b_learners = sl_lrnr,
+  q_learners = sl_lrnr,
+  r_learners = sl_lrnr,
+  effect = "direct",
+  estimator = "onestep",
+  estimator_args = list(cv_folds = 2)
+)
 summary(os_de)
 ```
 
@@ -586,19 +612,21 @@ call to the `medoutcon` function:
 
 ```{r de_tmle, message=FALSE, warning=FALSE, eval=FALSE}
 # compute targeted minimum loss estimate of the interventional direct effect
-tmle_de <- medoutcon(W = example_data[, ..w_names],
-                     A = example_data$A,
-                     Z = example_data$Z,
-                     M = example_data[, ..m_names],
-                     Y = example_data$Y,
-                     g_learners = sl_lrnr,
-                     h_learners = sl_lrnr,
-                     b_learners = sl_lrnr,
-                     q_learners = sl_lrnr,
-                     r_learners = sl_lrnr,
-                     effect = "direct",
-                     estimator = "tmle",
-                     estimator_args = list(cv_folds = 2, max_iter = 5))
+tmle_de <- medoutcon(
+  W = example_data[, ..w_names],
+  A = example_data$A,
+  Z = example_data$Z,
+  M = example_data[, ..m_names],
+  Y = example_data$Y,
+  g_learners = sl_lrnr,
+  h_learners = sl_lrnr,
+  b_learners = sl_lrnr,
+  q_learners = sl_lrnr,
+  r_learners = sl_lrnr,
+  effect = "direct",
+  estimator = "tmle",
+  estimator_args = list(cv_folds = 2, max_iter = 5)
+)
 summary(tmle_de)
 ```
 
@@ -632,18 +660,20 @@ method to each of the one-step estimators (and EIFs) for the contrasts.
 
 ```{r ie_os, message=FALSE, warning=FALSE, eval=FALSE}
 # compute one-step estimate of the interventional indirect effect
-os_ie <- medoutcon(W = example_data[, ..w_names],
-                   A = example_data$A,
-                   Z = example_data$Z,
-                   M = example_data[, ..m_names],
-                   Y = example_data$Y,
-                   g_learners = sl_lrnr,
-                   h_learners = sl_lrnr,
-                   b_learners = sl_lrnr,
-                   q_learners = sl_lrnr,
-                   r_learners = sl_lrnr,
-                   effect = "indirect",
-                   estimator = "onestep")
+os_ie <- medoutcon(
+  W = example_data[, ..w_names],
+  A = example_data$A,
+  Z = example_data$Z,
+  M = example_data[, ..m_names],
+  Y = example_data$Y,
+  g_learners = sl_lrnr,
+  h_learners = sl_lrnr,
+  b_learners = sl_lrnr,
+  q_learners = sl_lrnr,
+  r_learners = sl_lrnr,
+  effect = "indirect",
+  estimator = "onestep"
+)
 summary(os_ie)
 ```
 
@@ -653,18 +683,20 @@ single call to the `medoutcon` function, as demonstrated below
 
 ```{r ie_tmle, message=FALSE, warning=FALSE, eval=FALSE}
 # compute targeted minimum loss estimate of the interventional indirect effect
-tmle_ie <- medoutcon(W = example_data[, ..w_names],
-                     A = example_data$A,
-                     Z = example_data$Z,
-                     M = example_data[, ..m_names],
-                     Y = example_data$Y,
-                     g_learners = sl_lrnr,
-                     h_learners = sl_lrnr,
-                     b_learners = sl_lrnr,
-                     q_learners = sl_lrnr,
-                     r_learners = sl_lrnr,
-                     effect = "indirect",
-                     estimator = "tmle")
+tmle_ie <- medoutcon(
+  W = example_data[, ..w_names],
+  A = example_data$A,
+  Z = example_data$Z,
+  M = example_data[, ..m_names],
+  Y = example_data$Y,
+  g_learners = sl_lrnr,
+  h_learners = sl_lrnr,
+  b_learners = sl_lrnr,
+  q_learners = sl_lrnr,
+  r_learners = sl_lrnr,
+  effect = "indirect",
+  estimator = "tmle"
+)
 summary(tmle_ie)
 ```
 

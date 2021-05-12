@@ -93,8 +93,7 @@ Under the above identification assumptions, the controlled direct can be
 identified:
 $$ \E(Y_{1,m} - Y_{0,m}) = \E\{\color{ForestGreen}{\E(Y \mid A=1, M=m, W) - \E(Y \mid A=0, M=m, W)}\}$$
 
-- For intuition about this formula in R, let's continue with our toy example,
-  where we now add an indirect effect
+- For intuition about this formula in R, let's continue with a toy example:
 ```{r, echo = TRUE, eval = FALSE}
 n <- 1e6
 w <- rnorm(n)
@@ -188,16 +187,28 @@ ID: For all the effects, we should add a discussion of identification assumption
 - $M_0 \indep Y_{1,m} \mid W$
 - and positivity assumptions
 
+### Cross-world independence assumption
+
+What does $M_0 \indep Y_{1,m} \mid W$ mean?
+
+- Conditional on $W$, knowledge of the mediator value in the absence of
+  treatment, $M_0$,
+  provides no information about the outcome under treatment, $Y_{1,m}$.
+- Can you think of a data-generating mechanism that would violate this
+  assumption?
+- Example: in a randomized study, whenever we believe that treatment assignment
+  works through adherence (i.e., almost
+  always), we are violating this assumption (more on this later).
+- Cross-world assumptions are problematic for other reasons, including:
+  - You can never design a randomized study where the assumption holds by
+    design.
+
 ### If the cross-world assumption holds, can write the NDE as a weighted average of controlled direct effects at each level of $M=m$.
 
 \[\E \sum_m \{\E(Y_{1,m} \mid W) - \E(Y_{0,m} \mid W)\} \P(M_{0}=m
 \mid W)\]
-<!--
-ID: I still think the below is wrong. M could not possibly be an effect modifier of A -> Y because it comes after Y
-I suggest we delete this
-KER:I don't know what you mean
--->
-- If no effect modification of the effect of $A$ on $Y$ by $M$ (i.e., no interaction between $A$ and $M$), then CDE = NDE.
+
+- If CDE($m$) is constant across $m$ then CDE = NDE.
 
 
 ### Identification formula:
@@ -251,21 +262,6 @@ pred_pseudo <- predict(lm_pseudo, newdata = data.frame(a = 0, w = w))
 mean(pred_pseudo)
 ```
 
-### Cross-world independence assumption
-
-What does $M_0 \indep Y_{1,m} \mid W$ mean?
-
-- Conditional on $W$, knowledge of the mediator value in the absence of
-  treatment, $M_0$,
-  provides no information about the outcome under treatment, $Y_{1,m}$.
-- Can you think of a data-generating mechanism that would violate this
-  assumption?
-- Example: in a randomized study, whenever we believe that treatment assignment
-  works through adherence (i.e., almost
-  always), we are violating this assumption (more on this later).
-- Cross-world assumptions are problematic for other reasons, including:
-  - You can never design a randomized study where the assumption holds by
-    design.
 
 
 ### Is this the estimand I want?
@@ -416,6 +412,11 @@ lost on people
 ```{r , echo=FALSE, fig.cap="", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", out.width = "50%", results="asis"}
 knitr::include_graphics(here::here("img", "graphic4b.png"))
 ```
+
+### An alternative definition of the effects:
+- Above  we defined $G_a$ as a random draw from the distribution of $M_a \mid W$
+- What if instead we define $G_a$ as a random draw from the distribution of $M_a \mid (Z_a,W)$
+- It turns out the indirect effect defined in this way only measures the path $A\rightarrow M \rightarrow Y$, and not the path $A\rightarrow Z\rightarrow M \rightarrow Y$
 
 <!--
 KER: I see that you commented all of this out and I don't feel that strongly about it, but i think it is interesting and it is relevant and it is important for folks to think about.

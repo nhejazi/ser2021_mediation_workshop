@@ -19,64 +19,53 @@ KER: I think the tone can come off as smug sometimes, so I'd like to delete some
 - Statistical mediation analyses assess associations between the variables
 <!--- Causal mediation analysis is thus useful to understand mechanisms-->
 
-<!--
-### An example of a non-causal mediation analysis (product of coefficients)-->
-<!--
-- Assume you are interested in the effect of a treatment $A$ (naltrexone vs.
+### Why are the methods that we will discuss today important?
+
+- Assume you are interested in the effect of a treatment assignment $A$ (naltrexone vs.
   buprenorphine) on an outcome $Y$ (risk of relapse) through mediators $M$
-  (adherence, opioid use, pain, depressive symptoms)
+  (opioid use, pain, depressive symptoms)
+- We have pre-treatment confounders $W$
+- There is a confounder $Z$ of $M\rightarrow Y$ ffected by treatment assignment (adherence)
 - We could fit the following models:
     \begin{align}
-      \E(Y\mid A=a) & = \alpha_0 + \alpha_1 a\\
-      \E(M\mid A=a) & = \gamma_0 + \gamma_1 a\\
-      \E(Y\mid M=m, A=a) & = \beta_0 + \beta_1 m + \beta_2 a
+      \E(M\mid A=a, W=w, Z=z) & = \gamma_0 + \gamma_1 a + \gamma_2 w +\gamma_3 z \\
+      \E(Y\mid M=m, A=a, W=w, Z=z) & = \beta_0 + \beta_1 m + \beta_2 a + \beta_3 w + \beta_4 z
     \end{align}
 - The product $(\gamma_1\beta_1)$ has been proposed as a measure of the effect
   of $A$ on $Y$ through $M$
 - Causal interpretation problems with this method:
-  - What happens if there are confounders of the relation between treatment and
-    outcome?
-  - What happens if there are confounders of the relation between mediator and
-    outcome?
-  - What happens if there are confounders of the relation between treatment and
-    mediator?
-  - What happens if the confounders of mediator and outcome are affected by
-    treatment?
-### Example:
+  - We will see that this parameter cannot be interpreted as a causal effect
+  
+### R Example:
 - Assume we have a pre-treamtment confounder of $Y$ and $M$, denote it with $W$
 - For simplicity, assume $A$ is randomized
 - We'll generate a really large sample from a data generating mechanism so that
   we are not concerned with sampling errors
-```{r, echo = TRUE, eval = FALSE}
+```{r, echo = TRUE, eval = TRUE}
 n <- 1e7
 w <- rnorm(n)
 a <- rbinom(n, 1, 0.5)
-m <- rnorm(n, w + a)
-y <- rnorm(n, w - a)
+z <- rbinom(n, 1, 0.2 * a + 0.3)
+m <- rnorm(n, w + z)
+y <- rnorm(n, m + w - a + z)
 ```
--->
 
-<!--
-KER: why are you not conditioning on w? if you don't do that, then the models
-are wrong so why is it surprising that you are getting the wrong answer-->
-<!--
 - Note that the indirect effect (i.e., the effect through $M$) in this example
-  is zero
+  is nonzero (there is a pathway $A\rightarrow Z \rightarrow M \rightarrow Y$)
 - Let's see what the product of coefficients method would say:
--->
-<!--```{r, echo = TRUE, eval = FALSE}
-lm_y <- lm(y ~ m + a)
-lm_m <- lm(m ~ a)
+
+```{r, echo = TRUE, eval = TRUE}
+lm_y <- lm(y ~ m + a + w + z)
+lm_m <- lm(m ~ a + w + z)
 ## product of coefficients
 coef(lm_y)[2] * coef(lm_m)[2]
 ```
--->
-<!--
-### Statistical issues with this method:
-  - Assume the above confounding is not an issue
-  - Can I then interpret $(\gamma_1\beta_1)$ as the indirect effect?
-  - No: the regression models may be misspecified
--->
+
+Among other things, in this workshop:
+
+- We will provide some understanding for why the above method fails in this example
+- We will study estimators that are robust to misspecification in the above models
+
 ## Causal mediation models
 
 In this workshop we will use directed acyclic graphs. We will focus on the two

@@ -123,22 +123,41 @@ Let's take the NDE as an example:
 
 First, we need to introduce some notation to describe the EIF for the NDE
 
+- Let $Q(M, W)$ denote $\E(Y\mid A=1, M, W) - b(Y\mid A=0, M, W)$
+- We can now introduce the EIF:
+\begin{align*}
+    D(O) &= \color{ForestGreen}{\bigg\{ \frac{I(A=1)}{\P(A=1\mid W)}\frac{\P(M\mid A=0,W)}{\P(M\mid A=1,W)} -
+      \frac{I(A=0)}{\P(A=0\mid W)}\bigg\}} \times [Y-\E(Y\mid A,M,W)]  \\
+    &+ \frac{I(A=0)}{\P(A=0\mid W)}\big\{Q(M,W) - \E[Q(M,W) | W,A=0] \big\}\\
+    &+ \E[d(M,W) | W,A=0] - \psi(\P) 
+\end{align*}
+
+- Estimating $\P(M\mid A, W)$ is a really hard problem when $M$ is high-dimensional. But,
+since we have the ratio of these conditional densitities, we can reparamterize
+using Bayes rule to get something that is easier to compute:
+
+\begin{equation*}
+  \frac{\P(M\mid A=0,W)}{\P(M\mid A=1,W)} = \frac{\P(A = 0 \mid M, W) \P(A=1 \mid W)}{\P(A = 1 \mid M, W)\P(A=0 \mid W)}.
+\end{equation*}
+
+Thus we can change the expression of the EIF a bit as follows. First, some more notation that will be useful later:
+
 - Let $g(a\mid w)$ denote $\P(A=a\mid W=w)$
 - Let $e(a\mid m, w)$ denote $\P(A=a\mid M=m, W=w)$
 - Let $b(a, m, w)$ denote $\E(Y\mid A=a, M=m, W=w)$
-- Let $d(m, w)$ denote $b(1, m, w) - b(0, m, w)$
-- We can now introduce the EIF:
+- The EIF is
+
 \begin{align*}
-    D(O;\P) &= \bigg\{ \frac{I(A=1)}{g(0\mid W)}\frac{e(0\mid M,W)}{e(1\mid M,W)} -
-      \frac{I(A=0)}{g(0\mid W)}\bigg\} \times [Y-b(A,M,W)]  \\
-    &+ \frac{I(A=0)}{g(0\mid W)}\big\{d(M,W) - \E[d(M,W) | W,A=0] \big\}\\
-    &+ \E[d(M,W) | W,A=0] - \psi(\P) 
+    D(O) &= \color{ForestGreen}{\bigg\{ \frac{I(A=1)}{g(0\mid W)}\frac{e(0\mid M,W)}{e(1\mid M,W)} -
+      \frac{I(A=0)}{g(0\mid W)}\bigg\}} \times [Y-b(A,M,W)]  \\
+    &+ \frac{I(A=0)}{g(0\mid W)}\big\{Q(M,W) - \E[Q(M,W) | W,A=0] \big\}\\
+    &+ \E[Q(M,W) | W,A=0] - \psi(\P) 
 \end{align*}
 
 ### How to compute the one-step estimator (akin to Augmented IPW)
 
 First we will generate some data:
-```{r, echo = TRUE, eval = FALSE}
+```{r, echo = TRUE, eval = TRUE}
 mean_y <- function(m, a, w) abs(w) + a * m
 mean_m <- function(a, w)plogis(w^2 - a)
 pscore <- function(w) plogis(1 - abs(w))
@@ -168,27 +187,41 @@ Can be computed  in the following steps:
      regression algorithms, such as the Super Learner [CITE]
 ```{r, echo = TRUE, eval = FALSE}
 library(mgcv)
-b_fit <- gam(y ~ m:a + s(w, by = a))
+## fit model for E(Y | A, W)
+b_fit <- gam(y ~ m:a + s(w, by = a)
+## fit model for P(A = 1 | M, W)
 e_fit <- gam(a ~ m + w + s(w, by = m), family = binomial)
+## fit model for P(A = 1 | W)
 g_fit <- gam(a ~ w, family = binomial)
 ```
 
 2. Compute predictions  $g(1\mid w)$, $g(0\mid w)$, $e(1\mid m, w)$,
    $e(0\mid m, w)$,$b(1, m, w)$, $b(0, m, w)$, and  $b(a, m, w)$
+
 ```{r, echo = TRUE, eval = FALSE}
+## Compute P(A = 1 | W)
 g1_pred <- predict(g_fit, type = 'response')
+## Compute P(A = 0 | W)
 g0_pred <- 1 - g1_pred
+## Compute P(A = 1 | M, W)
 e1_pred <- predict(e_fit, type = 'response')
+## Compute P(A = 0 | M, W)
 e0_pred <- 1 - e1_pred
+## Compute E(Y | A = 1, M, W)
 b1_pred <- predict(b_fit, newdata = data.frame(a = 1, m, w))
+## Compute E(Y | A = 0, M, W)
 b0_pred <- predict(b_fit, newdata = data.frame(a = 0, m, w))
+## Compute E(Y | A, M, W)
 b_pred  <- predict(b_fit)
 ```
-3. Compute $d(M, W)$, fir a model for $\E[d(M,W) | W,A]$, and predict at $A=0$
+3. Compute $Q(M, W)$, fit a model for $\E[Q(M,W) | W,A]$, and predict at $A=0$
 ```{r, echo = TRUE, eval = FALSE}
+## Compute Q(M, W)
 pseudo <- b1_pred - b0_pred
-d_fit <- gam(pseudo ~ a + w + s(w, by = a))
-d0_pred <- predict(d_fit, newdata = data.frame(a = 0, w = w))
+## Fit model for E[Q(M, W) | A, W]
+q_fit <- gam(pseudo ~ a + w + s(w, by = a))
+## Compute E[Q(M, W) | A = 0, W]
+q_pred <- predict(q_fit, newdata = data.frame(a = 0, w = w))
 ```
 
 4. Estimate the weights
@@ -203,8 +236,8 @@ weights <- a / g0_pred * e0_pred / e1_pred - (1 - a) / g0_pred
 
 5. Compute the uncentered EIF:
 ```{r, echo = TRUE, eval = FALSE}
-eif <- weights * (y - b_pred) + (1 - a) / g0_pred * (pseudo - d0_pred) +
-  d0_pred
+eif <- weights * (y - b_pred) + (1 - a) / g0_pred * (pseudo - q_pred) +
+  q_pred
 ```
 
 6. The one step estimator is the mean of the uncentered EIF
@@ -231,24 +264,26 @@ one_step <- function(y, m, a, w) {
                      type = 'response')
   b_pred  <- predict(b_fit, type = 'response')
   pseudo <- b1_pred - b0_pred
-  d_fit <- gam(pseudo ~ a + w + s(w, by = a))
-  d0_pred <- predict(d_fit, newdata = data.frame(a = 0, w = w))
+  q_fit <- gam(pseudo ~ a + w + s(w, by = a))
+  q_pred <- predict(q_fit, newdata = data.frame(a = 0, w = w))
   weights <- a / g0_pred * e0_pred / e1_pred - (1 - a) / g0_pred
-  eif <- weights * (y - b_pred) + (1 - a) / g0_pred * (pseudo - d0_pred) + d0_pred
+  eif <- weights * (y - b_pred) + (1 - a) / g0_pred * (pseudo - q_pred) + q_pred
   return(mean(eif))
 }
 ```
 
 Let us first examine the bias
 
-```{r, echo = TRUE, eval = FALSE}
+```{r, echo = FALSE, eval = TRUE}
 w_big <- runif(1e6, -1, 1)
 trueval <- mean((mean_y(1, 1, w_big) - mean_y(1, 0, w_big)) * mean_m(0, w_big) +
   (mean_y(0, 1, w_big) - mean_y(0, 0, w_big)) * (1 - mean_m(0, w_big)))
-print(trueval)
+```
 
-n <- 1000
+- The true value is `r trueval`
 
+- Bias simulation
+```{r, echo = TRUE, eval = FALSE}
 estimate <- numeric(1000)
 for (i in 1:1000) {
   n <- 1000
@@ -266,7 +301,7 @@ abline(v = trueval, col = "red", lwd = 4)
 
 - And now the confidence intervals:
 
-```{r, echo = TRUE, eval = FALSE, fig.height = 8, fig.width = 8}
+```{r, echo = FALSE, eval = FALSE, fig.height = 8, fig.width = 8}
 cis <- cbind(
   estimate - qnorm(0.975) * sd(estimate),
   estimate + qnorm(0.975) * sd(estimate)
