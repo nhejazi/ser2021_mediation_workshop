@@ -116,8 +116,10 @@ Let's take the NDE as an example:
 
 ### The efficient influence function for the NDE
 
-- For illustration, we will first present how to construct an estimator of the NDE that uses the EIF ``by hand''
-- For other parameters, we will teach you how to use our packages _medoutcon_ and _medshift_
+- For illustration, we will first present how to construct an estimator of the
+  NDE that uses the EIF ``by hand''
+- For other parameters, we will teach you how to use our packages _medoutcon_
+  and _medshift_
 
 First, we need to introduce some notation to describe the EIF for the NDE
 
@@ -136,7 +138,7 @@ First, we need to introduce some notation to describe the EIF for the NDE
 ### How to compute the one-step estimator (akin to Augmented IPW)
 
 First we will generate some data:
-```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+```{r, echo = TRUE, eval = FALSE}
 mean_y <- function(m, a, w) abs(w) + a * m
 mean_m <- function(a, w)plogis(w^2 - a)
 pscore <- function(w) plogis(1 - abs(w))
@@ -160,17 +162,20 @@ Recall that the one-step estimator is defined as the bias-corrected g-computatio
 Can be computed  in the following steps:
 
 1. Fit models for $g(a\mid w)$, $e(a\mid m, w)$, and $b(a, m, w)$
-     - In this example we will use Generalized Additive Models [CITE] for tractability
-     - In applied settings we recommend using an ensemble of data-adaptive regression algorithms, such as the Super Learner [CITE]
-```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+   - In this example we will use Generalized Additive Models [CITE] for
+     tractability
+   - In applied settings we recommend using an ensemble of data-adaptive
+     regression algorithms, such as the Super Learner [CITE]
+```{r, echo = TRUE, eval = FALSE}
 library(mgcv)
 b_fit <- gam(y ~ m:a + s(w, by = a))
 e_fit <- gam(a ~ m + w + s(w, by = m), family = binomial)
 g_fit <- gam(a ~ w, family = binomial)
 ```
 
-2. Compute predictions  $g(1\mid w)$, $g(0\mid w)$, $e(1\mid m, w)$, $e(0\mid m, w)$,$b(1, m, w)$, $b(0, m, w)$, and  $b(a, m, w)$
-```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+2. Compute predictions  $g(1\mid w)$, $g(0\mid w)$, $e(1\mid m, w)$,
+   $e(0\mid m, w)$,$b(1, m, w)$, $b(0, m, w)$, and  $b(a, m, w)$
+```{r, echo = TRUE, eval = FALSE}
 g1_pred <- predict(g_fit, type = 'response')
 g0_pred <- 1 - g1_pred
 e1_pred <- predict(e_fit, type = 'response')
@@ -180,7 +185,7 @@ b0_pred <- predict(b_fit, newdata = data.frame(a = 0, m, w))
 b_pred  <- predict(b_fit)
 ```
 3. Compute $d(M, W)$, fir a model for $\E[d(M,W) | W,A]$, and predict at $A=0$
-```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+```{r, echo = TRUE, eval = FALSE}
 pseudo <- b1_pred - b0_pred
 d_fit <- gam(pseudo ~ a + w + s(w, by = a))
 d0_pred <- predict(d_fit, newdata = data.frame(a = 0, w = w))
@@ -197,12 +202,13 @@ weights <- a / g0_pred * e0_pred / e1_pred - (1 - a) / g0_pred
 ```
 
 5. Compute the uncentered EIF:
-```{r, echo = TRUE, eval = TRUE, cache = TRUE}
-eif <- weights * (y - b_pred) + (1 - a) / g0_pred * (pseudo - d0_pred) + d0_pred
+```{r, echo = TRUE, eval = FALSE}
+eif <- weights * (y - b_pred) + (1 - a) / g0_pred * (pseudo - d0_pred) +
+  d0_pred
 ```
 
 6. The one step estimator is the mean of the uncentered EIF
-```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+```{r, echo = TRUE, eval = FALSE}
 ## One-step estimator
 mean(eif)
 ```
@@ -210,7 +216,7 @@ mean(eif)
 ### Performance of the one-step estimator in a small simulation study
 
 First, we create a wrapper around the estimator
-```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+```{r, echo = TRUE, eval = FALSE}
 one_step <- function(y, m, a, w) {
   b_fit <- gam(y ~ m:a + s(w, by = a))
   e_fit <- gam(a ~ m + w + s(w, by = m), family = binomial)
@@ -235,7 +241,7 @@ one_step <- function(y, m, a, w) {
 
 Let us first examine the bias
 
-```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+```{r, echo = TRUE, eval = FALSE}
 w_big <- runif(1e6, -1, 1)
 trueval <- mean((mean_y(1, 1, w_big) - mean_y(1, 0, w_big)) * mean_m(0, w_big) +
   (mean_y(0, 1, w_big) - mean_y(0, 0, w_big)) * (1 - mean_m(0, w_big)))
@@ -260,7 +266,7 @@ abline(v = trueval, col = "red", lwd = 4)
 
 - And now the confidence intervals:
 
-```{r, echo = TRUE, eval = TRUE, cache = TRUE, fig.height = 8, fig.width = 8}
+```{r, echo = TRUE, eval = FALSE, fig.height = 8, fig.width = 8}
 cis <- cbind(
   estimate - qnorm(0.975) * sd(estimate),
   estimate + qnorm(0.975) * sd(estimate)
