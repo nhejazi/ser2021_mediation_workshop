@@ -123,13 +123,13 @@ Let's take the NDE as an example:
 
 First, we need to introduce some notation to describe the EIF for the NDE
 
-- Let $Q(M, W)$ denote $\E(Y\mid A=1, M, W) - b(Y\mid A=0, M, W)$
+- Let $Q(M, W)$ denote $\E(Y\mid A=1, M, W) - \E(Y\mid A=0, M, W)$
 - We can now introduce the EIF:
 \begin{align*}
     D(O) &= \color{ForestGreen}{\bigg\{ \frac{I(A=1)}{\P(A=1\mid W)}\frac{\P(M\mid A=0,W)}{\P(M\mid A=1,W)} -
       \frac{I(A=0)}{\P(A=0\mid W)}\bigg\}} \times [Y-\E(Y\mid A,M,W)]  \\
     &+ \frac{I(A=0)}{\P(A=0\mid W)}\big\{Q(M,W) - \E[Q(M,W) | W,A=0] \big\}\\
-    &+ \E[d(M,W) | W,A=0] - \psi(\P) 
+    &+ \E[Q(M,W) | W,A=0] - \psi(\P) 
 \end{align*}
 
 - Estimating $\P(M\mid A, W)$ is a really hard problem when $M$ is high-dimensional. But,
