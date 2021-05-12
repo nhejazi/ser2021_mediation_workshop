@@ -89,7 +89,7 @@ knitr::include_graphics(here::here("img", "graphic4a3.png"))
   + $\P(M = m \mid A=a, W) > 0 \text{  } a.e.$
   + $\P(A=a \mid W) > 0 \text{  } a.e.$
 
-Under the above identification assumptions, the controlled direct can be
+Under the above identification assumptions, the controlled direct effect can be
 identified:
 $$ \E(Y_{1,m} - Y_{0,m}) = \E\{\color{ForestGreen}{\E(Y \mid A=1, M=m, W) - \E(Y \mid A=0, M=m, W)}\}$$
 
@@ -208,7 +208,7 @@ What does $M_0 \indep Y_{1,m} \mid W$ mean?
 \[\E \sum_m \{\E(Y_{1,m} \mid W) - \E(Y_{0,m} \mid W)\} \P(M_{0}=m
 \mid W)\]
 
-- If CDE($m$) is constant across $m$ then CDE = NDE.
+- If CDE($m$) is constant across $m$, then CDE = NDE.
 
 
 ### Identification formula:
@@ -245,9 +245,6 @@ pred_y0 <- predict(lm_y, newdata = data.frame(a = 0, m = m, w = w))
 - and use this difference as a pseudo-outcome in a regression on $A$ and $W$:
 \[\color{Goldenrod}{\E\{}\color{ForestGreen}{\E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)}\color{Goldenrod}{\mid A=0,W\}}\]
 
-<!--
-KER: for some reason, when i look at the website it is showing pseudo ~ a + m instead of what is below
--->
 
 ```{r, echo = TRUE, eval = FALSE}
 pseudo <- pred_y1 - pred_y0
@@ -349,8 +346,8 @@ knitr::include_graphics(here::here("img", "ctndag.png"))
 
 ### Unidentifiability of the NDE and NIE in this setting
 
-- In this example, natural direct and indirect effects are unidentifiable from observed data on $(W,A,Z,M,Y)$.
-- The technical reason for this is that the cross-world counterfactual
+- In this example, natural direct and indirect effects are unidentifiable from observed data $O=(W,A,Z,M,Y)$.
+- The reason for this is that the cross-world counterfactual
   assumption
 \begin{equation*}
   Y_{1,m}\indep M_0\mid W
@@ -362,7 +359,7 @@ does not hold in the above directed acyclic graph.
 - Likewise, an intervention setting $A=0$ (necessary for the definition of
   $M_0$) induces a counterfactual $Z_0$.
 - The variables $Z_1$ and $Z_0$ are correlated because they share unmeasured
-  common causes.
+  common causes, $U_Z$.
 - The variable $Z_1$ is correlated with $Y_{1,m}$, and the variable $Z_0$ is
   correlated with $M_0$, because they are counterfactual outcomes in the same
   hypothetical worlds.
@@ -374,6 +371,9 @@ M_0 &= f_M(W, 0, Z_0, U_M)\\
 \end{align*}
 are correlated even after adjusting for $W$ by virtue of $Z_1$ and $Z_0$ being
 correlated.
+
+<!--Ivan, this is such a great explanation!!
+After that explanation, I'm not sure what you have below adds anything, but I'm happy to keep it if you guys think it's useful. Espeically because i think we do essentially adjust for z in our sequential regressions if we are estimating controlled direct effects in this environment, right?-->
 
 Intuitively:
 
@@ -417,6 +417,7 @@ knitr::include_graphics(here::here("img", "graphic4b.png"))
 - Above  we defined $G_a$ as a random draw from the distribution of $M_a \mid W$
 - What if instead we define $G_a$ as a random draw from the distribution of $M_a \mid (Z_a,W)$
 - It turns out the indirect effect defined in this way only measures the path $A\rightarrow M \rightarrow Y$, and not the path $A\rightarrow Z\rightarrow M \rightarrow Y$
+- There may be important reasons to choose one over another (e.g., survival analyses where we want the distribution conditional on $Z$, instrumental variable designs where it doesn't make sense to condition on $Z$)
 
 <!--
 KER: I see that you commented all of this out and I don't feel that strongly about it, but i think it is interesting and it is relevant and it is important for folks to think about.
