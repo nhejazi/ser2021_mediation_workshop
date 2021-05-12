@@ -49,4 +49,3 @@ bookdown::pdf_document2:
   toc_depth: 3
   toc_unnumbered: false
   pandoc_args: ["--top-level-division=chapter", "--listings"]
-

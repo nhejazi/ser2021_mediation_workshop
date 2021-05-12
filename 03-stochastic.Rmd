@@ -85,7 +85,8 @@ There are two possible ways of defining stochastic effects:
 - Consider the effect of an intervention where the post-intervention exposure is
   a function of the actually received exposure
   - For example modified treatment policies
-- In both cases $A\mid W$ is a non-deterministic intervention, thus the name _stochastic intervention_
+- In both cases $A \mid W$ is a non-deterministic intervention, thus the name
+  _stochastic intervention_
 
 ### Example: incremental propensity score interventions (IPSI) [@kennedy2018nonparametric] {-}
 
@@ -189,7 +190,7 @@ Under these assumptions, stochastic effects are identified as follows
 \end{align*}
 
 - Let's dissect the formula for the indirect effect in R:
-```{r, echo = TRUE, eval = FALSE}
+```{r}
 n <- 1e6
 w <- rnorm(n)
 a <- rbinom(n, 1, plogis(1 + w))
@@ -198,13 +199,13 @@ y <- rnorm(n, w + a + m)
 ```
 
 - First, fit regressions of the outcome on $(A,W)$ and $(M,A,W)$:
-```{r, echo = TRUE, eval = FALSE}
+```{r}
 fit_y1 <- lm(y ~ m + a + w)
 fit_y2 <- lm(y ~ a + w)
 ```
 
 - Get predictions fixing $A=a$ for all possible values $a$
-```{r, echo = TRUE, eval = FALSE}
+```{r}
 pred_y1_a1 <- predict(fit_y1, newdata = data.frame(a = 1, m, w))
 pred_y1_a0 <- predict(fit_y1, newdata = data.frame(a = 0, m, w))
 pred_y2_a1 <- predict(fit_y2, newdata = data.frame(a = 1, w))
@@ -213,28 +214,28 @@ pred_y2_a0 <- predict(fit_y2, newdata = data.frame(a = 0, w))
 - Compute
 \[\color{ForestGreen}{\{\E(Y\mid A=a, W)-\E(Y\mid A=a, M, W)\}}\]
 for each value $a$
-```{r, echo = TRUE, eval = FALSE}
+```{r}
 pseudo_a1 <- pred_y2_a1 - pred_y1_a1
 pseudo_a0 <- pred_y2_a0 - pred_y1_a0
 ```
 
 - Estimate the propensity score $g(1\mid w)$ and evaluate the post-intervention
   propensity score $g_\delta(1\mid w)$
-```{r, echo = TRUE, eval = FALSE}
+```{r}
 pscore_fit <- glm(a ~ w, family = binomial())
 pscore <- predict(pscore_fit, type = 'response')
 ## How do the intervention vs observed propensity score compare
 pscore_delta <- 2 * pscore / (2 * pscore + 1 - pscore)
 ```
 - What do the post-intervention propensity scores look like?
-```{r, echo = FALSE, eval = FALSE}
+```{r}
 plot(pscore, pscore_delta, xlab = 'Observed prop. score',
      ylab = 'Prop. score under intervention')
 abline(0, 1)
 ```
 
 ## What are the odds of exposure under intervention vs real world?
-```{r, echo = TRUE, eval = FALSE}
+```{r}
 odds <- (pscore_delta / (1 - pscore_delta)) / (pscore / (1 - pscore))
 summary(odds)
 ```
@@ -242,20 +243,20 @@ summary(odds)
 - Compute the sum
 \[\color{Goldenrod}{\sum_{a}\color{ForestGreen}{\{\E(Y\mid A=a, W)-\E(Y\mid A=a, M, W)\}}g_\delta(a\mid W)}\]
 
-```{r, echo = TRUE, eval = FALSE}
+```{r}
 indirect <- pseudo_a1 * pscore_delta + pseudo_a0 * (1 - pscore_delta)
 ```
 
 - The average of this value is the indirect effect
-```{r, echo = TRUE, eval = FALSE}
+```{r}
 ## E[Y(Adelta) - Y(Adelta, M)]
 mean(indirect)
 ```
 
 - The direct effect is
 \begin{align*}
-\E&(Y_{A_\delta} - Y_{A_\delta, M}) =\\
-&\E\left[\color{Goldenrod}{\sum_{a}\color{ForestGreen}{\{\E(Y\mid A=a, M, W) - Y\}}g_\delta(a\mid W)}\right]
+  \E&(Y_{A_\delta} - Y_{A_\delta, M}) =\\
+  &\E\left[\color{Goldenrod}{\sum_{a}\color{ForestGreen}{\{\E(Y\mid A=a, M, W) - Y\}}g_\delta(a\mid W)}\right]
 \end{align*}
 
 - Which can be computed as
@@ -280,6 +281,11 @@ mean(direct)
   - `R` implementation to be released soon, stay tuned!
 
 <!--
-ID: Should I add: continuous interventions, and/or the definitions of effects with intermediate confounders?
-KER: I don't think adding for intermediate confounders is necessary. Continuous interventions would be really useful *if* practical methods existed for that, but I think despite the paper existing, it hasn't really been done in practice, right? So probably wouldn't want to get into that.
+ID: Should I add: continuous interventions, and/or the definitions of effects
+with intermediate confounders?
+
+KER: I don't think adding for intermediate confounders is necessary. Continuous
+interventions would be really useful *if* practical methods existed for that,
+but I think despite the paper existing, it hasn't really been done in practice,
+right? So probably wouldn't want to get into that.
 -->

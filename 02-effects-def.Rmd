@@ -178,7 +178,9 @@ Then we can decompose the _average treatment effect_ $E(Y_1-Y_0)$ as follows
 ### Identification assumptions:
 
 <!--
-ID: For all the effects, we should add a discussion of identification assumptions: what they mean and try to teach people to identify when they are violated. We can do this in the context of our motivating examples.
+ID: For all the effects, we should add a discussion of identification
+assumptions: what they mean and try to teach people to identify when they are
+violated. We can do this in the context of our motivating examples.
 -->
 
 - $A \indep Y_{a,m} \mid W$
@@ -203,7 +205,8 @@ What does $M_0 \indep Y_{1,m} \mid W$ mean?
   - You can never design a randomized study where the assumption holds by
     design.
 
-### If the cross-world assumption holds, can write the NDE as a weighted average of controlled direct effects at each level of $M=m$.
+__If the cross-world assumption holds, can write the NDE as a weighted average
+of controlled direct effects at each level of $M=m$.__
 
 \[\E \sum_m \{\E(Y_{1,m} \mid W) - \E(Y_{0,m} \mid W)\} \P(M_{0}=m
 \mid W)\]
@@ -213,17 +216,17 @@ What does $M_0 \indep Y_{1,m} \mid W$ mean?
 
 ### Identification formula:
 
-- Under the above identification assumptions, the natural direct effect can be identified:
-
+- Under the above identification assumptions, the natural direct effect can be
+  identified:
 \begin{equation*}
-\E(Y_{1,M_0} - Y_{0,M_0}) =
-  \E[\color{Goldenrod}{\E\{}\color{ForestGreen}{\E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)}\color{Goldenrod}{\mid A=0,W\}}]
+  \E(Y_{1,M_0} - Y_{0,M_0}) =
+  \E[\color{Goldenrod}{\E\{}\color{ForestGreen}{\E(Y \mid A=1, M, W) -
+  \E(Y \mid A=0, M, W)}\color{Goldenrod}{\mid A=0,W\}}]
 \end{equation*}
 
 - The natural indirect effect can be identified similarly.
-
-- Let's dissect this formula in R:
-```{r, echo = TRUE, eval = FALSE}
+- Let's dissect this formula in `R`:
+```{r}
 n <- 1e6
 w <- rnorm(n)
 a <- rbinom(n, 1, 0.5)
@@ -231,11 +234,14 @@ m <- rnorm(n, w + a)
 y <- rnorm(n, w + a + m)
 ```
 - First we fit a correct model for the outcome
-```{r, echo = TRUE, eval = FALSE}
+```{r}
 lm_y <- lm(y ~ m + a + w)
 ```
-- Then we generate predictions
-\[\color{ForestGreen}{\E(Y \mid A=1, M, W)} \text{ and }\color{ForestGreen}{\E(Y \mid A=0, M, W)}\] with $A$ fixed but letting $M$ and $W$ take their observed values
+
+- Then we generate predictions \[\color{ForestGreen}{\E(Y \mid A=1, M, W)}
+  \text{ and }\color{ForestGreen}{\E(Y \mid A=0, M, W)}\] with $A$ fixed but
+  letting $M$ and $W$ take their observed
+values
 ```{r, echo = TRUE, eval = FALSE}
 pred_y1 <- predict(lm_y, newdata = data.frame(a = 1, m = m, w = w))
 pred_y0 <- predict(lm_y, newdata = data.frame(a = 0, m = m, w = w))
@@ -243,7 +249,8 @@ pred_y0 <- predict(lm_y, newdata = data.frame(a = 0, m = m, w = w))
 - Then we compute the difference between the predicted values
   \[\color{ForestGreen}{\E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)},\]
 - and use this difference as a pseudo-outcome in a regression on $A$ and $W$:
-\[\color{Goldenrod}{\E\{}\color{ForestGreen}{\E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)}\color{Goldenrod}{\mid A=0,W\}}\]
+  \[\color{Goldenrod}{\E\{}\color{ForestGreen}{\E(Y \mid A=1, M, W) - \E(Y \mid
+  A=0, M, W)}\color{Goldenrod}{\mid A=0,W\}}\]
 
 
 ```{r, echo = TRUE, eval = FALSE}
@@ -259,8 +266,6 @@ pred_pseudo <- predict(lm_pseudo, newdata = data.frame(a = 0, w = w))
 mean(pred_pseudo)
 ```
 
-
-
 ### Is this the estimand I want?
 
 - Makes sense to intervene on $A$ but not directly on $M$.
@@ -268,9 +273,6 @@ mean(pred_pseudo)
   effect. J. Pearl calls this _descriptive_.
 - NDE + NIE = total effect (ATE).
 - Okay with the assumptions.
-<!--
-NH: Should we mention cross-world indep and indentifiability issues in RCTs?
--->
 
 _What if our data structure involves a post-treatment confounder of the
 mediator-outcome relationship (e.g., adherence)?_
@@ -366,14 +368,19 @@ does not hold in the above directed acyclic graph.
 - To see this in the definition of counterfactual from a causal structural
   model:
 \begin{align*}
-Y_{1,m} &= f_Y(W, 1, Z_1, m, U_Y), \text{ and }\\
-M_0 &= f_M(W, 0, Z_0, U_M)\\
+  Y_{1,m} &= f_Y(W, 1, Z_1, m, U_Y), \text{ and }\\
+  M_0 &= f_M(W, 0, Z_0, U_M)\\
 \end{align*}
 are correlated even after adjusting for $W$ by virtue of $Z_1$ and $Z_0$ being
 correlated.
 
-<!--Ivan, this is such a great explanation!!
-After that explanation, I'm not sure what you have below adds anything, but I'm happy to keep it if you guys think it's useful. Espeically because i think we do essentially adjust for z in our sequential regressions if we are estimating controlled direct effects in this environment, right?-->
+<!--
+Ivan, this is such a great explanation!!  After that explanation, I'm not sure
+what you have below adds anything, but I'm happy to keep it if you guys think
+it's useful. Espeically because i think we do essentially adjust for z in our
+sequential regressions if we are estimating controlled direct effects in this
+environment, right?
+-->
 
 Intuitively:
 
@@ -415,12 +422,19 @@ knitr::include_graphics(here::here("img", "graphic4b.png"))
 
 ### An alternative definition of the effects:
 - Above  we defined $G_a$ as a random draw from the distribution of $M_a \mid W$
-- What if instead we define $G_a$ as a random draw from the distribution of $M_a \mid (Z_a,W)$
-- It turns out the indirect effect defined in this way only measures the path $A\rightarrow M \rightarrow Y$, and not the path $A\rightarrow Z\rightarrow M \rightarrow Y$
-- There may be important reasons to choose one over another (e.g., survival analyses where we want the distribution conditional on $Z$, instrumental variable designs where it doesn't make sense to condition on $Z$)
+- What if instead we define $G_a$ as a random draw from the distribution of $M_a
+  \mid (Z_a,W)$
+- It turns out the indirect effect defined in this way only measures the path
+  $A\rightarrow M \rightarrow Y$, and not the path $A\rightarrow Z\rightarrow M
+  \rightarrow Y$
+- There may be important reasons to choose one over another (e.g., survival
+  analyses where we want the distribution conditional on $Z$, instrumental
+  variable designs where it doesn't make sense to condition on $Z$)
 
 <!--
-KER: I see that you commented all of this out and I don't feel that strongly about it, but i think it is interesting and it is relevant and it is important for folks to think about.
+KER: I see that you commented all of this out and I don't feel that strongly
+about it, but i think it is interesting and it is relevant and it is important
+for folks to think about.
 -->
 <!--
  + Marginal PIDE: $\E(Y_{a, g_{M \mid a^{\star}, W}}) -
@@ -444,13 +458,14 @@ KER: I see that you commented all of this out and I don't feel that strongly abo
 
 Under these assumptions, the population interventional direct and indirect effect is identified:
 \begin{align*}
-\E&(Y_{a, G_{a'}}) = \\
-&\E\left[\color{Purple}{\E\left\{\color{Goldenrod}{\sum_z}\color{ForestGreen}{\E(Y \mid A=a, Z=z, M, W)} \color{Goldenrod}{\P(Z=z \mid A=a, W)}\mid A=a', W\right\}}\right]
+  \E&(Y_{a, G_{a'}}) = \\
+    &\E\left[\color{Purple}{\E\left\{\color{Goldenrod}{\sum_z}
+    \color{ForestGreen}{\E(Y \mid A=a, Z=z, M, W)}
+    \color{Goldenrod}{\P(Z=z \mid A=a, W)}\mid A=a', W\right\}}\right]
 \end{align*}
 
-- Let's dissect this formula in R:
-
-```{r, echo = TRUE, eval = FALSE}
+- Let's dissect this formula in `R`:
+```{r}
 n <- 1e6
 w <- rnorm(n)
 a <- rbinom(n, 1, 0.5)
@@ -462,31 +477,35 @@ y <- rnorm(n, w + a + z + m)
 - Let us compute $\E(Y_{1, G_0})$ (so that $a = 1$, and $a'=0$).
 - First, fit a regression model for the outcome, and compute
   \[\color{ForestGreen}{\E(Y \mid A=a, Z=z, M, W)}\] for all values of $z$
-```{r, echo = TRUE, eval = FALSE}
+```{r}
 lm_y <- lm(y ~ m + a + z + w)
 pred_a1z0 <- predict(lm_y, newdata = data.frame(m = m, a = 1, z = 0, w = w))
 pred_a1z1 <- predict(lm_y, newdata = data.frame(m = m, a = 1, z = 1, w = w))
 ```
+
 - Now we fit the true model for $Z \mid A, W$ and get the conditional
   probability that $Z=1$ fixing $A=1$
 ```{r, echo = TRUE, eval = FALSE}
 prob_z <- lm(z ~ a)
 pred_z <- predict(prob_z, newdata = data.frame(a = 1))
 ```
+
 - Now we compute the following pseudo-outcome:
-\[\color{Goldenrod}{\sum_z}\color{ForestGreen}{\E(Y \mid A=a, Z=z, M, W)} \color{Goldenrod}{\P(Z=z \mid A=a, w)}\]
-```{r, echo = TRUE, eval = FALSE}
+  \[\color{Goldenrod}{\sum_z}\color{ForestGreen}{\E(Y \mid A=a, Z=z, M, W)}
+  \color{Goldenrod}{\P(Z=z \mid A=a, w)}\]
+```{r}
 pseudo_out <- pred_a1z0 * (1 - pred_z) + pred_a1z1 * pred_z
 ```
 - Now we regress this pseudo-outcome on $A,W$, and compute the predictions
-  setting $A=0$, that is,
-\[\color{Purple}{\E\left\{\color{Goldenrod}{\sum_z}\color{ForestGreen}{\E(Y \mid A=a, Z=z, M, W)} \color{Goldenrod}{\P(Z=z \mid A=a, w)}\mid A=a', W\right\}}\]
-```{r, echo = TRUE, eval = FALSE}
+  setting $A=0$, that is, \[\color{Purple}{\E\left\{\color{Goldenrod}{\sum_z}
+  \color{ForestGreen}{\E(Y \mid A=a, Z=z, M, W)}
+  \color{Goldenrod}{\P(Z=z \mid A=a, w)}\mid A=a', W\right\}}\]
+```{r}
 fit_pseudo <- lm(pseudo_out ~ a + w)
 pred_pseudo <- predict(fit_pseudo, data.frame(a = 0, w = w))
 ```
 - And finally, just average those predictions!
-```{r, echo = TRUE, eval = FALSE}
+```{r}
 ## Mean(Y(1, G(0)))
 mean(pred_pseudo)
 ```
@@ -494,10 +513,13 @@ mean(pred_pseudo)
   $(a,a')=(0,0)$ to obtain an effect decomposition
 
 \begin{equation*}
-\E[Y_{1,G_1} - Y_{0,G_0}] = \underbrace{\E[Y_{\color{red}{1},\color{blue}{G_1}} -
-    Y_{\color{red}{1},\color{blue}{G_0}}]}_{\text{interventional indirect effect}} +
+  \E[Y_{1,G_1} - Y_{0,G_0}] = \underbrace{\E[Y_{\color{red}{1},
+    \color{blue}{G_1}} -
+    Y_{\color{red}{1},
+    \color{blue}{G_0}}]}_{\text{interventional indirect effect}} +
     \underbrace{\E[Y_{\color{blue}{1},\color{red}{G_0}} -
-    Y_{\color{blue}{0},\color{red}{G_0}}]}_{\text{interventional direct effect}}
+    Y_{\color{blue}{0},
+    \color{red}{G_0}}]}_{\text{interventional direct effect}}
 \end{equation*}
 
 ### Is this the estimand I want?
@@ -510,7 +532,8 @@ mean(pred_pseudo)
 
 ## Estimand Summary
 <!--
-ID: Can we redo the below table fixing the G notation? Also, is it possible to fix the formatting? (currently not very amenable to a presentation I think)
+ID: Can we redo the below table fixing the G notation? Also, is it possible to
+fix the formatting? (currently not very amenable to a presentation I think)
 -->
 ```{r , echo=FALSE, fig.cap="", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", out.width = "125%", results="asis"}
 knitr::include_graphics(here::here("img", "table1.png"))

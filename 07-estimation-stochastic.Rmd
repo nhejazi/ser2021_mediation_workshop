@@ -1,4 +1,6 @@
-# Estimating natural, interventional, and stochastic effects using R packages
+# Estimating (in)direct effects with `R` packages
+
+## `medshift`: Stochastic (in)direct effects
 
 We are interested in assessing the population intervention direct effect and
 the population intervention indirect effect, based on the effect decomposition
@@ -136,7 +138,7 @@ sl_binary_lrnr <- Lrnr_sl$new(
 )
 ```
 
-## Decomposing the population intervention effect
+### Decomposing the population intervention effect
 
 We may decompose the population intervention effect (PIE) in terms of a
 _population intervention direct effect_ (PIDE) and a _population
@@ -164,7 +166,7 @@ appropriate estimators as follows
   implemented in the [`npcausal` R
   package](https://github.com/ehkennedy/npcausal).
 
-## Estimating the effect decomposition term
+### Estimating the effect decomposition term
 
 As given in @diaz2020causal, the statistical functional identifying the
 decomposition term that appears in both the PIDE and PIIE
@@ -207,7 +209,7 @@ theta_eff <- medshift(
 summary(theta_eff)
 ```
 
-## Estimating the direct effect
+### Estimating the direct effect
 
 Recall that, based on the decomposition outlined previously, the population
 intervention direct effect may be denoted $\beta_{\text{PIDE}}(\delta) =
@@ -253,9 +255,7 @@ de_est <- linear_contrast(params_de, eifs_de)
 de_est
 ```
 
----
-
-# `medoutcon`
+## `medoutcon`: Natural/Interventional Effects
 
 An exposure of interest often affects an outcome directly, or indirectly by the
 mediation of some intermediate variables. Identifying and quantifying the
@@ -283,7 +283,7 @@ model. Among their contributions, @diaz2020nonparametric
 - present theoretical conditions under which their proposed estimators are
   consistent, multiply robust, and efficient.
 
-## Problem Setup and Notation
+### Problem Setup and Notation
 
 The problem addressed by the work of @diaz2020nonparametric may be represented
 by the following nonparametric structural equation model (NPSEM):
@@ -312,7 +312,7 @@ $b(a, z, m, w)$ to denote the outcome regression function $\mathbb{E}(Y \mid A
 = a, Z = z, M = m, W = w)$, as well as $q(z \mid a,w)$ and $r(z \mid a, m, w)$
 to denote the corresponding conditional densities of $Z$.
 
-## Interventional (In)Direct Effects
+### Interventional (In)Direct Effects
 
 @diaz2020nonparametric define the _total effect_ of $A$ on $Y$ in terms of a
 contrast between two user-supplied values $a', a^{\star} \in \mathcal{A}$.
@@ -368,7 +368,7 @@ functional
 under a set of standard identifiability conditions [@vanderweele2014effect],
 which are further reviewed in @diaz2020nonparametric.
 
-## Efficient Estimation
+### Efficient Estimation
 
 @diaz2020nonparametric define two efficient estimators of their interventional
 (in)direct effects. These are based on the one-step estimation and targeted
@@ -396,9 +396,9 @@ superior finite-sample performance, making them potentially more reliable than
 one-step estimators. For the exact form of the EIF as well as those of the
 one-step and TML estimators, consult @diaz2020nonparametric.
 
-## Data Analysis Example
+### Data Analysis Example
 
-### Setting up the data example
+#### Setting up the data example
 
 Now, we'll take a look at how to estimate the interventional direct and indirect
 effects using a simulated data example. @diaz2020nonparametric illustrate the
@@ -408,7 +408,7 @@ intervention had on adolescent girls' risk behavior.
 
 First, let's load a few required packages and set a seed for our simulation.
 
-```{r setup, message=FALSE, warning=FALSE}
+```{r setup}
 library(data.table)
 library(medoutcon)
 library(sl3)
@@ -423,7 +423,7 @@ $M$ an intermediate confounder $Z$ that affects the mediator $M$ and is itself
 affected by the exposure $A$, and, finally, a binary outcome $Y$ that is a
 function of $(W, A, Z, M)$.
 
-```{r make_example_data, message=FALSE, warning=FALSE}
+```{r make_example_data}
 # produces a simple data set based on ca causal model with mediation
 make_example_data <- function(n_obs = 1000) {
   ## baseline covariates
@@ -460,7 +460,7 @@ m_names <- stringr::str_subset(colnames(example_data), "M")
 
 Now, let's take a quick look at our simulated data:
 
-```{r example_data, message=FALSE, warning=FALSE}
+```{r example_data}
 # quick look at the data
 head(example_data)
 ```
@@ -480,14 +480,7 @@ estimate each of these nuisance parameters flexibly, we'll rely on data adaptive
 regression strategies in order to avoid the potential for (parametric) model
 misspecification.
 
-<!--
-Note that there are two additional nuisance parameters that must also be
-estimated ($u$ and $v$), which are themselves functions of the other nuisance
-parameters.  We recommend estimating these via the highly adaptive lasso, which
-is the...
--->
-
-### Ensemble learning of nuisance functions
+#### Ensemble learning of nuisance functions
 
 As we'd like to rely on flexible, data adaptive regression strategies for
 estimating each of the nuisance parameters $(g, h, b, q, r)$, we require a
@@ -511,7 +504,7 @@ $\ell_1$-penalized Lasso regression, an elastic net regression that equally
 weights the $\ell_1$ and $\ell_2$ penalties, random forests (`ranger`), and the
 highly adaptive lasso (HAL):
 
-```{r make_sl2, message=FALSE, warning=FALSE}
+```{r make_sl2}
 # instantiate learners
 mean_lrnr <- Lrnr_mean$new()
 fglm_lrnr <- Lrnr_glm_fast$new(family = binomial())
@@ -545,7 +538,7 @@ constructed above in practice, such a library will be too computationally
 intensive for our examples. To reduce computation time, we construct a simpler
 library, using only a subset of the above learning algorithms:
 
-```{r make_simple_sl, message=FALSE, warning=FALSE}
+```{r make_simple_sl}
 # create simpler learner library and instantiate super learner ensemble
 lrnr_lib <- Stack$new(mean_lrnr, fglm_lrnr, lasso_lrnr, rf_lrnr)
 sl_lrnr <- Lrnr_sl$new(learners = lrnr_lib, metalearner = Lrnr_nnls$new())
@@ -555,7 +548,7 @@ Having set up our ensemble learner, we're now ready to estimate each of the
 interventional effects using the efficient estimators exposed in the `medoutcon`
 package.
 
-### Estimating the direct effect
+#### Estimating the direct effect
 
 We're now ready to estimate the interventional direct effect. This direct effect
 is computed as a contrast between the interventions $(a' = 1, a^{\star} = 0)$
@@ -586,7 +579,7 @@ $(a' = 0, a^{\star} = 0)$ and $(a' = 1, a^{\star} = 0)$. Thus, the one-step
 estimator of this direct effect is constructed by application of the delta
 method to each of the one-step estimators (and EIFs) for these contrasts.
 
-```{r de_os, message=FALSE, warning=FALSE, eval=FALSE}
+```{r de_os}
 # compute one-step estimate of the interventional direct effect
 os_de <- medoutcon(
   W = example_data[, ..w_names],
@@ -610,7 +603,7 @@ Next, let's compare the one-step estimate to the TML estimate. Analogous to the
 case of the one-step estimator, the TML estimator can be evaluated via a single
 call to the `medoutcon` function:
 
-```{r de_tmle, message=FALSE, warning=FALSE, eval=FALSE}
+```{r de_tmle}
 # compute targeted minimum loss estimate of the interventional direct effect
 tmle_de <- medoutcon(
   W = example_data[, ..w_names],
@@ -635,7 +628,7 @@ estimator generally exhibits better finite-sample performance than the one-step
 estimator [@vdl2011targeted; @vdl2018targeted], so the TML estimate is likely to
 be more reliable in modest (realistic) sample sizes.
 
-### Estimating the indirect effect
+#### Estimating the indirect effect
 
 Estimation of the interventional indirect effect proceeds similarly to the
 strategy discussed above for the corresponding direct effect. An efficient
@@ -658,7 +651,7 @@ $(a' = 1, a^{\star} = 1)$ and $(a' = 1, a^{\star} = 0)$. Thus, the one-step
 estimator of this indirect effect is constructed by application of the delta
 method to each of the one-step estimators (and EIFs) for the contrasts.
 
-```{r ie_os, message=FALSE, warning=FALSE, eval=FALSE}
+```{r ie_os}
 # compute one-step estimate of the interventional indirect effect
 os_ie <- medoutcon(
   W = example_data[, ..w_names],
@@ -681,7 +674,7 @@ As before, let's compare the one-step estimate to the TML estimate. Analogous
 to the case of the one-step estimator, the TML estimator can be evaluated via a
 single call to the `medoutcon` function, as demonstrated below
 
-```{r ie_tmle, message=FALSE, warning=FALSE, eval=FALSE}
+```{r ie_tmle}
 # compute targeted minimum loss estimate of the interventional indirect effect
 tmle_ie <- medoutcon(
   W = example_data[, ..w_names],

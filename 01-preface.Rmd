@@ -13,7 +13,9 @@ knitr::include_graphics(here::here("img", "ctndag.png"))
 
 ## What is causal mediation analysis?
 <!--
-KER: I think the tone can come off as smug sometimes, so I'd like to delete some of this. I also made some edits, but I still think it's worth thinking about what is crucial to include vs not. 
+KER: I think the tone can come off as smug sometimes, so I'd like to delete
+some of this. I also made some edits, but I still think it's worth thinking
+about what is crucial to include vs not.
 -->
 - Causal mediation analyses assess how the paths behave under interventions
 - Statistical mediation analyses assess associations between the variables
@@ -28,20 +30,20 @@ KER: I think the tone can come off as smug sometimes, so I'd like to delete some
 - There is a confounder $Z$ of $M\rightarrow Y$ ffected by treatment assignment (adherence)
 - We could fit the following models:
     \begin{align}
-      \E(M\mid A=a, W=w, Z=z) & = \gamma_0 + \gamma_1 a + \gamma_2 w +\gamma_3 z \\
+      \E(M\mid A=a, W=w, Z=z) & = \gamma_0 + \gamma_1 a + \gamma_2 w + \gamma_3 z \\
       \E(Y\mid M=m, A=a, W=w, Z=z) & = \beta_0 + \beta_1 m + \beta_2 a + \beta_3 w + \beta_4 z
     \end{align}
 - The product $(\gamma_1\beta_1)$ has been proposed as a measure of the effect
   of $A$ on $Y$ through $M$
 - Causal interpretation problems with this method:
   - We will see that this parameter cannot be interpreted as a causal effect
-  
-### R Example:
+
+### `R` Example:
 - Assume we have a pre-treamtment confounder of $Y$ and $M$, denote it with $W$
 - For simplicity, assume $A$ is randomized
 - We'll generate a really large sample from a data generating mechanism so that
   we are not concerned with sampling errors
-```{r, echo = TRUE, eval = TRUE}
+```{r}
 n <- 1e7
 w <- rnorm(n)
 a <- rbinom(n, 1, 0.5)
@@ -54,7 +56,7 @@ y <- rnorm(n, m + w - a + z)
   is nonzero (there is a pathway $A\rightarrow Z \rightarrow M \rightarrow Y$)
 - Let's see what the product of coefficients method would say:
 
-```{r, echo = TRUE, eval = TRUE}
+```{r}
 lm_y <- lm(y ~ m + a + w + z)
 lm_m <- lm(m ~ a + w + z)
 ## product of coefficients

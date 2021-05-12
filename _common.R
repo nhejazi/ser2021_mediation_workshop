@@ -7,7 +7,7 @@ knitr::opts_chunk$set(
   comment = "#>",
   collapse = TRUE,
   cache = FALSE,
-  tidy = FALSE,
+  tidy = TRUE,
   out.width = "80%",
   fig.align = "center",
   fig.width = 6,
@@ -17,7 +17,8 @@ knitr::opts_chunk$set(
   dpi = 300,
   message = FALSE,
   warning = FALSE,
-  echo = TRUE
+  echo = TRUE,
+  eval = FALSE
 )
 
 # global options
