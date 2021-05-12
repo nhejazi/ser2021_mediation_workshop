@@ -46,11 +46,11 @@
 <li><a class="" href="index.html">Welcome to SER!</a></li>
 <li><a class="" href="mediation.html"><span class="header-section-number">1</span> Preliminaries on causal mediation analysis</a></li>
 <li><a class="active" href="estimands.html"><span class="header-section-number">2</span> Path-specific casual mediation effect types</a></li>
-<li><a class="" href="estimandirl.html"><span class="header-section-number">3</span> How to choose an estimand: Real world example</a></li>
-<li><a class="" href="stochastic.html"><span class="header-section-number">4</span> Stochastic Direct and Indirect Effects</a></li>
+<li><a class="" href="stochastic.html"><span class="header-section-number">3</span> Stochastic Direct and Indirect Effects</a></li>
+<li><a class="" href="estimandirl.html"><span class="header-section-number">4</span> How to choose an estimand: Real world example</a></li>
 <li><a class="" href="preliminaries-on-semiparametric-estimation.html"><span class="header-section-number">5</span> Preliminaries on semiparametric estimation</a></li>
-<li><a class="" href="estimating-natural-and-interventional-effects.html"><span class="header-section-number">6</span> Estimating natural and interventional effects</a></li>
-<li><a class="" href="estimating-stochastic-effects.html"><span class="header-section-number">7</span> Estimating stochastic effects</a></li>
+<li><a class="" href="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html"><span class="header-section-number">6</span> Using the EIF to construct an estimator: the case of the natural direct effect</a></li>
+<li><a class="" href="estimating-indirect-effects-with-r-packages.html"><span class="header-section-number">7</span> Estimating (in)direct effects with R packages</a></li>
 <li><a class="" href="references.html">References</a></li>
 </ul>
 
@@ -68,21 +68,20 @@
 <li>Natural direct and indirect effects</li>
 <li>Interventional direct and indirect effects</li>
 </ul>
-<div class="figure" style="text-align: center">
-<span id="fig:unnamed-chunk-1"></span>
-<img src="02-effects-def_files/figure-html/unnamed-chunk-1-1.png" alt="Directed acyclic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment" width="80%"><p class="caption">
-FIGURE 2.1: Directed acyclic graph under <em>no intermediate confounders</em> of the mediator-outcome relation affected by treatment
-</p>
-</div>
 <div id="controlled-direct-effects" class="section level2">
 <h2>
 <span class="header-section-number">2.1</span> Controlled direct effects<a class="anchor" aria-label="anchor" href="#controlled-direct-effects"><i class="fas fa-link"></i></a>
 </h2>
 <ul>
-<li>Set the mediator to a reference value <span class="math inline">\(M=m\)</span> uniformly for everyone in the population</li>
+<li>Set the mediator to a reference value <span class="math inline">\(M=m\)</span> uniformly for everyone in the
+population</li>
 <li>Compare <span class="math inline">\(A=1\)</span> vs <span class="math inline">\(A=0\)</span> with <span class="math inline">\(M=m\)</span> fixed</li>
 </ul>
 <p><span class="math display">\[\psi_{\text{CDE}} = \E(Y_{1,m} - Y_{0,m}) \]</span></p>
+<!--
+ID: Reminder to ask Kara about the purpose of these cartoons
+KER: !!
+-->
 <div id="identification-assumptions" class="section level3">
 <h3>
 <span class="header-section-number">2.1.1</span> Identification assumptions:<a class="anchor" aria-label="anchor" href="#identification-assumptions"><i class="fas fa-link"></i></a>
@@ -101,17 +100,18 @@ FIGURE 2.1: Directed acyclic graph under <em>no intermediate confounders</em> of
 </ul>
 </li>
 </ul>
-<p>Under the above identification assumptions, the controlled direct can be identified:
+<p>Under the above identification assumptions, the controlled direct effect can be
+identified:
 <span class="math display">\[ \E(Y_{1,m} - Y_{0,m}) = \E\{\color{ForestGreen}{\E(Y \mid A=1, M=m, W) - \E(Y \mid A=0, M=m, W)}\}\]</span></p>
 <ul>
-<li>For intuition about this formula in R, let’s continue with our toy example, where we now add an indirect effect</li>
+<li>For intuition about this formula in R, let’s continue with a toy example:</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">1e7</span>
+<code class="sourceCode R"><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">1e6</span>
 <span class="va">w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>
 <span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">1</span>, <span class="fl">0.5</span><span class="op">)</span>
 <span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">w</span> <span class="op">+</span> <span class="va">a</span><span class="op">)</span>
-<span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">w</span> <span class="op">-</span> <span class="va">a</span> <span class="op">+</span> <span class="va">m</span><span class="op">)</span></code></pre></div>
+<span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">w</span> <span class="op">+</span> <span class="va">a</span> <span class="op">+</span> <span class="va">m</span><span class="op">)</span></code></pre></div>
 <ul>
 <li>First we fit a correct model for the outcome</li>
 </ul>
@@ -120,24 +120,22 @@ FIGURE 2.1: Directed acyclic graph under <em>no intermediate confounders</em> of
 <ul>
 <li>Assume we would like the CDE at <span class="math inline">\(m=0\)</span>
 </li>
-<li>Then we generate predictions <span class="math display">\[\color{ForestGreen}{\E(Y \mid A=1, M=m, W)} \text{ and }\color{ForestGreen}{\E(Y \mid A=0, M=m, W)}:\]</span>
+<li>Then we generate predictions <span class="math display">\[\color{ForestGreen}{\E(Y \mid A=1, M=m, W)}
+\text{ and }\color{ForestGreen}{\E(Y \mid A=0, M=m, W)}:\]</span>
 </li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pred_y1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lm_y</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">1</span>, m <span class="op">=</span> <span class="fl">0</span>, w <span class="op">=</span> <span class="va">w</span><span class="op">)</span><span class="op">)</span>
 <span class="va">pred_y0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lm_y</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">0</span>, m <span class="op">=</span> <span class="fl">0</span>, w <span class="op">=</span> <span class="va">w</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <ul>
-<li>Then we compute the difference between the predicted values <span class="math inline">\(\color{ForestGreen}{\E(Y \mid A=1, M=m, W) - \E(Y \mid A=0, M=m, W)}\)</span>, and average across values of <span class="math inline">\(W\)</span>
+<li>Then we compute the difference between the predicted values
+<span class="math inline">\(\color{ForestGreen}{\E(Y \mid A=1, M=m, W) - \E(Y \mid A=0, M=m, W)}\)</span>, and
+average across values of <span class="math inline">\(W\)</span>
 </li>
 </ul>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## CDE at m = 0</span>
-<span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">pred_y1</span> <span class="op">-</span> <span class="va">pred_y0</span><span class="op">)</span>
-<span class="co">#&gt; [1] -0.99974</span></code></pre></div>
-<!--
-ID: Reminder to ask Kara about the purpose of these cartoons
--->
-<div class="inline-figure"><img src="img/graphic4a3.png" width="50%" style="display: block; margin: auto;"></div>
+<span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">pred_y1</span> <span class="op">-</span> <span class="va">pred_y0</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="is-this-the-estimand-i-want" class="section level3">
 <h3>
@@ -151,7 +149,8 @@ level <span class="math inline">\(m \in \mathcal{M}\)</span>.</li>
 <li>J. Pearl calls this <em>prescriptive</em>.</li>
 <li>Can you think of an example?</li>
 <li>Air pollution, rescue inhaler dosage, hospital visits</li>
-<li>Does not provide a decomposition of the average treatment effect into direct and indirect effects</li>
+<li>Does not provide a decomposition of the average treatment effect into
+direct and indirect effects</li>
 </ul>
 </li>
 </ul>
@@ -176,7 +175,7 @@ indirect counterparts?</em></p>
 <li><p>Interpreted as <em>the outcome for an individual in a hypothetical world where
 treatment was given but the mediator was held at the value it would have
 taken under no treatment</em></p></li>
-<li><p>Recal that, because of the definition of counterfactuals
+<li><p>Recall that, because of the definition of counterfactuals
 <span class="math display">\[\begin{equation*}
 Y_{1, M_1} = Y_1
 \end{equation*}\]</span></p></li>
@@ -189,20 +188,21 @@ Y_{1, M_1} = Y_1
     Y_{\color{blue}{0},\color{red}{M_0}}]}_{\text{natural direct effect}}
 \end{equation*}\]</span></p>
 <ul>
-<li>Natural direct effect (NDE): Varying treatment while keeping the mediator fixed at the value it would have taken under no treatment</li>
-<li>Natural indirect effect (NIE): Varying the mediator from the value it would have taken under treatment to the value it would have taken under control, while keeping treatment fixed</li>
+<li>Natural direct effect (NDE): Varying treatment while keeping the mediator
+fixed at the value it would have taken under no treatment</li>
+<li>Natural indirect effect (NIE): Varying the mediator from the value it would
+have taken under treatment to the value it would have taken under control,
+while keeping treatment fixed</li>
 </ul>
-<!--
-ID: I still think the below is wrong. M could not possibly be an effect modifier of A -> Y because it comes after Y
-I suggest we delete this
---><ul>
-<li>If no effect modification of the effect of <span class="math inline">\(A\)</span> on <span class="math inline">\(Y\)</span> by <span class="math inline">\(M\)</span> (i.e., no interaction between <span class="math inline">\(A\)</span> and <span class="math inline">\(M\)</span>), then CDE = NDE.</li>
-</ul>
-<div class="inline-figure"><img src="img/graphic4a.png" width="50%" style="display: block; margin: auto;"></div>
 <div id="identification-assumptions-1" class="section level3">
 <h3>
 <span class="header-section-number">2.2.1</span> Identification assumptions:<a class="anchor" aria-label="anchor" href="#identification-assumptions-1"><i class="fas fa-link"></i></a>
 </h3>
+<!--
+ID: For all the effects, we should add a discussion of identification
+assumptions: what they mean and try to teach people to identify when they are
+violated. We can do this in the context of our motivating examples.
+-->
 <ul>
 <li><span class="math inline">\(A \indep Y_{a,m} \mid W\)</span></li>
 <li><span class="math inline">\(M \indep Y_{a,m} \mid W, A\)</span></li>
@@ -210,41 +210,67 @@ I suggest we delete this
 <li><span class="math inline">\(M_0 \indep Y_{1,m} \mid W\)</span></li>
 <li>and positivity assumptions</li>
 </ul>
-<p>Note: If the cross-world assumption holds (defined below), the NDE can also be written
-as <span class="math display">\[\E \sum_m \{\E(Y_{1,m} \mid W) - \E(Y_{0,m} \mid W)\} \P(M_{0}=m \mid W)\]</span></p>
+</div>
+<div id="cross-world-independence-assumption" class="section level3">
+<h3>
+<span class="header-section-number">2.2.2</span> Cross-world independence assumption<a class="anchor" aria-label="anchor" href="#cross-world-independence-assumption"><i class="fas fa-link"></i></a>
+</h3>
+<p>What does <span class="math inline">\(M_0 \indep Y_{1,m} \mid W\)</span> mean?</p>
 <ul>
-<li>Weighted average of controlled direct effects at each level of <span class="math inline">\(M=m\)</span>.</li>
+<li>Conditional on <span class="math inline">\(W\)</span>, knowledge of the mediator value in the absence of
+treatment, <span class="math inline">\(M_0\)</span>,
+provides no information about the outcome under treatment, <span class="math inline">\(Y_{1,m}\)</span>.</li>
+<li>Can you think of a data-generating mechanism that would violate this
+assumption?</li>
+<li>Example: in a randomized study, whenever we believe that treatment assignment
+works through adherence (i.e., almost
+always), we are violating this assumption (more on this later).</li>
+<li>Cross-world assumptions are problematic for other reasons, including:
+<ul>
+<li>You can never design a randomized study where the assumption holds by
+design.</li>
+</ul>
+</li>
+</ul>
+<p><strong>If the cross-world assumption holds, can write the NDE as a weighted average
+of controlled direct effects at each level of <span class="math inline">\(M=m\)</span>.</strong></p>
+<p><span class="math display">\[\E \sum_m \{\E(Y_{1,m} \mid W) - \E(Y_{0,m} \mid W)\} \P(M_{0}=m
+\mid W)\]</span></p>
+<ul>
+<li>If CDE(<span class="math inline">\(m\)</span>) is constant across <span class="math inline">\(m\)</span>, then CDE = NDE.</li>
 </ul>
 </div>
 <div id="identification-formula" class="section level3">
 <h3>
-<span class="header-section-number">2.2.2</span> Identification formula:<a class="anchor" aria-label="anchor" href="#identification-formula"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.2.3</span> Identification formula:<a class="anchor" aria-label="anchor" href="#identification-formula"><i class="fas fa-link"></i></a>
 </h3>
 <ul>
-<li>Under the above identification assumptions, the natural direct effect can be identified:</li>
-</ul>
-<p><span class="math display">\[\begin{equation*}
+<li><p>Under the above identification assumptions, the natural direct effect can be
+identified:
+<span class="math display">\[\begin{equation*}
 \E(Y_{1,M_0} - Y_{0,M_0}) =
-  \E[\color{Goldenrod}{\E\{}\color{ForestGreen}{\E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)}\color{Goldenrod}{\mid A=0,W\}}]
-\end{equation*}\]</span></p>
-<ul>
+\E[\color{Goldenrod}{\E\{}\color{ForestGreen}{\E(Y \mid A=1, M, W) -
+\E(Y \mid A=0, M, W)}\color{Goldenrod}{\mid A=0,W\}}]
+\end{equation*}\]</span></p></li>
 <li><p>The natural indirect effect can be identified similarly.</p></li>
-<li><p>Let’s dissect this formula in R:</p></li>
+<li><p>Let’s dissect this formula in <code>R</code>:</p></li>
 </ul>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">1e7</span>
+<code class="sourceCode R"><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">1e6</span>
 <span class="va">w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>
 <span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">1</span>, <span class="fl">0.5</span><span class="op">)</span>
 <span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">w</span> <span class="op">+</span> <span class="va">a</span><span class="op">)</span>
-<span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">w</span> <span class="op">-</span> <span class="va">a</span> <span class="op">+</span> <span class="va">m</span><span class="op">)</span></code></pre></div>
+<span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">w</span> <span class="op">+</span> <span class="va">a</span> <span class="op">+</span> <span class="va">m</span><span class="op">)</span></code></pre></div>
 <ul>
 <li>First we fit a correct model for the outcome</li>
 </ul>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">lm_y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">m</span> <span class="op">+</span> <span class="va">a</span> <span class="op">+</span> <span class="va">w</span><span class="op">)</span></code></pre></div>
 <ul>
-<li>Then we generate predictions
-<span class="math display">\[\color{ForestGreen}{\E(Y \mid A=1, M, W)} \text{ and }\color{ForestGreen}{\E(Y \mid A=0, M, W)}\]</span> with <span class="math inline">\(A\)</span> fixed but letting <span class="math inline">\(M\)</span> and <span class="math inline">\(W\)</span> take their observed values</li>
+<li>Then we generate predictions <span class="math display">\[\color{ForestGreen}{\E(Y \mid A=1, M, W)}
+\text{ and }\color{ForestGreen}{\E(Y \mid A=0, M, W)}\]</span> with <span class="math inline">\(A\)</span> fixed but
+letting <span class="math inline">\(M\)</span> and <span class="math inline">\(W\)</span> take their observed
+values</li>
 </ul>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pred_y1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lm_y</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">1</span>, m <span class="op">=</span> <span class="va">m</span>, w <span class="op">=</span> <span class="va">w</span><span class="op">)</span><span class="op">)</span>
@@ -254,34 +280,21 @@ as <span class="math display">\[\E \sum_m \{\E(Y_{1,m} \mid W) - \E(Y_{0,m} \mid
 <span class="math display">\[\color{ForestGreen}{\E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)},\]</span>
 </li>
 <li>and use this difference as a pseudo-outcome in a regression on <span class="math inline">\(A\)</span> and <span class="math inline">\(W\)</span>:
-<span class="math display">\[\color{Goldenrod}{\E\{}\color{ForestGreen}{\E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)}\color{Goldenrod}{\mid A=0,W\}}\]</span>
+<span class="math display">\[\color{Goldenrod}{\E\{}\color{ForestGreen}{\E(Y \mid A=1, M, W) - \E(Y \mid
+A=0, M, W)}\color{Goldenrod}{\mid A=0,W\}}\]</span>
 </li>
 </ul>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pseudo</span> <span class="op">&lt;-</span> <span class="va">pred_y1</span> <span class="op">-</span> <span class="va">pred_y0</span>
-<span class="va">lm_pseudo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">pseudo</span> <span class="op">~</span> <span class="va">a</span> <span class="op">+</span> <span class="va">m</span><span class="op">)</span></code></pre></div>
+<span class="va">lm_pseudo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">pseudo</span> <span class="op">~</span> <span class="va">a</span> <span class="op">+</span> <span class="va">w</span><span class="op">)</span></code></pre></div>
 <ul>
-<li>Now we predict the value of this pseudo-outcome under <span class="math inline">\(A=0\)</span>, and average the result</li>
+<li>Now we predict the value of this pseudo-outcome under <span class="math inline">\(A=0\)</span>, and average the
+result</li>
 </ul>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pred_pseudo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lm_pseudo</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">0</span>, w <span class="op">=</span> <span class="va">w</span><span class="op">)</span><span class="op">)</span>
 <span class="co">## NDE:</span>
-<span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">pred_pseudo</span><span class="op">)</span>
-<span class="co">#&gt; [1] -1.0011</span></code></pre></div>
-</div>
-<div id="cross-world-independence-assumption" class="section level3">
-<h3>
-<span class="header-section-number">2.2.3</span> Cross-world independence assumption<a class="anchor" aria-label="anchor" href="#cross-world-independence-assumption"><i class="fas fa-link"></i></a>
-</h3>
-<p>What does <span class="math inline">\(M_0 \indep Y_{1,m} \mid W\)</span> mean?</p>
-<ul>
-<li>Conditional on <span class="math inline">\(W\)</span>, knowledge of the mediator value in the absence of treatment, <span class="math inline">\(M_0\)</span>,
-provides no information about the outcome under treatment, <span class="math inline">\(Y_{1,m}\)</span>.</li>
-<li>Can you think of a data-generating mechanism that would violate this
-assumption?</li>
-<li>Example: in a randomized study, whenever we believe that treatment assignment works through adherence (i.e., almost
-always), we are violating this assumption (more on this later).</li>
-</ul>
+<span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">pred_pseudo</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="is-this-the-estimand-i-want-1" class="section level3">
 <h3>
@@ -292,60 +305,58 @@ always), we are violating this assumption (more on this later).</li>
 <li>Want to understand a natural mechanism underlying an association/ total
 effect. J. Pearl calls this <em>descriptive</em>.</li>
 <li>NDE + NIE = total effect (ATE).</li>
-<li>Okay with the assumptions.
-<!--
-NH: Should we mention cross-world indep and indentifiability issues in RCTs?
--->
-</li>
+<li>Okay with the assumptions.</li>
 </ul>
 <p><em>What if our data structure involves a post-treatment confounder of the
 mediator-outcome relationship (e.g., adherence)?</em></p>
-<div class="figure" style="text-align: center">
-<span id="fig:unnamed-chunk-12"></span>
-<img src="02-effects-def_files/figure-html/unnamed-chunk-12-1.png" alt="Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment" width="80%"><p class="caption">
-FIGURE 2.2: Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment
-</p>
-</div>
-<div class="inline-figure"><img src="img/ctndag.png" width="100%" style="display: block; margin: auto;"></div>
 </div>
 <div id="unidentifiability-of-the-nde-and-nie-in-this-setting" class="section level3">
 <h3>
 <span class="header-section-number">2.2.5</span> Unidentifiability of the NDE and NIE in this setting<a class="anchor" aria-label="anchor" href="#unidentifiability-of-the-nde-and-nie-in-this-setting"><i class="fas fa-link"></i></a>
 </h3>
 <ul>
-<li>In this example, natural direct and indirect effects are
-unidentifiable from observed data on <span class="math inline">\((W,A,Z,M,Y)\)</span>.</li>
-<li>The technical
-reason for this is that the cross-world counterfactual assumption
+<li>In this example, natural direct and indirect effects are unidentifiable from observed data <span class="math inline">\(O=(W,A,Z,M,Y)\)</span>.</li>
+<li>The reason for this is that the cross-world counterfactual
+assumption
 <span class="math display">\[\begin{equation*}
 Y_{1,m}\indep M_0\mid W
 \end{equation*}\]</span>
-does not hold in the above directed acyiclic graph.</li>
-<li>Technically, the
-reason for this is that an intervention setting <span class="math inline">\(A=1\)</span> (necessary for
-the definition of <span class="math inline">\(Y_{1,m}\)</span>) induces a counterfactual variable
+does not hold in the above directed acyclic graph.</li>
+<li>Technically, the reason for this is that an intervention setting <span class="math inline">\(A=1\)</span>
+(necessary for the definition of <span class="math inline">\(Y_{1,m}\)</span>) induces a counterfactual variable
 <span class="math inline">\(Z_1\)</span>.</li>
-<li>Likewise, an intervention setting <span class="math inline">\(A=0\)</span> (necessary for the
-definition of <span class="math inline">\(M_0\)</span>) induces a counterfactual <span class="math inline">\(Z_0\)</span>.</li>
-<li>The variables <span class="math inline">\(Z_1\)</span> and <span class="math inline">\(Z_0\)</span> are correlated because they share unmeasured common
-causes.</li>
-<li>The variable <span class="math inline">\(Z_1\)</span> is correlated with <span class="math inline">\(Y_{1,m}\)</span>, and the
-variable <span class="math inline">\(Z_0\)</span> is correlated with <span class="math inline">\(M_0\)</span>, because they are
-counterfactual outcomes in the same hypothetical worlds.</li>
-<li>To see this in the definition of counterfactual from a causal structural model:
+<li>Likewise, an intervention setting <span class="math inline">\(A=0\)</span> (necessary for the definition of
+<span class="math inline">\(M_0\)</span>) induces a counterfactual <span class="math inline">\(Z_0\)</span>.</li>
+<li>The variables <span class="math inline">\(Z_1\)</span> and <span class="math inline">\(Z_0\)</span> are correlated because they share unmeasured
+common causes, <span class="math inline">\(U_Z\)</span>.</li>
+<li>The variable <span class="math inline">\(Z_1\)</span> is correlated with <span class="math inline">\(Y_{1,m}\)</span>, and the variable <span class="math inline">\(Z_0\)</span> is
+correlated with <span class="math inline">\(M_0\)</span>, because they are counterfactual outcomes in the same
+hypothetical worlds.</li>
+<li>To see this in the definition of counterfactual from a causal structural
+model:
 <span class="math display">\[\begin{align*}
 Y_{1,m} &amp;= f_Y(W, 1, Z_1, m, U_Y), \text{ and }\\
 M_0 &amp;= f_M(W, 0, Z_0, U_M)\\
 \end{align*}\]</span>
-are correlated even after adjusting for <span class="math inline">\(W\)</span> by virtue of <span class="math inline">\(Z_1\)</span> and <span class="math inline">\(Z_0\)</span> being correlated.</li>
+are correlated even after adjusting for <span class="math inline">\(W\)</span> by virtue of <span class="math inline">\(Z_1\)</span> and <span class="math inline">\(Z_0\)</span> being
+correlated.</li>
 </ul>
-<p>Intuitively:</p>
+<!--
+Ivan, this is such a great explanation!!  After that explanation, I'm not sure
+what you have below adds anything, but I'm happy to keep it if you guys think
+it's useful. Espeically because i think we do essentially adjust for z in our
+sequential regressions if we are estimating controlled direct effects in this
+environment, right?
+--><p>Intuitively:</p>
 <ul>
 <li>
-<span class="math inline">\(Z\)</span> is a confounder of the relation <span class="math inline">\(M \rightarrow Y\)</span>, which requires adjustment</li>
+<span class="math inline">\(Z\)</span> is a confounder of the relation <span class="math inline">\(M \rightarrow Y\)</span>, which requires
+adjustment</li>
 <li>But <span class="math inline">\(Z\)</span> is on the pathway <span class="math inline">\(A\rightarrow Y\)</span>, which precludes adjustment</li>
 </ul>
-<p>Note: CDEs are still identified in this setting. They can be identified and estimated similarly to a longitudinal data sructure with a two-time-point intervention.</p>
+<p>Note: CDEs are still identified in this setting. They can be identified and
+estimated similarly to a longitudinal data sructure with a two-time-point
+intervention.</p>
 </div>
 </div>
 <div id="interventional-indirect-effects" class="section level2">
@@ -353,55 +364,150 @@ are correlated even after adjusting for <span class="math inline">\(W\)</span> b
 <span class="header-section-number">2.3</span> Interventional (in)direct effects<a class="anchor" aria-label="anchor" href="#interventional-indirect-effects"><i class="fas fa-link"></i></a>
 </h2>
 <!--
-ID: Below I'd suggest to use the notation $Y_{a, G_a'}$ that I used
-in the other text I added in the next page, to ease the visual burden
-for people reading this
--->
-<!--
-I think the distinction between fully conditional and not will be completely lost on people
+I think the distinction between fully conditional and not will be completely
+lost on people
 -->
 <ul>
-<li><p>Let <span class="math inline">\(G_a\)</span> denote a random draw from the distribution of <span class="math inline">\(M(a) \mid W\)</span></p></li>
-<li><p>Define the counterfactual <span class="math inline">\(Y(1,G_0)\)</span> as the counterfactual
+<li>Let <span class="math inline">\(G_a\)</span> denote a random draw from the distribution of <span class="math inline">\(M_a \mid W\)</span>
+</li>
+<li>Define the counterfactual <span class="math inline">\(Y_{1,G_0}\)</span> as the counterfactual
 variable in a hypothetical world where <span class="math inline">\(A\)</span> is set <span class="math inline">\(A=1\)</span> and <span class="math inline">\(M\)</span> is
-set to <span class="math inline">\(M=G_0\)</span> with probability one.</p></li>
-<li><p>Define <span class="math inline">\(Y(0,G_0)\)</span> and <span class="math inline">\(Y(1,G_1)\)</span> similarly</p></li>
-<li><p>Then we can define:
+set to <span class="math inline">\(M=G_0\)</span> with probability one.</li>
+<li>Define <span class="math inline">\(Y_{0,G_0}\)</span> and <span class="math inline">\(Y_{1,G_1}\)</span> similarly</li>
+<li>Then we can define:
 <span class="math display">\[\begin{equation*}
-  \E[Y(1,G_1) - Y(0,G_0)] = \underbrace{\E[Y(1,G_1) -
-    Y(1,G_0)]}_{\text{interventional indirect effect}} +
-    \underbrace{\E[Y(1,G_0) -
-    Y(0,G_0)]}_{\text{interventional direct effect}}
-\end{equation*}\]</span></p></li>
-<li><p>Marginal PIDE: <span class="math inline">\(\E(Y_{a, g_{M \mid a^{\star}, W}}) - \E(Y_{a^{\star}, g_{M \mid a^{\star}, W}})\)</span></p></li>
-<li><p>Marginal PIIE: <span class="math inline">\(\E(Y_{a, g_{M \mid a, W}}) - \E(Y_{a, g_{M \mid a^{\star}, W}})\)</span></p></li>
-<li><p>Conditional PIDE: <span class="math inline">\(\E(Y_{a, g_{M \mid Z, a^{\star}, W}}) - \E(Y_{a^{\star}, g_{M \mid Z, a^{\star}, W}})\)</span></p></li>
-<li><p>Conditional PIIE: <span class="math inline">\(\E(Y_{a, g_{M \mid Z, a, W}}) - \E(Y_{a, g_{M \mid Z, a^{\star}, W}})\)</span>
-<!--
-ID: I don't follow this discussion about marginal vs conditional
-What you call the conditional effects are not really direct effects as they do not consider the pathway A>Z>M>Y
-I would completely omit that discussion 
---></p></li>
-<li><p>Can you think of an example when you would want the conditional versions?
-Marginal versions?</p></li>
+\E[Y_{1,G_1} - Y_{0,G_0}] = \underbrace{\E[Y_{\color{red}{1},\color{blue}{G_1}} -
+  Y_{\color{red}{1},\color{blue}{G_0}}]}_{\text{interventional indirect effect}} +
+  \underbrace{\E[Y_{\color{blue}{1},\color{red}{G_0}} -
+  Y_{\color{blue}{0},\color{red}{G_0}}]}_{\text{interventional direct effect}}
+\end{equation*}\]</span>
+</li>
+<li>Note that <span class="math inline">\(\E[Y_{1,G_1} - Y_{0,G_0}]\)</span> is still a <em>total effect</em> of treatment,
+even if it is different from the ATE <span class="math inline">\(\E[Y_{1} - Y_{0}]\)</span>
+</li>
+<li>We gain in the ability to solve a problem, but lose in terms of interpretation
+of the causal effect (cannot decompose the ATE)</li>
 </ul>
-<div class="inline-figure"><img src="img/graphic4b.png" width="50%" style="display: block; margin: auto;"></div>
-<p>Under the following identification assumptions, the population interventional direct and indirect effect is identified:
-<span class="math display">\[
-\E(Y_{a, G_{a'}}) = \E\left[\E\left\{\sum_z\E(Y \mid A=a, Z=z, M, W) P(Z=z \mid A=a, w)\mid A=a', W\right\}\right]
-\]</span>
+<div id="an-alternative-definition-of-the-effects" class="section level3">
+<h3>
+<span class="header-section-number">2.3.1</span> An alternative definition of the effects:<a class="anchor" aria-label="anchor" href="#an-alternative-definition-of-the-effects"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li>Above we defined <span class="math inline">\(G_a\)</span> as a random draw from the distribution of <span class="math inline">\(M_a \mid W\)</span>
+</li>
+<li>What if instead we define <span class="math inline">\(G_a\)</span> as a random draw from the distribution of <span class="math inline">\(M_a \mid (Z_a,W)\)</span>
+</li>
+<li>It turns out the indirect effect defined in this way only measures the path
+<span class="math inline">\(A\rightarrow M \rightarrow Y\)</span>, and not the path <span class="math inline">\(A\rightarrow Z\rightarrow M \rightarrow Y\)</span>
+</li>
+<li>There may be important reasons to choose one over another (e.g., survival
+analyses where we want the distribution conditional on <span class="math inline">\(Z\)</span>, instrumental
+variable designs where it doesn’t make sense to condition on <span class="math inline">\(Z\)</span>)</li>
+</ul>
 <!--
-ID: We should probably spend a good chunk of time going through these identification formulas and teaching people what they mean algorithmically
-For example, we could have a step by step R code chunck here where we implement a g-computation estimator for them... this would go a long way in building intuition i think
+KER: I see that you commented all of this out and I don't feel that strongly
+about it, but i think it is interesting and it is relevant and it is important
+for folks to think about.
+--><!--
+ + Marginal PIDE: $\E(Y_{a, g_{M \mid a^{\star}, W}}) -
+   \E(Y_{a^{\star}, g_{M \mid a^{\star}, W}})$
+ + Marginal PIIE: $\E(Y_{a, g_{M \mid a, W}}) -
+   \E(Y_{a, g_{M \mid a^{\star}, W}})$
+ + Conditional PIDE: $\E(Y_{a, g_{M \mid Z, a^{\star}, W}}) -
+   \E(Y_{a^{\star}, g_{M \mid Z, a^{\star}, W}})$
+ + Conditional PIIE: $\E(Y_{a, g_{M \mid Z, a, W}}) -
+   \E(Y_{a, g_{M \mid Z, a^{\star}, W}})$
+ + Can you think of an example when you would want the conditional versions?
+   Marginal versions?
 -->
-### Identification assumptions:</p>
+</div>
+<div id="identification-assumptions-2" class="section level3">
+<h3>
+<span class="header-section-number">2.3.2</span> Identification assumptions:<a class="anchor" aria-label="anchor" href="#identification-assumptions-2"><i class="fas fa-link"></i></a>
+</h3>
 <ul>
 <li><span class="math inline">\(A \indep Y_{a,m} \mid W\)</span></li>
 <li><span class="math inline">\(M \indep Y_{a,m} \mid W, A, Z\)</span></li>
 <li><span class="math inline">\(A \indep M_a \mid W\)</span></li>
 <li>and positivity assumptions.</li>
 </ul>
-<p>Is this the estimand I want?</p>
+<p>Under these assumptions, the population interventional direct and indirect effect is identified:
+<span class="math display">\[\begin{align*}
+  \E&amp;(Y_{a, G_{a'}}) = \\
+    &amp;\E\left[\color{Purple}{\E\left\{\color{Goldenrod}{\sum_z}
+    \color{ForestGreen}{\E(Y \mid A=a, Z=z, M, W)}
+    \color{Goldenrod}{\P(Z=z \mid A=a, W)}\mid A=a', W\right\}}\right]
+\end{align*}\]</span></p>
+<ul>
+<li>Let’s dissect this formula in <code>R</code>:</li>
+</ul>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">1e6</span>
+<span class="va">w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>
+<span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">1</span>, <span class="fl">0.5</span><span class="op">)</span>
+<span class="va">z</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">1</span>, <span class="fl">0.5</span> <span class="op">+</span> <span class="fl">0.2</span> <span class="op">*</span> <span class="va">a</span><span class="op">)</span>
+<span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">w</span> <span class="op">+</span> <span class="va">a</span> <span class="op">-</span> <span class="va">z</span><span class="op">)</span>
+<span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">w</span> <span class="op">+</span> <span class="va">a</span> <span class="op">+</span> <span class="va">z</span> <span class="op">+</span> <span class="va">m</span><span class="op">)</span></code></pre></div>
+<ul>
+<li>Let us compute <span class="math inline">\(\E(Y_{1, G_0})\)</span> (so that <span class="math inline">\(a = 1\)</span>, and <span class="math inline">\(a'=0\)</span>).</li>
+<li>First, fit a regression model for the outcome, and compute
+<span class="math display">\[\color{ForestGreen}{\E(Y \mid A=a, Z=z, M, W)}\]</span> for all values of <span class="math inline">\(z\)</span>
+</li>
+</ul>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">lm_y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">m</span> <span class="op">+</span> <span class="va">a</span> <span class="op">+</span> <span class="va">z</span> <span class="op">+</span> <span class="va">w</span><span class="op">)</span>
+<span class="va">pred_a1z0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lm_y</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>m <span class="op">=</span> <span class="va">m</span>, a <span class="op">=</span> <span class="fl">1</span>, z <span class="op">=</span> <span class="fl">0</span>, w <span class="op">=</span> <span class="va">w</span><span class="op">)</span><span class="op">)</span>
+<span class="va">pred_a1z1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lm_y</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>m <span class="op">=</span> <span class="va">m</span>, a <span class="op">=</span> <span class="fl">1</span>, z <span class="op">=</span> <span class="fl">1</span>, w <span class="op">=</span> <span class="va">w</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<ul>
+<li>Now we fit the true model for <span class="math inline">\(Z \mid A, W\)</span> and get the conditional
+probability that <span class="math inline">\(Z=1\)</span> fixing <span class="math inline">\(A=1\)</span>
+</li>
+</ul>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">prob_z</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">z</span> <span class="op">~</span> <span class="va">a</span><span class="op">)</span>
+<span class="va">pred_z</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">prob_z</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<ul>
+<li>Now we compute the following pseudo-outcome:
+<span class="math display">\[\color{Goldenrod}{\sum_z}\color{ForestGreen}{\E(Y \mid A=a, Z=z, M, W)}
+\color{Goldenrod}{\P(Z=z \mid A=a, w)}\]</span>
+</li>
+</ul>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">pseudo_out</span> <span class="op">&lt;-</span> <span class="va">pred_a1z0</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">pred_z</span><span class="op">)</span> <span class="op">+</span> <span class="va">pred_a1z1</span> <span class="op">*</span> <span class="va">pred_z</span></code></pre></div>
+<ul>
+<li>Now we regress this pseudo-outcome on <span class="math inline">\(A,W\)</span>, and compute the predictions
+setting <span class="math inline">\(A=0\)</span>, that is, <span class="math display">\[\color{Purple}{\E\left\{\color{Goldenrod}{\sum_z}
+\color{ForestGreen}{\E(Y \mid A=a, Z=z, M, W)}
+\color{Goldenrod}{\P(Z=z \mid A=a, w)}\mid A=a', W\right\}}\]</span>
+</li>
+</ul>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fit_pseudo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">pseudo_out</span> <span class="op">~</span> <span class="va">a</span> <span class="op">+</span> <span class="va">w</span><span class="op">)</span>
+<span class="va">pred_pseudo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_pseudo</span>, <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">0</span>, w <span class="op">=</span> <span class="va">w</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<ul>
+<li>And finally, just average those predictions!</li>
+</ul>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## Mean(Y(1, G(0)))</span>
+<span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">pred_pseudo</span><span class="op">)</span></code></pre></div>
+<ul>
+<li>This was for <span class="math inline">\((a,a')=(1,0)\)</span>. Can do the same with <span class="math inline">\((a,a')=(1,1)\)</span>, and
+<span class="math inline">\((a,a')=(0,0)\)</span> to obtain an effect decomposition</li>
+</ul>
+<p><span class="math display">\[\begin{equation*}
+  \E[Y_{1,G_1} - Y_{0,G_0}] = \underbrace{\E[Y_{\color{red}{1},
+    \color{blue}{G_1}} -
+    Y_{\color{red}{1},
+    \color{blue}{G_0}}]}_{\text{interventional indirect effect}} +
+    \underbrace{\E[Y_{\color{blue}{1},\color{red}{G_0}} -
+    Y_{\color{blue}{0},
+    \color{red}{G_0}}]}_{\text{interventional direct effect}}
+\end{equation*}\]</span></p>
+</div>
+<div id="is-this-the-estimand-i-want-2" class="section level3">
+<h3>
+<span class="header-section-number">2.3.3</span> Is this the estimand I want?<a class="anchor" aria-label="anchor" href="#is-this-the-estimand-i-want-2"><i class="fas fa-link"></i></a>
+</h3>
 <ul>
 <li>Makes sense to intervene on <span class="math inline">\(A\)</span> but not directly on <span class="math inline">\(M\)</span>.</li>
 <li>Goal is to understand a natural mechanism underlying an association or total
@@ -409,20 +515,21 @@ effect.</li>
 <li>Okay with the assumptions!</li>
 </ul>
 </div>
+</div>
 <div id="estimand-summary" class="section level2">
 <h2>
 <span class="header-section-number">2.4</span> Estimand Summary<a class="anchor" aria-label="anchor" href="#estimand-summary"><i class="fas fa-link"></i></a>
 </h2>
 <!--
-ID: Can we redo the below table fixing the G notation? Also, is it possible to fix the formatting? (currently not very amenable to a presentation I think)
+ID: Can we redo the below table fixing the G notation? Also, is it possible to
+fix the formatting? (currently not very amenable to a presentation I think)
 -->
-<div class="inline-figure"><img src="img/table1.png" width="125%" style="display: block; margin: auto;"></div>
 
 </div>
 </div>
   <div class="chapter-nav">
 <div class="prev"><a href="mediation.html"><span class="header-section-number">1</span> Preliminaries on causal mediation analysis</a></div>
-<div class="next"><a href="estimandirl.html"><span class="header-section-number">3</span> How to choose an estimand: Real world example</a></div>
+<div class="next"><a href="stochastic.html"><span class="header-section-number">3</span> Stochastic Direct and Indirect Effects</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
@@ -436,13 +543,19 @@ ID: Can we redo the below table fixing the G notation? Also, is it possible to f
 <li>
 <a class="nav-link" href="#natural-direct-and-indirect-effects"><span class="header-section-number">2.2</span> Natural direct and indirect effects</a><ul class="nav navbar-nav">
 <li><a class="nav-link" href="#identification-assumptions-1"><span class="header-section-number">2.2.1</span> Identification assumptions:</a></li>
-<li><a class="nav-link" href="#identification-formula"><span class="header-section-number">2.2.2</span> Identification formula:</a></li>
-<li><a class="nav-link" href="#cross-world-independence-assumption"><span class="header-section-number">2.2.3</span> Cross-world independence assumption</a></li>
+<li><a class="nav-link" href="#cross-world-independence-assumption"><span class="header-section-number">2.2.2</span> Cross-world independence assumption</a></li>
+<li><a class="nav-link" href="#identification-formula"><span class="header-section-number">2.2.3</span> Identification formula:</a></li>
 <li><a class="nav-link" href="#is-this-the-estimand-i-want-1"><span class="header-section-number">2.2.4</span> Is this the estimand I want?</a></li>
 <li><a class="nav-link" href="#unidentifiability-of-the-nde-and-nie-in-this-setting"><span class="header-section-number">2.2.5</span> Unidentifiability of the NDE and NIE in this setting</a></li>
 </ul>
 </li>
-<li><a class="nav-link" href="#interventional-indirect-effects"><span class="header-section-number">2.3</span> Interventional (in)direct effects</a></li>
+<li>
+<a class="nav-link" href="#interventional-indirect-effects"><span class="header-section-number">2.3</span> Interventional (in)direct effects</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#an-alternative-definition-of-the-effects"><span class="header-section-number">2.3.1</span> An alternative definition of the effects:</a></li>
+<li><a class="nav-link" href="#identification-assumptions-2"><span class="header-section-number">2.3.2</span> Identification assumptions:</a></li>
+<li><a class="nav-link" href="#is-this-the-estimand-i-want-2"><span class="header-section-number">2.3.3</span> Is this the estimand I want?</a></li>
+</ul>
+</li>
 <li><a class="nav-link" href="#estimand-summary"><span class="header-section-number">2.4</span> Estimand Summary</a></li>
 </ul>
 
@@ -461,7 +574,7 @@ ID: Can we redo the below table fixing the G notation? Also, is it possible to f
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: May 07, 2021.</p>
+    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: May 12, 2021.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

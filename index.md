@@ -2,7 +2,7 @@
 knit: "bookdown::render_book"
 title: "[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis"
 author: "Iván Díaz, Nima Hejazi, Kara Rudolph"
-date: "updated: May 07, 2021"
+date: "updated: May 12, 2021"
 documentclass: book
 site: bookdown::bookdown_site
 bibliography: [book.bib, packages.bib]
@@ -61,17 +61,21 @@ parameter estimable from the observed data distribution). Familiarity with the
 ## Workshop schedule {#schedule}
 
 * 10:00A-10:30A: introductions/mediation set up
-* 10:30A-11:00A: estimands and how to choose
-* 11:00A-11:30A: discussion: how to choose in real-world examples
-* 11:30A-12:00P: shift parameter introduction with application in lecture part
+<!-- Ivan-->
+* 10:30A-11:15A: controlled direct effects, natural direct and indirect effects, interventional direct and indirect effects
+ <!-- Kara-->
+* 11:15A-11:45A: stochastic mediation estimands
+ <!-- Nima-->
+* 11:45A-12:00P: how to choose an estimand in real-world examples
+ <!-- Kara-->
 * 12:00P-12:15P break/discussion
-* 12:15P-12:45P estimation for natural direct and indirect effects,
-  interventional direct and indirect effects
-* 12:45P-01:15P: practice `R` code for estimation
-* 01:15P-01:30P: estimation for stochastic interventional direct and indirect
-  effects
-* 01:30P-01:50P: practice: code for estimation
-* 01:50P-02:00P wrap up
+* 12:15P-12:45P: what is the EIF
+ <!-- Ivan-->
+* 12:45P-01:00P: using the EIF for estimating the natural direct effect
+<!-- Ivan-->
+* 01:00P-01:45P: practice: `R` code for estimation
+ <!-- Nima-->
+* 01:45P-02:00P wrap up
 
 __NOTE: All times listed in Pacific Time.__
 
@@ -125,32 +129,6 @@ was built with R version 4.0.5 (2021-03-31), [pandoc](https://pandoc.org/) versi
 rmarkdown::pandoc_version()`, and the following packages:
 
 
-|package    |version    |source                              |
-|:----------|:----------|:-----------------------------------|
-|bookdown   |0.21.11    |Github (rstudio/bookdown\@33c4f70)  |
-|bslib      |0.2.4.9003 |Github (rstudio/bslib\@e09af88)     |
-|dagitty    |0.3-1      |CRAN (R 4.0.5)                      |
-|data.table |1.14.0     |CRAN (R 4.0.5)                      |
-|downlit    |0.2.1      |CRAN (R 4.0.5)                      |
-|dplyr      |1.0.6      |CRAN (R 4.0.5)                      |
-|ggdag      |0.2.3      |CRAN (R 4.0.5)                      |
-|ggfortify  |0.4.11     |CRAN (R 4.0.5)                      |
-|ggplot2    |3.3.3      |CRAN (R 4.0.5)                      |
-|kableExtra |1.3.4      |CRAN (R 4.0.5)                      |
-|knitr      |1.32       |CRAN (R 4.0.5)                      |
-|magick     |2.7.1      |CRAN (R 4.0.5)                      |
-|medoutcon  |0.1.5      |Github (nhejazi/medoutcon\@39820e2) |
-|medshift   |0.1.4      |Github (nhejazi/medshift\@f9e11a9)  |
-|mvtnorm    |1.1-1      |CRAN (R 4.0.5)                      |
-|origami    |1.0.3      |CRAN (R 4.0.5)                      |
-|pdftools   |2.3.1      |CRAN (R 4.0.5)                      |
-|readr      |1.4.0      |CRAN (R 4.0.5)                      |
-|rmarkdown  |2.7.11     |Github (rstudio/rmarkdown\@e340d75) |
-|skimr      |2.1.3      |CRAN (R 4.0.5)                      |
-|sl3        |1.4.3      |Github (tlverse/sl3\@5cddc6c)       |
-|stringr    |1.4.0      |CRAN (R 4.0.5)                      |
-|tibble     |3.1.1      |CRAN (R 4.0.5)                      |
-|tidyr      |1.1.3      |CRAN (R 4.0.5)                      |
 
 ## Setup instructions {#setup}
 

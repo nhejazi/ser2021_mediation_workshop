@@ -1,32 +1,57 @@
 # Preliminaries on semiparametric estimation
 
-## Why do we need new estimation tools?
+## From causal to statistical quantities
 
-- As we have seen all the mediation parameters that we consider can be
+- We have arrived at identification formulas that express quantities that we
+  care about in terms of observable quantities
+- This required **causal assumptions**
+  - Many of these assumptions are empirically unverifiable
+  - We saw an example where we could relax the cross-world assumption, at the
+    cost of changing the parameter interpretation
+  - and where we could relax the positivity assumption, also at the cost of
+    changing the parameter interpretation
+- The resulting estimation problem can be tackled using **statistical
+  assumptions** of various degrees of strength
+  - Most of these assumptions are verifiable (e.g., a linear model)
+  - Thus, most are unnecessary (except for convenience)
+  - The estimation approach we use reduces reliance on these statistical
+    assumptions
+
+### Computing identification formulas if you know the true distribution
+
+- The mediation parameters that we consider can be
   seen as a function of the joint probability distribution of $O=(W,A,Z,M,Y)$
 - For example, under identifiability assumptions the natural direct effect is
   equal to
   \begin{equation*}
-    \psi(\P) =  \sum_{m,w}\big[\E(Y\mid A=1,M=m,W=w) -
-      \E(Y\mid A=0,M=m,W=w)\big]\P(M=m\mid A=0, W=w)\P(W=w)
+    \psi(\P) =  \E[\E\{\E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)\mid A=0,W\}]
   \end{equation*}
-
 - The notation $\psi(\P)$ implies that the parameter is a function of $\P$
 - This means that we can compute it for any distribution $\P$
 - For example, if we know the true $\P(W,A,M,Y)$, we can comnpute the true value
   of the parameter by:
-  - Computing the conditional expectation $\E(Y\mid A=1,M=m,W=w)$ for all values
-    $(m,w)$
+  - Computing the conditional expectation $\E(Y\mid A=1,M=m,W=w)$ for all
+    values $(m,w)$
   - Computing the probability $\P(M=m\mid A=0,W=w)$ for all values $(m,w)$
   - Computing the probability $\P(W=w)$ for all values $w$
-  - Computing the sum over all values $(m,w)$
-- This is how you would compute the _true value_ **if you knew** the true
+  - Computing the mean over all values $(m,w)$
+
+### Estimating identification formulas
+
+The above is how you would compute the _true value_ **if you know** the true
   distribution $\P$
+
+- This is exactly what we did in our R examples before
 - But we can use the same logic for estimation:
-  - Fit a regression to estimate $\E(Y\mid A=1,M=m,W=w)$
-  - Fit a regression to estimate $\P(M=m\mid A=0,W=w)$
+  - Fit a regression to estimate, say $\hat\E(Y\mid A=1,M=m,W=w)$
+  - Fit a regression to estimate, say $\hat\P(M=m\mid A=0,W=w)$
   - Estimate $\P(W=w)$ with the empirical distribution
-- This is known as the g-computation estimator (more on this estimator later)
+  - Evaluate
+    \begin{equation*}
+      \psi(\hat\P) =  \hat\E[\hat\E\{\hat\E(Y \mid A=1, M, W) -
+      \hat\E(Y \mid A=0, M, W)\mid A=0,W\}]
+  \end{equation*}
+- This is known as the g-computation estimator
 
 ### How can g-estimation be implemented in practice?
 
@@ -45,12 +70,86 @@
   - Unless $W$ and $M$ contain very few categorical variables, it is very easy
     to misspecify the models
   - This can introduce sizable bias in the estimators
-  - This bias is highly problematic
-    - We go through a thorough process to correctly specify our causal models to
-      avoid bias
-    - Overly simplisitc models introduce bias and squander those efforts
-    - The bias can be small or large and you can never know from a single data
-      analysis
+
+### An example of the bias of a g-computation estimator of the natural direct effect
+
+- The following `R` chunk provides simulation code to exemplify the bias of a
+  g-computation estimator in a simple situation
+
+```r
+mean_y <- function(m, a, w) abs(w) + a * m
+mean_m <- function(a, w) plogis(w^2 - a)
+pscore <- function(w) plogis(1 - abs(w))
+```
+
+- This yields a true NDE value of
+
+```r
+w_big <- runif(1e6, -1, 1)
+trueval <- mean((mean_y(1, 1, w_big) - mean_y(1, 0, w_big)) *
+  mean_m(0, w_big) + (mean_y(0, 1, w_big) - mean_y(0, 0, w_big)) *
+    (1 - mean_m(0, w_big)))
+print(trueval)
+```
+
+- Let's perform a simulation where we draw 1000 datasets from the above distribution, and compute a g-computation estimator based on
+
+```r
+gcomp <- function(y, m, a, w) {
+  lm_y <- lm(y ~ m + a + w)
+  pred_y1 <- predict(lm_y, newdata = data.frame(a = 1, m = m, w = w))
+  pred_y0 <- predict(lm_y, newdata = data.frame(a = 0, m = m, w = w))
+  pseudo <- pred_y1 - pred_y0
+  lm_pseudo <- lm(pseudo ~ a + w)
+  pred_pseudo <- predict(lm_pseudo, newdata = data.frame(a = 0, w = w))
+  estimate <- mean(pred_pseudo)
+  return(estimate)
+}
+```
+
+
+```r
+estimate <- numeric(1000)
+for (i in 1:1000) {
+  n <- 1000
+  w <- runif(n, -1, 1)
+  a <- rbinom(n, 1, pscore(w))
+  m <- rbinom(n, 1, mean_m(a, w))
+  y <- rnorm(n, mean_y(m, a, w))
+
+  estimate[i] <- gcomp(y, m, a, w)
+}
+
+hist(estimate)
+abline(v = trueval, col = "red", lwd = 4)
+```
+
+- The bias also affects the confidence intervals:
+
+```r
+cis <- cbind(
+  estimate - qnorm(0.975) * sd(estimate),
+  estimate + qnorm(0.975) * sd(estimate)
+)
+
+ord <- order(rowSums(cis))
+lower <- cis[ord, 1]
+upper <- cis[ord, 2]
+curve(trueval + 0 * x,
+  ylim = c(0, 1), xlim = c(0, 1001), lwd = 2, lty = 3, xaxt = "n",
+  xlab = "", ylab = "Confidence interval", cex.axis = 1.2, cex.lab = 1.2
+)
+for (i in 1:1000) {
+  clr <- rgb(0.5, 0, 0.75, 0.5)
+  if (upper[i] < trueval || lower[i] > trueval) clr <- rgb(1, 0, 0, 1)
+  points(rep(i, 2), c(lower[i], upper[i]), type = "l", lty = 1, col = clr)
+}
+text(450, 0.10, "n=1000 repetitions = 1000 ", cex = 1.2)
+text(450, 0.01, paste0(
+  "Coverage probability = ",
+  mean(lower < trueval & trueval < upper), "%"
+), cex = 1.2)
+```
 
 ### Pros and cons of g-computation with data-adaptive regression
 
@@ -59,51 +158,48 @@
   - Alleviate model-misspecification bias
 
 - Cons:
-  - Might be harder to implement depending on the regression procedure
+  - Might be harder to implement depending on the regression procedures used
   - No general approaches for computation of standard errors and confidence
     intervals
+  - For example, the bootstrap is not guaranteed to work, and it is known to
+    fail in some cases
 
-## Semiparametric estimation - an alternative to solve these problems
 
-### Bias/variance tradeoff
+## Semiparametric estimation (or correcting the bias of g-computation estimators)
 
-- A lot of the recent literature in causal inference with data-adaptive
-  regression uses the following ideas
+<!--
+KER this may be just me, but I'm not sure the "incorrect bias/variance
+tradeoff" argument will be super concrete for folks. I think maybe a more
+concrete/motivating argument would be to say that we want to use data adaptive
+methods because we don't know how to correctly specify all our models. we also
+want valid standard errors and confidence intervals. to do this, we need to use
+semiparametric estimation
+-->
+
 - G-computation estimation with data-adaptive regression offers an incorrect
-  bias/variance trade-off
-- Specifically, the bias of a g-computation estimator can often be expressed as
+    bias/variance trade-off
+- It accepts more bias than necessary
+- The bias of a g-computation estimator may be corrected as follows:
   \begin{equation*}
-    \psi(\hat\P) - \psi(\P) \approx -\E[D(O;\hat\P)]
+    \psi(\hat \P) + \frac{1}{n}\sum_{i=1}^n D(O_i)
   \end{equation*}
-- The function $D(O;\P)$ is called _the efficient influence function_ (EIF)
-- The EIF must be found on a case-by-case basis or each parameter $\psi(\P)$
-- For example, for estimating the standardized mean $\psi(P)=\E[\E(Y\mid A=1,
+  for some function $D(O_i)$ of the data
+- The function $D(O)$ is called _the efficient influence function_ (EIF)
+- The EIF must be found on a case-by-case basis for each parameter $\psi(\P)$
+- For example, for estimating the standardized mean $\psi(\P)=\E[\E(Y\mid A=1,
   W)]$, we have
   \begin{equation*}
-    D(O,\hat\P) = \frac{A}{\hat P(A=1\mid W)}[Y - \hat\E(Y\mid A=1, W)] +
+    D(O) = \frac{A}{\hat \P(A=1\mid W)}[Y - \hat\E(Y\mid A=1, W)] +
     \hat\E(Y\mid A=1, W) - \psi(\hat\P)
   \end{equation*}
+- The EIF is found by using a distributional analogue of a Taylor expansion
+- In this workshop we will omit the specific form of $D(O)$ for
+  some of the parameters that we use
+- But the estimators we discuss and implement in the R packages will be based on
+  these EIFs
+- And the specific form of the EIF may be found in papers in the references
 
-- In this workshop we will not present the specific form of $D(O;\hat\P)$ for
-  all parameters that we use
-- But the estimators we discuss and implement in the packages will be based on
-  theser EIFs
-
-### Bias-correction of g-computation estimators
-
-- There are at least two ways to use the EIF to perform a bias correction for a
-  g-computation estimator
-- The first one is the so-called _one step_ estimator:
-  \begin{equation*}
-    \psi(\hat \P) + \frac{1}{n}\sum_{i=1}^n D(O;\hat \P_i)
-  \end{equation*}
-- The idea behind the one-step estimator is simple: subtract an estimate of the
-  bias of the g-computation estimator
-- The second approach is the _targeted maximum likelihood estimator_ (TMLE)
-- TMLE is based on the principle that it is possile to construct a
-  data-adaptive estimator $\tilde \P$ such that
-  \begin{equation*}
-    \frac{1}{n}\sum_{i=1}^n D(O;\tilde \P_i)=0
-  \end{equation*}
-- Thus, for this special data-adaptive estimate $\tilde \P$, the TMLE is
-  actually just the g-computation estimator $\psi(\tilde\P)$
+Note: the bias correction above may have an additional problem of returning
+parameter estimates outside of natural bounds. E.g., probabilities greater than
+one. A solution to this (not discussed in this workshop) is targeted minimum
+loss based estimation.

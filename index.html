@@ -46,11 +46,11 @@
 <li><a class="active" href="index.html">Welcome to SER!</a></li>
 <li><a class="" href="mediation.html"><span class="header-section-number">1</span> Preliminaries on causal mediation analysis</a></li>
 <li><a class="" href="estimands.html"><span class="header-section-number">2</span> Path-specific casual mediation effect types</a></li>
-<li><a class="" href="estimandirl.html"><span class="header-section-number">3</span> How to choose an estimand: Real world example</a></li>
-<li><a class="" href="stochastic.html"><span class="header-section-number">4</span> Stochastic Direct and Indirect Effects</a></li>
+<li><a class="" href="stochastic.html"><span class="header-section-number">3</span> Stochastic Direct and Indirect Effects</a></li>
+<li><a class="" href="estimandirl.html"><span class="header-section-number">4</span> How to choose an estimand: Real world example</a></li>
 <li><a class="" href="preliminaries-on-semiparametric-estimation.html"><span class="header-section-number">5</span> Preliminaries on semiparametric estimation</a></li>
-<li><a class="" href="estimating-natural-and-interventional-effects.html"><span class="header-section-number">6</span> Estimating natural and interventional effects</a></li>
-<li><a class="" href="estimating-stochastic-effects.html"><span class="header-section-number">7</span> Estimating stochastic effects</a></li>
+<li><a class="" href="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html"><span class="header-section-number">6</span> Using the EIF to construct an estimator: the case of the natural direct effect</a></li>
+<li><a class="" href="estimating-indirect-effects-with-r-packages.html"><span class="header-section-number">7</span> Estimating (in)direct effects with R packages</a></li>
 <li><a class="" href="references.html">References</a></li>
 </ul>
 
@@ -100,18 +100,29 @@ parameter estimable from the observed data distribution). Familiarity with the
 <span class="header-section-number">0.2</span> Workshop schedule<a class="anchor" aria-label="anchor" href="#schedule"><i class="fas fa-link"></i></a>
 </h2>
 <ul>
-<li>10:00A-10:30A: introductions/mediation set up</li>
-<li>10:30A-11:00A: estimands and how to choose</li>
-<li>11:00A-11:30A: discussion: how to choose in real-world examples</li>
-<li>11:30A-12:00P: shift parameter introduction with application in lecture part</li>
+<li>10:00A-10:30A: introductions/mediation set up
+<!-- Ivan-->
+</li>
+<li>10:30A-11:15A: controlled direct effects, natural direct and indirect effects, interventional direct and indirect effects
+<!-- Kara-->
+</li>
+<li>11:15A-11:45A: stochastic mediation estimands
+<!-- Nima-->
+</li>
+<li>11:45A-12:00P: how to choose an estimand in real-world examples
+<!-- Kara-->
+</li>
 <li>12:00P-12:15P break/discussion</li>
-<li>12:15P-12:45P estimation for natural direct and indirect effects,
-interventional direct and indirect effects</li>
-<li>12:45P-01:15P: practice <code>R</code> code for estimation</li>
-<li>01:15P-01:30P: estimation for stochastic interventional direct and indirect
-effects</li>
-<li>01:30P-01:50P: practice: code for estimation</li>
-<li>01:50P-02:00P wrap up</li>
+<li>12:15P-12:45P: what is the EIF
+<!-- Ivan-->
+</li>
+<li>12:45P-01:00P: using the EIF for estimating the natural direct effect
+<!-- Ivan-->
+</li>
+<li>01:00P-01:45P: practice: <code>R</code> code for estimation
+<!-- Nima-->
+</li>
+<li>01:45P-02:00P wrap up</li>
 </ul>
 <p><strong>NOTE: All times listed in Pacific Time.</strong></p>
 </div>
@@ -170,135 +181,6 @@ target available policy and program resources.</p>
 and the complete source is available on
 <a href="https://github.com/tlverse/tlverse-handbook">GitHub</a>. This version of the book
 was built with R version 4.0.5 (2021-03-31), <a href="https://pandoc.org/">pandoc</a> version <code>r rmarkdown::pandoc_version()</code>, and the following packages:</p>
-<div class="inline-table"><table class="table table-sm">
-<thead><tr class="header">
-<th align="left">package</th>
-<th align="left">version</th>
-<th align="left">source</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">bookdown</td>
-<td align="left">0.21.11</td>
-<td align="left">Github (rstudio/bookdown@33c4f70)</td>
-</tr>
-<tr class="even">
-<td align="left">bslib</td>
-<td align="left">0.2.4.9003</td>
-<td align="left">Github (rstudio/bslib@e09af88)</td>
-</tr>
-<tr class="odd">
-<td align="left">dagitty</td>
-<td align="left">0.3-1</td>
-<td align="left">CRAN (R 4.0.5)</td>
-</tr>
-<tr class="even">
-<td align="left">data.table</td>
-<td align="left">1.14.0</td>
-<td align="left">CRAN (R 4.0.5)</td>
-</tr>
-<tr class="odd">
-<td align="left">downlit</td>
-<td align="left">0.2.1</td>
-<td align="left">CRAN (R 4.0.5)</td>
-</tr>
-<tr class="even">
-<td align="left">dplyr</td>
-<td align="left">1.0.6</td>
-<td align="left">CRAN (R 4.0.5)</td>
-</tr>
-<tr class="odd">
-<td align="left">ggdag</td>
-<td align="left">0.2.3</td>
-<td align="left">CRAN (R 4.0.5)</td>
-</tr>
-<tr class="even">
-<td align="left">ggfortify</td>
-<td align="left">0.4.11</td>
-<td align="left">CRAN (R 4.0.5)</td>
-</tr>
-<tr class="odd">
-<td align="left">ggplot2</td>
-<td align="left">3.3.3</td>
-<td align="left">CRAN (R 4.0.5)</td>
-</tr>
-<tr class="even">
-<td align="left">kableExtra</td>
-<td align="left">1.3.4</td>
-<td align="left">CRAN (R 4.0.5)</td>
-</tr>
-<tr class="odd">
-<td align="left">knitr</td>
-<td align="left">1.32</td>
-<td align="left">CRAN (R 4.0.5)</td>
-</tr>
-<tr class="even">
-<td align="left">magick</td>
-<td align="left">2.7.1</td>
-<td align="left">CRAN (R 4.0.5)</td>
-</tr>
-<tr class="odd">
-<td align="left">medoutcon</td>
-<td align="left">0.1.5</td>
-<td align="left">Github (nhejazi/medoutcon@39820e2)</td>
-</tr>
-<tr class="even">
-<td align="left">medshift</td>
-<td align="left">0.1.4</td>
-<td align="left">Github (nhejazi/medshift@f9e11a9)</td>
-</tr>
-<tr class="odd">
-<td align="left">mvtnorm</td>
-<td align="left">1.1-1</td>
-<td align="left">CRAN (R 4.0.5)</td>
-</tr>
-<tr class="even">
-<td align="left">origami</td>
-<td align="left">1.0.3</td>
-<td align="left">CRAN (R 4.0.5)</td>
-</tr>
-<tr class="odd">
-<td align="left">pdftools</td>
-<td align="left">2.3.1</td>
-<td align="left">CRAN (R 4.0.5)</td>
-</tr>
-<tr class="even">
-<td align="left">readr</td>
-<td align="left">1.4.0</td>
-<td align="left">CRAN (R 4.0.5)</td>
-</tr>
-<tr class="odd">
-<td align="left">rmarkdown</td>
-<td align="left">2.7.11</td>
-<td align="left">Github (rstudio/rmarkdown@e340d75)</td>
-</tr>
-<tr class="even">
-<td align="left">skimr</td>
-<td align="left">2.1.3</td>
-<td align="left">CRAN (R 4.0.5)</td>
-</tr>
-<tr class="odd">
-<td align="left">sl3</td>
-<td align="left">1.4.3</td>
-<td align="left">Github (tlverse/sl3@5cddc6c)</td>
-</tr>
-<tr class="even">
-<td align="left">stringr</td>
-<td align="left">1.4.0</td>
-<td align="left">CRAN (R 4.0.5)</td>
-</tr>
-<tr class="odd">
-<td align="left">tibble</td>
-<td align="left">3.1.1</td>
-<td align="left">CRAN (R 4.0.5)</td>
-</tr>
-<tr class="even">
-<td align="left">tidyr</td>
-<td align="left">1.1.3</td>
-<td align="left">CRAN (R 4.0.5)</td>
-</tr>
-</tbody>
-</table></div>
 </div>
 <div id="setup" class="section level2">
 <h2>
@@ -459,7 +341,7 @@ Data</a>.</p>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: May 07, 2021.</p>
+    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: May 12, 2021.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

@@ -46,11 +46,11 @@
 <li><a class="" href="index.html">Welcome to SER!</a></li>
 <li><a class="active" href="mediation.html"><span class="header-section-number">1</span> Preliminaries on causal mediation analysis</a></li>
 <li><a class="" href="estimands.html"><span class="header-section-number">2</span> Path-specific casual mediation effect types</a></li>
-<li><a class="" href="estimandirl.html"><span class="header-section-number">3</span> How to choose an estimand: Real world example</a></li>
-<li><a class="" href="stochastic.html"><span class="header-section-number">4</span> Stochastic Direct and Indirect Effects</a></li>
+<li><a class="" href="stochastic.html"><span class="header-section-number">3</span> Stochastic Direct and Indirect Effects</a></li>
+<li><a class="" href="estimandirl.html"><span class="header-section-number">4</span> How to choose an estimand: Real world example</a></li>
 <li><a class="" href="preliminaries-on-semiparametric-estimation.html"><span class="header-section-number">5</span> Preliminaries on semiparametric estimation</a></li>
-<li><a class="" href="estimating-natural-and-interventional-effects.html"><span class="header-section-number">6</span> Estimating natural and interventional effects</a></li>
-<li><a class="" href="estimating-stochastic-effects.html"><span class="header-section-number">7</span> Estimating stochastic effects</a></li>
+<li><a class="" href="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html"><span class="header-section-number">6</span> Using the EIF to construct an estimator: the case of the natural direct effect</a></li>
+<li><a class="" href="estimating-indirect-effects-with-r-packages.html"><span class="header-section-number">7</span> Estimating (in)direct effects with R packages</a></li>
 <li><a class="" href="references.html">References</a></li>
 </ul>
 
@@ -71,31 +71,37 @@
 <!--
 ID: Need to fix format of the following figure
 --></p>
-<div class="inline-figure"><img src="img/ctndag.png" width="50%" style="display: block; margin: auto;"></div>
 </div>
 <div id="what-is-causal-mediation-analysis" class="section level2">
 <h2>
 <span class="header-section-number">1.2</span> What is causal mediation analysis?<a class="anchor" aria-label="anchor" href="#what-is-causal-mediation-analysis"><i class="fas fa-link"></i></a>
 </h2>
+<!--
+KER: I think the tone can come off as smug sometimes, so I'd like to delete
+some of this. I also made some edits, but I still think it's worth thinking
+about what is crucial to include vs not.
+-->
 <ul>
-<li>Like all causal analyses, <em>causal mediation analysis</em> is different from
-standard statistical mediation analyses</li>
-<li>Statistical mediation analyses merely assess associations between the variables</li>
-<li>Causal mediation analyses assess how the system behaves under interventions</li>
-<li>Causal mediation analysis is thus useful to understand mechanisms</li>
+<li>Causal mediation analyses assess how the paths behave under interventions</li>
+<li>Statistical mediation analyses assess associations between the variables
+<!--- Causal mediation analysis is thus useful to understand mechanisms-->
+</li>
 </ul>
-<div id="an-example-of-a-non-causal-mediation-analysis-product-of-coefficients" class="section level3">
+<div id="why-are-the-methods-that-we-will-discuss-today-important" class="section level3">
 <h3>
-<span class="header-section-number">1.2.1</span> An example of a non-causal mediation analysis (product of coefficients)<a class="anchor" aria-label="anchor" href="#an-example-of-a-non-causal-mediation-analysis-product-of-coefficients"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.2.1</span> Why are the methods that we will discuss today important?<a class="anchor" aria-label="anchor" href="#why-are-the-methods-that-we-will-discuss-today-important"><i class="fas fa-link"></i></a>
 </h3>
 <ul>
-<li>Assume you are interested in the effect of a treatment <span class="math inline">\(A\)</span> (naltrexone vs. buprenorphine) on an outcome <span class="math inline">\(Y\)</span> (risk of relapse) through mediators <span class="math inline">\(M\)</span>
-(adherence, opioid use, pain, depressive symptoms)</li>
+<li>Assume you are interested in the effect of a treatment assignment <span class="math inline">\(A\)</span> (naltrexone vs.
+buprenorphine) on an outcome <span class="math inline">\(Y\)</span> (risk of relapse) through mediators <span class="math inline">\(M\)</span>
+(opioid use, pain, depressive symptoms)</li>
+<li>We have pre-treatment confounders <span class="math inline">\(W\)</span>
+</li>
+<li>There is a confounder <span class="math inline">\(Z\)</span> of <span class="math inline">\(M\rightarrow Y\)</span> ffected by treatment assignment (adherence)</li>
 <li>We could fit the following models:
 <span class="math display">\[\begin{align}
-    \E(Y\mid A=a) &amp; = \alpha_0 + \alpha_1 a\\
-    \E(M\mid A=a) &amp; = \gamma_0 + \gamma_1 a\\
-    \E(Y\mid M=m, A=a) &amp; = \beta_0 + \beta_1 m + \beta_2 a
+    \E(M\mid A=a, W=w, Z=z) &amp; = \gamma_0 + \gamma_1 a + \gamma_2 w + \gamma_3 z \\
+    \E(Y\mid M=m, A=a, W=w, Z=z) &amp; = \beta_0 + \beta_1 m + \beta_2 a + \beta_3 w + \beta_4 z
   \end{align}\]</span>
 </li>
 <li>The product <span class="math inline">\((\gamma_1\beta_1)\)</span> has been proposed as a measure of the effect
@@ -103,44 +109,43 @@ of <span class="math inline">\(A\)</span> on <span class="math inline">\(Y\)</sp
 </li>
 <li>Causal interpretation problems with this method:
 <ul>
-<li>What happens if there are confounders of the relation between treatment and outcome?</li>
-<li>What happens if there are confounders of the relation between mediator and outcome?</li>
-<li>What happens if there are confounders of the relation between treatment and mediator?</li>
-<li>What happens if the confounders of mediator and outcome are affected by treatment?
-### Example:</li>
+<li>We will see that this parameter cannot be interpreted as a causal effect</li>
 </ul>
 </li>
+</ul>
+</div>
+<div id="r-example" class="section level3">
+<h3>
+<span class="header-section-number">1.2.2</span> <code>R</code> Example:<a class="anchor" aria-label="anchor" href="#r-example"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
 <li>Assume we have a pre-treamtment confounder of <span class="math inline">\(Y\)</span> and <span class="math inline">\(M\)</span>, denote it with <span class="math inline">\(W\)</span>
 </li>
 <li>For simplicity, assume <span class="math inline">\(A\)</span> is randomized</li>
-<li>We’ll generate a really large sample from a data generating mechanism so that we are not concerned with sampling errors</li>
+<li>We’ll generate a really large sample from a data generating mechanism so that
+we are not concerned with sampling errors</li>
 </ul>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">1e7</span>
 <span class="va">w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>
 <span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">1</span>, <span class="fl">0.5</span><span class="op">)</span>
-<span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">w</span> <span class="op">+</span> <span class="va">a</span><span class="op">)</span>
-<span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">w</span> <span class="op">-</span> <span class="va">a</span><span class="op">)</span></code></pre></div>
+<span class="va">z</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">1</span>, <span class="fl">0.2</span> <span class="op">*</span> <span class="va">a</span> <span class="op">+</span> <span class="fl">0.3</span><span class="op">)</span>
+<span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">w</span> <span class="op">+</span> <span class="va">z</span><span class="op">)</span>
+<span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="va">m</span> <span class="op">+</span> <span class="va">w</span> <span class="op">-</span> <span class="va">a</span> <span class="op">+</span> <span class="va">z</span><span class="op">)</span></code></pre></div>
 <ul>
-<li>Note that the indirect effect (i.e., the effect through <span class="math inline">\(M\)</span>) in this example is zero</li>
+<li>Note that the indirect effect (i.e., the effect through <span class="math inline">\(M\)</span>) in this example
+is nonzero (there is a pathway <span class="math inline">\(A\rightarrow Z \rightarrow M \rightarrow Y\)</span>)</li>
 <li>Let’s see what the product of coefficients method would say:</li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">lm_y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">m</span> <span class="op">+</span> <span class="va">a</span><span class="op">)</span>
-<span class="va">lm_m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">m</span> <span class="op">~</span> <span class="va">a</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">lm_y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">m</span> <span class="op">+</span> <span class="va">a</span> <span class="op">+</span> <span class="va">w</span> <span class="op">+</span> <span class="va">z</span><span class="op">)</span>
+<span class="va">lm_m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">m</span> <span class="op">~</span> <span class="va">a</span> <span class="op">+</span> <span class="va">w</span> <span class="op">+</span> <span class="va">z</span><span class="op">)</span>
 <span class="co">## product of coefficients</span>
-<span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">lm_y</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">lm_m</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>
-<span class="co">#&gt;       m </span>
-<span class="co">#&gt; 0.50107</span></code></pre></div>
-</div>
-<div id="statistical-issues-with-this-method" class="section level3">
-<h3>
-<span class="header-section-number">1.2.2</span> Statistical issues with this method:<a class="anchor" aria-label="anchor" href="#statistical-issues-with-this-method"><i class="fas fa-link"></i></a>
-</h3>
+<span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">lm_y</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="va">lm_m</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span></code></pre></div>
+<p>Among other things, in this workshop:</p>
 <ul>
-<li>Assume the above confounding is not an issue</li>
-<li>Can I then interpret <span class="math inline">\((\gamma_1\beta_1)\)</span> as the indirect effect?</li>
-<li>No: the regression models may be misspecified</li>
+<li>We will provide some understanding for why the above method fails in this example</li>
+<li>We will study estimators that are robust to misspecification in the above models</li>
 </ul>
 </div>
 </div>
@@ -148,29 +153,17 @@ of <span class="math inline">\(A\)</span> on <span class="math inline">\(Y\)</sp
 <h2>
 <span class="header-section-number">1.3</span> Causal mediation models<a class="anchor" aria-label="anchor" href="#causal-mediation-models"><i class="fas fa-link"></i></a>
 </h2>
-<p>In this workshopp we will use directed acyclic graphs to conceptualize the above
-confounding issues. We will focus on the two types of graph:</p>
+<p>In this workshop we will use directed acyclic graphs. We will focus on the two
+types of graph:</p>
 <div id="no-intermediate-confounders" class="section level3">
 <h3>
 <span class="header-section-number">1.3.1</span> No intermediate confounders<a class="anchor" aria-label="anchor" href="#no-intermediate-confounders"><i class="fas fa-link"></i></a>
 </h3>
-<div class="figure" style="text-align: center">
-<span id="fig:unnamed-chunk-4"></span>
-<img src="01-preface_files/figure-html/unnamed-chunk-4-1.png" alt="Directed acyclic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment" width="80%"><p class="caption">
-FIGURE 1.1: Directed acyclic graph under <em>no intermediate confounders</em> of the mediator-outcome relation affected by treatment
-</p>
-</div>
 </div>
 <div id="intermediate-confounders" class="section level3">
 <h3>
 <span class="header-section-number">1.3.2</span> Intermediate confounders<a class="anchor" aria-label="anchor" href="#intermediate-confounders"><i class="fas fa-link"></i></a>
 </h3>
-<div class="figure" style="text-align: center">
-<span id="fig:unnamed-chunk-5"></span>
-<img src="01-preface_files/figure-html/unnamed-chunk-5-1.png" alt="Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment" width="80%"><p class="caption">
-FIGURE 1.2: Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment
-</p>
-</div>
 <p>The above graphs can be interpreted as a <em>non-parametric structural equation model</em>
 (NPSEM), also known as <em>structural causal model</em> (SCM):</p>
 <p><span class="math display">\[\begin{align}
@@ -184,8 +177,8 @@ FIGURE 1.2: Directed acyclic graph under intermediate confounders of the mediato
 <li>Here <span class="math inline">\(U=(U_W, U_A, U_Z, U_M, U_Y)\)</span> is a vector of all unmeasured exogenous
 factors affecting the system</li>
 <li>The functions <span class="math inline">\(f\)</span> are assumed fixed but unknown</li>
-<li>We posit this model as a system of equation that nature uses to geenrate the
-data at hand</li>
+<li>We posit this model as a system of equations that nature uses to geenrate the
+data</li>
 <li>Therefore we leave the functions <span class="math inline">\(f\)</span> unspecified (i.e., we do not know the
 true nature mechanisms)</li>
 <li>Sometimes we know something: e.g., if <span class="math inline">\(A\)</span> is randomized we know <span class="math inline">\(A=f_A(U_A)\)</span>
@@ -201,8 +194,10 @@ where <span class="math inline">\(U_A\)</span> is the flip of a coin (i.e., inde
 <li>We define all the effects of interest using <em>counterfactuals</em>
 </li>
 <li>Counterfactuals are hypothetical random variables that would have been
-observed in a world where we would be able to perform interventions on the
-random variables of interest</li>
+observed in an alternative world where something had happened, possibly
+contrary to fact <!--we would be able to perform interventions on the
+  random variables of interest-->
+</li>
 <li>
 <span class="math inline">\(Y_a\)</span> is a counterfactual variable in a hypothetical world where <span class="math inline">\(\P(A=a)=1\)</span>
 with probability one</li>
@@ -217,9 +212,8 @@ where <span class="math inline">\(\P(A=a)=1\)</span>.</li>
 <h3>
 <span class="header-section-number">1.4.1</span> How are counterfactuals defined?<a class="anchor" aria-label="anchor" href="#how-are-counterfactuals-defined"><i class="fas fa-link"></i></a>
 </h3>
+<!-- - You can use counterfactual variables as _primitives_ -->
 <ul>
-<li>You can use counterfactual variables as <em>primitives</em>
-</li>
 <li>In the NPSEM framework, counterfactuals are quantities <em>derived</em> from the
 model.</li>
 <li>Take as example the DAG in Figure 1.2:
@@ -240,9 +234,10 @@ model.</li>
 treatment was given but the mediator was held at the value it would have
 taken under no treatment</em>
 </li>
-<li>Causal effects are defined in terms of the distribution of these counterfactuals</li>
-<li>I.e., causal effects give you information about what would happen <em>under intervention</em>
-</li>
+<li>Causal effects are defined in terms of the distribution of these
+counterfactuals.</li>
+<li>That is, causal effects give you information about what would have happened
+<em>in some hypothetical world</em>.</li>
 </ul>
 </div>
 </div>
@@ -257,8 +252,8 @@ taken under no treatment</em>
 <li><a class="nav-link" href="#motivating-study"><span class="header-section-number">1.1</span> Motivating study</a></li>
 <li>
 <a class="nav-link" href="#what-is-causal-mediation-analysis"><span class="header-section-number">1.2</span> What is causal mediation analysis?</a><ul class="nav navbar-nav">
-<li><a class="nav-link" href="#an-example-of-a-non-causal-mediation-analysis-product-of-coefficients"><span class="header-section-number">1.2.1</span> An example of a non-causal mediation analysis (product of coefficients)</a></li>
-<li><a class="nav-link" href="#statistical-issues-with-this-method"><span class="header-section-number">1.2.2</span> Statistical issues with this method:</a></li>
+<li><a class="nav-link" href="#why-are-the-methods-that-we-will-discuss-today-important"><span class="header-section-number">1.2.1</span> Why are the methods that we will discuss today important?</a></li>
+<li><a class="nav-link" href="#r-example"><span class="header-section-number">1.2.2</span> R Example:</a></li>
 </ul>
 </li>
 <li>
@@ -287,7 +282,7 @@ taken under no treatment</em>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: May 07, 2021.</p>
+    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: May 12, 2021.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

@@ -46,11 +46,11 @@
 <li><a class="" href="index.html">Welcome to SER!</a></li>
 <li><a class="" href="mediation.html"><span class="header-section-number">1</span> Preliminaries on causal mediation analysis</a></li>
 <li><a class="" href="estimands.html"><span class="header-section-number">2</span> Path-specific casual mediation effect types</a></li>
-<li><a class="" href="estimandirl.html"><span class="header-section-number">3</span> How to choose an estimand: Real world example</a></li>
-<li><a class="" href="stochastic.html"><span class="header-section-number">4</span> Stochastic Direct and Indirect Effects</a></li>
+<li><a class="" href="stochastic.html"><span class="header-section-number">3</span> Stochastic Direct and Indirect Effects</a></li>
+<li><a class="" href="estimandirl.html"><span class="header-section-number">4</span> How to choose an estimand: Real world example</a></li>
 <li><a class="active" href="preliminaries-on-semiparametric-estimation.html"><span class="header-section-number">5</span> Preliminaries on semiparametric estimation</a></li>
-<li><a class="" href="estimating-natural-and-interventional-effects.html"><span class="header-section-number">6</span> Estimating natural and interventional effects</a></li>
-<li><a class="" href="estimating-stochastic-effects.html"><span class="header-section-number">7</span> Estimating stochastic effects</a></li>
+<li><a class="" href="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html"><span class="header-section-number">6</span> Using the EIF to construct an estimator: the case of the natural direct effect</a></li>
+<li><a class="" href="estimating-indirect-effects-with-r-packages.html"><span class="header-section-number">7</span> Estimating (in)direct effects with R packages</a></li>
 <li><a class="" href="references.html">References</a></li>
 </ul>
 
@@ -63,53 +63,95 @@
 <h1>
 <span class="header-section-number">5</span> Preliminaries on semiparametric estimation<a class="anchor" aria-label="anchor" href="#preliminaries-on-semiparametric-estimation"><i class="fas fa-link"></i></a>
 </h1>
-<div id="why-do-we-need-new-estimation-tools" class="section level2">
+<div id="from-causal-to-statistical-quantities" class="section level2">
 <h2>
-<span class="header-section-number">5.1</span> Why do we need new estimation tools?<a class="anchor" aria-label="anchor" href="#why-do-we-need-new-estimation-tools"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.1</span> From causal to statistical quantities<a class="anchor" aria-label="anchor" href="#from-causal-to-statistical-quantities"><i class="fas fa-link"></i></a>
 </h2>
 <ul>
-<li><p>As we have seen all the mediation parameters that we consider can be
-seen as a function of the joint probability distribution of <span class="math inline">\(O=(W,A,Z,M,Y)\)</span></p></li>
-<li><p>For example, under identifiability assumptions the natural direct effect is
+<li>We have arrived at identification formulas that express quantities that we
+care about in terms of observable quantities</li>
+<li>This required <strong>causal assumptions</strong>
+<ul>
+<li>Many of these assumptions are empirically unverifiable</li>
+<li>We saw an example where we could relax the cross-world assumption, at the
+cost of changing the parameter interpretation</li>
+<li>and where we could relax the positivity assumption, also at the cost of
+changing the parameter interpretation</li>
+</ul>
+</li>
+<li>The resulting estimation problem can be tackled using <strong>statistical
+assumptions</strong> of various degrees of strength
+<ul>
+<li>Most of these assumptions are verifiable (e.g., a linear model)</li>
+<li>Thus, most are unnecessary (except for convenience)</li>
+<li>The estimation approach we use reduces reliance on these statistical
+assumptions</li>
+</ul>
+</li>
+</ul>
+<div id="computing-identification-formulas-if-you-know-the-true-distribution" class="section level3">
+<h3>
+<span class="header-section-number">5.1.1</span> Computing identification formulas if you know the true distribution<a class="anchor" aria-label="anchor" href="#computing-identification-formulas-if-you-know-the-true-distribution"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li>The mediation parameters that we consider can be
+seen as a function of the joint probability distribution of <span class="math inline">\(O=(W,A,Z,M,Y)\)</span>
+</li>
+<li>For example, under identifiability assumptions the natural direct effect is
 equal to
 <span class="math display">\[\begin{equation*}
-  \psi(\P) =  \sum_{m,w}\big[\E(Y\mid A=1,M=m,W=w) -
-    \E(Y\mid A=0,M=m,W=w)\big]\P(M=m\mid A=0, W=w)\P(W=w)
-\end{equation*}\]</span></p></li>
-<li><p>The notation <span class="math inline">\(\psi(\P)\)</span> implies that the parameter is a function of <span class="math inline">\(\P\)</span></p></li>
-<li><p>This means that we can compute it for any distribution <span class="math inline">\(\P\)</span></p></li>
-<li>
-<p>For example, if we know the true <span class="math inline">\(\P(W,A,M,Y)\)</span>, we can comnpute the true value
-of the parameter by:</p>
+  \psi(\P) =  \E[\E\{\E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)\mid A=0,W\}]
+\end{equation*}\]</span>
+</li>
+<li>The notation <span class="math inline">\(\psi(\P)\)</span> implies that the parameter is a function of <span class="math inline">\(\P\)</span>
+</li>
+<li>This means that we can compute it for any distribution <span class="math inline">\(\P\)</span>
+</li>
+<li>For example, if we know the true <span class="math inline">\(\P(W,A,M,Y)\)</span>, we can comnpute the true value
+of the parameter by:
 <ul>
-<li>Computing the conditional expectation <span class="math inline">\(\E(Y\mid A=1,M=m,W=w)\)</span> for all values
-<span class="math inline">\((m,w)\)</span>
+<li>Computing the conditional expectation <span class="math inline">\(\E(Y\mid A=1,M=m,W=w)\)</span> for all
+values <span class="math inline">\((m,w)\)</span>
 </li>
 <li>Computing the probability <span class="math inline">\(\P(M=m\mid A=0,W=w)\)</span> for all values <span class="math inline">\((m,w)\)</span>
 </li>
 <li>Computing the probability <span class="math inline">\(\P(W=w)\)</span> for all values <span class="math inline">\(w\)</span>
 </li>
-<li>Computing the sum over all values <span class="math inline">\((m,w)\)</span>
+<li>Computing the mean over all values <span class="math inline">\((m,w)\)</span>
 </li>
 </ul>
 </li>
-<li><p>This is how you would compute the <em>true value</em> <strong>if you knew</strong> the true
-distribution <span class="math inline">\(\P\)</span></p></li>
-<li>
-<p>But we can use the same logic for estimation:</p>
+</ul>
+</div>
+<div id="estimating-identification-formulas" class="section level3">
+<h3>
+<span class="header-section-number">5.1.2</span> Estimating identification formulas<a class="anchor" aria-label="anchor" href="#estimating-identification-formulas"><i class="fas fa-link"></i></a>
+</h3>
+<p>The above is how you would compute the <em>true value</em> <strong>if you know</strong> the true
+distribution <span class="math inline">\(\P\)</span></p>
 <ul>
-<li>Fit a regression to estimate <span class="math inline">\(\E(Y\mid A=1,M=m,W=w)\)</span>
+<li>This is exactly what we did in our R examples before</li>
+<li>But we can use the same logic for estimation:
+<ul>
+<li>Fit a regression to estimate, say <span class="math inline">\(\hat\E(Y\mid A=1,M=m,W=w)\)</span>
 </li>
-<li>Fit a regression to estimate <span class="math inline">\(\P(M=m\mid A=0,W=w)\)</span>
+<li>Fit a regression to estimate, say <span class="math inline">\(\hat\P(M=m\mid A=0,W=w)\)</span>
 </li>
 <li>Estimate <span class="math inline">\(\P(W=w)\)</span> with the empirical distribution</li>
+<li>Evaluate
+<span class="math display">\[\begin{equation*}
+  \psi(\hat\P) =  \hat\E[\hat\E\{\hat\E(Y \mid A=1, M, W) -
+  \hat\E(Y \mid A=0, M, W)\mid A=0,W\}]
+\end{equation*}\]</span>
+</li>
 </ul>
 </li>
-<li><p>This is known as the g-computation estimator (more on this estimator later)</p></li>
+<li>This is known as the g-computation estimator</li>
 </ul>
+</div>
 <div id="how-can-g-estimation-be-implemented-in-practice" class="section level3">
 <h3>
-<span class="header-section-number">5.1.1</span> How can g-estimation be implemented in practice?<a class="anchor" aria-label="anchor" href="#how-can-g-estimation-be-implemented-in-practice"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.1.3</span> How can g-estimation be implemented in practice?<a class="anchor" aria-label="anchor" href="#how-can-g-estimation-be-implemented-in-practice"><i class="fas fa-link"></i></a>
 </h3>
 <ul>
 <li>There are two possible ways to do g-computation estimation:
@@ -122,7 +164,7 @@ distribution <span class="math inline">\(\P\)</span></p></li>
 </div>
 <div id="pros-and-cons-of-parametric-models" class="section level3">
 <h3>
-<span class="header-section-number">5.1.2</span> Pros and cons of parametric models<a class="anchor" aria-label="anchor" href="#pros-and-cons-of-parametric-models"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.1.4</span> Pros and cons of parametric models<a class="anchor" aria-label="anchor" href="#pros-and-cons-of-parametric-models"><i class="fas fa-link"></i></a>
 </h3>
 <ul>
 <li>Pros:
@@ -137,22 +179,89 @@ distribution <span class="math inline">\(\P\)</span></p></li>
 <li>Unless <span class="math inline">\(W\)</span> and <span class="math inline">\(M\)</span> contain very few categorical variables, it is very easy
 to misspecify the models</li>
 <li>This can introduce sizable bias in the estimators</li>
-<li>This bias is highly problematic
-<ul>
-<li>We go through a thorough process to correctly specify our causal models to
-avoid bias</li>
-<li>Overly simplisitc models introduce bias and squander those efforts</li>
-<li>The bias can be small or large and you can never know from a single data
-analysis</li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
 </div>
+<div id="an-example-of-the-bias-of-a-g-computation-estimator-of-the-natural-direct-effect" class="section level3">
+<h3>
+<span class="header-section-number">5.1.5</span> An example of the bias of a g-computation estimator of the natural direct effect<a class="anchor" aria-label="anchor" href="#an-example-of-the-bias-of-a-g-computation-estimator-of-the-natural-direct-effect"><i class="fas fa-link"></i></a>
+</h3>
+<ul>
+<li>The following <code>R</code> chunk provides simulation code to exemplify the bias of a
+g-computation estimator in a simple situation</li>
+</ul>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mean_y</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">m</span>, <span class="va">a</span>, <span class="va">w</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">w</span><span class="op">)</span> <span class="op">+</span> <span class="va">a</span> <span class="op">*</span> <span class="va">m</span>
+<span class="va">mean_m</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">a</span>, <span class="va">w</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">plogis</a></span><span class="op">(</span><span class="va">w</span><span class="op">^</span><span class="fl">2</span> <span class="op">-</span> <span class="va">a</span><span class="op">)</span>
+<span class="va">pscore</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">w</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">plogis</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">w</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<ul>
+<li>This yields a true NDE value of</li>
+</ul>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">w_big</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">1e6</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>
+<span class="va">trueval</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="op">(</span><span class="fu">mean_y</span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="va">w_big</span><span class="op">)</span> <span class="op">-</span> <span class="fu">mean_y</span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="va">w_big</span><span class="op">)</span><span class="op">)</span> <span class="op">*</span>
+  <span class="fu">mean_m</span><span class="op">(</span><span class="fl">0</span>, <span class="va">w_big</span><span class="op">)</span> <span class="op">+</span> <span class="op">(</span><span class="fu">mean_y</span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="va">w_big</span><span class="op">)</span> <span class="op">-</span> <span class="fu">mean_y</span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="va">w_big</span><span class="op">)</span><span class="op">)</span> <span class="op">*</span>
+    <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fu">mean_m</span><span class="op">(</span><span class="fl">0</span>, <span class="va">w_big</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">trueval</span><span class="op">)</span></code></pre></div>
+<ul>
+<li>Let’s perform a simulation where we draw 1000 datasets from the above distribution, and compute a g-computation estimator based on</li>
+</ul>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">gcomp</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">y</span>, <span class="va">m</span>, <span class="va">a</span>, <span class="va">w</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">lm_y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">m</span> <span class="op">+</span> <span class="va">a</span> <span class="op">+</span> <span class="va">w</span><span class="op">)</span>
+  <span class="va">pred_y1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lm_y</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">1</span>, m <span class="op">=</span> <span class="va">m</span>, w <span class="op">=</span> <span class="va">w</span><span class="op">)</span><span class="op">)</span>
+  <span class="va">pred_y0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lm_y</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">0</span>, m <span class="op">=</span> <span class="va">m</span>, w <span class="op">=</span> <span class="va">w</span><span class="op">)</span><span class="op">)</span>
+  <span class="va">pseudo</span> <span class="op">&lt;-</span> <span class="va">pred_y1</span> <span class="op">-</span> <span class="va">pred_y0</span>
+  <span class="va">lm_pseudo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">pseudo</span> <span class="op">~</span> <span class="va">a</span> <span class="op">+</span> <span class="va">w</span><span class="op">)</span>
+  <span class="va">pred_pseudo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">lm_pseudo</span>, newdata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">0</span>, w <span class="op">=</span> <span class="va">w</span><span class="op">)</span><span class="op">)</span>
+  <span class="va">estimate</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">pred_pseudo</span><span class="op">)</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">estimate</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">numeric</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span>
+<span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">1000</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">1000</span>
+  <span class="va">w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="va">n</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>
+  <span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">1</span>, <span class="fu">pscore</span><span class="op">(</span><span class="va">w</span><span class="op">)</span><span class="op">)</span>
+  <span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">1</span>, <span class="fu">mean_m</span><span class="op">(</span><span class="va">a</span>, <span class="va">w</span><span class="op">)</span><span class="op">)</span>
+  <span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu">mean_y</span><span class="op">(</span><span class="va">m</span>, <span class="va">a</span>, <span class="va">w</span><span class="op">)</span><span class="op">)</span>
+
+  <span class="va">estimate</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">gcomp</span><span class="op">(</span><span class="va">y</span>, <span class="va">m</span>, <span class="va">a</span>, <span class="va">w</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/abline.html">abline</a></span><span class="op">(</span>v <span class="op">=</span> <span class="va">trueval</span>, col <span class="op">=</span> <span class="st">"red"</span>, lwd <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></code></pre></div>
+<ul>
+<li>The bias also affects the confidence intervals:</li>
+</ul>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span>
+  <span class="va">estimate</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span><span class="op">(</span><span class="fl">0.975</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span>,
+  <span class="va">estimate</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span><span class="op">(</span><span class="fl">0.975</span><span class="op">)</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span>
+<span class="op">)</span>
+
+<span class="va">ord</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html">order</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html">rowSums</a></span><span class="op">(</span><span class="va">cis</span><span class="op">)</span><span class="op">)</span>
+<span class="va">lower</span> <span class="op">&lt;-</span> <span class="va">cis</span><span class="op">[</span><span class="va">ord</span>, <span class="fl">1</span><span class="op">]</span>
+<span class="va">upper</span> <span class="op">&lt;-</span> <span class="va">cis</span><span class="op">[</span><span class="va">ord</span>, <span class="fl">2</span><span class="op">]</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/curve.html">curve</a></span><span class="op">(</span><span class="va">trueval</span> <span class="op">+</span> <span class="fl">0</span> <span class="op">*</span> <span class="va">x</span>,
+  ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1001</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">2</span>, lty <span class="op">=</span> <span class="fl">3</span>, xaxt <span class="op">=</span> <span class="st">"n"</span>,
+  xlab <span class="op">=</span> <span class="st">""</span>, ylab <span class="op">=</span> <span class="st">"Confidence interval"</span>, cex.axis <span class="op">=</span> <span class="fl">1.2</span>, cex.lab <span class="op">=</span> <span class="fl">1.2</span>
+<span class="op">)</span>
+<span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">1000</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">clr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/rgb.html">rgb</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">0</span>, <span class="fl">0.75</span>, <span class="fl">0.5</span><span class="op">)</span>
+  <span class="kw">if</span> <span class="op">(</span><span class="va">upper</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;</span> <span class="va">trueval</span> <span class="op">||</span> <span class="va">lower</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&gt;</span> <span class="va">trueval</span><span class="op">)</span> <span class="va">clr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/rgb.html">rgb</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/graphics/points.html">points</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">i</span>, <span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">lower</span><span class="op">[</span><span class="va">i</span><span class="op">]</span>, <span class="va">upper</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"l"</span>, lty <span class="op">=</span> <span class="fl">1</span>, col <span class="op">=</span> <span class="va">clr</span><span class="op">)</span>
+<span class="op">}</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/text.html">text</a></span><span class="op">(</span><span class="fl">450</span>, <span class="fl">0.10</span>, <span class="st">"n=1000 repetitions = 1000 "</span>, cex <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/text.html">text</a></span><span class="op">(</span><span class="fl">450</span>, <span class="fl">0.01</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span>
+  <span class="st">"Coverage probability = "</span>,
+  <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">lower</span> <span class="op">&lt;</span> <span class="va">trueval</span> <span class="op">&amp;</span> <span class="va">trueval</span> <span class="op">&lt;</span> <span class="va">upper</span><span class="op">)</span>, <span class="st">"%"</span>
+<span class="op">)</span>, cex <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span></code></pre></div>
+</div>
 <div id="pros-and-cons-of-g-computation-with-data-adaptive-regression" class="section level3">
 <h3>
-<span class="header-section-number">5.1.3</span> Pros and cons of g-computation with data-adaptive regression<a class="anchor" aria-label="anchor" href="#pros-and-cons-of-g-computation-with-data-adaptive-regression"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.1.6</span> Pros and cons of g-computation with data-adaptive regression<a class="anchor" aria-label="anchor" href="#pros-and-cons-of-g-computation-with-data-adaptive-regression"><i class="fas fa-link"></i></a>
 </h3>
 <ul>
 <li>Pros:
@@ -163,92 +272,78 @@ analysis</li>
 </li>
 <li>Cons:
 <ul>
-<li>Might be harder to implement depending on the regression procedure</li>
+<li>Might be harder to implement depending on the regression procedures used</li>
 <li>No general approaches for computation of standard errors and confidence
 intervals</li>
+<li>For example, the bootstrap is not guaranteed to work, and it is known to
+fail in some cases</li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="semiparametric-estimation---an-alternative-to-solve-these-problems" class="section level2">
+<div id="semiparametric-estimation-or-correcting-the-bias-of-g-computation-estimators" class="section level2">
 <h2>
-<span class="header-section-number">5.2</span> Semiparametric estimation - an alternative to solve these problems<a class="anchor" aria-label="anchor" href="#semiparametric-estimation---an-alternative-to-solve-these-problems"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.2</span> Semiparametric estimation (or correcting the bias of g-computation estimators)<a class="anchor" aria-label="anchor" href="#semiparametric-estimation-or-correcting-the-bias-of-g-computation-estimators"><i class="fas fa-link"></i></a>
 </h2>
-<div id="biasvariance-tradeoff" class="section level3">
-<h3>
-<span class="header-section-number">5.2.1</span> Bias/variance tradeoff<a class="anchor" aria-label="anchor" href="#biasvariance-tradeoff"><i class="fas fa-link"></i></a>
-</h3>
+<!--
+KER this may be just me, but I'm not sure the "incorrect bias/variance
+tradeoff" argument will be super concrete for folks. I think maybe a more
+concrete/motivating argument would be to say that we want to use data adaptive
+methods because we don't know how to correctly specify all our models. we also
+want valid standard errors and confidence intervals. to do this, we need to use
+semiparametric estimation
+-->
 <ul>
-<li><p>A lot of the recent literature in causal inference with data-adaptive
-regression uses the following ideas</p></li>
-<li><p>G-computation estimation with data-adaptive regression offers an incorrect
-bias/variance trade-off</p></li>
-<li><p>Specifically, the bias of a g-computation estimator can often be expressed as
+<li>G-computation estimation with data-adaptive regression offers an incorrect
+bias/variance trade-off</li>
+<li>It accepts more bias than necessary</li>
+<li>The bias of a g-computation estimator may be corrected as follows:
 <span class="math display">\[\begin{equation*}
-  \psi(\hat\P) - \psi(\P) \approx -\E[D(O;\hat\P)]
-\end{equation*}\]</span></p></li>
-<li><p>The function <span class="math inline">\(D(O;\P)\)</span> is called <em>the efficient influence function</em> (EIF)</p></li>
-<li><p>The EIF must be found on a case-by-case basis or each parameter <span class="math inline">\(\psi(\P)\)</span></p></li>
-<li><p>For example, for estimating the standardized mean <span class="math inline">\(\psi(P)=\E[\E(Y\mid A=1, W)]\)</span>, we have
+  \psi(\hat \P) + \frac{1}{n}\sum_{i=1}^n D(O_i)
+\end{equation*}\]</span>
+for some function <span class="math inline">\(D(O_i)\)</span> of the data</li>
+<li>The function <span class="math inline">\(D(O)\)</span> is called <em>the efficient influence function</em> (EIF)</li>
+<li>The EIF must be found on a case-by-case basis for each parameter <span class="math inline">\(\psi(\P)\)</span>
+</li>
+<li>For example, for estimating the standardized mean <span class="math inline">\(\psi(\P)=\E[\E(Y\mid A=1, W)]\)</span>, we have
 <span class="math display">\[\begin{equation*}
-  D(O,\hat\P) = \frac{A}{\hat P(A=1\mid W)}[Y - \hat\E(Y\mid A=1, W)] +
+  D(O) = \frac{A}{\hat \P(A=1\mid W)}[Y - \hat\E(Y\mid A=1, W)] +
   \hat\E(Y\mid A=1, W) - \psi(\hat\P)
-\end{equation*}\]</span></p></li>
-<li><p>In this workshop we will not present the specific form of <span class="math inline">\(D(O;\hat\P)\)</span> for
-all parameters that we use</p></li>
-<li><p>But the estimators we discuss and implement in the packages will be based on
-theser EIFs</p></li>
-</ul>
-</div>
-<div id="bias-correction-of-g-computation-estimators" class="section level3">
-<h3>
-<span class="header-section-number">5.2.2</span> Bias-correction of g-computation estimators<a class="anchor" aria-label="anchor" href="#bias-correction-of-g-computation-estimators"><i class="fas fa-link"></i></a>
-</h3>
-<ul>
-<li>There are at least two ways to use the EIF to perform a bias correction for a
-g-computation estimator</li>
-<li>The first one is the so-called <em>one step</em> estimator:
-<span class="math display">\[\begin{equation*}
-  \psi(\hat \P) + \frac{1}{n}\sum_{i=1}^n D(O;\hat \P_i)
 \end{equation*}\]</span>
 </li>
-<li>The idea behind the one-step estimator is simple: subtract an estimate of the
-bias of the g-computation estimator</li>
-<li>The second approach is the <em>targeted maximum likelihood estimator</em> (TMLE)</li>
-<li>TMLE is based on the principle that it is possile to construct a
-data-adaptive estimator <span class="math inline">\(\tilde \P\)</span> such that
-<span class="math display">\[\begin{equation*}
-  \frac{1}{n}\sum_{i=1}^n D(O;\tilde \P_i)=0
-\end{equation*}\]</span>
-</li>
-<li>Thus, for this special data-adaptive estimate <span class="math inline">\(\tilde \P\)</span>, the TMLE is
-actually just the g-computation estimator <span class="math inline">\(\psi(\tilde\P)\)</span>
-</li>
+<li>The EIF is found by using a distributional analogue of a Taylor expansion</li>
+<li>In this workshop we will omit the specific form of <span class="math inline">\(D(O)\)</span> for
+some of the parameters that we use</li>
+<li>But the estimators we discuss and implement in the R packages will be based on
+these EIFs</li>
+<li>And the specific form of the EIF may be found in papers in the references</li>
 </ul>
-</div>
+<p>Note: the bias correction above may have an additional problem of returning
+parameter estimates outside of natural bounds. E.g., probabilities greater than
+one. A solution to this (not discussed in this workshop) is targeted minimum
+loss based estimation.</p>
+
 </div>
 </div>
   <div class="chapter-nav">
-<div class="prev"><a href="stochastic.html"><span class="header-section-number">4</span> Stochastic Direct and Indirect Effects</a></div>
-<div class="next"><a href="estimating-natural-and-interventional-effects.html"><span class="header-section-number">6</span> Estimating natural and interventional effects</a></div>
+<div class="prev"><a href="estimandirl.html"><span class="header-section-number">4</span> How to choose an estimand: Real world example</a></div>
+<div class="next"><a href="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html"><span class="header-section-number">6</span> Using the EIF to construct an estimator: the case of the natural direct effect</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
 <li><a class="nav-link" href="#preliminaries-on-semiparametric-estimation"><span class="header-section-number">5</span> Preliminaries on semiparametric estimation</a></li>
 <li>
-<a class="nav-link" href="#why-do-we-need-new-estimation-tools"><span class="header-section-number">5.1</span> Why do we need new estimation tools?</a><ul class="nav navbar-nav">
-<li><a class="nav-link" href="#how-can-g-estimation-be-implemented-in-practice"><span class="header-section-number">5.1.1</span> How can g-estimation be implemented in practice?</a></li>
-<li><a class="nav-link" href="#pros-and-cons-of-parametric-models"><span class="header-section-number">5.1.2</span> Pros and cons of parametric models</a></li>
-<li><a class="nav-link" href="#pros-and-cons-of-g-computation-with-data-adaptive-regression"><span class="header-section-number">5.1.3</span> Pros and cons of g-computation with data-adaptive regression</a></li>
+<a class="nav-link" href="#from-causal-to-statistical-quantities"><span class="header-section-number">5.1</span> From causal to statistical quantities</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#computing-identification-formulas-if-you-know-the-true-distribution"><span class="header-section-number">5.1.1</span> Computing identification formulas if you know the true distribution</a></li>
+<li><a class="nav-link" href="#estimating-identification-formulas"><span class="header-section-number">5.1.2</span> Estimating identification formulas</a></li>
+<li><a class="nav-link" href="#how-can-g-estimation-be-implemented-in-practice"><span class="header-section-number">5.1.3</span> How can g-estimation be implemented in practice?</a></li>
+<li><a class="nav-link" href="#pros-and-cons-of-parametric-models"><span class="header-section-number">5.1.4</span> Pros and cons of parametric models</a></li>
+<li><a class="nav-link" href="#an-example-of-the-bias-of-a-g-computation-estimator-of-the-natural-direct-effect"><span class="header-section-number">5.1.5</span> An example of the bias of a g-computation estimator of the natural direct effect</a></li>
+<li><a class="nav-link" href="#pros-and-cons-of-g-computation-with-data-adaptive-regression"><span class="header-section-number">5.1.6</span> Pros and cons of g-computation with data-adaptive regression</a></li>
 </ul>
 </li>
-<li>
-<a class="nav-link" href="#semiparametric-estimation---an-alternative-to-solve-these-problems"><span class="header-section-number">5.2</span> Semiparametric estimation - an alternative to solve these problems</a><ul class="nav navbar-nav">
-<li><a class="nav-link" href="#biasvariance-tradeoff"><span class="header-section-number">5.2.1</span> Bias/variance tradeoff</a></li>
-<li><a class="nav-link" href="#bias-correction-of-g-computation-estimators"><span class="header-section-number">5.2.2</span> Bias-correction of g-computation estimators</a></li>
-</ul>
-</li>
+<li><a class="nav-link" href="#semiparametric-estimation-or-correcting-the-bias-of-g-computation-estimators"><span class="header-section-number">5.2</span> Semiparametric estimation (or correcting the bias of g-computation estimators)</a></li>
 </ul>
 
       <div class="book-extra">
@@ -266,7 +361,7 @@ actually just the g-computation estimator <span class="math inline">\(\psi(\tild
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: May 07, 2021.</p>
+    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: May 12, 2021.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

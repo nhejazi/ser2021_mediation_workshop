@@ -206,7 +206,7 @@
 
 \title{{[}SER 2021 Workshop{]} Causal Mediation: Modern Methods for Path Analysis}
 \author{Iván Díaz, Nima Hejazi, Kara Rudolph}
-\date{updated: May 07, 2021}
+\date{updated: May 12, 2021}
 
 \begin{document}
 \maketitle
@@ -279,25 +279,21 @@ parameter estimable from the observed data distribution). Familiarity with the
 \item
   10:00A-10:30A: introductions/mediation set up
 \item
-  10:30A-11:00A: estimands and how to choose
+  10:30A-11:15A: controlled direct effects, natural direct and indirect effects, interventional direct and indirect effects
 \item
-  11:00A-11:30A: discussion: how to choose in real-world examples
+  11:15A-11:45A: stochastic mediation estimands
 \item
-  11:30A-12:00P: shift parameter introduction with application in lecture part
+  11:45A-12:00P: how to choose an estimand in real-world examples
 \item
   12:00P-12:15P break/discussion
 \item
-  12:15P-12:45P estimation for natural direct and indirect effects,
-  interventional direct and indirect effects
+  12:15P-12:45P: what is the EIF
 \item
-  12:45P-01:15P: practice \passthrough{\lstinline!R!} code for estimation
+  12:45P-01:00P: using the EIF for estimating the natural direct effect
 \item
-  01:15P-01:30P: estimation for stochastic interventional direct and indirect
-  effects
+  01:00P-01:45P: practice: \passthrough{\lstinline!R!} code for estimation
 \item
-  01:30P-01:50P: practice: code for estimation
-\item
-  01:50P-02:00P wrap up
+  01:45P-02:00P wrap up
 \end{itemize}
 
 \textbf{NOTE: All times listed in Pacific Time.}
@@ -357,38 +353,6 @@ These workshop materials were written using \href{http://bookdown.org/}{bookdown
 and the complete source is available on
 \href{https://github.com/tlverse/tlverse-handbook}{GitHub}. This version of the book
 was built with R version 4.0.5 (2021-03-31), \href{https://pandoc.org/}{pandoc} version \passthrough{\lstinline!r rmarkdown::pandoc\_version()!}, and the following packages:
-
-\begin{longtable}[]{@{}lll@{}}
-\toprule
-package & version & source\tabularnewline
-\midrule
-\endhead
-bookdown & 0.21.11 & Github (rstudio/bookdown@33c4f70)\tabularnewline
-bslib & 0.2.4.9003 & Github (rstudio/bslib@e09af88)\tabularnewline
-dagitty & 0.3-1 & CRAN (R 4.0.5)\tabularnewline
-data.table & 1.14.0 & CRAN (R 4.0.5)\tabularnewline
-downlit & 0.2.1 & CRAN (R 4.0.5)\tabularnewline
-dplyr & 1.0.6 & CRAN (R 4.0.5)\tabularnewline
-ggdag & 0.2.3 & CRAN (R 4.0.5)\tabularnewline
-ggfortify & 0.4.11 & CRAN (R 4.0.5)\tabularnewline
-ggplot2 & 3.3.3 & CRAN (R 4.0.5)\tabularnewline
-kableExtra & 1.3.4 & CRAN (R 4.0.5)\tabularnewline
-knitr & 1.32 & CRAN (R 4.0.5)\tabularnewline
-magick & 2.7.1 & CRAN (R 4.0.5)\tabularnewline
-medoutcon & 0.1.5 & Github (nhejazi/medoutcon@39820e2)\tabularnewline
-medshift & 0.1.4 & Github (nhejazi/medshift@f9e11a9)\tabularnewline
-mvtnorm & 1.1-1 & CRAN (R 4.0.5)\tabularnewline
-origami & 1.0.3 & CRAN (R 4.0.5)\tabularnewline
-pdftools & 2.3.1 & CRAN (R 4.0.5)\tabularnewline
-readr & 1.4.0 & CRAN (R 4.0.5)\tabularnewline
-rmarkdown & 2.7.11 & Github (rstudio/rmarkdown@e340d75)\tabularnewline
-skimr & 2.1.3 & CRAN (R 4.0.5)\tabularnewline
-sl3 & 1.4.3 & Github (tlverse/sl3@5cddc6c)\tabularnewline
-stringr & 1.4.0 & CRAN (R 4.0.5)\tabularnewline
-tibble & 3.1.1 & CRAN (R 4.0.5)\tabularnewline
-tidyr & 1.1.3 & CRAN (R 4.0.5)\tabularnewline
-\bottomrule
-\end{longtable}
 
 \hypertarget{setup}{%
 \section{Setup instructions}\label{setup}}
@@ -531,44 +495,35 @@ Data}.
 
 Do differences in the effects of treatment (comparing two medications for opioid use disorder, naltrexone vs buprenorphine) on risk of relapse operate through mediators of adherence, opioid use, pain, and depressive symptoms? \citep{rudolph2020explaining}
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/ctndag} 
-
-}
-
-\end{figure}
-
 \hypertarget{what-is-causal-mediation-analysis}{%
 \section{What is causal mediation analysis?}\label{what-is-causal-mediation-analysis}}
 
 \begin{itemize}
 \tightlist
 \item
-  Like all causal analyses, \emph{causal mediation analysis} is different from
-  standard statistical mediation analyses
+  Causal mediation analyses assess how the paths behave under interventions
 \item
-  Statistical mediation analyses merely assess associations between the variables
-\item
-  Causal mediation analyses assess how the system behaves under interventions
-\item
-  Causal mediation analysis is thus useful to understand mechanisms
+  Statistical mediation analyses assess associations between the variables
 \end{itemize}
 
-\hypertarget{an-example-of-a-non-causal-mediation-analysis-product-of-coefficients}{%
-\subsection{An example of a non-causal mediation analysis (product of coefficients)}\label{an-example-of-a-non-causal-mediation-analysis-product-of-coefficients}}
+\hypertarget{why-are-the-methods-that-we-will-discuss-today-important}{%
+\subsection{Why are the methods that we will discuss today important?}\label{why-are-the-methods-that-we-will-discuss-today-important}}
 
 \begin{itemize}
 \tightlist
 \item
-  Assume you are interested in the effect of a treatment \(A\) (naltrexone vs.~buprenorphine) on an outcome \(Y\) (risk of relapse) through mediators \(M\)
-  (adherence, opioid use, pain, depressive symptoms)
+  Assume you are interested in the effect of a treatment assignment \(A\) (naltrexone vs.
+  buprenorphine) on an outcome \(Y\) (risk of relapse) through mediators \(M\)
+  (opioid use, pain, depressive symptoms)
+\item
+  We have pre-treatment confounders \(W\)
+\item
+  There is a confounder \(Z\) of \(M\rightarrow Y\) ffected by treatment assignment (adherence)
 \item
   We could fit the following models:
   \begin{align}
-      \E(Y\mid A=a) & = \alpha_0 + \alpha_1 a\\
-      \E(M\mid A=a) & = \gamma_0 + \gamma_1 a\\
-      \E(Y\mid M=m, A=a) & = \beta_0 + \beta_1 m + \beta_2 a
+      \E(M\mid A=a, W=w, Z=z) & = \gamma_0 + \gamma_1 a + \gamma_2 w + \gamma_3 z \\
+      \E(Y\mid M=m, A=a, W=w, Z=z) & = \beta_0 + \beta_1 m + \beta_2 a + \beta_3 w + \beta_4 z
     \end{align}
 \item
   The product \((\gamma_1\beta_1)\) has been proposed as a measure of the effect
@@ -579,90 +534,70 @@ Do differences in the effects of treatment (comparing two medications for opioid
   \begin{itemize}
   \tightlist
   \item
-    What happens if there are confounders of the relation between treatment and outcome?
-  \item
-    What happens if there are confounders of the relation between mediator and outcome?
-  \item
-    What happens if there are confounders of the relation between treatment and mediator?
-  \item
-    What happens if the confounders of mediator and outcome are affected by treatment?
-    \#\#\# Example:
+    We will see that this parameter cannot be interpreted as a causal effect
   \end{itemize}
+\end{itemize}
+
+\hypertarget{r-example}{%
+\subsection{\texorpdfstring{\texttt{R} Example:}{R Example:}}\label{r-example}}
+
+\begin{itemize}
+\tightlist
 \item
   Assume we have a pre-treamtment confounder of \(Y\) and \(M\), denote it with \(W\)
 \item
   For simplicity, assume \(A\) is randomized
 \item
-  We'll generate a really large sample from a data generating mechanism so that we are not concerned with sampling errors
+  We'll generate a really large sample from a data generating mechanism so that
+  we are not concerned with sampling errors
 \end{itemize}
 
 \begin{lstlisting}[language=R]
 n <- 1e7
 w <- rnorm(n)
 a <- rbinom(n, 1, 0.5)
-m <- rnorm(n, w + a)
-y <- rnorm(n, w - a)
+z <- rbinom(n, 1, 0.2 * a + 0.3)
+m <- rnorm(n, w + z)
+y <- rnorm(n, m + w - a + z)
 \end{lstlisting}
 
 \begin{itemize}
 \tightlist
 \item
-  Note that the indirect effect (i.e., the effect through \(M\)) in this example is zero
+  Note that the indirect effect (i.e., the effect through \(M\)) in this example
+  is nonzero (there is a pathway \(A\rightarrow Z \rightarrow M \rightarrow Y\))
 \item
   Let's see what the product of coefficients method would say:
 \end{itemize}
 
 \begin{lstlisting}[language=R]
-lm_y <- lm(y ~ m + a)
-lm_m <- lm(m ~ a)
+lm_y <- lm(y ~ m + a + w + z)
+lm_m <- lm(m ~ a + w + z)
 ## product of coefficients
 coef(lm_y)[2] * coef(lm_m)[2]
-#>       m 
-#> 0.50107
 \end{lstlisting}
 
-\hypertarget{statistical-issues-with-this-method}{%
-\subsection{Statistical issues with this method:}\label{statistical-issues-with-this-method}}
+Among other things, in this workshop:
 
 \begin{itemize}
 \tightlist
 \item
-  Assume the above confounding is not an issue
+  We will provide some understanding for why the above method fails in this example
 \item
-  Can I then interpret \((\gamma_1\beta_1)\) as the indirect effect?
-\item
-  No: the regression models may be misspecified
+  We will study estimators that are robust to misspecification in the above models
 \end{itemize}
 
 \hypertarget{causal-mediation-models}{%
 \section{Causal mediation models}\label{causal-mediation-models}}
 
-In this workshopp we will use directed acyclic graphs to conceptualize the above
-confounding issues. We will focus on the two types of graph:
+In this workshop we will use directed acyclic graphs. We will focus on the two
+types of graph:
 
 \hypertarget{no-intermediate-confounders}{%
 \subsection{No intermediate confounders}\label{no-intermediate-confounders}}
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.8\linewidth]{01-preface_files/figure-latex/unnamed-chunk-4-1} 
-
-}
-
-\caption{Directed acyclic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-4}
-\end{figure}
-
 \hypertarget{intermediate-confounders}{%
 \subsection{Intermediate confounders}\label{intermediate-confounders}}
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.8\linewidth]{01-preface_files/figure-latex/unnamed-chunk-5-1} 
-
-}
-
-\caption{Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-5}
-\end{figure}
 
 The above graphs can be interpreted as a \emph{non-parametric structural equation model}
 (NPSEM), also known as \emph{structural causal model} (SCM):
@@ -683,8 +618,8 @@ The above graphs can be interpreted as a \emph{non-parametric structural equatio
 \item
   The functions \(f\) are assumed fixed but unknown
 \item
-  We posit this model as a system of equation that nature uses to geenrate the
-  data at hand
+  We posit this model as a system of equations that nature uses to geenrate the
+  data
 \item
   Therefore we leave the functions \(f\) unspecified (i.e., we do not know the
   true nature mechanisms)
@@ -702,8 +637,8 @@ The above graphs can be interpreted as a \emph{non-parametric structural equatio
   We define all the effects of interest using \emph{counterfactuals}
 \item
   Counterfactuals are hypothetical random variables that would have been
-  observed in a world where we would be able to perform interventions on the
-  random variables of interest
+  observed in an alternative world where something had happened, possibly
+  contrary to fact 
 \item
   \(Y_a\) is a counterfactual variable in a hypothetical world where \(\P(A=a)=1\)
   with probability one
@@ -719,8 +654,6 @@ The above graphs can be interpreted as a \emph{non-parametric structural equatio
 
 \begin{itemize}
 \tightlist
-\item
-  You can use counterfactual variables as \emph{primitives}
 \item
   In the NPSEM framework, counterfactuals are quantities \emph{derived} from the
   model.
@@ -743,9 +676,11 @@ The above graphs can be interpreted as a \emph{non-parametric structural equatio
   treatment was given but the mediator was held at the value it would have
   taken under no treatment}
 \item
-  Causal effects are defined in terms of the distribution of these counterfactuals
+  Causal effects are defined in terms of the distribution of these
+  counterfactuals.
 \item
-  I.e., causal effects give you information about what would happen \emph{under intervention}
+  That is, causal effects give you information about what would have happened
+  \emph{in some hypothetical world}.
 \end{itemize}
 
 \hypertarget{estimands}{%
@@ -761,22 +696,14 @@ The above graphs can be interpreted as a \emph{non-parametric structural equatio
   Interventional direct and indirect effects
 \end{itemize}
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.8\linewidth]{02-effects-def_files/figure-latex/unnamed-chunk-1-1} 
-
-}
-
-\caption{Directed acyclic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-1}
-\end{figure}
-
 \hypertarget{controlled-direct-effects}{%
 \section{Controlled direct effects}\label{controlled-direct-effects}}
 
 \begin{itemize}
 \tightlist
 \item
-  Set the mediator to a reference value \(M=m\) uniformly for everyone in the population
+  Set the mediator to a reference value \(M=m\) uniformly for everyone in the
+  population
 \item
   Compare \(A=1\) vs \(A=0\) with \(M=m\) fixed
 \end{itemize}
@@ -810,21 +737,22 @@ The above graphs can be interpreted as a \emph{non-parametric structural equatio
   \end{itemize}
 \end{itemize}
 
-Under the above identification assumptions, the controlled direct can be identified:
+Under the above identification assumptions, the controlled direct effect can be
+identified:
 \[ \E(Y_{1,m} - Y_{0,m}) = \E\{\color{ForestGreen}{\E(Y \mid A=1, M=m, W) - \E(Y \mid A=0, M=m, W)}\}\]
 
 \begin{itemize}
 \tightlist
 \item
-  For intuition about this formula in R, let's continue with our toy example, where we now add an indirect effect
+  For intuition about this formula in R, let's continue with a toy example:
 \end{itemize}
 
 \begin{lstlisting}[language=R]
-n <- 1e7
+n <- 1e6
 w <- rnorm(n)
 a <- rbinom(n, 1, 0.5)
 m <- rnorm(n, w + a)
-y <- rnorm(n, w - a + m)
+y <- rnorm(n, w + a + m)
 \end{lstlisting}
 
 \begin{itemize}
@@ -842,7 +770,8 @@ lm_y <- lm(y ~ m + a + w)
 \item
   Assume we would like the CDE at \(m=0\)
 \item
-  Then we generate predictions \[\color{ForestGreen}{\E(Y \mid A=1, M=m, W)} \text{ and }\color{ForestGreen}{\E(Y \mid A=0, M=m, W)}:\]
+  Then we generate predictions \[\color{ForestGreen}{\E(Y \mid A=1, M=m, W)}
+  \text{ and }\color{ForestGreen}{\E(Y \mid A=0, M=m, W)}:\]
 \end{itemize}
 
 \begin{lstlisting}[language=R]
@@ -853,22 +782,15 @@ pred_y0 <- predict(lm_y, newdata = data.frame(a = 0, m = 0, w = w))
 \begin{itemize}
 \tightlist
 \item
-  Then we compute the difference between the predicted values \(\color{ForestGreen}{\E(Y \mid A=1, M=m, W) - \E(Y \mid A=0, M=m, W)}\), and average across values of \(W\)
+  Then we compute the difference between the predicted values
+  \(\color{ForestGreen}{\E(Y \mid A=1, M=m, W) - \E(Y \mid A=0, M=m, W)}\), and
+  average across values of \(W\)
 \end{itemize}
 
 \begin{lstlisting}[language=R]
 ## CDE at m = 0
 mean(pred_y1 - pred_y0)
-#> [1] -0.99974
 \end{lstlisting}
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/graphic4a3} 
-
-}
-
-\end{figure}
 
 \hypertarget{is-this-the-estimand-i-want}{%
 \subsection{Is this the estimand I want?}\label{is-this-the-estimand-i-want}}
@@ -890,7 +812,8 @@ mean(pred_y1 - pred_y0)
   \item
     Air pollution, rescue inhaler dosage, hospital visits
   \item
-    Does not provide a decomposition of the average treatment effect into direct and indirect effects
+    Does not provide a decomposition of the average treatment effect into
+    direct and indirect effects
   \end{itemize}
 \end{itemize}
 
@@ -921,7 +844,7 @@ Still using the same DAG as above,
   treatment was given but the mediator was held at the value it would have
   taken under no treatment}
 \item
-  Recal that, because of the definition of counterfactuals
+  Recall that, because of the definition of counterfactuals
   \begin{equation*}
   Y_{1, M_1} = Y_1
   \end{equation*}
@@ -939,24 +862,13 @@ Then we can decompose the \emph{average treatment effect} \(E(Y_1-Y_0)\) as foll
 \begin{itemize}
 \tightlist
 \item
-  Natural direct effect (NDE): Varying treatment while keeping the mediator fixed at the value it would have taken under no treatment
+  Natural direct effect (NDE): Varying treatment while keeping the mediator
+  fixed at the value it would have taken under no treatment
 \item
-  Natural indirect effect (NIE): Varying the mediator from the value it would have taken under treatment to the value it would have taken under control, while keeping treatment fixed
+  Natural indirect effect (NIE): Varying the mediator from the value it would
+  have taken under treatment to the value it would have taken under control,
+  while keeping treatment fixed
 \end{itemize}
-
-\begin{itemize}
-\tightlist
-\item
-  If no effect modification of the effect of \(A\) on \(Y\) by \(M\) (i.e., no interaction between \(A\) and \(M\)), then CDE = NDE.
-\end{itemize}
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/graphic4a} 
-
-}
-
-\end{figure}
 
 \hypertarget{identification-assumptions-1}{%
 \subsection{Identification assumptions:}\label{identification-assumptions-1}}
@@ -975,42 +887,71 @@ Then we can decompose the \emph{average treatment effect} \(E(Y_1-Y_0)\) as foll
   and positivity assumptions
 \end{itemize}
 
-Note: If the cross-world assumption holds (defined below), the NDE can also be written
-as \[\E \sum_m \{\E(Y_{1,m} \mid W) - \E(Y_{0,m} \mid W)\} \P(M_{0}=m \mid W)\]
+\hypertarget{cross-world-independence-assumption}{%
+\subsection{Cross-world independence assumption}\label{cross-world-independence-assumption}}
+
+What does \(M_0 \indep Y_{1,m} \mid W\) mean?
 
 \begin{itemize}
 \tightlist
 \item
-  Weighted average of controlled direct effects at each level of \(M=m\).
+  Conditional on \(W\), knowledge of the mediator value in the absence of
+  treatment, \(M_0\),
+  provides no information about the outcome under treatment, \(Y_{1,m}\).
+\item
+  Can you think of a data-generating mechanism that would violate this
+  assumption?
+\item
+  Example: in a randomized study, whenever we believe that treatment assignment
+  works through adherence (i.e., almost
+  always), we are violating this assumption (more on this later).
+\item
+  Cross-world assumptions are problematic for other reasons, including:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    You can never design a randomized study where the assumption holds by
+    design.
+  \end{itemize}
+\end{itemize}
+
+\textbf{If the cross-world assumption holds, can write the NDE as a weighted average
+of controlled direct effects at each level of \(M=m\).}
+
+\[\E \sum_m \{\E(Y_{1,m} \mid W) - \E(Y_{0,m} \mid W)\} \P(M_{0}=m
+\mid W)\]
+
+\begin{itemize}
+\tightlist
+\item
+  If CDE(\(m\)) is constant across \(m\), then CDE = NDE.
 \end{itemize}
 
 \hypertarget{identification-formula}{%
 \subsection{Identification formula:}\label{identification-formula}}
 
 \begin{itemize}
-\tightlist
 \item
-  Under the above identification assumptions, the natural direct effect can be identified:
-\end{itemize}
-
-\begin{equation*}
-\E(Y_{1,M_0} - Y_{0,M_0}) =
-  \E[\color{Goldenrod}{\E\{}\color{ForestGreen}{\E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)}\color{Goldenrod}{\mid A=0,W\}}]
-\end{equation*}
-
-\begin{itemize}
+  Under the above identification assumptions, the natural direct effect can be
+  identified:
+  \begin{equation*}
+  \E(Y_{1,M_0} - Y_{0,M_0}) =
+  \E[\color{Goldenrod}{\E\{}\color{ForestGreen}{\E(Y \mid A=1, M, W) -
+  \E(Y \mid A=0, M, W)}\color{Goldenrod}{\mid A=0,W\}}]
+  \end{equation*}
 \item
   The natural indirect effect can be identified similarly.
 \item
-  Let's dissect this formula in R:
+  Let's dissect this formula in \passthrough{\lstinline!R!}:
 \end{itemize}
 
 \begin{lstlisting}[language=R]
-n <- 1e7
+n <- 1e6
 w <- rnorm(n)
 a <- rbinom(n, 1, 0.5)
 m <- rnorm(n, w + a)
-y <- rnorm(n, w - a + m)
+y <- rnorm(n, w + a + m)
 \end{lstlisting}
 
 \begin{itemize}
@@ -1026,8 +967,10 @@ lm_y <- lm(y ~ m + a + w)
 \begin{itemize}
 \tightlist
 \item
-  Then we generate predictions
-  \[\color{ForestGreen}{\E(Y \mid A=1, M, W)} \text{ and }\color{ForestGreen}{\E(Y \mid A=0, M, W)}\] with \(A\) fixed but letting \(M\) and \(W\) take their observed values
+  Then we generate predictions \[\color{ForestGreen}{\E(Y \mid A=1, M, W)}
+  \text{ and }\color{ForestGreen}{\E(Y \mid A=0, M, W)}\] with \(A\) fixed but
+  letting \(M\) and \(W\) take their observed
+  values
 \end{itemize}
 
 \begin{lstlisting}[language=R]
@@ -1042,44 +985,27 @@ pred_y0 <- predict(lm_y, newdata = data.frame(a = 0, m = m, w = w))
   \[\color{ForestGreen}{\E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)},\]
 \item
   and use this difference as a pseudo-outcome in a regression on \(A\) and \(W\):
-  \[\color{Goldenrod}{\E\{}\color{ForestGreen}{\E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)}\color{Goldenrod}{\mid A=0,W\}}\]
+  \[\color{Goldenrod}{\E\{}\color{ForestGreen}{\E(Y \mid A=1, M, W) - \E(Y \mid
+  A=0, M, W)}\color{Goldenrod}{\mid A=0,W\}}\]
 \end{itemize}
 
 \begin{lstlisting}[language=R]
 pseudo <- pred_y1 - pred_y0
-lm_pseudo <- lm(pseudo ~ a + m)
+lm_pseudo <- lm(pseudo ~ a + w)
 \end{lstlisting}
 
 \begin{itemize}
 \tightlist
 \item
-  Now we predict the value of this pseudo-outcome under \(A=0\), and average the result
+  Now we predict the value of this pseudo-outcome under \(A=0\), and average the
+  result
 \end{itemize}
 
 \begin{lstlisting}[language=R]
 pred_pseudo <- predict(lm_pseudo, newdata = data.frame(a = 0, w = w))
 ## NDE:
 mean(pred_pseudo)
-#> [1] -1.0011
 \end{lstlisting}
-
-\hypertarget{cross-world-independence-assumption}{%
-\subsection{Cross-world independence assumption}\label{cross-world-independence-assumption}}
-
-What does \(M_0 \indep Y_{1,m} \mid W\) mean?
-
-\begin{itemize}
-\tightlist
-\item
-  Conditional on \(W\), knowledge of the mediator value in the absence of treatment, \(M_0\),
-  provides no information about the outcome under treatment, \(Y_{1,m}\).
-\item
-  Can you think of a data-generating mechanism that would violate this
-  assumption?
-\item
-  Example: in a randomized study, whenever we believe that treatment assignment works through adherence (i.e., almost
-  always), we are violating this assumption (more on this later).
-\end{itemize}
 
 \hypertarget{is-this-the-estimand-i-want-1}{%
 \subsection{Is this the estimand I want?}\label{is-this-the-estimand-i-want-1}}
@@ -1100,60 +1026,43 @@ What does \(M_0 \indep Y_{1,m} \mid W\) mean?
 \emph{What if our data structure involves a post-treatment confounder of the
 mediator-outcome relationship (e.g., adherence)?}
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.8\linewidth]{02-effects-def_files/figure-latex/unnamed-chunk-12-1} 
-
-}
-
-\caption{Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-12}
-\end{figure}
-
-\begin{figure}
-
-{\centering \includegraphics[width=1\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/ctndag} 
-
-}
-
-\end{figure}
-
 \hypertarget{unidentifiability-of-the-nde-and-nie-in-this-setting}{%
 \subsection{Unidentifiability of the NDE and NIE in this setting}\label{unidentifiability-of-the-nde-and-nie-in-this-setting}}
 
 \begin{itemize}
 \tightlist
 \item
-  In this example, natural direct and indirect effects are
-  unidentifiable from observed data on \((W,A,Z,M,Y)\).
+  In this example, natural direct and indirect effects are unidentifiable from observed data \(O=(W,A,Z,M,Y)\).
 \item
-  The technical
-  reason for this is that the cross-world counterfactual assumption
+  The reason for this is that the cross-world counterfactual
+  assumption
   \begin{equation*}
   Y_{1,m}\indep M_0\mid W
   \end{equation*}
-  does not hold in the above directed acyiclic graph.
+  does not hold in the above directed acyclic graph.
 \item
-  Technically, the
-  reason for this is that an intervention setting \(A=1\) (necessary for
-  the definition of \(Y_{1,m}\)) induces a counterfactual variable
+  Technically, the reason for this is that an intervention setting \(A=1\)
+  (necessary for the definition of \(Y_{1,m}\)) induces a counterfactual variable
   \(Z_1\).
 \item
-  Likewise, an intervention setting \(A=0\) (necessary for the
-  definition of \(M_0\)) induces a counterfactual \(Z_0\).
+  Likewise, an intervention setting \(A=0\) (necessary for the definition of
+  \(M_0\)) induces a counterfactual \(Z_0\).
 \item
-  The variables \(Z_1\) and \(Z_0\) are correlated because they share unmeasured common
-  causes.
+  The variables \(Z_1\) and \(Z_0\) are correlated because they share unmeasured
+  common causes, \(U_Z\).
 \item
-  The variable \(Z_1\) is correlated with \(Y_{1,m}\), and the
-  variable \(Z_0\) is correlated with \(M_0\), because they are
-  counterfactual outcomes in the same hypothetical worlds.
+  The variable \(Z_1\) is correlated with \(Y_{1,m}\), and the variable \(Z_0\) is
+  correlated with \(M_0\), because they are counterfactual outcomes in the same
+  hypothetical worlds.
 \item
-  To see this in the definition of counterfactual from a causal structural model:
+  To see this in the definition of counterfactual from a causal structural
+  model:
   \begin{align*}
   Y_{1,m} &= f_Y(W, 1, Z_1, m, U_Y), \text{ and }\\
   M_0 &= f_M(W, 0, Z_0, U_M)\\
   \end{align*}
-  are correlated even after adjusting for \(W\) by virtue of \(Z_1\) and \(Z_0\) being correlated.
+  are correlated even after adjusting for \(W\) by virtue of \(Z_1\) and \(Z_0\) being
+  correlated.
 \end{itemize}
 
 Intuitively:
@@ -1161,59 +1070,65 @@ Intuitively:
 \begin{itemize}
 \tightlist
 \item
-  \(Z\) is a confounder of the relation \(M \rightarrow Y\), which requires adjustment
+  \(Z\) is a confounder of the relation \(M \rightarrow Y\), which requires
+  adjustment
 \item
   But \(Z\) is on the pathway \(A\rightarrow Y\), which precludes adjustment
 \end{itemize}
 
-Note: CDEs are still identified in this setting. They can be identified and estimated similarly to a longitudinal data sructure with a two-time-point intervention.
+Note: CDEs are still identified in this setting. They can be identified and
+estimated similarly to a longitudinal data sructure with a two-time-point
+intervention.
 
 \hypertarget{interventional-indirect-effects}{%
 \section{Interventional (in)direct effects}\label{interventional-indirect-effects}}
 
 \begin{itemize}
+\tightlist
 \item
-  Let \(G_a\) denote a random draw from the distribution of \(M(a) \mid W\)
+  Let \(G_a\) denote a random draw from the distribution of \(M_a \mid W\)
 \item
-  Define the counterfactual \(Y(1,G_0)\) as the counterfactual
+  Define the counterfactual \(Y_{1,G_0}\) as the counterfactual
   variable in a hypothetical world where \(A\) is set \(A=1\) and \(M\) is
   set to \(M=G_0\) with probability one.
 \item
-  Define \(Y(0,G_0)\) and \(Y(1,G_1)\) similarly
+  Define \(Y_{0,G_0}\) and \(Y_{1,G_1}\) similarly
 \item
   Then we can define:
   \begin{equation*}
-    \E[Y(1,G_1) - Y(0,G_0)] = \underbrace{\E[Y(1,G_1) -
-      Y(1,G_0)]}_{\text{interventional indirect effect}} +
-      \underbrace{\E[Y(1,G_0) -
-      Y(0,G_0)]}_{\text{interventional direct effect}}
+  \E[Y_{1,G_1} - Y_{0,G_0}] = \underbrace{\E[Y_{\color{red}{1},\color{blue}{G_1}} -
+    Y_{\color{red}{1},\color{blue}{G_0}}]}_{\text{interventional indirect effect}} +
+    \underbrace{\E[Y_{\color{blue}{1},\color{red}{G_0}} -
+    Y_{\color{blue}{0},\color{red}{G_0}}]}_{\text{interventional direct effect}}
   \end{equation*}
 \item
-  Marginal PIDE: \(\E(Y_{a, g_{M \mid a^{\star}, W}}) - \E(Y_{a^{\star}, g_{M \mid a^{\star}, W}})\)
+  Note that \(\E[Y_{1,G_1} - Y_{0,G_0}]\) is still a \emph{total effect} of treatment,
+  even if it is different from the ATE \(\E[Y_{1} - Y_{0}]\)
 \item
-  Marginal PIIE: \(\E(Y_{a, g_{M \mid a, W}}) - \E(Y_{a, g_{M \mid a^{\star}, W}})\)
-\item
-  Conditional PIDE: \(\E(Y_{a, g_{M \mid Z, a^{\star}, W}}) - \E(Y_{a^{\star}, g_{M \mid Z, a^{\star}, W}})\)
-\item
-  Conditional PIIE: \(\E(Y_{a, g_{M \mid Z, a, W}}) - \E(Y_{a, g_{M \mid Z, a^{\star}, W}})\)
-\item
-  Can you think of an example when you would want the conditional versions?
-  Marginal versions?
+  We gain in the ability to solve a problem, but lose in terms of interpretation
+  of the causal effect (cannot decompose the ATE)
 \end{itemize}
 
-\begin{figure}
+\hypertarget{an-alternative-definition-of-the-effects}{%
+\subsection{An alternative definition of the effects:}\label{an-alternative-definition-of-the-effects}}
 
-{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/graphic4b} 
+\begin{itemize}
+\tightlist
+\item
+  Above we defined \(G_a\) as a random draw from the distribution of \(M_a \mid W\)
+\item
+  What if instead we define \(G_a\) as a random draw from the distribution of \(M_a \mid (Z_a,W)\)
+\item
+  It turns out the indirect effect defined in this way only measures the path
+  \(A\rightarrow M \rightarrow Y\), and not the path \(A\rightarrow Z\rightarrow M \rightarrow Y\)
+\item
+  There may be important reasons to choose one over another (e.g., survival
+  analyses where we want the distribution conditional on \(Z\), instrumental
+  variable designs where it doesn't make sense to condition on \(Z\))
+\end{itemize}
 
-}
-
-\end{figure}
-
-Under the following identification assumptions, the population interventional direct and indirect effect is identified:
-\[
-\E(Y_{a, G_{a'}}) = \E\left[\E\left\{\sum_z\E(Y \mid A=a, Z=z, M, W) P(Z=z \mid A=a, w)\mid A=a', W\right\}\right]
-\]
-\#\#\# Identification assumptions:
+\hypertarget{identification-assumptions-2}{%
+\subsection{Identification assumptions:}\label{identification-assumptions-2}}
 
 \begin{itemize}
 \tightlist
@@ -1227,7 +1142,112 @@ Under the following identification assumptions, the population interventional di
   and positivity assumptions.
 \end{itemize}
 
-Is this the estimand I want?
+Under these assumptions, the population interventional direct and indirect effect is identified:
+\begin{align*}
+  \E&(Y_{a, G_{a'}}) = \\
+    &\E\left[\color{Purple}{\E\left\{\color{Goldenrod}{\sum_z}
+    \color{ForestGreen}{\E(Y \mid A=a, Z=z, M, W)}
+    \color{Goldenrod}{\P(Z=z \mid A=a, W)}\mid A=a', W\right\}}\right]
+\end{align*}
+
+\begin{itemize}
+\tightlist
+\item
+  Let's dissect this formula in \passthrough{\lstinline!R!}:
+\end{itemize}
+
+\begin{lstlisting}[language=R]
+n <- 1e6
+w <- rnorm(n)
+a <- rbinom(n, 1, 0.5)
+z <- rbinom(n, 1, 0.5 + 0.2 * a)
+m <- rnorm(n, w + a - z)
+y <- rnorm(n, w + a + z + m)
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  Let us compute \(\E(Y_{1, G_0})\) (so that \(a = 1\), and \(a'=0\)).
+\item
+  First, fit a regression model for the outcome, and compute
+  \[\color{ForestGreen}{\E(Y \mid A=a, Z=z, M, W)}\] for all values of \(z\)
+\end{itemize}
+
+\begin{lstlisting}[language=R]
+lm_y <- lm(y ~ m + a + z + w)
+pred_a1z0 <- predict(lm_y, newdata = data.frame(m = m, a = 1, z = 0, w = w))
+pred_a1z1 <- predict(lm_y, newdata = data.frame(m = m, a = 1, z = 1, w = w))
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  Now we fit the true model for \(Z \mid A, W\) and get the conditional
+  probability that \(Z=1\) fixing \(A=1\)
+\end{itemize}
+
+\begin{lstlisting}[language=R]
+prob_z <- lm(z ~ a)
+pred_z <- predict(prob_z, newdata = data.frame(a = 1))
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  Now we compute the following pseudo-outcome:
+  \[\color{Goldenrod}{\sum_z}\color{ForestGreen}{\E(Y \mid A=a, Z=z, M, W)}
+  \color{Goldenrod}{\P(Z=z \mid A=a, w)}\]
+\end{itemize}
+
+\begin{lstlisting}[language=R]
+pseudo_out <- pred_a1z0 * (1 - pred_z) + pred_a1z1 * pred_z
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  Now we regress this pseudo-outcome on \(A,W\), and compute the predictions
+  setting \(A=0\), that is, \[\color{Purple}{\E\left\{\color{Goldenrod}{\sum_z}
+  \color{ForestGreen}{\E(Y \mid A=a, Z=z, M, W)}
+  \color{Goldenrod}{\P(Z=z \mid A=a, w)}\mid A=a', W\right\}}\]
+\end{itemize}
+
+\begin{lstlisting}[language=R]
+fit_pseudo <- lm(pseudo_out ~ a + w)
+pred_pseudo <- predict(fit_pseudo, data.frame(a = 0, w = w))
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  And finally, just average those predictions!
+\end{itemize}
+
+\begin{lstlisting}[language=R]
+## Mean(Y(1, G(0)))
+mean(pred_pseudo)
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  This was for \((a,a')=(1,0)\). Can do the same with \((a,a')=(1,1)\), and
+  \((a,a')=(0,0)\) to obtain an effect decomposition
+\end{itemize}
+
+\begin{equation*}
+  \E[Y_{1,G_1} - Y_{0,G_0}] = \underbrace{\E[Y_{\color{red}{1},
+    \color{blue}{G_1}} -
+    Y_{\color{red}{1},
+    \color{blue}{G_0}}]}_{\text{interventional indirect effect}} +
+    \underbrace{\E[Y_{\color{blue}{1},\color{red}{G_0}} -
+    Y_{\color{blue}{0},
+    \color{red}{G_0}}]}_{\text{interventional direct effect}}
+\end{equation*}
+
+\hypertarget{is-this-the-estimand-i-want-2}{%
+\subsection{Is this the estimand I want?}\label{is-this-the-estimand-i-want-2}}
 
 \begin{itemize}
 \tightlist
@@ -1243,13 +1263,382 @@ Is this the estimand I want?
 \hypertarget{estimand-summary}{%
 \section{Estimand Summary}\label{estimand-summary}}
 
-\begin{figure}
+\hypertarget{stochastic}{%
+\chapter{Stochastic Direct and Indirect Effects}\label{stochastic}}
 
-{\centering \includegraphics[width=1.25\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/table1} 
+\hypertarget{definition-of-the-effects}{%
+\section{Definition of the effects}\label{definition-of-the-effects}}
 
-}
+Consider the following directed acyclic graph.
 
-\end{figure}
+\hypertarget{motivation-for-stochastic-interventions}{%
+\section{Motivation for stochastic interventions}\label{motivation-for-stochastic-interventions}}
+
+\begin{itemize}
+\tightlist
+\item
+  So far we have discussed controlled, natural, and interventional (in)direct effects
+\item
+  These effects require that \(0 < \P(A=1\mid W) < 1\)
+\item
+  They are defined only for binary exposures
+\item
+  \emph{What can we do when the positivity assumption does not hold or the exposure
+  is continuous?}
+\item
+  Solution: we can use stochastic effects
+\end{itemize}
+
+\hypertarget{definition-of-stochastic-effects}{%
+\section{Definition of stochastic effects}\label{definition-of-stochastic-effects}}
+
+There are two possible ways of defining stochastic effects:
+
+\begin{itemize}
+\tightlist
+\item
+  Consider the effect of an intervention where the exposure is drawn from a
+  distribution
+
+  \begin{itemize}
+  \tightlist
+  \item
+    For example incremental propensity score interventions
+  \end{itemize}
+\end{itemize}
+
+\begin{itemize}
+\tightlist
+\item
+  Consider the effect of an intervention where the post-intervention exposure is
+  a function of the actually received exposure
+
+  \begin{itemize}
+  \tightlist
+  \item
+    For example modified treatment policies
+  \end{itemize}
+\item
+  In both cases \(A \mid W\) is a non-deterministic intervention, thus the name
+  \emph{stochastic intervention}
+\end{itemize}
+
+\hypertarget{example-incremental-propensity-score-interventions-ipsi-kennedy2018nonparametric}{%
+\subsection*{\texorpdfstring{Example: incremental propensity score interventions (IPSI) \citep{kennedy2018nonparametric}}{Example: incremental propensity score interventions (IPSI) {[}@kennedy2018nonparametric{]}}}\label{example-incremental-propensity-score-interventions-ipsi-kennedy2018nonparametric}}
+
+
+\hypertarget{definition-of-the-intervention}{%
+\subsubsection*{Definition of the intervention}\label{definition-of-the-intervention}}
+
+
+\begin{itemize}
+\tightlist
+\item
+  Assume \(A\) is binary, and \(\P(A=1\mid W=w) = g(1\mid w)\) is the propensity score
+\item
+  Consider an intervention in which each individual receives the intervention
+  with probability \(g_\delta(1\mid w)\), equal to
+  \begin{equation*}
+    g_\delta(1\mid w)=\frac{\delta g(1\mid w)}{\delta g(1\mid w) +
+    1 - g(1\mid w)}
+  \end{equation*}
+\item
+  e.g., draw the post-intervention exposure from a Bernoulli variable with
+  probability \(g_\delta(1\mid w)\)
+\item
+  The value \(\delta\) is user given
+\item
+  Let \(A_\delta\) denote the post-intervention exposure distribution
+\item
+  Some algebra shows that \(\delta\) is an odds ratio comparing the pre- and
+  post-intervention exposure distributions
+  \begin{equation*}
+    \delta = \frac{\text{odds}(A_\delta = 1\mid W=w)}
+    {\text{odds}(A = 1\mid W=w)}
+  \end{equation*}
+\item
+  Interpretation: \emph{what would happen in a
+  world where the odds of receiving treatment is increased by \(\delta\)}
+\item
+  Let \(Y_{A_\delta}\) denote the outcome in this hypothetical world
+\end{itemize}
+
+\hypertarget{illustrative-application-for-ipsis}{%
+\subsubsection{Illustrative application for IPSIs}\label{illustrative-application-for-ipsis}}
+
+\begin{itemize}
+\tightlist
+\item
+  Consider the effect of participation in sports on children's BMI
+\item
+  Mediation through snacking, exercising, etc.
+\item
+  Intervention: for each individual, increase the odds of participating in
+  sports by \(\delta=2\)
+\item
+  The post-intervention exposure is a draw \(A_\delta\) from a Bernoulli
+  distribution with probability \(g_\delta(1\mid w)\)
+\end{itemize}
+
+\hypertarget{example-modified-treatment-policies-mtp-diaz2020causal}{%
+\subsection*{\texorpdfstring{Example: modified treatment policies (MTP) \citep{diaz2020causal}}{Example: modified treatment policies (MTP) {[}@diaz2020causal{]}}}\label{example-modified-treatment-policies-mtp-diaz2020causal}}
+
+
+\hypertarget{definition-of-the-intervention-1}{%
+\subsubsection*{Definition of the intervention}\label{definition-of-the-intervention-1}}
+
+
+\begin{itemize}
+\tightlist
+\item
+  Consider a continuous exposure \(A\) taking values in the real numbers
+\item
+  Consider an intervention that assigns exposure as \(A_\delta = A - \delta\)
+\item
+  Example: \(A\) is pollution measured as \(PM_{2.5}\) and you are interested in an
+  intervention that reduces \(PM_{2.5}\) concentration by some amount \(\delta\)
+\end{itemize}
+
+\hypertarget{mediation-analysis-for-stochastic-interventions}{%
+\subsection{Mediation analysis for stochastic interventions}\label{mediation-analysis-for-stochastic-interventions}}
+
+\begin{itemize}
+\item
+  The total effect of an IPSI can be computed as a contrast of the outcome under
+  intervention vs no intervention:
+  \begin{equation*}
+    \psi = \E[Y_{A_\delta} - Y]
+  \end{equation*}
+\item
+  Recall the NPSEM
+  \begin{align}
+    W & = f_W(U_W)\\
+    A & = f_A(W, U_A)\\
+    M & = f_M(W, A, U_M)\\
+    Y & = f_Y(W, A, M, U_Y)
+  \end{align}
+\item
+  From this we have
+  \begin{align*}
+  M_{A_\delta} & = f_M(W, A_\delta, U_M)\\
+  Y_{A_\delta} & = f_Y(W, A_\delta, M_{A_\delta}, U_Y)
+  \end{align*}
+\item
+  Thus, we have \(Y_{A_\delta} = Y_{A_\delta, M_{A_\delta}}\) and \(Y = Y_{A,M_{A}}\)
+\item
+  Let us introduce the counterfactual \(Y_{A_\delta, M}\), interpreted as the
+  outcome observed in a world where the intervention on \(A\) is performed but the
+  mediator is fixed at the value it would have taken under no intervention:
+  \[Y_{A_\delta, M}  = f_Y(W, A_\delta, M_{A_\delta}, U_Y)\]
+\item
+  Then we can decompose the total effect into:
+  \begin{align*}
+    \E[Y&_{A_\delta,M_{A_\delta}} - Y_{A,M_A}] = \\
+    &\underbrace{\E[Y_{\color{red}{A_\delta},\color{blue}{M_{A_\delta}}} -
+      Y_{\color{red}{A_\delta},\color{blue}{M}}]}_{\text{stochastic natural indirect effect}} +
+      \underbrace{\E[Y_{\color{blue}{A_\delta},\color{red}{M}} -
+      Y_{\color{blue}{A},\color{red}{M}}]}_{\text{stochastic natural direct effect}}
+  \end{align*}
+\end{itemize}
+
+\hypertarget{identification-assumptions-3}{%
+\section{Identification assumptions}\label{identification-assumptions-3}}
+
+\begin{itemize}
+\tightlist
+\item
+  Confounder assumptions:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \(A \indep Y_{a,m} \mid W\)
+  \item
+    \(M \indep Y_{a,m} \mid W, A\)
+  \end{itemize}
+\item
+  No confounder of \(M\rightarrow Y\) affected by \(A\)
+\item
+  Positivity assumptions:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    If \(g_\delta(a \mid w)>0\) then \(g(a \mid w)>0\)
+  \item
+    If \(\P(Z=z\mid W=w)>0\) then \(\P(Z=z\mid A=a,W=w)>0\)
+  \end{itemize}
+\end{itemize}
+
+Under these assumptions, stochastic effects are identified as follows
+
+\begin{itemize}
+\item
+  The indirect effect can be identified as follows
+  \begin{align*}
+  \E&(Y_{A_\delta} - Y_{A_\delta, M}) =\\
+  &\E\left[\color{Goldenrod}{\sum_{a}\color{ForestGreen}{\{\E(Y\mid A=a, W)-\E(Y\mid A=a, M, W)\}}g_\delta(a\mid W)}\right]
+  \end{align*}
+\item
+  The direct effect can be identified as follows
+  \begin{align*}
+  \E&(Y_{A_\delta} - Y_{A_\delta, M}) =\\
+  &\E\left[\color{Goldenrod}{\sum_{a}\color{ForestGreen}{\{\E(Y\mid A=a, M, W) - Y\}}g_\delta(a\mid W)}\right]
+  \end{align*}
+\item
+  Let's dissect the formula for the indirect effect in R:
+\end{itemize}
+
+\begin{lstlisting}[language=R]
+n <- 1e6
+w <- rnorm(n)
+a <- rbinom(n, 1, plogis(1 + w))
+m <- rnorm(n, w + a)
+y <- rnorm(n, w + a + m)
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  First, fit regressions of the outcome on \((A,W)\) and \((M,A,W)\):
+\end{itemize}
+
+\begin{lstlisting}[language=R]
+fit_y1 <- lm(y ~ m + a + w)
+fit_y2 <- lm(y ~ a + w)
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  Get predictions fixing \(A=a\) for all possible values \(a\)
+\end{itemize}
+
+\begin{lstlisting}[language=R]
+pred_y1_a1 <- predict(fit_y1, newdata = data.frame(a = 1, m, w))
+pred_y1_a0 <- predict(fit_y1, newdata = data.frame(a = 0, m, w))
+pred_y2_a1 <- predict(fit_y2, newdata = data.frame(a = 1, w))
+pred_y2_a0 <- predict(fit_y2, newdata = data.frame(a = 0, w))
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  Compute
+  \[\color{ForestGreen}{\{\E(Y\mid A=a, W)-\E(Y\mid A=a, M, W)\}}\]
+  for each value \(a\)
+\end{itemize}
+
+\begin{lstlisting}[language=R]
+pseudo_a1 <- pred_y2_a1 - pred_y1_a1
+pseudo_a0 <- pred_y2_a0 - pred_y1_a0
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  Estimate the propensity score \(g(1\mid w)\) and evaluate the post-intervention
+  propensity score \(g_\delta(1\mid w)\)
+\end{itemize}
+
+\begin{lstlisting}[language=R]
+pscore_fit <- glm(a ~ w, family = binomial())
+pscore <- predict(pscore_fit, type = 'response')
+## How do the intervention vs observed propensity score compare
+pscore_delta <- 2 * pscore / (2 * pscore + 1 - pscore)
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  What do the post-intervention propensity scores look like?
+\end{itemize}
+
+\begin{lstlisting}[language=R]
+plot(pscore, pscore_delta, xlab = 'Observed prop. score',
+     ylab = 'Prop. score under intervention')
+abline(0, 1)
+\end{lstlisting}
+
+\hypertarget{what-are-the-odds-of-exposure-under-intervention-vs-real-world}{%
+\section{What are the odds of exposure under intervention vs real world?}\label{what-are-the-odds-of-exposure-under-intervention-vs-real-world}}
+
+\begin{lstlisting}[language=R]
+odds <- (pscore_delta / (1 - pscore_delta)) / (pscore / (1 - pscore))
+summary(odds)
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  Compute the sum
+  \[\color{Goldenrod}{\sum_{a}\color{ForestGreen}{\{\E(Y\mid A=a, W)-\E(Y\mid A=a, M, W)\}}g_\delta(a\mid W)}\]
+\end{itemize}
+
+\begin{lstlisting}[language=R]
+indirect <- pseudo_a1 * pscore_delta + pseudo_a0 * (1 - pscore_delta)
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  The average of this value is the indirect effect
+\end{itemize}
+
+\begin{lstlisting}[language=R]
+## E[Y(Adelta) - Y(Adelta, M)]
+mean(indirect)
+\end{lstlisting}
+
+\begin{itemize}
+\item
+  The direct effect is
+  \begin{align*}
+  \E&(Y_{A_\delta} - Y_{A_\delta, M}) =\\
+  &\E\left[\color{Goldenrod}{\sum_{a}\color{ForestGreen}{\{\E(Y\mid A=a, M, W) - Y\}}g_\delta(a\mid W)}\right]
+  \end{align*}
+\item
+  Which can be computed as
+\end{itemize}
+
+\begin{lstlisting}[language=R]
+direct <- (pred_y1_a1 - y) * pscore_delta +
+       (pred_y1_a0 - y) * (1 - pscore_delta)
+mean(direct)
+\end{lstlisting}
+
+\hypertarget{summary}{%
+\section{Summary}\label{summary}}
+
+\begin{itemize}
+\tightlist
+\item
+  Stochastic (in)direct effects
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Relax the positivity assumption
+  \item
+    Can be defined for non-binary exposures
+  \item
+    Do not require a cross-world assumption
+  \end{itemize}
+\item
+  Still require the absence of intermediate confounders
+
+  \begin{itemize}
+  \tightlist
+  \item
+    But, compared to the NDE and NIE, we can design a randomized study where
+    identifiability assumptions hold, at least in principle
+  \item
+    There is a version of these effects that can accomodate intermediate
+    confounders \citep{hejazi2020nonparametric}
+  \item
+    \passthrough{\lstinline!R!} implementation to be released soon, stay tuned!
+  \end{itemize}
+\end{itemize}
 
 \hypertarget{estimandirl}{%
 \chapter{How to choose an estimand: Real world example}\label{estimandirl}}
@@ -1257,24 +1646,8 @@ Is this the estimand I want?
 \hypertarget{comparative-effectivness-of-two-medications-for-opioid-use-disorder-oud}{%
 \section{Comparative effectivness of two medications for opioid use disorder (OUD)}\label{comparative-effectivness-of-two-medications-for-opioid-use-disorder-oud}}
 
-\begin{figure}
-
-{\centering \includegraphics[width=1\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/ctndag} 
-
-}
-
-\end{figure}
-
 \emph{Motivation}: Opposite overall treatment effects for homeless versus
 nonhomeless participants.
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/tmleesttotal} 
-
-}
-
-\end{figure}
 
 \hypertarget{getting-specific-about-the-question}{%
 \subsection{Getting specific about the question}\label{getting-specific-about-the-question}}
@@ -1283,7 +1656,9 @@ To what extent does the indirect effect through mediators of adherence, pain, an
 depressive symptoms explain the differences in treatment effects on OUD relapse
 for homeless and nonhomeless individuals?
 
-What estimand do we want?
+\hypertarget{what-estimand-do-we-want}{%
+\subsubsection*{What estimand do we want?}\label{what-estimand-do-we-want}}
+
 
 \begin{itemize}
 \tightlist
@@ -1319,182 +1694,98 @@ What estimand do we want?
   \begin{itemize}
   \tightlist
   \item
-    Direct effect: \(\E(Y_{1,g_0} - Y_{0,g_0})\)
+    Direct effect: \(\E(Y_{1,G_0} - Y_{0,G_0})\)
   \item
-    Indirect effect: \(\E(Y_{1,g_1} - Y_{1,g_0})\)
+    Indirect effect: \(\E(Y_{1,G_1} - Y_{1,G_0})\)
   \end{itemize}
+\item
+  Here \(G_a\) is a draw from the distribution of \(M_a\mid W\).
 \item
   Need to incorporate multiple and continuous mediators
 \end{itemize}
 
-\hypertarget{stochastic}{%
-\chapter{Stochastic Direct and Indirect Effects}\label{stochastic}}
+\hypertarget{what-if-the-positivity-assumption-paamid-w0-violated}{%
+\subsubsection*{\texorpdfstring{What if the positivity assumption \(\P(A=a\mid W)>0\) violated?}{What if the positivity assumption \textbackslash P(A=a\textbackslash mid W)\textgreater0 violated?}}\label{what-if-the-positivity-assumption-paamid-w0-violated}}
 
-\hypertarget{definition-of-the-effects}{%
-\section{Definition of the effects}\label{definition-of-the-effects}}
 
-Consider the following directed acyclic graph.
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.8\linewidth]{04-stochastic_files/figure-latex/unnamed-chunk-1-1} 
-
-}
-
-\caption{Directed acyclic graph under no intermediate confounders of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-1}
-\end{figure}
-
-\hypertarget{motivation-for-stochastic-interventions}{%
-\section{Motivation for stochastic interventions}\label{motivation-for-stochastic-interventions}}
+\(\rightarrow\) Can't identify or estimate any of the above effects
 
 \begin{itemize}
 \tightlist
 \item
-  So far we have discussed controlled, natural, and interventional (in)direct effects
+  But we can estimate the effect of some stochastic interventions, e.g., IPSIs
 \item
-  These effects require that \(0 < \P(A=1\mid W) < 1\)
-\item
-  They are defined only for binary exposures
-\item
-  \emph{What can we do when the positivity assumption does not hold or the exposure
-  is continuous?}
-\item
-  Solution: we can use stochastic effects
+  Tradeoff between feasibility and interpretation
 \end{itemize}
 
-\hypertarget{definition-of-stochastic-effects}{%
-\section{Definition of stochastic effects}\label{definition-of-stochastic-effects}}
+\hypertarget{what-if-the-exposure-variable-is-continuous}{%
+\subsubsection*{What if the exposure variable is continuous?}\label{what-if-the-exposure-variable-is-continuous}}
 
-There are two possible ways of defining stochastic effects:
+
+\(\rightarrow\) All the above effects are defined for binary exposures
 
 \begin{itemize}
 \tightlist
 \item
-  Consider the effect of an intervention where the exposure is drawn from a
-  distribution
-
-  \begin{itemize}
-  \tightlist
-  \item
-    Example: {[}TO FILL IN{]}
-  \end{itemize}
+  But we can estimate the effect of some stochastic interventions
 \item
-  Consider the effect of an intervention where the post-intervention exposure is
-  a function of the actually received exposure
-
-  \begin{itemize}
-  \tightlist
-  \item
-    Example: {[}TO FILL IN{]}
-  \end{itemize}
-\item
-  In both cases \(A\mid W\) is non-deterministic, thus the name \emph{stochastic intervention}
+  Work in progress (including upcoming R software)
 \end{itemize}
-
-\hypertarget{example-incremental-propensity-score-interventions-ipsi-kennedy2018nonparametric}{%
-\subsection*{\texorpdfstring{Example: incremental propensity score interventions (IPSI) \citep{kennedy2018nonparametric}}{Example: incremental propensity score interventions (IPSI) {[}@kennedy2018nonparametric{]}}}\label{example-incremental-propensity-score-interventions-ipsi-kennedy2018nonparametric}}
-
-
-\hypertarget{definition-of-the-intervention}{%
-\subsubsection*{Definition of the intervention}\label{definition-of-the-intervention}}
-
-
-\begin{itemize}
-\tightlist
-\item
-  Assume \(A\) is binary, and \(\P(A=1\mid W=w) = g(1\mid w)\) is the propensity score
-\item
-  Consider an intervention in which each individual receives the intervention
-  with probability \(g_\delta(1\mid w)\), equal to
-  \begin{equation*}
-    g_\delta(1\mid w)=\frac{\delta g(1\mid w)}{\delta g(1\mid w) +
-    1 - g(1\mid w)}
-  \end{equation*}
-\item
-  e.g., draw the post-intervention exposure from a Bernoulli variable with
-  probability \(g_\delta(1\mid w)\)
-\item
-  The value \(\delta\) is user given
-\item
-  Let \(A_\delta\) denote the post-intervention distribution
-\item
-  Some algebra shows that \(\delta\) is an odds ratio comparing the pre- and
-  post-intervantion distributions
-  \begin{equation*}
-    \delta = \frac{\text{odds}(A_\delta = 1\mid W=w)}
-    {\text{odds}(A = 1\mid W=w)}
-  \end{equation*}
-\item
-  This gives the intervention a nice interpretation as \emph{what would happen in a
-  world where the odds of receiving treatment is increased by \(\delta\)}
-\item
-  Let \(Y_{A_\delta}\) denote the outcome in this hypothetical world
-\end{itemize}
-
-\hypertarget{example-modified-treatment-policies}{%
-\subsection{Example: modified treatment policies}\label{example-modified-treatment-policies}}
-
-\hypertarget{definition-of-the-intervention-1}{%
-\subsubsection*{Definition of the intervention}\label{definition-of-the-intervention-1}}
-
-
-\hypertarget{mediation-analysis-for-stochastic-interventions}{%
-\subsection{Mediation analysis for stochastic interventions}\label{mediation-analysis-for-stochastic-interventions}}
-
-\begin{itemize}
-\tightlist
-\item
-  The total effect of an IPSI can be computed as a contrast of the outcome under
-  intervention vs no intervention:
-  \begin{equation*}
-    \psi = \E[Y_{A_\delta} - Y]
-  \end{equation*}
-\item
-  Recall the NPSEM
-  \begin{align}
-    W & = f_W(U_W)\\
-    A & = f_A(W, U_A)\\
-    M & = f_M(W, A, U_M)\\
-    Y & = f_Y(W, A, M, U_Y)
-  \end{align}
-\item
-  From this we have \(Y_{A_\delta} = f_Y(W, A_\delta, M_{A_\delta}, U_Y)\)
-\item
-  Thus, we have \(Y_{A_\delta} = Y_{A_\delta, M_{A_\delta}}\) and \(Y = Y(A,M(A))\)
-\item
-  Let us introduce the counterfactual \(Y_{A_\delta,M}\), interpreted as the
-  outcome observed in a world where the intervention on \(A\) is performed but the
-  mediator is fixed at the value it would have taken under no intervention
-\item
-  Then we can decompose the total effect into:
-  \begin{align*}
-    \E[Y&_{A_\delta,M_{A_\delta}} - Y_{A,M_A}] = \\
-    &\underbrace{\E[Y_{A_\delta,M_{A_\delta}} -
-      Y_{A_\delta,M_A}]}_{\text{stochastic natural indirect effect}} +
-      \underbrace{\E[Y_{A,M_{A_\delta}} -
-      Y_{A,M_A}]}_{\text{stochastic natural direct effect}}
-  \end{align*}
-\end{itemize}
-
-\hypertarget{identification-of-the-effect-of-a-stochastic-intervention}{%
-\section{Identification of the effect of a stochastic intervention}\label{identification-of-the-effect-of-a-stochastic-intervention}}
 
 \hypertarget{preliminaries-on-semiparametric-estimation}{%
 \chapter{Preliminaries on semiparametric estimation}\label{preliminaries-on-semiparametric-estimation}}
 
-\hypertarget{why-do-we-need-new-estimation-tools}{%
-\section{Why do we need new estimation tools?}\label{why-do-we-need-new-estimation-tools}}
+\hypertarget{from-causal-to-statistical-quantities}{%
+\section{From causal to statistical quantities}\label{from-causal-to-statistical-quantities}}
 
 \begin{itemize}
+\tightlist
 \item
-  As we have seen all the mediation parameters that we consider can be
+  We have arrived at identification formulas that express quantities that we
+  care about in terms of observable quantities
+\item
+  This required \textbf{causal assumptions}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Many of these assumptions are empirically unverifiable
+  \item
+    We saw an example where we could relax the cross-world assumption, at the
+    cost of changing the parameter interpretation
+  \item
+    and where we could relax the positivity assumption, also at the cost of
+    changing the parameter interpretation
+  \end{itemize}
+\item
+  The resulting estimation problem can be tackled using \textbf{statistical
+  assumptions} of various degrees of strength
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Most of these assumptions are verifiable (e.g., a linear model)
+  \item
+    Thus, most are unnecessary (except for convenience)
+  \item
+    The estimation approach we use reduces reliance on these statistical
+    assumptions
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{computing-identification-formulas-if-you-know-the-true-distribution}{%
+\subsection{Computing identification formulas if you know the true distribution}\label{computing-identification-formulas-if-you-know-the-true-distribution}}
+
+\begin{itemize}
+\tightlist
+\item
+  The mediation parameters that we consider can be
   seen as a function of the joint probability distribution of \(O=(W,A,Z,M,Y)\)
 \item
   For example, under identifiability assumptions the natural direct effect is
   equal to
   \begin{equation*}
-    \psi(\P) =  \sum_{m,w}\big[\E(Y\mid A=1,M=m,W=w) -
-      \E(Y\mid A=0,M=m,W=w)\big]\P(M=m\mid A=0, W=w)\P(W=w)
+    \psi(\P) =  \E[\E\{\E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)\mid A=0,W\}]
   \end{equation*}
 \item
   The notation \(\psi(\P)\) implies that the parameter is a function of \(\P\)
@@ -1507,32 +1798,47 @@ There are two possible ways of defining stochastic effects:
   \begin{itemize}
   \tightlist
   \item
-    Computing the conditional expectation \(\E(Y\mid A=1,M=m,W=w)\) for all values
-    \((m,w)\)
+    Computing the conditional expectation \(\E(Y\mid A=1,M=m,W=w)\) for all
+    values \((m,w)\)
   \item
     Computing the probability \(\P(M=m\mid A=0,W=w)\) for all values \((m,w)\)
   \item
     Computing the probability \(\P(W=w)\) for all values \(w\)
   \item
-    Computing the sum over all values \((m,w)\)
+    Computing the mean over all values \((m,w)\)
   \end{itemize}
+\end{itemize}
+
+\hypertarget{estimating-identification-formulas}{%
+\subsection{Estimating identification formulas}\label{estimating-identification-formulas}}
+
+The above is how you would compute the \emph{true value} \textbf{if you know} the true
+distribution \(\P\)
+
+\begin{itemize}
+\tightlist
 \item
-  This is how you would compute the \emph{true value} \textbf{if you knew} the true
-  distribution \(\P\)
+  This is exactly what we did in our R examples before
 \item
   But we can use the same logic for estimation:
 
   \begin{itemize}
   \tightlist
   \item
-    Fit a regression to estimate \(\E(Y\mid A=1,M=m,W=w)\)
+    Fit a regression to estimate, say \(\hat\E(Y\mid A=1,M=m,W=w)\)
   \item
-    Fit a regression to estimate \(\P(M=m\mid A=0,W=w)\)
+    Fit a regression to estimate, say \(\hat\P(M=m\mid A=0,W=w)\)
   \item
     Estimate \(\P(W=w)\) with the empirical distribution
+  \item
+    Evaluate
+    \begin{equation*}
+      \psi(\hat\P) =  \hat\E[\hat\E\{\hat\E(Y \mid A=1, M, W) -
+      \hat\E(Y \mid A=0, M, W)\mid A=0,W\}]
+    \end{equation*}
   \end{itemize}
 \item
-  This is known as the g-computation estimator (more on this estimator later)
+  This is known as the g-computation estimator
 \end{itemize}
 
 \hypertarget{how-can-g-estimation-be-implemented-in-practice}{%
@@ -1579,22 +1885,104 @@ There are two possible ways of defining stochastic effects:
     to misspecify the models
   \item
     This can introduce sizable bias in the estimators
-  \item
-    This bias is highly problematic
-
-    \begin{itemize}
-    \tightlist
-    \item
-      We go through a thorough process to correctly specify our causal models to
-      avoid bias
-    \item
-      Overly simplisitc models introduce bias and squander those efforts
-    \item
-      The bias can be small or large and you can never know from a single data
-      analysis
-    \end{itemize}
   \end{itemize}
 \end{itemize}
+
+\hypertarget{an-example-of-the-bias-of-a-g-computation-estimator-of-the-natural-direct-effect}{%
+\subsection{An example of the bias of a g-computation estimator of the natural direct effect}\label{an-example-of-the-bias-of-a-g-computation-estimator-of-the-natural-direct-effect}}
+
+\begin{itemize}
+\tightlist
+\item
+  The following \passthrough{\lstinline!R!} chunk provides simulation code to exemplify the bias of a
+  g-computation estimator in a simple situation
+\end{itemize}
+
+\begin{lstlisting}[language=R]
+mean_y <- function(m, a, w) abs(w) + a * m
+mean_m <- function(a, w) plogis(w^2 - a)
+pscore <- function(w) plogis(1 - abs(w))
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  This yields a true NDE value of
+\end{itemize}
+
+\begin{lstlisting}[language=R]
+w_big <- runif(1e6, -1, 1)
+trueval <- mean((mean_y(1, 1, w_big) - mean_y(1, 0, w_big)) *
+  mean_m(0, w_big) + (mean_y(0, 1, w_big) - mean_y(0, 0, w_big)) *
+    (1 - mean_m(0, w_big)))
+print(trueval)
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  Let's perform a simulation where we draw 1000 datasets from the above distribution, and compute a g-computation estimator based on
+\end{itemize}
+
+\begin{lstlisting}[language=R]
+gcomp <- function(y, m, a, w) {
+  lm_y <- lm(y ~ m + a + w)
+  pred_y1 <- predict(lm_y, newdata = data.frame(a = 1, m = m, w = w))
+  pred_y0 <- predict(lm_y, newdata = data.frame(a = 0, m = m, w = w))
+  pseudo <- pred_y1 - pred_y0
+  lm_pseudo <- lm(pseudo ~ a + w)
+  pred_pseudo <- predict(lm_pseudo, newdata = data.frame(a = 0, w = w))
+  estimate <- mean(pred_pseudo)
+  return(estimate)
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=R]
+estimate <- numeric(1000)
+for (i in 1:1000) {
+  n <- 1000
+  w <- runif(n, -1, 1)
+  a <- rbinom(n, 1, pscore(w))
+  m <- rbinom(n, 1, mean_m(a, w))
+  y <- rnorm(n, mean_y(m, a, w))
+
+  estimate[i] <- gcomp(y, m, a, w)
+}
+
+hist(estimate)
+abline(v = trueval, col = "red", lwd = 4)
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  The bias also affects the confidence intervals:
+\end{itemize}
+
+\begin{lstlisting}[language=R]
+cis <- cbind(
+  estimate - qnorm(0.975) * sd(estimate),
+  estimate + qnorm(0.975) * sd(estimate)
+)
+
+ord <- order(rowSums(cis))
+lower <- cis[ord, 1]
+upper <- cis[ord, 2]
+curve(trueval + 0 * x,
+  ylim = c(0, 1), xlim = c(0, 1001), lwd = 2, lty = 3, xaxt = "n",
+  xlab = "", ylab = "Confidence interval", cex.axis = 1.2, cex.lab = 1.2
+)
+for (i in 1:1000) {
+  clr <- rgb(0.5, 0, 0.75, 0.5)
+  if (upper[i] < trueval || lower[i] > trueval) clr <- rgb(1, 0, 0, 1)
+  points(rep(i, 2), c(lower[i], upper[i]), type = "l", lty = 1, col = clr)
+}
+text(450, 0.10, "n=1000 repetitions = 1000 ", cex = 1.2)
+text(450, 0.01, paste0(
+  "Coverage probability = ",
+  mean(lower < trueval & trueval < upper), "%"
+), cex = 1.2)
+\end{lstlisting}
 
 \hypertarget{pros-and-cons-of-g-computation-with-data-adaptive-regression}{%
 \subsection{Pros and cons of g-computation with data-adaptive regression}\label{pros-and-cons-of-g-computation-with-data-adaptive-regression}}
@@ -1617,105 +2005,75 @@ There are two possible ways of defining stochastic effects:
   \begin{itemize}
   \tightlist
   \item
-    Might be harder to implement depending on the regression procedure
+    Might be harder to implement depending on the regression procedures used
   \item
     No general approaches for computation of standard errors and confidence
     intervals
+  \item
+    For example, the bootstrap is not guaranteed to work, and it is known to
+    fail in some cases
   \end{itemize}
 \end{itemize}
 
-\hypertarget{semiparametric-estimation---an-alternative-to-solve-these-problems}{%
-\section{Semiparametric estimation - an alternative to solve these problems}\label{semiparametric-estimation---an-alternative-to-solve-these-problems}}
-
-\hypertarget{biasvariance-tradeoff}{%
-\subsection{Bias/variance tradeoff}\label{biasvariance-tradeoff}}
-
-\begin{itemize}
-\item
-  A lot of the recent literature in causal inference with data-adaptive
-  regression uses the following ideas
-\item
-  G-computation estimation with data-adaptive regression offers an incorrect
-  bias/variance trade-off
-\item
-  Specifically, the bias of a g-computation estimator can often be expressed as
-  \begin{equation*}
-    \psi(\hat\P) - \psi(\P) \approx -\E[D(O;\hat\P)]
-  \end{equation*}
-\item
-  The function \(D(O;\P)\) is called \emph{the efficient influence function} (EIF)
-\item
-  The EIF must be found on a case-by-case basis or each parameter \(\psi(\P)\)
-\item
-  For example, for estimating the standardized mean \(\psi(P)=\E[\E(Y\mid A=1, W)]\), we have
-  \begin{equation*}
-    D(O,\hat\P) = \frac{A}{\hat P(A=1\mid W)}[Y - \hat\E(Y\mid A=1, W)] +
-    \hat\E(Y\mid A=1, W) - \psi(\hat\P)
-  \end{equation*}
-\item
-  In this workshop we will not present the specific form of \(D(O;\hat\P)\) for
-  all parameters that we use
-\item
-  But the estimators we discuss and implement in the packages will be based on
-  theser EIFs
-\end{itemize}
-
-\hypertarget{bias-correction-of-g-computation-estimators}{%
-\subsection{Bias-correction of g-computation estimators}\label{bias-correction-of-g-computation-estimators}}
+\hypertarget{semiparametric-estimation-or-correcting-the-bias-of-g-computation-estimators}{%
+\section{Semiparametric estimation (or correcting the bias of g-computation estimators)}\label{semiparametric-estimation-or-correcting-the-bias-of-g-computation-estimators}}
 
 \begin{itemize}
 \tightlist
 \item
-  There are at least two ways to use the EIF to perform a bias correction for a
-  g-computation estimator
+  G-computation estimation with data-adaptive regression offers an incorrect
+  bias/variance trade-off
 \item
-  The first one is the so-called \emph{one step} estimator:
+  It accepts more bias than necessary
+\item
+  The bias of a g-computation estimator may be corrected as follows:
   \begin{equation*}
-    \psi(\hat \P) + \frac{1}{n}\sum_{i=1}^n D(O;\hat \P_i)
+    \psi(\hat \P) + \frac{1}{n}\sum_{i=1}^n D(O_i)
+  \end{equation*}
+  for some function \(D(O_i)\) of the data
+\item
+  The function \(D(O)\) is called \emph{the efficient influence function} (EIF)
+\item
+  The EIF must be found on a case-by-case basis for each parameter \(\psi(\P)\)
+\item
+  For example, for estimating the standardized mean \(\psi(\P)=\E[\E(Y\mid A=1, W)]\), we have
+  \begin{equation*}
+    D(O) = \frac{A}{\hat \P(A=1\mid W)}[Y - \hat\E(Y\mid A=1, W)] +
+    \hat\E(Y\mid A=1, W) - \psi(\hat\P)
   \end{equation*}
 \item
-  The idea behind the one-step estimator is simple: subtract an estimate of the
-  bias of the g-computation estimator
+  The EIF is found by using a distributional analogue of a Taylor expansion
 \item
-  The second approach is the \emph{targeted maximum likelihood estimator} (TMLE)
+  In this workshop we will omit the specific form of \(D(O)\) for
+  some of the parameters that we use
 \item
-  TMLE is based on the principle that it is possile to construct a
-  data-adaptive estimator \(\tilde \P\) such that
-  \begin{equation*}
-    \frac{1}{n}\sum_{i=1}^n D(O;\tilde \P_i)=0
-  \end{equation*}
+  But the estimators we discuss and implement in the R packages will be based on
+  these EIFs
 \item
-  Thus, for this special data-adaptive estimate \(\tilde \P\), the TMLE is
-  actually just the g-computation estimator \(\psi(\tilde\P)\)
+  And the specific form of the EIF may be found in papers in the references
 \end{itemize}
 
-\hypertarget{estimating-natural-and-interventional-effects}{%
-\chapter{Estimating natural and interventional effects}\label{estimating-natural-and-interventional-effects}}
+Note: the bias correction above may have an additional problem of returning
+parameter estimates outside of natural bounds. E.g., probabilities greater than
+one. A solution to this (not discussed in this workshop) is targeted minimum
+loss based estimation.
 
-\hypertarget{natural-indirect-effects}{%
-\section{Natural (in)direct effects}\label{natural-indirect-effects}}
+\hypertarget{using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect}{%
+\chapter{Using the EIF to construct an estimator: the case of the natural direct effect}\label{using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect}}
+
+\hypertarget{natural-direct-effect}{%
+\section{Natural direct effect}\label{natural-direct-effect}}
 
 Recall:
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.8\linewidth]{06-estimation-natural-interventional_files/figure-latex/unnamed-chunk-1-1} 
-
-}
-
-\caption{Directed acyclic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-1}
-\end{figure}
-
-Assuming a binary \(A\), we define the natural direct effect as:
-\[NDE = E(Y_{1,M_{0}} - Y_{0,M_{0}})\],
-
-and the natural indirect effect as:
-\[NIE = E(Y_{1,M_{1}} - Y_{1,M_{0}})\].
-
-\hypertarget{simple-case-for-intuition}{%
-\subsection{Simple case for intuition}\label{simple-case-for-intuition}}
-
-The observed data is \(O=(W, A, M, Y)\)
+\begin{itemize}
+\item
+  Assuming a binary \(A\), we define the natural direct effect as: \[NDE = E(Y_{1,M_{0}} - Y_{0,M_{0}}),\]
+\item
+  and the natural indirect effect as: \[NIE = E(Y_{1,M_{1}} - Y_{1,M_{0}}).\]
+\item
+  The observed data is \(O=(W, A, M, Y)\)
+\end{itemize}
 
 This SCM is represented in the above DAG and the following causal models:
 \begin{align*}
@@ -1748,321 +2106,169 @@ from our observed data:
   and positivity assumptions
 \end{itemize}
 
-\hypertarget{how-to-estimate-using-g-computation}{%
-\subsection{How to estimate using G-computation}\label{how-to-estimate-using-g-computation}}
-
-Let's take the NDE as an example:
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  Fit a regression of \(Y\) on \(M,A,W\). Predict outcome values setting \(A=1\).
-  We'll call the result \(\bar{Q}_Y(M,1,W)\). Predict outcome values setting
-  \(A=0\). We'll call the result \(\bar{Q}_Y(M,0,W)\).
-\item
-  Take the difference \(\bar{Q}_Y(M,1,W) - \bar{Q}_Y(M,0,W)\) and regress it on
-  \(W\) among those for whom \(A=0\). This recovers the expected difference had all
-  individuals been set to the control condition \(A = 0\).
-\item
-  The sample mean of the predicted values gives the estimate.
-\end{enumerate}
-
-\hypertarget{how-to-estimate-using-the-doubly-robust-methods-that-rely-on-the-eif}{%
-\subsection{How to estimate using the doubly robust methods that rely on the EIF}\label{how-to-estimate-using-the-doubly-robust-methods-that-rely-on-the-eif}}
-
-The EIC for the NDE (\(\Psi_{NDE}\)) is given by:
-
-\begin{align}
-    D^{\star} &= \bigg\{ \frac{I(A=1)}{g(1|W)}\frac{Q(M|W,0)}{Q(M|W,1)} -
-      \frac{I(A=0)}{g(0|W)}\bigg\} \times (Y-\bar{Q}_Y(M,A,W))  \\
-    &+ \frac{I(A=0)}{g(0|W)}\{ \bar{Q}_{diff} - E(\bar{Q}_{diff} | W,0) \}\\
-    &+ E(\bar{Q}_{diff} | W,0) - \Psi_{NDE}
-\end{align}
-
-\hypertarget{how-to-estimate-using-the-one-step-estimator-essentially-a-iptw}{%
-\subsection{How to estimate using the one-step estimator (essentially A-IPTW)}\label{how-to-estimate-using-the-one-step-estimator-essentially-a-iptw}}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  Estimate
-  \begin{equation*}
-   C_Y(Q_M, g)(O) = \Bigg\{\frac{\I(A = 1)}{g(1 \mid W)}
-     \frac{Q_M(M \mid 0, W)}{Q_M(M \mid 1, W)} -
-     \frac{\I(A = 0)}{g(0 \mid W)} \Bigg\}.
-    \end{equation*}
-  Breaking this down, \(\frac{\I(A = 1)}{g(1 \mid W)}\) is the inverse probability
-  weight for \(A = 1\) and, likewise, \(\frac{\I(A = 0)}{g(0 \mid W)}\) is the inverse
-  probability weight for \(A = 0\). The middle term is the ratio of the mediator
-  density when \(A = 0\) to the mediator density when \(A = 1\).
-\end{enumerate}
-
-Estimating \(Q_M\) is a really hard problem when \(M\) is high-dimensional. But,
-since we have the ratio of these conditional densitities, we can reparamterize
-using Bayes rule to get something that is easier to compute:
+Then, the NDE is identified as
 \begin{equation*}
-  \frac{\P(A = 0 \mid M, W) g(0 \mid W)}{\P(A = 1 \mid M, W) g(1 \mid W)}.
+    \psi(\P) =  \E[\E\{\E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)\mid A=0,W\}]
+  \end{equation*}
+
+\hypertarget{the-efficient-influence-function-for-the-nde}{%
+\subsection{The efficient influence function for the NDE}\label{the-efficient-influence-function-for-the-nde}}
+
+\begin{itemize}
+\tightlist
+\item
+  For illustration, we will first present how to construct an estimator of the
+  NDE that uses the EIF ``by hand''
+\item
+  For other parameters, we will teach you how to use our packages \emph{medoutcon}
+  and \emph{medshift}
+\end{itemize}
+
+First, we need to introduce some notation to describe the EIF for the NDE
+
+\begin{itemize}
+\item
+  Let \(Q(M, W)\) denote \(\E(Y\mid A=1, M, W) - \E(Y\mid A=0, M, W)\)
+\item
+  We can now introduce the EIF:
+  \begin{align*}
+    D(O) &= \color{ForestGreen}{\bigg\{ \frac{I(A=1)}{\P(A=1\mid W)}\frac{\P(M\mid A=0,W)}{\P(M\mid A=1,W)} -
+      \frac{I(A=0)}{\P(A=0\mid W)}\bigg\}} \times [Y-\E(Y\mid A,M,W)]  \\
+    &+ \frac{I(A=0)}{\P(A=0\mid W)}\big\{Q(M,W) - \E[Q(M,W) | W,A=0] \big\}\\
+    &+ \E[Q(M,W) | W,A=0] - \psi(\P)
+  \end{align*}
+\item
+  Estimating \(\P(M\mid A, W)\) is a really hard problem when \(M\) is
+  high-dimensional. But, since we have the ratio of these conditional
+  densitities, we can reparamterize using Bayes rule to get something that is
+  easier to compute:
+\end{itemize}
+
+\begin{equation*}
+  \frac{\P(M\mid A=0,W)}{\P(M\mid A=1,W)} = \frac{\P(A = 0 \mid M, W) \P(A=1
+  \mid W)}{\P(A = 1 \mid M, W)\P(A=0 \mid W)}.
 \end{equation*}
 
+Thus we can change the expression of the EIF a bit as follows. First, some more
+notation that will be useful later:
+
+\begin{itemize}
+\tightlist
+\item
+  Let \(g(a\mid w)\) denote \(\P(A=a\mid W=w)\)
+\item
+  Let \(e(a\mid m, w)\) denote \(\P(A=a\mid M=m, W=w)\)
+\item
+  Let \(b(a, m, w)\) denote \(\E(Y\mid A=a, M=m, W=w)\)
+\item
+  The EIF is
+\end{itemize}
+
+\begin{align*}
+    D(O) &= \color{ForestGreen}{\bigg\{ \frac{I(A=1)}{g(0\mid W)}\frac{e(0\mid M,W)}{e(1\mid M,W)} -
+      \frac{I(A=0)}{g(0\mid W)}\bigg\}} \times [Y-b(A,M,W)]  \\
+    &+ \frac{I(A=0)}{g(0\mid W)}\big\{Q(M,W) - \E[Q(M,W) | W,A=0] \big\}\\
+    &+ \E[Q(M,W) | W,A=0] - \psi(\P)
+\end{align*}
+
+\hypertarget{how-to-compute-the-one-step-estimator-akin-to-augmented-ipw}{%
+\subsection{How to compute the one-step estimator (akin to Augmented IPW)}\label{how-to-compute-the-one-step-estimator-akin-to-augmented-ipw}}
+
+First we will generate some data:
+
+\begin{lstlisting}[language=R]
+mean_y <- function(m, a, w) abs(w) + a * m
+mean_m <- function(a, w)plogis(w^2 - a)
+pscore <- function(w) plogis(1 - abs(w))
+
+w_big <- runif(1e6, -1, 1)
+trueval <- mean((mean_y(1, 1, w_big) - mean_y(1, 0, w_big)) * mean_m(0, w_big)
+                + (mean_y(0, 1, w_big) - mean_y(0, 0, w_big)) *
+                  (1 - mean_m(0, w_big)))
+
+n <- 1000
+w <- runif(n, -1, 1)
+a <- rbinom(n, 1, pscore(w))
+m <- rbinom(n, 1, mean_m(a, w))
+y <- rnorm(n, mean_y(m, a, w))
+\end{lstlisting}
+
+Recall that the one-step estimator is defined as the bias-corrected
+g-computation estimator:
+\begin{equation*}
+  \psi(\hat \P) + \frac{1}{n}\sum_{i=1}^n D(O;\hat \P_i)
+\end{equation*}
+
+Can be computed in the following steps:
+
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  We estimate \(g_{A \mid W}(W)=P(A=a \mid W)\) from a logistic regression of
-  \(A\) on \(W\), generating predicted probabilities that \(A=1\) for \(g(1 \mid W)\)
-  and \(A=0\) for \(g(0 \mid W)\).\\
-\item
-  We estimate \(\P(A=a \mid M, W)\) from a logistic regression of \(A\) on \(M, W\),
-  generating predicted probabilities that \(A=1\) for and \(A=0\).
+  Fit models for \(g(a\mid w)\), \(e(a\mid m, w)\), and \(b(a, m, w)\)
+
+  \begin{itemize}
+  \tightlist
+  \item
+    In this example we will use Generalized Additive Models {[}CITE{]} for
+    tractability
+  \item
+    In applied settings we recommend using an ensemble of data-adaptive
+    regression algorithms, such as the Super Learner {[}CITE{]}
+  \end{itemize}
 \end{enumerate}
 
 \begin{lstlisting}[language=R]
-amodel <- "a ~ w "
-mmodel <- "m ~ a + w"
-amodel <- "a ~ m + w"
-ymodel <- "y ~ m + a*w"
-
-# make gm
-afit <- glm(formula = amodel, family = "binomial", data = obsdat)
-mfit <- glm(formula = mmodel, family = "binomial", data = obsdat)
-
-a1 <- predict(afit, newdata = data.frame(w = obsdat$w), type = "response")
-a0 <- 1 - a1
-
-am1 <- predict(amfit,
-  newdata = data.frame(w = obsdat$w, m = obsdat$m),
-  type = "response"
-)
-am0 <- 1 - am1
-cy <- (am0 * a0) / (am1 * a1)
+library(mgcv)
+## fit model for E(Y | A, W)
+b_fit <- gam(y ~ m:a + s(w, by = a)
+## fit model for P(A = 1 | M, W)
+e_fit <- gam(a ~ m + w + s(w, by = m), family = binomial)
+## fit model for P(A = 1 | W)
+g_fit <- gam(a ~ w, family = binomial)
 \end{lstlisting}
 
-\(\bar{Q}_Y(M,a^\prime,W) - \bar{Q}_Y(M,a^\star,W)\)
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Compute predictions \(g(1\mid w)\), \(g(0\mid w)\), \(e(1\mid m, w)\),
+  \(e(0\mid m, w)\),\(b(1, m, w)\), \(b(0, m, w)\), and \(b(a, m, w)\)
+\end{enumerate}
+
+\begin{lstlisting}[language=R]
+## Compute P(A = 1 | W)
+g1_pred <- predict(g_fit, type = 'response')
+## Compute P(A = 0 | W)
+g0_pred <- 1 - g1_pred
+## Compute P(A = 1 | M, W)
+e1_pred <- predict(e_fit, type = 'response')
+## Compute P(A = 0 | M, W)
+e0_pred <- 1 - e1_pred
+## Compute E(Y | A = 1, M, W)
+b1_pred <- predict(b_fit, newdata = data.frame(a = 1, m, w))
+## Compute E(Y | A = 0, M, W)
+b0_pred <- predict(b_fit, newdata = data.frame(a = 0, m, w))
+## Compute E(Y | A, M, W)
+b_pred  <- predict(b_fit)
+\end{lstlisting}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{2}
 \tightlist
 \item
-  To obtain an estimate of \(\bar{Q}_{diff} = \bar{Q}_Y(M,1,W) - \bar{Q}_Y(M,0,W)\), predict values of \(Y\) from a regression of \(Y\) on \(M,A,W\),
-  setting \(A=1\) and \(A=0\), giving \(\hat{Y}(m, 1, w)\) and \(\hat{Y}(m, 1, w)\).
+  Compute \(Q(M, W)\), fit a model for \(\E[Q(M,W) | W,A]\), and predict at \(A=0\)
 \end{enumerate}
 
 \begin{lstlisting}[language=R]
-qyinit <- cbind(
-  predict(glm(
-    formula = ymodel, family = "binomial",
-    data = data.frame(cbind(datw, a = a, m = m, y = y))
-  ),
-  newdata = data.frame(cbind(datw, a, m)), type = "response"
-  ),
-  predict(glm(
-    formula = ymodel, family = "binomial",
-    data = data.frame(cbind(datw, a = a, m = m, y = y))
-  ),
-  newdata = data.frame(cbind(datw, a = 0, m)), type = "response"
-  ),
-  predict(glm(
-    formula = ymodel, family = "binomial",
-    data = data.frame(cbind(datw, z = z, m = m, y = y))
-  ),
-  newdata = data.frame(cbind(datw, a = 1, m)), type = "response"
-  )
-)
-
-qbardiff <- qyinit[, 3] - qyinit[, 2]
-\end{lstlisting}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{4}
-\tightlist
-\item
-  We then regress \(\hat{\bar{Q}}_{diff}(M,A,W)\) on \(W\) among those
-  with \(A=0\) and take the mean.
-\end{enumerate}
-
-\begin{lstlisting}[language=R]
-margqdiff_fit <- glm(qbardiff ~ w,
-  data = data.frame(
-    qbardiff = qbardiff[a == 0],
-    w = w[a == 0]
-  )
-)
-margqdiff <- predict(margqdiff_fit,
-  newdata = data.frame(qbardiff = qbardiffup, w = w)
-)
-meanmargqdiff<- mean(margqdiff)
-\end{lstlisting}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{5}
-\tightlist
-\item
-  Plug in the estimates of these nuisance parameters to the EIC, set it equal to 0, and solve. This gives an estimate of the NDE.
-\end{enumerate}
-
-\begin{lstlisting}[language=R]
-
-os_nde <- cy*(y-qyinit[,1]) + (a0/am0)*(qbardiff - meanmargqdiff) + meanmargqdiff
-\end{lstlisting}
-
-\hypertarget{interventional-direct-and-indirect-effects}{%
-\section{Interventional direct and indirect effects}\label{interventional-direct-and-indirect-effects}}
-
-Recall that in the presence of a intermediate confounder natural (in)direct effects are not identified
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.8\linewidth]{06-estimation-natural-interventional_files/figure-latex/unnamed-chunk-7-1} 
-
-}
-
-\caption{Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-7}
-\end{figure}
-
-We define the interventional direct effect as:
-\begin{equation*}
-  \psi_{\text{PIDE}} = \E(Y_{a^\prime,g_{M \mid a^\star,W}} -
-    Y_{a\star,g_{M \mid a^\star,W}}),
-\end{equation*}
-
-and the interventional indirect effect as:
-
-\begin{equation*}
-  \psi_{\text{PIIE}} = \E(Y_{a^\prime,g_{M \mid a^\prime,W}} -
-    Y_{a^\prime,g_{M \mid a^\star,W}}).
-\end{equation*}
-
-\hypertarget{simple-case-for-intuition-1}{%
-\section{Simple case for intuition}\label{simple-case-for-intuition-1}}
-
-Consider a simple data structure \(O=(W, A, Z, M, Y)\). This SCM is represented in
-the above DAG and the following causal models:
-\begin{align*}
-W & = f_W(U_W)\\
-A & = f_A(W, U_A)\\
-Z & = f_Z(W, A, U_Z)\\
-M & = f_M(W, A, Z, U_M)\\
-Y & = f_Y(W, A, Z, M, U_Y),
-\end{align*}
-where (\(U_W, U_A, U_Z, U_M, U_Y\)) are exogenous random errors. We assume \(A\) is
-a single binary treatment, \(Z\) is a single binary intermediate confounder, \(M\)
-is a single binary mediator. There are no restrictions on the distribution of
-\(W\) or \(Y\).
-
-\(g_{M \mid a^\prime,W}\) represents the counterfactual,
-conditional distribution of \(M\), as described by
-\citet{vanderweele2016mediation}:
-
-\begin{equation*}
-  g_{M \mid A,W}(m, a^{\star}, W) \equiv g_{M \mid a^{\star}, W}(W) =
-    \sum_{z=0}^1 \P(M=1 \mid Z=z,W) \P(Z=z \mid A=a^{\star}, W).
-\end{equation*}
-
-In what follows, we are going to assume that \(g_{M \mid A,W}(m, a^{\star}, W)\)
-is known, estimated from observed data, which we call
-\(\hat{g}_{M \mid a^{\star}, W}\). This is going to slightly alter the usual
-identification assumptions such that we no longer need to assume exchangeability
-of \(A\) and the counterfactual \(M\) values. This means the remaining assumptions
-are the same as those for controlled direct effects.
-
-\hypertarget{estimation-using-g-computation}{%
-\subsection{Estimation using G-Computation}\label{estimation-using-g-computation}}
-
-The estimand \(E(Y_{a^\prime, \hat{g}_{M \mid a^\star,W}})\) can be identified
-via sequential regression, which provides the framework for the
-G-computation-based estimator. The procedure is as follows
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  Fit a regression of \(Y\) on \(M,Z,W\). Predict outcome values under under
-  \(M=m\). We'll call the result \(\bar{Q}_Y(M,Z,W)\).
-\item
-  Integrate out \(M\) under our stochastic intervention
-  \(\hat{g}_{M \mid a^{\star}, W}\). We can do this by evaluating
-  \(\E(Y \mid M=m,Z=z,W)\) at each \(m\) and multiplying it by the probability
-  that \(M=m\) under \(\hat{g}_{M \mid a^{\star}, W}\), summing over all \(m\).
-  We'll call the results \(\bar{Q}^{g}_M(Z,W)\).
-\item
-  Integrate out \(Z\) and set \(A=a^\prime\). Again, we can do this by evaluating
-  the predicted values from Step 2, setting \(A=a^\prime\), and at each \(z\),
-  multiplying the prediction by the probability that \(Z=z\) under \(A=a^\prime\).
-  We'll call the result \(\bar{Q}^{a^\prime}_Z(W)\).
-\item
-  Taking the sample mean (marginalizing over \(W\)) gives the parameter
-  estimate.
-\end{enumerate}
-
-\hypertarget{estimate-with-doubly-robust-methods-based-on-the-eif}{%
-\subsection{Estimate with doubly robust methods based on the EIF}\label{estimate-with-doubly-robust-methods-based-on-the-eif}}
-
-We are showing the one-step estimator (generalization of A-IPW)
-
-The EIF for the parameter \(\Psi(P)(a^{\prime}, \hat{g}_{M \mid a^{\star},W})\),
-where, again, \(\hat{g}_{M \mid a^{\star}, W}\) is assumed known, is given by:
-\begin{align*}
-  D^{\star}(a^{\prime}, \hat{g}_{M \mid a^{\star}, W}) &= \sum_{k=0}^2
-      D_k^{\star}(a^{\prime}, \hat{g}_{M \mid a^{\star}, W}), \text{ where }\\
-  D^{\star}_0(a^{\prime}, \hat{g}_{M \mid a^{\star}, W}) &=
-      \bar{Q}^{a^{\prime}}_{Z(W)} -
-      \Psi(P)(a^{\prime}, \hat{g}_{M \mid a^{\star}, W})\\
-  D^{\star}_1(a^{\prime}, \hat{g}_{M \mid a^{\star}, W}) &=
-      \frac{I(A=a^{\prime})}{\P(A=a^{\prime} \mid W)}(\bar{Q}^{\hat{g}}_M(Z,W)
-      - \bar{Q}^{a^{\prime}}_{Z(W)})\\
-  D^{\star}_2(a^{\prime}, \hat{g}_{M \mid a^{\star}, W}) &=
-      \frac{I(A=a^{\prime})\{I(M=1) \hat{g}_{M \mid a^{\star}, W} +
-      I(M=0)(1-\hat{g}_{M \mid a^{\star}, W}) \}}{\P(A=a^{\prime}}
-      &\times (Y-\bar{Q}_{Y(M,Z,W)}).
-\end{align*}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  We estimate \(g_{Z \mid a^{\star}, W}(W) = \P(Z=1 \mid A=a^{\star}, W)\) from
-  a logistic regression of \(Z\) on \(A, W\) setting \(A=a^{\star}\).
-\item
-  We then estimate \(g_{M \mid z,W}(W) = \P(M=1 \mid Z=z, W)\) from a logistic
-  regression of \(M\) on \(Z, W\), setting \(z=\{0,1\}\).
-\item
-  We use these quantities to calculate \(\hat{g}_{M \mid a^{\star}, W} = \hat{g}_{M \mid z=1,W}\hat{g}_{Z \mid a^{\star}, W} + \hat{g}_{M \mid z=0,W}(1-\hat{g}_{Z|a^{\star}, W})\).
-\end{enumerate}
-
-\begin{lstlisting}[language=R]
-zmodel <- "z ~ a + w1 "
-mmodel <- "m ~ z + w1"
-ymodel <- "y ~ m + z*w1"
-
-# make gm and get counterfactual predictions
-zfit <- glm(formula = zmodel, family = "binomial", data = obsdat)
-mfit <- glm(formula = mmodel, family = "binomial", data = obsdat)
-
-za0 <- predict(zfit,
-  newdata = data.frame(w1 = obsdat$w1, a = 0),
-  type = "response"
-)
-za1 <- predict(zfit,
-  newdata = data.frame(w1 = obsdat$w1, a = 1),
-  type = "response"
-)
-
-mz1 <- predict(mfit,
-  newdata = data.frame(w1 = obsdat$w1, z = 1),
-  type = "response"
-)
-mz0 < -predict(mfit,
-  newdata = data.frame(w1 = obsdat$w1, z = 0),
-  type = "response"
-)
-
-gm0 <- (mz1 * za0) + (mz0 * (1 - za0))
-gma1 <- (mz1 * za1) + (mz0 * (1 - za1))
+## Compute Q(M, W)
+pseudo <- b1_pred - b0_pred
+## Fit model for E[Q(M, W) | A, W]
+q_fit <- gam(pseudo ~ a + w + s(w, by = a))
+## Compute E[Q(M, W) | A = 0, W]
+q_pred <- predict(q_fit, newdata = data.frame(a = 0, w = w))
 \end{lstlisting}
 
 \begin{enumerate}
@@ -2070,32 +2276,16 @@ gma1 <- (mz1 * za1) + (mz0 * (1 - za1))
 \setcounter{enumi}{3}
 \tightlist
 \item
-  To obtain an estimate of \(\bar{Q}_{Y}(M,Z,W)\), predict values of \(Y\) from a
-  regression of \(Y\) on \(M,Z,W\), setting \(m=1\) and \(m=0\), giving
-  \(\hat{Y}(m=1, z, w)\) and \(\hat{Y}(m=0, z, w)\).
+  Estimate the weights
+  \begin{equation*}
+    \bigg\{ \frac{I(A=1)}{g(0\mid W)}\frac{e(0\mid M,W)}{e(1\mid M,W)} -
+     \frac{I(A=0)}{g(0\mid W)}\bigg\}
+    \end{equation*}
+  using the above predictions:
 \end{enumerate}
 
 \begin{lstlisting}[language=R]
-tmpdat$qyinit <- cbind(
-  predict(glm(
-    formula = ymodel, family = "binomial",
-    data = data.frame(cbind(datw, z = z, m = m, y = y))
-  ),
-  newdata = data.frame(cbind(datw, z = z, m = m)), type = "response"
-  ),
-  predict(glm(
-    formula = ymodel, family = "binomial",
-    data = data.frame(cbind(datw, z = z, m = m, y = y))
-  ),
-  newdata = data.frame(cbind(datw, z = z, m = 0)), type = "response"
-  ),
-  predict(glm(
-    formula = ymodel, family = "binomial",
-    data = data.frame(cbind(datw, z = z, m = m, y = y))
-  ),
-  newdata = data.frame(cbind(datw, z = z, m = 1)), type = "response"
-  )
-)
+weights <- a / g0_pred * e0_pred / e1_pred - (1 - a) / g0_pred
 \end{lstlisting}
 
 \begin{enumerate}
@@ -2103,28 +2293,12 @@ tmpdat$qyinit <- cbind(
 \setcounter{enumi}{4}
 \tightlist
 \item
-  Estimate the weights :
-  \begin{equation*}
-     h_1(a) = \frac{I(A=a)\{I(M=1)\hat{g}_{M \mid a^{\star}, W} +
-       I(M=0)(1-\hat{g}_{M \mid a^{\star}, W}) \}}{\P(A=a)\{I(M=1)
-       g_{M \mid Z,W} + I(M=0)(1-g_{M \mid Z,W}) \}}
-  \end{equation*}
+  Compute the uncentered EIF:
 \end{enumerate}
 
 \begin{lstlisting}[language=R]
-psa1 <- I(a == 1) / mean(a)
-psa0 <- I(a == 0) / mean(1 - a)
-mz <- predict(glm(
-  formula = mmodel, family = "binomial",
-  data = data.frame(cbind(datw, z = z, m = m))
-),
-newdata = data.frame(cbind(datw, z = z)), type = "response"
-)
-psm <- (mz * m) + ((1 - mz) * (1 - m))
-
-tmpdat$ha1gma1 <- ((m * gma1 + (1 - m) * (1 - gma1)) / psm) * psa1 
-tmpdat$ha1gma0 <- ((m * gm + (1 - m) * (1 - gm)) / psm) * psa1 
-tmpdat$ha0gma0 <- ((m * gm + (1 - m) * (1 - gm)) / psm) * psa0 
+eif <- weights * (y - b_pred) + (1 - a) / g0_pred * (pseudo - q_pred) +
+  q_pred
 \end{lstlisting}
 
 \begin{enumerate}
@@ -2132,134 +2306,814 @@ tmpdat$ha0gma0 <- ((m * gm + (1 - m) * (1 - gm)) / psm) * psa0
 \setcounter{enumi}{5}
 \tightlist
 \item
-  We next integrate out \(M\) from \(\bar{Q}_{Y}(M,Z,W)\). First, we
-  estimate \(\bar{Q}_{Y,n}(M,Z,W)\) setting \(m=1\) and \(m=0\), giving
-  \(\bar{Q}_Y(m=1, z, w)\) and \(\bar{Q}_Y(m=0, z, w)\). Then,
-  multiply these predicted values by their probabilities under
-  \(\hat{g}_{M \mid a^{\star},W}(W)\) (for \(a \in \{a, a^{\star}\}\)), and add
-  them together (i.e., \(\bar{Q}^{\hat{g}}_{M,n}(Z,W) = \hat{Q}^{\star}_Y(m=1, z, w) \hat{g}_{M|a^{\star},W} + \hat{Q}^{\star}_Y(m=0, z, w)(1-\hat{g}_{M|a^{\star},W})\)).
+  The one step estimator is the mean of the uncentered EIF
 \end{enumerate}
 
 \begin{lstlisting}[language=R]
-tmpdat$Qma1g0 <- tmpdat$qyinit[, 2] * (1 - gm) + tmpdat$qyinit[, 3] * gm
-tmpdat$Qma1g1 <- tmpdat$qyinit[, 2] * (1 - gma1) + tmpdat$qyinit[, 3] * gma1
-tmpdat$Qma0g0 <- tmpdat$qyinit[, 2]* (1 - gm) + tmpdat$qyinit[, 3] * gm
+## One-step estimator
+mean(eif)
 \end{lstlisting}
 
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{6}
+\hypertarget{performance-of-the-one-step-estimator-in-a-small-simulation-study}{%
+\subsection{Performance of the one-step estimator in a small simulation study}\label{performance-of-the-one-step-estimator-in-a-small-simulation-study}}
+
+First, we create a wrapper around the estimator
+
+\begin{lstlisting}[language=R]
+one_step <- function(y, m, a, w) {
+  b_fit <- gam(y ~ m:a + s(w, by = a))
+  e_fit <- gam(a ~ m + w + s(w, by = m), family = binomial)
+  g_fit <- gam(a ~ w, family = binomial)
+  g1_pred <- predict(g_fit, type = 'response')
+  g0_pred <- 1 - g1_pred
+  e1_pred <- predict(e_fit, type = 'response')
+  e0_pred <- 1 - e1_pred
+  b1_pred <- predict(b_fit, newdata = data.frame(a = 1, m, w),
+                 type = 'response')
+  b0_pred <- predict(b_fit, newdata = data.frame(a = 0, m, w),
+                     type = 'response')
+  b_pred  <- predict(b_fit, type = 'response')
+  pseudo <- b1_pred - b0_pred
+  q_fit <- gam(pseudo ~ a + w + s(w, by = a))
+  q_pred <- predict(q_fit, newdata = data.frame(a = 0, w = w))
+  weights <- a / g0_pred * e0_pred / e1_pred - (1 - a) / g0_pred
+  eif <- weights * (y - b_pred) + (1 - a) / g0_pred *
+    (pseudo - q_pred) + q_pred
+  return(mean(eif))
+}
+\end{lstlisting}
+
+Let us first examine the bias
+
+\begin{itemize}
 \tightlist
 \item
-  We now fit a regression of \(\bar{Q}^{\hat{g}}_{M,n}(Z,W)\) on \(W\)
-  among those with \(A=a^\prime\). We call the predicted values from this
-  regression \(\hat{\bar{Q}}^{a^\prime}_{Z}(W)\).
-\end{enumerate}
+  The true value is:
+\end{itemize}
 
 \begin{lstlisting}[language=R]
-Qzfita1g0 <- glm(
-  formula = paste("Qma1g0", qmodel, sep = "~"),
-  data = tmpdat[tmpdat$a == 1, ], family = "quasibinomial"
-)
-Qzfita1g1 <- glm(
-  formula = paste("Qma1g1", qmodel, sep = "~"),
-  data = tmpdat[tmpdat$a == 1, ], family = "quasibinomial"
-)
-Qzfita0g0 <- glm(
-  formula = paste("Qma0g0", qmodel, sep = "~"),
-  data = tmpdat[tmpdat$a == 0, ], family = "quasibinomial"
-)
-
-Qza1g0 <- predict(Qzfita1g0, type = "response", newdata = tmpdat)
-Qza1g1 <- predict(Qzfita1g1, type = "response", newdata = tmpdat)
-Qza0g0 <- predict(Qzfita0g0, type = "response", newdata = tmpdat)
+w_big <- runif(1e6, -1, 1)
+trueval <- mean((mean_y(1, 1, w_big) - mean_y(1, 0, w_big)) * mean_m(0, w_big) +
+  (mean_y(0, 1, w_big) - mean_y(0, 0, w_big)) * (1 - mean_m(0, w_big)))
+print(trueval)
 \end{lstlisting}
 
-(Note that if \(A\) were not randomly assigned, we would need to complete a
-second targeting step.)
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{7}
+\begin{itemize}
 \tightlist
 \item
-  Take the empirical mean of these predicted values
-  \(\Psi(P)(a^\prime, \hat{g}_{M \mid a^{\star}, W})\).
-\end{enumerate}
+  Bias simulation
+\end{itemize}
 
 \begin{lstlisting}[language=R]
-meanQza1m0 <- mean(Qza1g0)
-meanQza1m1 <- mean(Qza1g1)
-meanQza0m0 <- mean(Qza0g0)
+estimate <- numeric(1000)
+for (i in 1:1000) {
+  n <- 1000
+  w <- runif(n, -1, 1)
+  a <- rbinom(n, 1, pscore(w))
+  m <- rbinom(n, 1, mean_m(a, w))
+  y <- rnorm(n, mean_y(m, a, w))
+
+  estimate[i] <- one_step(y, m, a, w)
+}
+
+hist(estimate)
+abline(v = trueval, col = "red", lwd = 4)
 \end{lstlisting}
 
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{8}
+\begin{itemize}
+\tightlist
 \item
-  Repeat the above steps for each of the interventions. For example, for
-  binary \(A\), we would execute these steps a total of three times to
-  estimate:
-
-  \begin{enumerate}
-  \def\labelenumii{\arabic{enumii}.}
-  \tightlist
-  \item
-    \(\Psi(P)(1,\hat{g}_{M \mid 1, W})\),
-  \item
-    \(\Psi(P)(1,\hat{g}_{M \mid 0, W})\), and
-  \item
-    \(\Psi(P)(0,\hat{g}_{M \mid 0, W})\).
-  \end{enumerate}
-\item
-  Plug in all of the nuisance parameter estimates to the EIC, set it equal to zero and solve. This is the one-step estimate of the PIDE and PIIE.
-\item
-  The variance can be estimated as the sample variance of the EIF (defined
-  above) divided by \(n\).
-\end{enumerate}
+  And now the confidence intervals:
+\end{itemize}
 
 \begin{lstlisting}[language=R]
-# first get EIF
-eic1a1g0 <- tmpdat$ha1gma0 * (tmpdat$y - tmpdat$qyinit[,1])
-eic2a1g0 <- psa1 * (tmpdat$Qma1g0 - Qza1g0)
-eic3a1g0 <- Qza1g0 - meanQza1m0
-eica1g0 <- eic1a1g0 + eic2a1g0 + eic3a1g0
+cis <- cbind(
+  estimate - qnorm(0.975) * sd(estimate),
+  estimate + qnorm(0.975) * sd(estimate)
+)
 
-eic1a1g1 <- tmpdat$ha1gma1 * (tmpdat$y - tmpdat$qyinit[,1])
-eic2a1g1 <- psa1 * (tmpdat$Qma1g1 - Qza1g1)
-eic3a1g1 <- Qza1g1 - meanQza1m1
-eica1g1 <- eic1a1g1 + eic2a1g1 + eic3a1g1
-
-eic1a0g0 <- tmpdat$ha0gma0 * (tmpdat$y - tmpdat$qyinit[,1)
-eic2a0g0 <- psa0 * (tmpdat$Qma0g0 - Qza0g0)
-eic3a0g0 <- Qzupa0g0 - meanQza0m0
-eica0g0 <- eic1a0g0 + eic2a0g0 + eic3a0g0
-
-pide <- mean(eica1g0 - eica0g0)
-piie <- mean(eica1g1 - eica1g0)
-
-# estimands
-pideeic <- eica1g0 - eica0g0
-vareic <- var(pideeic) / nrow(tmpdat)
-
-piieeic <- eica1g1 - eica1g0
-varpiieeic <- var(piieeic) / nrow(tmpdat)
+ord <- order(rowSums(cis))
+lower <- cis[ord, 1]
+upper <- cis[ord, 2]
+curve(trueval + 0 * x,
+  ylim = c(0, 1), xlim = c(0, 1001), lwd = 2, lty = 3, xaxt = "n",
+  xlab = "", ylab = "Confidence interval", cex.axis = 1.2, cex.lab = 1.2
+)
+for (i in 1:1000) {
+  clr <- rgb(0.5, 0, 0.75, 0.5)
+  if (upper[i] < trueval || lower[i] > trueval) clr <- rgb(1, 0, 0, 1)
+  points(rep(i, 2), c(lower[i], upper[i]), type = "l", lty = 1, col = clr)
+}
+text(450, 0.10, "n=1000 repetitions = 1000 ", cex = 1.2)
+text(450, 0.01, paste0(
+  "Coverage probability = ",
+  mean(lower < trueval & trueval < upper), "%"
+), cex = 1.2)
 \end{lstlisting}
 
-\hypertarget{the-general-case}{%
-\section{The general case}\label{the-general-case}}
+\hypertarget{estimating-indirect-effects-with-r-packages}{%
+\chapter{\texorpdfstring{Estimating (in)direct effects with \texttt{R} packages}{Estimating (in)direct effects with R packages}}\label{estimating-indirect-effects-with-r-packages}}
 
-Actually, we would want to have the fixed parameter with the true, unknown
-\(g_{M \mid a, W}\) and would like \(M\) to be continuous/multi-dimensional.
+\hypertarget{medshift-stochastic-indirect-effects}{%
+\section{\texorpdfstring{\texttt{medshift}: Stochastic (in)direct effects}{medshift: Stochastic (in)direct effects}}\label{medshift-stochastic-indirect-effects}}
 
-This is a pain to do by hand, but Nima made an easy-to-use package for all of us
-called \href{https://github.com/nhejazi/medoutcon}{medoutcon}! He will go through
-this next.
+We are interested in assessing the population intervention direct effect and
+the population intervention indirect effect, based on the effect decomposition
+of the population intervention effect introduced in \citet{diaz2020causal}.
 
-\hypertarget{estimating-stochastic-effects}{%
-\chapter{Estimating stochastic effects}\label{estimating-stochastic-effects}}
+To proceed, we'll use as our running example a simple data set from an
+observational study of the relationship between BMI and kids behavior,
+distributed as part of the \href{https://CRAN.R-project.org/package=mma}{\passthrough{\lstinline!mma!} R package on
+CRAN}. First, let's load the packages
+we'll be using and set a seed; then, load this data set and take a quick look
+at it
 
-{[}TO FILL IN{]}
+\begin{lstlisting}[language=R]
+# preliminaries
+library(data.table)
+library(dplyr)
+library(sl3)
+library(medshift)
+library(mma)
+set.seed(429153)
+
+# load and examine data
+data(weight_behavior)
+dim(weight_behavior)
+head(weight_behavior)
+\end{lstlisting}
+
+The documentation for the data set describes it as a ``database obtained from the
+Louisiana State University Health Sciences Center, New Orleans, by Dr.~Richard
+Scribner. He explored the relationship between BMI and kids behavior through a
+survey at children, teachers and parents in Grenada in 2014. This data set
+includes 691 observations and 15 variables.''
+
+Unfortunately, the data set contains a few observations with missing values. As
+these are unrelated to the object of our analysis, we'll simply remove these for
+the time being. Note that in a real data analysis, we might consider strategies
+to fully make of the observed data, perhaps by imputing missing values. For now,
+we simply remove the incomplete observations, resulting in a data set with fewer
+observations but much the same structure as the original:
+
+For the analysis of this observational data set, we focus on the effect of
+participating in a sports team (\passthrough{\lstinline!sports!}) on the BMI of children (\passthrough{\lstinline!bmi!}), taking
+several related covariates as mediators (\passthrough{\lstinline!snack!}, \passthrough{\lstinline!exercises!}, \passthrough{\lstinline!overweigh!}) and
+all other collected covariates as potential confounders. Considering an NPSEM,
+we separate the observed variables from the data set into their corresponding
+nodes as follows
+
+\begin{lstlisting}[language=R]
+Y <- weight_behavior_complete$bmi
+A <- weight_behavior_complete$sports
+Z <- weight_behavior_complete %>%
+  select(snack, exercises, overweigh)
+W <- weight_behavior_complete %>%
+  select(
+    age, sex, race, numpeople, car, gotosch, tvhours, cmpthours,
+    cellhours, sweat
+  )
+\end{lstlisting}
+
+Finally, in our analysis, we consider an incremental propensity score
+intervention (IPSI), as first proposed by \citet{kennedy2017nonparametric}, wherein the
+\emph{odds of participating in a sports team} is modulated by some fixed amount
+(\(0 \leq \delta \leq \infty\)) for each individual. Such an intervention may be
+interpreted as the effect of a school program that motivates children to
+participate in sports teams. To exemplify our approach, we postulate a
+motivational intervention that \emph{triples the odds} of participating in a sports
+team for each individual:
+
+\begin{lstlisting}[language=R]
+delta_shift_ipsi <- 3
+\end{lstlisting}
+
+To easily incorporate ensemble machine learning into the estimation procedure,
+we rely on the facilities provided in the \href{https://tlverse.org/sl3}{\passthrough{\lstinline!sl3!} R
+package} \citep{coyle2020sl3}. For a complete guide on using
+the \passthrough{\lstinline!sl3!} R package, consider consulting \url{https://tlverse.org/sl3}, or
+\url{https://tlverse.org} (and \url{https://github.com/tlverse}) for the \passthrough{\lstinline!tlverse!}
+ecosystem, of which \passthrough{\lstinline!sl3!} is a major part. We construct an ensemble learner
+using a handful of popular machine learning algorithms below
+
+\begin{lstlisting}[language=R]
+# SL learners used for continuous data (the nuisance parameter M)
+xgb_contin_lrnr <- Lrnr_xgboost$new(nrounds = 50, objective = "reg:linear")
+enet_contin_lrnr <- Lrnr_glmnet$new(
+  alpha = 0.5, family = "gaussian",
+  nfolds = 3
+)
+lasso_contin_lrnr <- Lrnr_glmnet$new(
+  alpha = 1, family = "gaussian",
+  nfolds = 3
+)
+fglm_contin_lrnr <- Lrnr_glm_fast$new(family = gaussian())
+contin_lrnr_lib <- Stack$new(
+  enet_contin_lrnr, lasso_contin_lrnr,
+  fglm_contin_lrnr, xgb_contin_lrnr
+)
+sl_contin_lrnr <- Lrnr_sl$new(
+  learners = contin_lrnr_lib,
+  metalearner = Lrnr_nnls$new()
+)
+
+# SL learners used for binary data (nuisance parameters G and E in this case)
+xgb_binary_lrnr <- Lrnr_xgboost$new(nrounds = 50, objective = "reg:logistic")
+enet_binary_lrnr <- Lrnr_glmnet$new(
+  alpha = 0.5, family = "binomial",
+  nfolds = 3
+)
+lasso_binary_lrnr <- Lrnr_glmnet$new(
+  alpha = 1, family = "binomial",
+  nfolds = 3
+)
+fglm_binary_lrnr <- Lrnr_glm_fast$new(family = binomial())
+binary_lrnr_lib <- Stack$new(
+  enet_binary_lrnr, lasso_binary_lrnr,
+  fglm_binary_lrnr, xgb_binary_lrnr
+)
+logistic_metalearner <- make_learner(
+  Lrnr_solnp,
+  metalearner_logistic_binomial,
+  loss_loglik_binomial
+)
+sl_binary_lrnr <- Lrnr_sl$new(
+  learners = binary_lrnr_lib,
+  metalearner = logistic_metalearner
+)
+\end{lstlisting}
+
+\hypertarget{decomposing-the-population-intervention-effect}{%
+\subsection{Decomposing the population intervention effect}\label{decomposing-the-population-intervention-effect}}
+
+We may decompose the population intervention effect (PIE) in terms of a
+\emph{population intervention direct effect} (PIDE) and a \emph{population
+intervention indirect effect} (PIIE):
+\begin{equation*}
+  \overbrace{\mathbb{E}\{Y(A_\delta, Z(A_\delta)) -
+    Y(A_\delta, Z)\}}^{\text{PIIE}} +
+    \overbrace{\mathbb{E}\{Y(A_\delta, Z) - Y(A, Z)\}}^{\text{PIDE}}.
+\end{equation*}
+
+This decomposition of the PIE as the sum of the population intervention direct
+and indirect effects has an interpretation analogous to the corresponding
+standard decomposition of the average treatment effect. In the sequel, we will
+compute each of the components of the direct and indirect effects above using
+appropriate estimators as follows
+
+\begin{itemize}
+\tightlist
+\item
+  For \(\mathbb{E}\{Y(A, Z)\}\), the sample mean \(\frac{1}{n}\sum_{i=1}^n Y_i\) is
+  sufficient;
+\item
+  for \(\mathbb{E}\{Y(A_{\delta}, Z)\}\), an efficient one-step estimator for the
+  effect of a joint intervention altering the exposure mechanism but not the
+  mediation mechanism, as proposed in \citet{diaz2020causal}; and,
+\item
+  for \(\mathbb{E}\{Y(A_{\delta}, Z_{A_{\delta}})\}\), an efficient one-step
+  estimator for the effect of a joint intervention altering both the exposure
+  and mediation mechanisms, as proposed in \citet{kennedy2017nonparametric} and
+  implemented in the \href{https://github.com/ehkennedy/npcausal}{\passthrough{\lstinline!npcausal!} R
+  package}.
+\end{itemize}
+
+\hypertarget{estimating-the-effect-decomposition-term}{%
+\subsection{Estimating the effect decomposition term}\label{estimating-the-effect-decomposition-term}}
+
+As given in \citet{diaz2020causal}, the statistical functional identifying the
+decomposition term that appears in both the PIDE and PIIE
+\(\mathbb{E}\{Y(A_{\delta}, Z)\}\), which corresponds to altering the exposure
+mechanism while keeping the mediation mechanism fixed, is
+\begin{equation*}
+  \theta_0(\delta) = \int m_0(a, z, w) g_{0,\delta}(a \mid w) p_0(z, w)
+    d\nu(a, z, w),
+\end{equation*}
+for which a one-step estimator is available. The corresponding \emph{efficient
+influence function} (EIF) with respect to the nonparametric model \(\mathcal{M}\)
+is \(D_{\eta,\delta}(o) = D^Y_{\eta,\delta}(o) + D^A_{\eta,\delta}(o) + D^{Z,W}_{\eta,\delta}(o) - \theta(\delta)\). The
+one-step estimator may be computed using the EIF estimating equation, making use
+of cross-fitting \citep{zheng2011cross, chernozhukov2018double} to circumvent any
+need for entropy conditions (i.e., Donsker class restrictions). The resultant
+estimator is
+\begin{equation*}
+  \hat{\theta}(\delta) = \frac{1}{n} \sum_{i = 1}^n D_{\hat{\eta}_{j(i)},
+  \delta}(O_i) = \frac{1}{n} \sum_{i = 1}^n \left\{ D^Y_{\hat{\eta}_{j(i)},
+  \delta}(O_i) + D^A_{\hat{\eta}_{j(i)}, \delta}(O_i) +
+  D^{Z,W}_{\hat{\eta}_{j(i)}, \delta}(O_i) \right\},
+\end{equation*}
+which is implemented in the \passthrough{\lstinline!medshift!} R package. We make use of that
+implementation to estimate \(\mathbb{E}\{Y(A_{\delta}, Z)\}\) via its one-step
+estimator \(\hat{\theta}(\delta)\) below
+
+\begin{lstlisting}[language=R]
+# let's compute the parameter where A (but not Z) are shifted
+theta_eff <- medshift(
+  W = W, A = A, Z = Z, Y = Y,
+  delta = delta_shift_ipsi,
+  g_learners = sl_binary_lrnr,
+  e_learners = sl_binary_lrnr,
+  m_learners = sl_contin_lrnr,
+  phi_learners = Lrnr_hal9001$new(),
+  estimator = "onestep",
+  estimator_args = list(cv_folds = 3)
+)
+summary(theta_eff)
+\end{lstlisting}
+
+\hypertarget{estimating-the-direct-effect}{%
+\subsection{Estimating the direct effect}\label{estimating-the-direct-effect}}
+
+Recall that, based on the decomposition outlined previously, the population
+intervention direct effect may be denoted \(\beta_{\text{PIDE}}(\delta) = \theta_0(\delta) - \mathbb{E}Y\). Thus, an estimator of the PIDE,
+\(\hat{\beta}_{\text{PIDE}}(\delta)\) may be expressed as a composition of
+estimators of its constituent parameters:
+\begin{equation*}
+  \hat{\beta}_{\text{PIDE}}({\delta}) = \hat{\theta}(\delta) -
+  \frac{1}{n} \sum_{i = 1}^n Y_i.
+\end{equation*}
+
+Based on the above, we may construct an estimator of the PIDE using quantities
+already computed. The convenience function below applies the simple delta method
+required in the case of a linear contrast between the two constituent
+parameters:
+
+\begin{lstlisting}[language=R]
+# convenience function to compute inference via delta method: EY1 - EY0
+linear_contrast <- function(params, eifs, ci_level = 0.95) {
+  # bounds for confidence interval
+  ci_norm_bounds <- c(-1, 1) * abs(stats::qnorm(p = (1 - ci_level) / 2))
+  param_est <- params[[1]] - params[[2]]
+  eif <- eifs[[1]] - eifs[[2]]
+  se_eif <- sqrt(var(eif) / length(eif))
+  param_ci <- param_est + ci_norm_bounds * se_eif
+  # parameter and inference
+  out <- c(param_ci[1], param_est, param_ci[2])
+  names(out) <- c("lwr_ci", "param_est", "upr_ci")
+  return(out)
+}
+\end{lstlisting}
+
+With the above convenience function in hand, we'll construct or extract the
+necessary components from existing objects and simply apply the function:
+
+\begin{lstlisting}[language=R]
+# parameter estimates and EIFs for components of direct effect
+EY <- mean(Y)
+eif_EY <- Y - EY
+params_de <- list(theta_eff$theta, EY)
+eifs_de <- list(theta_eff$eif, eif_EY)
+
+# direct effect = EY - estimated quantity
+de_est <- linear_contrast(params_de, eifs_de)
+de_est
+\end{lstlisting}
+
+\hypertarget{medoutcon-naturalinterventional-effects}{%
+\section{\texorpdfstring{\texttt{medoutcon}: Natural/Interventional Effects}{medoutcon: Natural/Interventional Effects}}\label{medoutcon-naturalinterventional-effects}}
+
+An exposure of interest often affects an outcome directly, or indirectly by the
+mediation of some intermediate variables. Identifying and quantifying the
+mechanisms underlying causal effects is an increasingly popular endeavor in
+public health, medicine, and the social sciences, as knowledge of such
+mechanisms can improve understanding of both \emph{why and how} treatments can be
+effective. Such mechanistic knowledge may be arguably even more important in
+cases where treatments result in unanticipated ineffective or even harmful
+effects.
+
+Traditional techniques for mediation analysis fare poorly in the face of
+intermediate confounding. Classical parameters like the natural (in)direct
+effects face a lack of identifiability in cases where mediator-outcome (i.e.,
+intermediate) confounders affected by exposure complicate the relationship
+between the exposure, mediators, and outcome. \citet{diaz2020nonparametric} provide a
+theoretical and computational study of the properties of newly developed
+interventional (in)direct effect estimands within the non-parametric statistical
+model. Among their contributions, \citet{diaz2020nonparametric}
+
+\begin{itemize}
+\tightlist
+\item
+  derive the efficient influence function (EIF), an key object in
+  semiparametric efficiency theory;
+\item
+  use the EIF to develop two asymptotically optimal, non-parametric estimators,
+  each of which is capable of leveraging machine learning for the estimation of
+  nuisance parameters; and
+\item
+  present theoretical conditions under which their proposed estimators are
+  consistent, multiply robust, and efficient.
+\end{itemize}
+
+\hypertarget{problem-setup-and-notation}{%
+\subsection{Problem Setup and Notation}\label{problem-setup-and-notation}}
+
+The problem addressed by the work of \citet{diaz2020nonparametric} may be represented
+by the following nonparametric structural equation model (NPSEM):
+\begin{align*}
+  W &= f_W(U_W); A = f_A(W, U_A); Z=f_Z(W, A, U_Z);\\ \nonumber
+  M &= f_M(W, A, Z, U_M); Y = f_Y(W, A, Z, M, U_Y).
+\end{align*}
+In the NPSEM, \(W\) denotes a vector of observed pre-treatment covariates, \(A\)
+denotes a categorical treatment variable, \(Z\) denotes an intermediate confounder
+affected by treatment, \(M\) denotes a (possibly multivariate) mediator, and \(Y\)
+denotes a continuous or binary outcome. The vector of exogenous factors
+\(U=(U_W,U_A,U_Z,U_M,U_Y)\), and the functions \(f\), are assumed deterministic but
+unknown. Importantly, the NPSEM encodes a time-ordering between these variables
+and allows the evaluation of counterfactual quantities defined by intervening on
+a set of nodes of the NPSEM. The observed data unit can be represented by the
+random variable \(O = (W, A, Z, M, Y)\); we consider access to \(O_1, \ldots, O_n\),
+a sample of \(n\) i.i.d. observations of \(O\).
+
+\citet{diaz2020nonparametric} additionally define the following parameterizations,
+familiarity with which will be useful for using the \href{https://github.com/nhejazi/medoutcon}{\passthrough{\lstinline!medoutcon!} \passthrough{\lstinline!R!}
+package}. In particular, these authors
+define \(g(a \mid w)\) as the probability mass function of \(A = a\) conditional on
+\(W = w\) and use \(h(a \mid m, w)\) to denote the probability mass function of \(A = a\) conditional on \((M, W) = (m, w)\). Further, \citet{diaz2020nonparametric} use
+\(b(a, z, m, w)\) to denote the outcome regression function \(\mathbb{E}(Y \mid A = a, Z = z, M = m, W = w)\), as well as \(q(z \mid a,w)\) and \(r(z \mid a, m, w)\)
+to denote the corresponding conditional densities of \(Z\).
+
+\hypertarget{interventional-indirect-effects-1}{%
+\subsection{Interventional (In)Direct Effects}\label{interventional-indirect-effects-1}}
+
+\citet{diaz2020nonparametric} define the \emph{total effect} of \(A\) on \(Y\) in terms of a
+contrast between two user-supplied values \(a', a^{\star} \in \mathcal{A}\).
+Examination of the NPSEM reveals that there are four paths involved in this
+effect, namely \(A \rightarrow Y\), \(A \rightarrow M \rightarrow Y\), \(A \rightarrow Z \rightarrow Y\), and \(A \rightarrow Z \rightarrow M \rightarrow Y\).
+Mediation analysis has classically considered the \emph{natural direct effect} (NDE)
+and the \emph{natural indirect effect} (NIE), which are defined as
+\(\mathbb{E}_c(Y_{a', M_{a^{\star}}} - Y_{a^{\star}, M_{a^{\star}}})\) and
+\(\mathbb{E}_c(Y_{a',M_{a'}} - Y_{a',M_{a^{\star}}})\), respectively. The natural
+direct effect measures the effect through paths \emph{not} involving the mediator
+(\(A \rightarrow Y\) and \(A \rightarrow Z \rightarrow Y\)), whereas the natural
+indirect effect measures the effect through paths involving the mediator
+(\(A \rightarrow M \rightarrow Y\) and \(A \rightarrow Z \rightarrow M \rightarrow Y\)). As the sum of the natural direct and indirect effects equals the average
+treatment effect \(\mathbb{E}_c(Y_1-Y_0)\), this effect decomposition is
+appealing. Unfortunately, the natural direct and indirect effects are
+not generally identified in the presence of an intermediate confounder affected
+by treatment.
+
+To circumvent this issue, \citet{diaz2020nonparametric} define the direct and indirect
+effects using stochastic interventions on the mediator, following a strategy
+previously outlined by \citet{vanderweele2014effect} and \citet{rudolph2017robust}, among
+others. Let \(G_a\) denote a random draw from the conditional distribution of
+\(M_a\) conditional on \(W\). Consider the effect of \(A\) on \(Y\) defined as the
+difference in expected outcome in hypothetical worlds in which \((A,M) = (a', G_{a'})\) versus \((A,M) = (a^{\star}, G_{a^{\star}})\) with probability one, which
+may be decomposed into direct and indirect effects as follows
+\begin{equation*}
+\mathbb{E}_c(Y_{a', G_{a'}} - Y_{a^{\star}, G_{a^{\star}}}) =
+  \underbrace{\mathbb{E}_c(Y_{a', G_{a'}} - Y_{a',
+    G_{a^{\star}}})}_{\text{Indirect effect (through $M$)}} +
+  \underbrace{\mathbb{E}_c(Y_{a', G_{a^{\star}}} - Y_{a^{\star},
+      G_{a^{\star}}})}_{\text{Direct effect (not through $M$)}}.
+\end{equation*}
+Like the natural direct effect, this interventional direct effect measures the
+effects through paths not involving the mediator. Likewise, the interventional
+indirect effect measures the effect through paths involving the mediator. Note,
+however, that natural and interventional mediation effects have different
+interpretations. That is, the interventional indirect effect measures the effect
+of fixing the exposure at \(a'\) while setting the mediator to a random draw
+\(G_{a^{\star}}\) from those with exposure \(a'\) versus a random draw \(G_{a'}\) from
+those with exposure \(a^{\star}\), given covariates \(W\). As is clear from the
+effect decomposition, the term \(\theta_c = \mathbb{E}_c(Y_{a', G_{a^{\star}}})\)
+is required for estimation of both the interventional direct and indirect
+effects; thus, \citet{diaz2020nonparametric} focus on estimation of this quantity.
+Importantly, it has been shown that \(\theta_c\) is identified by the statistical
+functional
+\begin{equation*}
+  \theta = \int b(a', z, m, w) q(z \mid a', w) p(m \mid a^{\star}, w)
+    p(w) d\nu(w,z,m)
+\end{equation*}
+under a set of standard identifiability conditions \citep{vanderweele2014effect},
+which are further reviewed in \citet{diaz2020nonparametric}.
+
+\hypertarget{efficient-estimation}{%
+\subsection{Efficient Estimation}\label{efficient-estimation}}
+
+\citet{diaz2020nonparametric} define two efficient estimators of their interventional
+(in)direct effects. These are based on the one-step estimation and targeted
+minimum loss (TML) estimation frameworks, respectively. Briefly, both estimation
+strategies proceed in two stages, starting by first constructing initial
+estimates of the nuisance parameters present in the EIF, then proceeding to
+apply distinct bias-correction strategies in their second stages. Both
+estimation strategies require an assumption about the behavior of initial
+estimators of the nuisance parameters (specifically, that these lie in a Donsker
+class); however, the need for such an assumption may be avoided by making use of
+cross-validation in the fitting fo initial estimators. The \passthrough{\lstinline!medoutcon!} \passthrough{\lstinline!R!}
+package requires the use of cross-validation in the construction of these
+initial estimates, resulting in cross-fitted one-step and and cross-validated
+TML estimators \citep{klaassen1987consistent, zheng2011cross, chernozhukov2018double}.
+
+The one-step estimator \(\hat{\theta}_{\text{os}}\) is constructed by adding the
+empirical mean of the EIF (evaluated at initial estimates of the nuisance
+parameters) to the substitution estimator. By constrast, the TML estimator
+\(\hat{\theta}_{\text{tmle}}\) updates the components of the substitution
+estimator via logistic tilting models formulated to ensure that relevant score
+equations appearing in the EIF are (approximately) solved. While the estimators
+are asymptotically equivalent, TML estimators have been shown to exhibit
+superior finite-sample performance, making them potentially more reliable than
+one-step estimators. For the exact form of the EIF as well as those of the
+one-step and TML estimators, consult \citet{diaz2020nonparametric}.
+
+\hypertarget{data-analysis-example}{%
+\subsection{Data Analysis Example}\label{data-analysis-example}}
+
+\hypertarget{setting-up-the-data-example}{%
+\subsubsection{Setting up the data example}\label{setting-up-the-data-example}}
+
+Now, we'll take a look at how to estimate the interventional direct and indirect
+effects using a simulated data example. \citet{diaz2020nonparametric} illustrate the
+use of their estimators of these effects in an application in which they seek to
+elucidate the mechanisms behind the unintended harmful effects that a housing
+intervention had on adolescent girls' risk behavior.
+
+First, let's load a few required packages and set a seed for our simulation.
+
+\begin{lstlisting}[language=R]
+library(data.table)
+library(medoutcon)
+library(sl3)
+set.seed(75681)
+n_obs <- 500
+\end{lstlisting}
+
+Next, we'll generate a very simple simulated dataset. The function
+\passthrough{\lstinline!make\_example\_data!}, defined below, generates three binary baseline covariates
+\(W = (W_1, W_2, W_3)\), a binary exposure variable \(A\), a single binary mediateor
+\(M\) an intermediate confounder \(Z\) that affects the mediator \(M\) and is itself
+affected by the exposure \(A\), and, finally, a binary outcome \(Y\) that is a
+function of \((W, A, Z, M)\).
+
+\begin{lstlisting}[language=R]
+# produces a simple data set based on ca causal model with mediation
+make_example_data <- function(n_obs = 1000) {
+  ## baseline covariates
+  w_1 <- rbinom(n_obs, 1, prob = 0.6)
+  w_2 <- rbinom(n_obs, 1, prob = 0.3)
+  w_3 <- rbinom(n_obs, 1, prob = pmin(0.2 + (w_1 + w_2) / 3, 1))
+  w <- cbind(w_1, w_2, w_3)
+  w_names <- paste("W", seq_len(ncol(w)), sep = "_")
+
+  ## exposure
+  a <- as.numeric(rbinom(n_obs, 1, plogis(rowSums(w) - 2)))
+
+  ## mediator-outcome confounder affected by treatment
+  z <- rbinom(n_obs, 1, plogis(rowMeans(-log(2) + w - a) + 0.2))
+
+  ## mediator -- could be multivariate
+  m <- rbinom(n_obs, 1, plogis(rowSums(log(3) * w[, -3] + a - z)))
+  m_names <- "M"
+
+  ## outcome
+  y <- rbinom(n_obs, 1, plogis(1 / (rowSums(w) - z + a + m)))
+
+  ## construct output
+  dat <- as.data.table(cbind(w = w, a = a, z = z, m = m, y = y))
+  setnames(dat, c(w_names, "A", "Z", m_names, "Y"))
+  return(dat)
+}
+
+# set seed and simulate example data
+example_data <- make_example_data(n_obs)
+w_names <- stringr::str_subset(colnames(example_data), "W")
+m_names <- stringr::str_subset(colnames(example_data), "M")
+\end{lstlisting}
+
+Now, let's take a quick look at our simulated data:
+
+\begin{lstlisting}[language=R]
+# quick look at the data
+head(example_data)
+\end{lstlisting}
+
+As noted above, all covariates in our dataset are binary; however, note that
+this need not be the case for using our methodology --- in particular, the only
+current limitation is that the intermediate confounder \(Z\) must be binary when
+using our implemented TML estimator of the (in)direct effects.
+
+Using this dataset, we'll proceed to estimate the interventional (in)direct
+effects. In order to do so, we'll need to estimate several nuisance parameters,
+including the exposure mechanism \(g(A \mid W)\), a re-parameterized exposure
+mechanism that conditions on the mediators \(h(A \mid M, W)\), the outcome
+mechanism \(b(Y \mid M, Z, A, W)\), and two variants of the intermediate
+confounding mechanism \(q(Z \mid A, W)\) and \(r(Z \mid M, A, W)\). In order to
+estimate each of these nuisance parameters flexibly, we'll rely on data adaptive
+regression strategies in order to avoid the potential for (parametric) model
+misspecification.
+
+\hypertarget{ensemble-learning-of-nuisance-functions}{%
+\subsubsection{Ensemble learning of nuisance functions}\label{ensemble-learning-of-nuisance-functions}}
+
+As we'd like to rely on flexible, data adaptive regression strategies for
+estimating each of the nuisance parameters \((g, h, b, q, r)\), we require a
+method for choosing among or combining the wide variety of available regression
+strategies. For this, we recommend the use of the Super Learner algorithm for
+ensemble machine learning \citep{vdl2007super}. The recently developed \href{https://tlverse.org/sl3}{\passthrough{\lstinline!sl3!} R
+package} \citep{coyle2020sl3} provides a unified interface
+for deploying a wide variety of machine learning algorithms (simply called
+\emph{learners} in the \passthrough{\lstinline!sl3!} nomenclature) as well as for constructing Super Learner
+ensemble models of such learners. For a complete guide on using the \passthrough{\lstinline!sl3!} R
+package, consider consulting \url{https://tlverse.org/sl3}, or \url{https://tlverse.org}
+(and \url{https://github.com/tlverse}) for the \passthrough{\lstinline!tlverse!} ecosystem, of which \passthrough{\lstinline!sl3!} is
+an integral part.
+
+To construct an ensemble learner using a handful of popular machine learning
+algorithms, we'll first instantiate variants of learners from the appropriate
+classes for each algorithm, and then create a Super Learner ensemble via the
+\passthrough{\lstinline!Lrnr\_sl!} class. Below, we demonstrate the construction of an ensemble learner
+based on a modeling library including an intercept model, a main-terms GLM,
+\(\ell_1\)-penalized Lasso regression, an elastic net regression that equally
+weights the \(\ell_1\) and \(\ell_2\) penalties, random forests (\passthrough{\lstinline!ranger!}), and the
+highly adaptive lasso (HAL):
+
+\begin{lstlisting}[language=R]
+# instantiate learners
+mean_lrnr <- Lrnr_mean$new()
+fglm_lrnr <- Lrnr_glm_fast$new(family = binomial())
+lasso_lrnr <- Lrnr_glmnet$new(alpha = 1, family = "binomial", nfolds = 3)
+enet_lrnr <- Lrnr_glmnet$new(alpha = 0.5, family = "binomial", nfolds = 3)
+rf_lrnr <- Lrnr_ranger$new(num.trees = 200)
+
+# for HAL, use linear probability formulation, with bounding in unit interval
+hal_gaussian_lrnr <- Lrnr_hal9001$new(
+  family = "gaussian",
+  fit_control = list(
+    max_degree = 3,
+    n_folds = 3,
+    use_min = TRUE,
+    type.measure = "mse"
+  )
+)
+bound_lrnr <- Lrnr_bound$new(bound = 1e-6)
+hal_bounded_lrnr <- Pipeline$new(hal_gaussian_lrnr, bound_lrnr)
+
+# create learner library and instantiate super learner ensemble
+lrnr_lib <- Stack$new(
+  mean_lrnr, fglm_lrnr, enet_lrnr, lasso_lrnr,
+  rf_lrnr, hal_bounded_lrnr
+)
+sl_lrnr <- Lrnr_sl$new(learners = lrnr_lib, metalearner = Lrnr_nnls$new())
+\end{lstlisting}
+
+While we recommend the use of a Super Learner ensemble model like the one
+constructed above in practice, such a library will be too computationally
+intensive for our examples. To reduce computation time, we construct a simpler
+library, using only a subset of the above learning algorithms:
+
+\begin{lstlisting}[language=R]
+# create simpler learner library and instantiate super learner ensemble
+lrnr_lib <- Stack$new(mean_lrnr, fglm_lrnr, lasso_lrnr, rf_lrnr)
+sl_lrnr <- Lrnr_sl$new(learners = lrnr_lib, metalearner = Lrnr_nnls$new())
+\end{lstlisting}
+
+Having set up our ensemble learner, we're now ready to estimate each of the
+interventional effects using the efficient estimators exposed in the \passthrough{\lstinline!medoutcon!}
+package.
+
+\hypertarget{estimating-the-direct-effect-1}{%
+\subsubsection{Estimating the direct effect}\label{estimating-the-direct-effect-1}}
+
+We're now ready to estimate the interventional direct effect. This direct effect
+is computed as a contrast between the interventions \((a' = 1, a^{\star} = 0)\)
+and \((a' = 0, a^{\star} = 0)\). In particular, our efficient estimators of the
+interventional direct effect proceed by constructing estimators
+\(\hat{\theta}(a' = 1, a^{\star} = 0)\) and \(\hat{\theta}(a' = 0, a^{\star} = 0)\).
+Then, an efficient estimator of the direct effect is available by application
+of the delta method, that is, \(\hat{\theta}^{\text{DE}} = \hat{\theta}(a' = 1, a^{\star} = 0) - \hat{\theta}(a' = 0, a^{\star} = 0)\).
+Applying the same principle to the EIF estimates, one can derive variance
+estimates and construct asymptotically correct Wald-style confidence intervals
+for \(\hat{\theta}^{\text{DE}}\).
+
+The \passthrough{\lstinline!medoutcon!} package makes the estimation task quite simple, as only a single
+call to the eponymous \passthrough{\lstinline!medoutcon!} function is required. As demonstrated below,
+we need only feed in each component of the observed data \(O = (W, A, Z, M, Y)\)
+(of which \(W\) and \(M\) can be multivariate), specify the effect type, and the
+estimator. Additionally, for each nuisance parameter we may specify a separate
+regression function --- in the examples below, we use the simpler Super Learner
+ensemble constructed above for fitting each nuisance function, but this need not
+be the case (i.e., different estimators may be used for each nuisance function).
+
+First, we examine the one-step estimator of the interventional direct effect.
+Recall that the one-step estimator is constructed by adding the mean of the EIF
+(evaluated at initial estimates of the nuisance parameters) to the substitution
+estimator. As noted above, this is done separately for each of the two contrasts
+\((a' = 0, a^{\star} = 0)\) and \((a' = 1, a^{\star} = 0)\). Thus, the one-step
+estimator of this direct effect is constructed by application of the delta
+method to each of the one-step estimators (and EIFs) for these contrasts.
+
+\begin{lstlisting}[language=R]
+# compute one-step estimate of the interventional direct effect
+os_de <- medoutcon(
+  W = example_data[, ..w_names],
+  A = example_data$A,
+  Z = example_data$Z,
+  M = example_data[, ..m_names],
+  Y = example_data$Y,
+  g_learners = sl_lrnr,
+  h_learners = sl_lrnr,
+  b_learners = sl_lrnr,
+  q_learners = sl_lrnr,
+  r_learners = sl_lrnr,
+  effect = "direct",
+  estimator = "onestep",
+  estimator_args = list(cv_folds = 2)
+)
+summary(os_de)
+\end{lstlisting}
+
+Next, let's compare the one-step estimate to the TML estimate. Analogous to the
+case of the one-step estimator, the TML estimator can be evaluated via a single
+call to the \passthrough{\lstinline!medoutcon!} function:
+
+\begin{lstlisting}[language=R]
+# compute targeted minimum loss estimate of the interventional direct effect
+tmle_de <- medoutcon(
+  W = example_data[, ..w_names],
+  A = example_data$A,
+  Z = example_data$Z,
+  M = example_data[, ..m_names],
+  Y = example_data$Y,
+  g_learners = sl_lrnr,
+  h_learners = sl_lrnr,
+  b_learners = sl_lrnr,
+  q_learners = sl_lrnr,
+  r_learners = sl_lrnr,
+  effect = "direct",
+  estimator = "tmle",
+  estimator_args = list(cv_folds = 2, max_iter = 5)
+)
+summary(tmle_de)
+\end{lstlisting}
+
+Here, we recall that the TML
+estimator generally exhibits better finite-sample performance than the one-step
+estimator \citep{vdl2011targeted, vdl2018targeted}, so the TML estimate is likely to
+be more reliable in modest (realistic) sample sizes.
+
+\hypertarget{estimating-the-indirect-effect}{%
+\subsubsection{Estimating the indirect effect}\label{estimating-the-indirect-effect}}
+
+Estimation of the interventional indirect effect proceeds similarly to the
+strategy discussed above for the corresponding direct effect. An efficient
+estimator can be computed as a contrast between the interventions \((a' = 1, a^{\star} = 0)\) and \((a' = 1, a^{\star} = 1)\). Specifically, our efficient
+estimators of the interventional indirect effect proceed by constructing
+estimators \(\hat{\theta}(a' = 1, a^{\star} = 0)\) and \(\hat{\theta}(a' = 1, a^{\star} = 1)\). Then, application of the delta method yields an efficient
+estimator of the indirect effect, that is, \(\hat{\theta}^{\text{IE}} = \hat{\theta}(a' = 1, a^{\star} = 0) - \hat{\theta}(a' = 1, a^{\star} = 1)\). The
+same principle may be applied to the EIF estimates to derive variance estimates
+and construct asymptotically correct Wald-style confidence intervals for
+\(\hat{\theta}^{\text{IE}}\).
+
+Now, we examine the one-step estimator of the interventional indirect effect.
+The one-step estimator is constructed by adding the mean of the EIF
+(evaluated at initial estimates of the nuisance parameters) to the substitution
+estimator. As noted above, this is done separately for each of the two contrasts
+\((a' = 1, a^{\star} = 1)\) and \((a' = 1, a^{\star} = 0)\). Thus, the one-step
+estimator of this indirect effect is constructed by application of the delta
+method to each of the one-step estimators (and EIFs) for the contrasts.
+
+\begin{lstlisting}[language=R]
+# compute one-step estimate of the interventional indirect effect
+os_ie <- medoutcon(
+  W = example_data[, ..w_names],
+  A = example_data$A,
+  Z = example_data$Z,
+  M = example_data[, ..m_names],
+  Y = example_data$Y,
+  g_learners = sl_lrnr,
+  h_learners = sl_lrnr,
+  b_learners = sl_lrnr,
+  q_learners = sl_lrnr,
+  r_learners = sl_lrnr,
+  effect = "indirect",
+  estimator = "onestep"
+)
+summary(os_ie)
+\end{lstlisting}
+
+As before, let's compare the one-step estimate to the TML estimate. Analogous
+to the case of the one-step estimator, the TML estimator can be evaluated via a
+single call to the \passthrough{\lstinline!medoutcon!} function, as demonstrated below
+
+\begin{lstlisting}[language=R]
+# compute targeted minimum loss estimate of the interventional indirect effect
+tmle_ie <- medoutcon(
+  W = example_data[, ..w_names],
+  A = example_data$A,
+  Z = example_data$Z,
+  M = example_data[, ..m_names],
+  Y = example_data$Y,
+  g_learners = sl_lrnr,
+  h_learners = sl_lrnr,
+  b_learners = sl_lrnr,
+  q_learners = sl_lrnr,
+  r_learners = sl_lrnr,
+  effect = "indirect",
+  estimator = "tmle"
+)
+summary(tmle_ie)
+\end{lstlisting}
+
+As before, the TML estimator provides better finite-sample performance than the
+one-step estimator, so it may be preferred in this example.
 
   \bibliography{book.bib,packages.bib}
 
