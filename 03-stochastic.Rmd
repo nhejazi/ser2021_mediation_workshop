@@ -80,10 +80,12 @@ There are two possible ways of defining stochastic effects:
 - Consider the effect of an intervention where the exposure is drawn from a
   distribution
   - For example incremental propensity score interventions
+
+<!--KER this next bullet does not make sense to me-->
 - Consider the effect of an intervention where the post-intervention exposure is
   a function of the actually received exposure
   - For example modified treatment policies
-- In both cases $A\mid W$ is non-deterministic post-intervention, thus the name _stochastic intervention_
+- In both cases $A\mid W$ is a non-deterministic intervention, thus the name _stochastic intervention_
 
 ### Example: incremental propensity score interventions (IPSI) [@kennedy2018nonparametric] {-}
 
@@ -99,9 +101,9 @@ There are two possible ways of defining stochastic effects:
 - e.g., draw the post-intervention exposure from a Bernoulli variable with
   probability $g_\delta(1\mid w)$
 - The value $\delta$ is user given
-- Let $A_\delta$ denote the post-intervention distribution
+- Let $A_\delta$ denote the post-intervention exposure distribution
 - Some algebra shows that $\delta$ is an odds ratio comparing the pre- and
-  post-intervantion distributions
+  post-intervention exposure distributions
   \begin{equation*}
     \delta = \frac{\text{odds}(A_\delta = 1\mid W=w)}
     {\text{odds}(A = 1\mid W=w)}
@@ -114,7 +116,7 @@ There are two possible ways of defining stochastic effects:
 
 - Consider the effect of participation in sports on children's BMI
 - Mediation through snacking, exercising, etc.
-- Intervention: for each individual, increase the odds of participating in a
+- Intervention: for each individual, increase the odds of participating in
   sports by $\delta=2$
 - The post-intervention exposure is a draw $A_\delta$ from a Bernoulli
   distribution with probability $g_\delta(1\mid w)$
@@ -270,7 +272,7 @@ mean(direct)
   - Can be defined for non-binary exposures
   - Do not require a cross-world assumption
 
-- Still require the abscence of intermediate confounders
+- Still require the absence of intermediate confounders
   - But, compared to the NDE and NIE, we can design a randomized study where
     identifiability assumptions hold, at least in principle
   - There is a version of these effects that can accomodate intermediate
