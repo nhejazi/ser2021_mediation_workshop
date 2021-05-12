@@ -78,7 +78,7 @@ pscore <- function(w) plogis(1 - abs(w))
 ```
 
 - This yields a true NDE value of
-```{r, echo = FALSE, eval = FALSE}
+```{r, echo = TRUE, eval = FALSE}
 w_big <- runif(1e6, -1, 1)
 trueval <- mean((mean_y(1, 1, w_big) - mean_y(1, 0, w_big)) *
   mean_m(0, w_big) + (mean_y(0, 1, w_big) - mean_y(0, 0, w_big)) *
@@ -100,7 +100,7 @@ gcomp <- function(y, m, a, w) {
 }
 ```
 
-```{r, echo = FALSE, eval = FALSE}
+```{r, echo = TRUE, eval = FALSE}
 estimate <- numeric(1000)
 for (i in 1:1000) {
   n <- 1000
@@ -117,7 +117,7 @@ abline(v = trueval, col = "red", lwd = 4)
 ```
 
 - The bias also affects the confidence intervals:
-```{r, echo = FALSE, eval = FALSE, fig.height = 8, fig.width = 8}
+```{r, echo = TRUE, eval = FALSE, fig.height = 8, fig.width = 8}
 cis <- cbind(
   estimate - qnorm(0.975) * sd(estimate),
   estimate + qnorm(0.975) * sd(estimate)

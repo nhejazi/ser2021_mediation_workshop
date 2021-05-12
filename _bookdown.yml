@@ -20,5 +20,6 @@ rmd_files: [
   "04-how-to-choose.Rmd",
   "05-preliminaries-estimation.Rmd",
   "06-estimation-natural-interventional.Rmd",
+  "07-estimation-stochastic.Rmd",
   "references.Rmd"
 ]

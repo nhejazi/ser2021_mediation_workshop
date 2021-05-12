@@ -274,13 +274,15 @@ one_step <- function(y, m, a, w) {
 
 Let us first examine the bias
 
-```{r, echo = FALSE, eval = TRUE}
+
+- The true value is:
+
+```{r, echo = TRUE, eval = TRUE, class.source = 'fold-hide'}
 w_big <- runif(1e6, -1, 1)
 trueval <- mean((mean_y(1, 1, w_big) - mean_y(1, 0, w_big)) * mean_m(0, w_big) +
   (mean_y(0, 1, w_big) - mean_y(0, 0, w_big)) * (1 - mean_m(0, w_big)))
+print(trueval)
 ```
-
-- The true value is `r trueval`
 
 - Bias simulation
 ```{r, echo = TRUE, eval = FALSE}
@@ -301,7 +303,7 @@ abline(v = trueval, col = "red", lwd = 4)
 
 - And now the confidence intervals:
 
-```{r, echo = FALSE, eval = FALSE, fig.height = 8, fig.width = 8}
+```{r, echo = TRUE, eval = FALSE, fig.height = 8, fig.width = 8}
 cis <- cbind(
   estimate - qnorm(0.975) * sd(estimate),
   estimate + qnorm(0.975) * sd(estimate)
