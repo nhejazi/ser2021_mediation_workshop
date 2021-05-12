@@ -467,13 +467,13 @@ pred_a1z1 <- predict(lm_y, newdata = data.frame(m = m, a = 1, z = 1, w = w))
 ```
 - Now we fit the true model for $Z \mid A, W$ and get the conditional
   probability that $Z=1$ fixing $A=1$
-```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+```{r, echo = TRUE, eval = FALSE}
 prob_z <- lm(z ~ a)
 pred_z <- predict(prob_z, newdata = data.frame(a = 1))
 ```
 - Now we compute the following pseudo-outcome:
 \[\color{Goldenrod}{\sum_z}\color{ForestGreen}{\E(Y \mid A=a, Z=z, M, W)} \color{Goldenrod}{\P(Z=z \mid A=a, w)}\]
-```{r, echo = TRUE, eval = TRUE, cache = TRUE}
+```{r, echo = TRUE, eval = FALSE}
 pseudo_out <- pred_a1z0 * (1 - pred_z) + pred_a1z1 * pred_z
 ```
 - Now we regress this pseudo-outcome on $A,W$, and compute the predictions
