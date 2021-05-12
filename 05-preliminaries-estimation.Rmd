@@ -8,6 +8,7 @@
   - Many of these assumptions are empirically unverifiable
   - We saw an example where we could relax the cross-world assumption, at the
     cost of changing the parameter interpretation
+  - and where we could relax the positivity assumption, also at the cost of changing the parameter interpretation
 - The resulting estimation problem can be tackled using **statistical
   assumptions** of various degrees of strength
   - Most of these assumptions are verifiable (e.g., a linear model)
@@ -53,7 +54,7 @@ The above is how you would compute the _true value_ **if you know** the true
 ### How can g-estimation be implemented in practice?
 
 - There are two possible ways to do g-computation estimation:
-  - Using parametric models for the above regressions
+  - Using parametric models for the above regressions 
   - Using flexible data-adaptive regression (aka machine learning)
 
 ### Pros and cons of parametric models
@@ -86,7 +87,7 @@ trueval <- mean((mean_y(1, 1, w_big) - mean_y(1, 0, w_big)) *
 print(trueval)
 ```
 
-- Let's perform a simulation where we draw 1000 datasets from the above distribition, and compute a g-computation estimator based on
+- Let's perform a simulation where we draw 1000 datasets from the above distribution, and compute a g-computation estimator based on
 ```{r, echo = TRUE, eval = FALSE}
 gcomp <- function(y, m, a, w) {
   lm_y <- lm(y ~ m + a + w)
@@ -157,6 +158,7 @@ text(450, 0.01, paste0(
 
 
 ## Semiparametric estimation (or correcting the bias of g-computation estimators)
+<!--KER this may be just me, but I'm not sure the "incorrect bias/variance tradeoff" argument will be super concrete for folks. I think maybe a more concrete/motivating argument would be to say that we want to use data adaptive methods because we don't know how to correctly specify all our models. we also want valid standard errors and confidence intervals. to do this, we need to use semiparametric estimation-->
 
 - G-computation estimation with data-adaptive regression offers an incorrect
     bias/variance trade-off
@@ -178,12 +180,9 @@ for some function $D(O_i)$ of the data
 - In this workshop we will omit the specific form of $D(O)$ for
   some of the parameters that we use
 - But the estimators we discuss and implement in the R packages will be based on
-  theser EIFs
+  these EIFs
 - And the specific form of the EIF may be found in papers in the references
 
 Note: the bias correction above may have an additional problem of returning parameter estimates outside of natural bounds. E.g., probabilities greater than one. A solution to this (not discussed in this workshop) is targeted minimum loss based estimation.
 
 
-<!--
-KER: I don't find the below helpful
--->
