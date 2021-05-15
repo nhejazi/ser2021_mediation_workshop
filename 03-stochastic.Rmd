@@ -278,7 +278,7 @@ mean(direct)
     identifiability assumptions hold, at least in principle
   - There is a version of these effects that can accomodate intermediate
     confounders [@hejazi2020nonparametric]
-  - `R` implementation to be released soon, stay tuned!
+  - `R` implementation to be released soon...stay tuned!
 
 <!--
 ID: Should I add: continuous interventions, and/or the definitions of effects
