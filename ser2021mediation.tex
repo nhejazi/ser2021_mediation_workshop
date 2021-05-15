@@ -206,7 +206,7 @@
 
 \title{{[}SER 2021 Workshop{]} Causal Mediation: Modern Methods for Path Analysis}
 \author{Iván Díaz, Nima Hejazi, Kara Rudolph}
-\date{updated: May 12, 2021}
+\date{updated: May 15, 2021}
 
 \begin{document}
 \maketitle
@@ -243,6 +243,9 @@ Meeting} on
 Monday, 24 May 2021. While we encourage use of this \passthrough{\lstinline!bookdown!} site, for
 convenience, we have also made these workshop materials \href{https://code.nimahejazi.org/ser2021_mediation_workshop/ser2021mediation.pdf}{available in
 PDF}.
+Discussion will take place \emph{on Slack} -- first join the workspace
+\href{https://join.slack.com/t/moderncausalmediation/shared_invite/zt-qd2ocx45-XlKvMA9FXlsixnwI7VnbHQ}{here},
+then the ``\#ser2021'' channel.
 
 \hypertarget{about}{%
 \section{About this workshop}\label{about}}
@@ -277,23 +280,25 @@ parameter estimable from the observed data distribution). Familiarity with the
 \begin{itemize}
 \tightlist
 \item
-  10:00A-10:30A: introductions/mediation set up
+  10:00A-10:30A: introductions/mediation set up 
 \item
-  10:30A-11:15A: controlled direct effects, natural direct and indirect effects, interventional direct and indirect effects
+  10:30A-11:15A: controlled direct effects, natural direct and indirect effects,
+  interventional direct and indirect effects 
 \item
-  11:15A-11:45A: stochastic mediation estimands
+  11:15A-11:45A: stochastic mediation estimands 
 \item
-  11:45A-12:00P: how to choose an estimand in real-world examples
+  11:45A-12:00P: how to choose an estimand in real-world examples 
 \item
   12:00P-12:15P break/discussion
 \item
-  12:15P-12:45P: what is the EIF
+  12:15P-12:45P: what is the EIF 
 \item
-  12:45P-01:00P: using the EIF for estimating the natural direct effect
+  12:45P-01:00P: using the EIF for estimating the natural direct
+  effect 
 \item
-  01:00P-01:45P: practice: \passthrough{\lstinline!R!} code for estimation
+  01:00P-01:45P: practice: \passthrough{\lstinline!R!} code for estimation 
 \item
-  01:45P-02:00P wrap up
+  01:45P-02:00P: Wrap-up
 \end{itemize}
 
 \textbf{NOTE: All times listed in Pacific Time.}
@@ -305,13 +310,12 @@ parameter estimable from the observed data distribution). Familiarity with the
 \subsection*{Iván Díaz}\label{ivuxe1n-duxedaz}}
 
 
-I am an Assistant Professor at Weill Cornel Medicine. My research
-focuses on the development of non-parametric statistical methods for
-causal inference from observational and randomized studies with
-complex datasets, using machine learning. This includes but is not
-limited to mediation analysis, methods for continuous exposures,
-longitudinal data including survival analysis, and efficiency
-guarantees with covariate adjustment in randomized trials. I am also
+I am an Assistant Professor at Weill Cornel Medicine. My research focuses on the
+development of non-parametric statistical methods for causal inference from
+observational and randomized studies with complex datasets, using machine
+learning. This includes but is not limited to mediation analysis, methods for
+continuous exposures, longitudinal data including survival analysis, and
+efficiency guarantees with covariate adjustment in randomized trials. I am also
 interested in general semi-parametric theory, machine learning, and
 high-dimensional data.
 
@@ -322,13 +326,11 @@ high-dimensional data.
 I am a PhD candidate in biostatistics at UC Berkeley, working under the joint
 direction of Mark van der Laan and Alan Hubbard. My research interests fall at
 the intersection of causal inference and machine learning, drawing on ideas from
-non/semi-parametric estimation in large, flexible statistical models to develop
-efficient and robust statistical procedures for evaluating complex target
-estimands in observational and randomized studies. Particular areas of current
-emphasis include causal mediation/path analysis, outcome-dependent sampling
-designs, targeted loss-based estimation, and applications in vaccine efficacy
-trials. I am also passionate about statistical computing and open source
-software development for applied statistics.
+non/semi-parametric estimation in large, flexible statistical models. Particular
+areas of current emphasis include causal mediation analysis, corrections for
+outcome-dependent sampling designs, targeted loss-based estimation, and
+applications in vaccine efficacy trials. I am also passionate about statistical
+computing and open source software development for applied statistics.
 
 \hypertarget{kara-rudolph}{%
 \subsection*{Kara Rudolph}\label{kara-rudolph}}
@@ -1636,7 +1638,7 @@ mean(direct)
     There is a version of these effects that can accomodate intermediate
     confounders \citep{hejazi2020nonparametric}
   \item
-    \passthrough{\lstinline!R!} implementation to be released soon, stay tuned!
+    \passthrough{\lstinline!R!} implementation to be released soon\ldots stay tuned!
   \end{itemize}
 \end{itemize}
 
