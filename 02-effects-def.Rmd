@@ -108,7 +108,7 @@ lm_y <- lm(y ~ m + a + w)
 - Assume we would like the CDE at $m=0$
 - Then we generate predictions \[\color{ForestGreen}{\E(Y \mid A=1, M=m, W)}
   \text{ and }\color{ForestGreen}{\E(Y \mid A=0, M=m, W)}:\]
-```{r, echo = TRUE, eval = FALSE}
+```{r}
 pred_y1 <- predict(lm_y, newdata = data.frame(a = 1, m = 0, w = w))
 pred_y0 <- predict(lm_y, newdata = data.frame(a = 0, m = 0, w = w))
 ```
