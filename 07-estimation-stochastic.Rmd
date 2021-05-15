@@ -13,7 +13,7 @@ CRAN](https://CRAN.R-project.org/package=mma). First, let's load the packages
 we'll be using and set a seed; then, load this data set and take a quick look
 at it
 
-```{r load_data, message=FALSE, warning=FALSE}
+```{r load_data}
 # preliminaries
 library(data.table)
 library(dplyr)
@@ -41,7 +41,7 @@ to fully make of the observed data, perhaps by imputing missing values. For now,
 we simply remove the incomplete observations, resulting in a data set with fewer
 observations but much the same structure as the original:
 
-```{r remove_na, echo=FALSE, message=FALSE, warning=FALSE}
+```{r remove_na}
 # remove missing values
 is_na <- unique(do.call(c, apply(apply(weight_behavior, 2, is.na), 2, which)))
 weight_behavior_complete <- weight_behavior[-is_na, ]
@@ -58,7 +58,7 @@ all other collected covariates as potential confounders. Considering an NPSEM,
 we separate the observed variables from the data set into their corresponding
 nodes as follows
 
-```{r npsem, message=FALSE, warning=FALSE}
+```{r npsem}
 Y <- weight_behavior_complete$bmi
 A <- weight_behavior_complete$sports
 Z <- weight_behavior_complete %>%
@@ -79,7 +79,7 @@ participate in sports teams. To exemplify our approach, we postulate a
 motivational intervention that _triples the odds_ of participating in a sports
 team for each individual:
 
-```{r delta_ipsi, message=FALSE, warning=FALSE}
+```{r delta_ipsi}
 delta_shift_ipsi <- 3
 ```
 
@@ -91,7 +91,7 @@ https://tlverse.org (and https://github.com/tlverse) for the `tlverse`
 ecosystem, of which `sl3` is a major part. We construct an ensemble learner
 using a handful of popular machine learning algorithms below
 
-```{r make_sl1, message=FALSE, warning=FALSE, eval=FALSE}
+```{r make_sl1, eval=FALSE}
 # SL learners used for continuous data (the nuisance parameter M)
 xgb_contin_lrnr <- Lrnr_xgboost$new(nrounds = 50, objective = "reg:linear")
 enet_contin_lrnr <- Lrnr_glmnet$new(
@@ -194,7 +194,7 @@ which is implemented in the `medshift` R package. We make use of that
 implementation to estimate $\mathbb{E}\{Y(A_{\delta}, Z)\}$ via its one-step
 estimator $\hat{\theta}(\delta)$ below
 
-```{r efficient_est, message=FALSE, warning=FALSE, eval=FALSE}
+```{r efficient_est, eval=FALSE}
 # let's compute the parameter where A (but not Z) are shifted
 theta_eff <- medshift(
   W = W, A = A, Z = Z, Y = Y,
@@ -225,7 +225,7 @@ Based on the above, we may construct an estimator of the PIDE using quantities
 already computed. The convenience function below applies the simple delta method
 required in the case of a linear contrast between the two constituent
 parameters:
-```{r linear_contrast_delta, message=FALSE, warning=FALSE, eval=FALSE}
+```{r linear_contrast_delta, eval=FALSE}
 # convenience function to compute inference via delta method: EY1 - EY0
 linear_contrast <- function(params, eifs, ci_level = 0.95) {
   # bounds for confidence interval
@@ -243,7 +243,7 @@ linear_contrast <- function(params, eifs, ci_level = 0.95) {
 
 With the above convenience function in hand, we'll construct or extract the
 necessary components from existing objects and simply apply the function:
-```{r comp_de_binary, message=FALSE, warning=FALSE, eval=FALSE}
+```{r comp_de_binary, eval=FALSE}
 # parameter estimates and EIFs for components of direct effect
 EY <- mean(Y)
 eif_EY <- Y - EY
@@ -579,7 +579,7 @@ $(a' = 0, a^{\star} = 0)$ and $(a' = 1, a^{\star} = 0)$. Thus, the one-step
 estimator of this direct effect is constructed by application of the delta
 method to each of the one-step estimators (and EIFs) for these contrasts.
 
-```{r de_os}
+```{r de_os, eval=FALSE}
 # compute one-step estimate of the interventional direct effect
 os_de <- medoutcon(
   W = example_data[, ..w_names],
@@ -603,7 +603,7 @@ Next, let's compare the one-step estimate to the TML estimate. Analogous to the
 case of the one-step estimator, the TML estimator can be evaluated via a single
 call to the `medoutcon` function:
 
-```{r de_tmle}
+```{r de_tmle, eval=FALSE}
 # compute targeted minimum loss estimate of the interventional direct effect
 tmle_de <- medoutcon(
   W = example_data[, ..w_names],
@@ -623,10 +623,10 @@ tmle_de <- medoutcon(
 summary(tmle_de)
 ```
 
-Here, we recall that the TML
-estimator generally exhibits better finite-sample performance than the one-step
-estimator [@vdl2011targeted; @vdl2018targeted], so the TML estimate is likely to
-be more reliable in modest (realistic) sample sizes.
+Here, we recall that the TML estimator generally exhibits better finite-sample
+performance than the one-step estimator [@vdl2011targeted; @vdl2018targeted], so
+the TML estimate is likely to be more reliable in modest (realistic) sample
+sizes.
 
 #### Estimating the indirect effect
 
@@ -651,7 +651,7 @@ $(a' = 1, a^{\star} = 1)$ and $(a' = 1, a^{\star} = 0)$. Thus, the one-step
 estimator of this indirect effect is constructed by application of the delta
 method to each of the one-step estimators (and EIFs) for the contrasts.
 
-```{r ie_os}
+```{r ie_os, eval=FALSE}
 # compute one-step estimate of the interventional indirect effect
 os_ie <- medoutcon(
   W = example_data[, ..w_names],
@@ -674,7 +674,7 @@ As before, let's compare the one-step estimate to the TML estimate. Analogous
 to the case of the one-step estimator, the TML estimator can be evaluated via a
 single call to the `medoutcon` function, as demonstrated below
 
-```{r ie_tmle}
+```{r ie_tmle, eval=FALSE}
 # compute targeted minimum loss estimate of the interventional indirect effect
 tmle_ie <- medoutcon(
   W = example_data[, ..w_names],

@@ -94,7 +94,7 @@ identified:
 $$ \E(Y_{1,m} - Y_{0,m}) = \E\{\color{ForestGreen}{\E(Y \mid A=1, M=m, W) - \E(Y \mid A=0, M=m, W)}\}$$
 
 - For intuition about this formula in R, let's continue with a toy example:
-```{r, echo = TRUE, eval = FALSE}
+```{r}
 n <- 1e6
 w <- rnorm(n)
 a <- rbinom(n, 1, 0.5)
@@ -102,7 +102,7 @@ m <- rnorm(n, w + a)
 y <- rnorm(n, w + a + m)
 ```
 - First we fit a correct model for the outcome
-```{r, echo = TRUE, eval = FALSE}
+```{r}
 lm_y <- lm(y ~ m + a + w)
 ```
 - Assume we would like the CDE at $m=0$
@@ -115,7 +115,7 @@ pred_y0 <- predict(lm_y, newdata = data.frame(a = 0, m = 0, w = w))
 - Then we compute the difference between the predicted values
   $\color{ForestGreen}{\E(Y \mid A=1, M=m, W) - \E(Y \mid A=0, M=m, W)}$, and
   average across values of $W$
-```{r, echo = TRUE, eval = FALSE}
+```{r}
 ## CDE at m = 0
 mean(pred_y1 - pred_y0)
 ```
@@ -242,7 +242,7 @@ lm_y <- lm(y ~ m + a + w)
   \text{ and }\color{ForestGreen}{\E(Y \mid A=0, M, W)}\] with $A$ fixed but
   letting $M$ and $W$ take their observed
 values
-```{r, echo = TRUE, eval = FALSE}
+```{r}
 pred_y1 <- predict(lm_y, newdata = data.frame(a = 1, m = m, w = w))
 pred_y0 <- predict(lm_y, newdata = data.frame(a = 0, m = m, w = w))
 ```
@@ -253,14 +253,14 @@ pred_y0 <- predict(lm_y, newdata = data.frame(a = 0, m = m, w = w))
   A=0, M, W)}\color{Goldenrod}{\mid A=0,W\}}\]
 
 
-```{r, echo = TRUE, eval = FALSE}
+```{r}
 pseudo <- pred_y1 - pred_y0
 lm_pseudo <- lm(pseudo ~ a + w)
 ```
 
 - Now we predict the value of this pseudo-outcome under $A=0$, and average the
   result
-```{r, echo = TRUE, eval = FALSE}
+```{r}
 pred_pseudo <- predict(lm_pseudo, newdata = data.frame(a = 0, w = w))
 ## NDE:
 mean(pred_pseudo)
@@ -485,7 +485,7 @@ pred_a1z1 <- predict(lm_y, newdata = data.frame(m = m, a = 1, z = 1, w = w))
 
 - Now we fit the true model for $Z \mid A, W$ and get the conditional
   probability that $Z=1$ fixing $A=1$
-```{r, echo = TRUE, eval = FALSE}
+```{r}
 prob_z <- lm(z ~ a)
 pred_z <- predict(prob_z, newdata = data.frame(a = 1))
 ```

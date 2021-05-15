@@ -44,7 +44,7 @@ about what is crucial to include vs not.
 - We'll generate a really large sample from a data generating mechanism so that
   we are not concerned with sampling errors
 ```{r}
-n <- 1e7
+n <- 1e6
 w <- rnorm(n)
 a <- rbinom(n, 1, 0.5)
 z <- rbinom(n, 1, 0.2 * a + 0.3)
