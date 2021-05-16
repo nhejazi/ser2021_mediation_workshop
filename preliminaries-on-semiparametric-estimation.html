@@ -203,9 +203,11 @@ g-computation estimator in a simple situation</li>
 <span class="va">trueval</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="op">(</span><span class="fu">mean_y</span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="va">w_big</span><span class="op">)</span> <span class="op">-</span> <span class="fu">mean_y</span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="va">w_big</span><span class="op">)</span><span class="op">)</span> <span class="op">*</span>
   <span class="fu">mean_m</span><span class="op">(</span><span class="fl">0</span>, <span class="va">w_big</span><span class="op">)</span> <span class="op">+</span> <span class="op">(</span><span class="fu">mean_y</span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="va">w_big</span><span class="op">)</span> <span class="op">-</span> <span class="fu">mean_y</span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="va">w_big</span><span class="op">)</span><span class="op">)</span> <span class="op">*</span>
     <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fu">mean_m</span><span class="op">(</span><span class="fl">0</span>, <span class="va">w_big</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">trueval</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">trueval</span><span class="op">)</span>
+<span class="co">#&gt; [1] 0.58048</span></code></pre></div>
 <ul>
-<li>Let’s perform a simulation where we draw 1000 datasets from the above distribution, and compute a g-computation estimator based on</li>
+<li>Let’s perform a simulation where we draw 1000 datasets from the above
+distribution, and compute a g-computation estimator based on</li>
 </ul>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">gcomp</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">y</span>, <span class="va">m</span>, <span class="va">a</span>, <span class="va">w</span><span class="op">)</span> <span class="op">{</span>
@@ -219,19 +221,20 @@ g-computation estimator in a simple situation</li>
   <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">estimate</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">numeric</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span>
-<span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">1000</span><span class="op">)</span> <span class="op">{</span>
+<code class="sourceCode R"><span class="va">estimate</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_len</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">iter</span><span class="op">)</span> <span class="op">{</span>
   <span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">1000</span>
   <span class="va">w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="va">n</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>
   <span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">1</span>, <span class="fu">pscore</span><span class="op">(</span><span class="va">w</span><span class="op">)</span><span class="op">)</span>
   <span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">1</span>, <span class="fu">mean_m</span><span class="op">(</span><span class="va">a</span>, <span class="va">w</span><span class="op">)</span><span class="op">)</span>
   <span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">n</span>, <span class="fu">mean_y</span><span class="op">(</span><span class="va">m</span>, <span class="va">a</span>, <span class="va">w</span><span class="op">)</span><span class="op">)</span>
-
-  <span class="va">estimate</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">gcomp</span><span class="op">(</span><span class="va">y</span>, <span class="va">m</span>, <span class="va">a</span>, <span class="va">w</span><span class="op">)</span>
-<span class="op">}</span>
+  <span class="va">est</span> <span class="op">&lt;-</span> <span class="fu">gcomp</span><span class="op">(</span><span class="va">y</span>, <span class="va">m</span>, <span class="va">a</span>, <span class="va">w</span><span class="op">)</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">est</span><span class="op">)</span>
+<span class="op">}</span><span class="op">)</span>
+<span class="va">estimate</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html">do.call</a></span><span class="op">(</span><span class="va">c</span>, <span class="va">estimate</span><span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/abline.html">abline</a></span><span class="op">(</span>v <span class="op">=</span> <span class="va">trueval</span>, col <span class="op">=</span> <span class="st">"red"</span>, lwd <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="05-preliminaries-estimation_files/figure-html/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;"></div>
 <ul>
 <li>The bias also affects the confidence intervals:</li>
 </ul>
@@ -258,6 +261,7 @@ g-computation estimator in a simple situation</li>
   <span class="st">"Coverage probability = "</span>,
   <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">lower</span> <span class="op">&lt;</span> <span class="va">trueval</span> <span class="op">&amp;</span> <span class="va">trueval</span> <span class="op">&lt;</span> <span class="va">upper</span><span class="op">)</span>, <span class="st">"%"</span>
 <span class="op">)</span>, cex <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="05-preliminaries-estimation_files/figure-html/unnamed-chunk-5-1.png" width="80%" style="display: block; margin: auto;"></div>
 </div>
 <div id="pros-and-cons-of-g-computation-with-data-adaptive-regression" class="section level3">
 <h3>
@@ -361,7 +365,7 @@ loss based estimation.</p>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: May 15, 2021.</p>
+    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: May 16, 2021.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

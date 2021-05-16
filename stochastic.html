@@ -68,6 +68,12 @@
 <span class="header-section-number">3.1</span> Definition of the effects<a class="anchor" aria-label="anchor" href="#definition-of-the-effects"><i class="fas fa-link"></i></a>
 </h2>
 <p>Consider the following directed acyclic graph.</p>
+<div class="figure" style="text-align: center">
+<span id="fig:unnamed-chunk-1"></span>
+<img src="03-stochastic_files/figure-html/unnamed-chunk-1-1.png" alt="Directed acyclic graph under no intermediate confounders of the mediator-outcome relation affected by treatment" width="80%"><p class="caption">
+FIGURE 2.1: Directed acyclic graph under no intermediate confounders of the mediator-outcome relation affected by treatment
+</p>
+</div>
 </div>
 <div id="motivation-for-stochastic-interventions" class="section level2">
 <h2>
@@ -293,6 +299,7 @@ propensity score <span class="math inline">\(g_\delta(1\mid w)\)</span>
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">pscore</span>, <span class="va">pscore_delta</span>, xlab <span class="op">=</span> <span class="st">'Observed prop. score'</span>,
      ylab <span class="op">=</span> <span class="st">'Prop. score under intervention'</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/abline.html">abline</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="03-stochastic_files/figure-html/unnamed-chunk-7-1.png" width="80%" style="display: block; margin: auto;"></div>
 </div>
 <div id="what-are-the-odds-of-exposure-under-intervention-vs-real-world" class="section level2">
 <h2>
@@ -300,7 +307,9 @@ propensity score <span class="math inline">\(g_\delta(1\mid w)\)</span>
 </h2>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">odds</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">pscore_delta</span> <span class="op">/</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">pscore_delta</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="va">pscore</span> <span class="op">/</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">pscore</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">odds</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">odds</span><span class="op">)</span>
+<span class="co">#&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
+<span class="co">#&gt;       2       2       2       2       2       2</span></code></pre></div>
 <ul>
 <li>Compute the sum
 <span class="math display">\[\color{Goldenrod}{\sum_{a}\color{ForestGreen}{\{\E(Y\mid A=a, W)-\E(Y\mid A=a, M, W)\}}g_\delta(a\mid W)}\]</span>
@@ -313,7 +322,8 @@ propensity score <span class="math inline">\(g_\delta(1\mid w)\)</span>
 </ul>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## E[Y(Adelta) - Y(Adelta, M)]</span>
-<span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">indirect</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">indirect</span><span class="op">)</span>
+<span class="co">#&gt; [1] 0.1091</span></code></pre></div>
 <ul>
 <li><p>The direct effect is
 <span class="math display">\[\begin{align*}
@@ -325,7 +335,8 @@ propensity score <span class="math inline">\(g_\delta(1\mid w)\)</span>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">direct</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="va">pred_y1_a1</span> <span class="op">-</span> <span class="va">y</span><span class="op">)</span> <span class="op">*</span> <span class="va">pscore_delta</span> <span class="op">+</span>
        <span class="op">(</span><span class="va">pred_y1_a0</span> <span class="op">-</span> <span class="va">y</span><span class="op">)</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">pscore_delta</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">direct</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">direct</span><span class="op">)</span>
+<span class="co">#&gt; [1] 0.10934</span></code></pre></div>
 </div>
 <div id="summary" class="section level2">
 <h2>
@@ -398,7 +409,7 @@ right? So probably wouldn't want to get into that.
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: May 15, 2021.</p>
+    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: May 16, 2021.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

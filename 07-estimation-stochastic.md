@@ -26,7 +26,22 @@ set.seed(429153)
 # load and examine data
 data(weight_behavior)
 dim(weight_behavior)
+#> [1] 691  15
 head(weight_behavior)
+#>      bmi  age sex  race numpeople car gotosch snack tvhours cmpthours cellhours
+#> 1 18.207 12.2   F OTHER         5   3       2     1       4         0         0
+#> 2 22.784 12.8   M OTHER         4   3       2     1       4         2         0
+#> 3 19.607 12.6   F OTHER         4   2       4     2      NA        NA        NA
+#> 4 25.568 12.1   M OTHER         2   3       2     1       0         2         0
+#> 5 15.074 12.3   M OTHER         4   1       2     1       2         1         3
+#> 6 22.983 11.8   M OTHER         4   1       1     1       4         3         2
+#>   sports exercises sweat overweigh
+#> 1      2         2     1         0
+#> 2      1         8     2         0
+#> 3   <NA>         4     2         0
+#> 4      2         9     1         1
+#> 5      1        12     1         0
+#> 6      1         1     1         0
 ```
 
 The documentation for the data set describes it as a "database obtained from the
@@ -43,6 +58,30 @@ we simply remove the incomplete observations, resulting in a data set with fewer
 observations but much the same structure as the original:
 
 
+```r
+# remove missing values
+is_na <- unique(do.call(c, apply(apply(weight_behavior, 2, is.na), 2, which)))
+weight_behavior_complete <- weight_behavior[-is_na, ]
+weight_behavior_complete$sports <-
+  as.numeric(weight_behavior_complete$sports) - 1
+dim(weight_behavior_complete)
+#> [1] 567  15
+head(weight_behavior_complete)
+#>      bmi  age sex  race numpeople car gotosch snack tvhours cmpthours cellhours
+#> 1 18.207 12.2   F OTHER         5   3       2     1       4         0         0
+#> 2 22.784 12.8   M OTHER         4   3       2     1       4         2         0
+#> 4 25.568 12.1   M OTHER         2   3       2     1       0         2         0
+#> 5 15.074 12.3   M OTHER         4   1       2     1       2         1         3
+#> 6 22.983 11.8   M OTHER         4   1       1     1       4         3         2
+#> 8 19.157 12.1   F OTHER         3   3       2     1       0         0         1
+#>   sports exercises sweat overweigh
+#> 1      1         2     1         0
+#> 2      0         8     2         0
+#> 4      1         9     1         1
+#> 5      0        12     1         0
+#> 6      0         1     1         0
+#> 8      0         1     3         0
+```
 
 For the analysis of this observational data set, we focus on the effect of
 participating in a sports team (`sports`) on the BMI of children (`bmi`), taking
@@ -465,6 +504,13 @@ Now, let's take a quick look at our simulated data:
 ```r
 # quick look at the data
 head(example_data)
+#>    W_1 W_2 W_3 A Z M Y
+#> 1:   0   0   1 0 0 0 1
+#> 2:   0   1   1 0 0 0 1
+#> 3:   1   1   0 0 1 1 1
+#> 4:   1   0   1 0 1 0 0
+#> 5:   0   0   0 1 1 1 1
+#> 6:   1   0   1 1 0 1 1
 ```
 
 As noted above, all covariates in our dataset are binary; however, note that
@@ -629,10 +675,10 @@ tmle_de <- medoutcon(
 summary(tmle_de)
 ```
 
-Here, we recall that the TML
-estimator generally exhibits better finite-sample performance than the one-step
-estimator [@vdl2011targeted; @vdl2018targeted], so the TML estimate is likely to
-be more reliable in modest (realistic) sample sizes.
+Here, we recall that the TML estimator generally exhibits better finite-sample
+performance than the one-step estimator [@vdl2011targeted; @vdl2018targeted], so
+the TML estimate is likely to be more reliable in modest (realistic) sample
+sizes.
 
 #### Estimating the indirect effect
 

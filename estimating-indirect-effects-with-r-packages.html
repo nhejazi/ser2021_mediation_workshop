@@ -88,7 +88,22 @@ at it</p>
 <span class="co"># load and examine data</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">weight_behavior</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">weight_behavior</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">weight_behavior</span><span class="op">)</span></code></pre></div>
+<span class="co">#&gt; [1] 691  15</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">weight_behavior</span><span class="op">)</span>
+<span class="co">#&gt;      bmi  age sex  race numpeople car gotosch snack tvhours cmpthours cellhours</span>
+<span class="co">#&gt; 1 18.207 12.2   F OTHER         5   3       2     1       4         0         0</span>
+<span class="co">#&gt; 2 22.784 12.8   M OTHER         4   3       2     1       4         2         0</span>
+<span class="co">#&gt; 3 19.607 12.6   F OTHER         4   2       4     2      NA        NA        NA</span>
+<span class="co">#&gt; 4 25.568 12.1   M OTHER         2   3       2     1       0         2         0</span>
+<span class="co">#&gt; 5 15.074 12.3   M OTHER         4   1       2     1       2         1         3</span>
+<span class="co">#&gt; 6 22.983 11.8   M OTHER         4   1       1     1       4         3         2</span>
+<span class="co">#&gt;   sports exercises sweat overweigh</span>
+<span class="co">#&gt; 1      2         2     1         0</span>
+<span class="co">#&gt; 2      1         8     2         0</span>
+<span class="co">#&gt; 3   &lt;NA&gt;         4     2         0</span>
+<span class="co">#&gt; 4      2         9     1         1</span>
+<span class="co">#&gt; 5      1        12     1         0</span>
+<span class="co">#&gt; 6      1         1     1         0</span></code></pre></div>
 <p>The documentation for the data set describes it as a “database obtained from the
 Louisiana State University Health Sciences Center, New Orleans, by Dr. Richard
 Scribner. He explored the relationship between BMI and kids behavior through a
@@ -100,13 +115,36 @@ the time being. Note that in a real data analysis, we might consider strategies
 to fully make of the observed data, perhaps by imputing missing values. For now,
 we simply remove the incomplete observations, resulting in a data set with fewer
 observations but much the same structure as the original:</p>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># remove missing values</span>
+<span class="va">is_na</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/duplicated.html">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html">do.call</a></span><span class="op">(</span><span class="va">c</span>, <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">weight_behavior</span>, <span class="fl">2</span>, <span class="va">is.na</span><span class="op">)</span>, <span class="fl">2</span>, <span class="va">which</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="va">weight_behavior_complete</span> <span class="op">&lt;-</span> <span class="va">weight_behavior</span><span class="op">[</span><span class="op">-</span><span class="va">is_na</span>, <span class="op">]</span>
+<span class="va">weight_behavior_complete</span><span class="op">$</span><span class="va">sports</span> <span class="op">&lt;-</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">weight_behavior_complete</span><span class="op">$</span><span class="va">sports</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span>
+<span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">weight_behavior_complete</span><span class="op">)</span>
+<span class="co">#&gt; [1] 567  15</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">weight_behavior_complete</span><span class="op">)</span>
+<span class="co">#&gt;      bmi  age sex  race numpeople car gotosch snack tvhours cmpthours cellhours</span>
+<span class="co">#&gt; 1 18.207 12.2   F OTHER         5   3       2     1       4         0         0</span>
+<span class="co">#&gt; 2 22.784 12.8   M OTHER         4   3       2     1       4         2         0</span>
+<span class="co">#&gt; 4 25.568 12.1   M OTHER         2   3       2     1       0         2         0</span>
+<span class="co">#&gt; 5 15.074 12.3   M OTHER         4   1       2     1       2         1         3</span>
+<span class="co">#&gt; 6 22.983 11.8   M OTHER         4   1       1     1       4         3         2</span>
+<span class="co">#&gt; 8 19.157 12.1   F OTHER         3   3       2     1       0         0         1</span>
+<span class="co">#&gt;   sports exercises sweat overweigh</span>
+<span class="co">#&gt; 1      1         2     1         0</span>
+<span class="co">#&gt; 2      0         8     2         0</span>
+<span class="co">#&gt; 4      1         9     1         1</span>
+<span class="co">#&gt; 5      0        12     1         0</span>
+<span class="co">#&gt; 6      0         1     1         0</span>
+<span class="co">#&gt; 8      0         1     3         0</span></code></pre></div>
 <p>For the analysis of this observational data set, we focus on the effect of
 participating in a sports team (<code>sports</code>) on the BMI of children (<code>bmi</code>), taking
 several related covariates as mediators (<code>snack</code>, <code>exercises</code>, <code>overweigh</code>) and
 all other collected covariates as potential confounders. Considering an NPSEM,
 we separate the observed variables from the data set into their corresponding
 nodes as follows</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">Y</span> <span class="op">&lt;-</span> <span class="va">weight_behavior_complete</span><span class="op">$</span><span class="va">bmi</span>
 <span class="va">A</span> <span class="op">&lt;-</span> <span class="va">weight_behavior_complete</span><span class="op">$</span><span class="va">sports</span>
 <span class="va">Z</span> <span class="op">&lt;-</span> <span class="va">weight_behavior_complete</span> <span class="op">%&gt;%</span>
@@ -124,7 +162,7 @@ interpreted as the effect of a school program that motivates children to
 participate in sports teams. To exemplify our approach, we postulate a
 motivational intervention that <em>triples the odds</em> of participating in a sports
 team for each individual:</p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">delta_shift_ipsi</span> <span class="op">&lt;-</span> <span class="fl">3</span></code></pre></div>
 <p>To easily incorporate ensemble machine learning into the estimation procedure,
 we rely on the facilities provided in the <a href="https://tlverse.org/sl3"><code>sl3</code> R
@@ -133,7 +171,7 @@ the <code>sl3</code> R package, consider consulting <a href="https://tlverse.org
 <a href="https://tlverse.org" class="uri">https://tlverse.org</a> (and <a href="https://github.com/tlverse" class="uri">https://github.com/tlverse</a>) for the <code>tlverse</code>
 ecosystem, of which <code>sl3</code> is a major part. We construct an ensemble learner
 using a handful of popular machine learning algorithms below</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># SL learners used for continuous data (the nuisance parameter M)</span>
 <span class="va">xgb_contin_lrnr</span> <span class="op">&lt;-</span> <span class="va"><a href="https://tlverse.org/sl3/reference/Lrnr_xgboost.html">Lrnr_xgboost</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>nrounds <span class="op">=</span> <span class="fl">50</span>, objective <span class="op">=</span> <span class="st">"reg:linear"</span><span class="op">)</span>
 <span class="va">enet_contin_lrnr</span> <span class="op">&lt;-</span> <span class="va"><a href="https://tlverse.org/sl3/reference/Lrnr_glmnet.html">Lrnr_glmnet</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
@@ -236,7 +274,7 @@ estimator is
 which is implemented in the <code>medshift</code> R package. We make use of that
 implementation to estimate <span class="math inline">\(\mathbb{E}\{Y(A_{\delta}, Z)\}\)</span> via its one-step
 estimator <span class="math inline">\(\hat{\theta}(\delta)\)</span> below</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># let's compute the parameter where A (but not Z) are shifted</span>
 <span class="va">theta_eff</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medshift/man/medshift.html">medshift</a></span><span class="op">(</span>
   W <span class="op">=</span> <span class="va">W</span>, A <span class="op">=</span> <span class="va">A</span>, Z <span class="op">=</span> <span class="va">Z</span>, Y <span class="op">=</span> <span class="va">Y</span>,
@@ -266,7 +304,7 @@ estimators of its constituent parameters:
 already computed. The convenience function below applies the simple delta method
 required in the case of a linear contrast between the two constituent
 parameters:</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># convenience function to compute inference via delta method: EY1 - EY0</span>
 <span class="va">linear_contrast</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">params</span>, <span class="va">eifs</span>, <span class="va">ci_level</span> <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span> <span class="op">{</span>
   <span class="co"># bounds for confidence interval</span>
@@ -282,7 +320,7 @@ parameters:</p>
 <span class="op">}</span></code></pre></div>
 <p>With the above convenience function in hand, we’ll construct or extract the
 necessary components from existing objects and simply apply the function:</p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># parameter estimates and EIFs for components of direct effect</span>
 <span class="va">EY</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span>
 <span class="va">eif_EY</span> <span class="op">&lt;-</span> <span class="va">Y</span> <span class="op">-</span> <span class="va">EY</span>
@@ -447,7 +485,7 @@ use of their estimators of these effects in an application in which they seek to
 elucidate the mechanisms behind the unintended harmful effects that a housing
 intervention had on adolescent girls’ risk behavior.</p>
 <p>First, let’s load a few required packages and set a seed for our simulation.</p>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com">data.table</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/nhejazi/medoutcon">medoutcon</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tlverse.org/sl3">sl3</a></span><span class="op">)</span>
@@ -459,7 +497,7 @@ intervention had on adolescent girls’ risk behavior.</p>
 <span class="math inline">\(M\)</span> an intermediate confounder <span class="math inline">\(Z\)</span> that affects the mediator <span class="math inline">\(M\)</span> and is itself
 affected by the exposure <span class="math inline">\(A\)</span>, and, finally, a binary outcome <span class="math inline">\(Y\)</span> that is a
 function of <span class="math inline">\((W, A, Z, M)\)</span>.</p>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># produces a simple data set based on ca causal model with mediation</span>
 <span class="va">make_example_data</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">n_obs</span> <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span> <span class="op">{</span>
   <span class="co">## baseline covariates</span>
@@ -493,9 +531,16 @@ function of <span class="math inline">\((W, A, Z, M)\)</span>.</p>
 <span class="va">w_names</span> <span class="op">&lt;-</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_subset.html">str_subset</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">example_data</span><span class="op">)</span>, <span class="st">"W"</span><span class="op">)</span>
 <span class="va">m_names</span> <span class="op">&lt;-</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_subset.html">str_subset</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">example_data</span><span class="op">)</span>, <span class="st">"M"</span><span class="op">)</span></code></pre></div>
 <p>Now, let’s take a quick look at our simulated data:</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># quick look at the data</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">example_data</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">example_data</span><span class="op">)</span>
+<span class="co">#&gt;    W_1 W_2 W_3 A Z M Y</span>
+<span class="co">#&gt; 1:   0   0   1 0 0 0 1</span>
+<span class="co">#&gt; 2:   0   1   1 0 0 0 1</span>
+<span class="co">#&gt; 3:   1   1   0 0 1 1 1</span>
+<span class="co">#&gt; 4:   1   0   1 0 1 0 0</span>
+<span class="co">#&gt; 5:   0   0   0 1 1 1 1</span>
+<span class="co">#&gt; 6:   1   0   1 1 0 1 1</span></code></pre></div>
 <p>As noted above, all covariates in our dataset are binary; however, note that
 this need not be the case for using our methodology — in particular, the only
 current limitation is that the intermediate confounder <span class="math inline">\(Z\)</span> must be binary when
@@ -534,7 +579,7 @@ based on a modeling library including an intercept model, a main-terms GLM,
 <span class="math inline">\(\ell_1\)</span>-penalized Lasso regression, an elastic net regression that equally
 weights the <span class="math inline">\(\ell_1\)</span> and <span class="math inline">\(\ell_2\)</span> penalties, random forests (<code>ranger</code>), and the
 highly adaptive lasso (HAL):</p>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># instantiate learners</span>
 <span class="va">mean_lrnr</span> <span class="op">&lt;-</span> <span class="va"><a href="https://tlverse.org/sl3/reference/Lrnr_mean.html">Lrnr_mean</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span>
 <span class="va">fglm_lrnr</span> <span class="op">&lt;-</span> <span class="va"><a href="https://tlverse.org/sl3/reference/Lrnr_glm_fast.html">Lrnr_glm_fast</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/family.html">binomial</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
@@ -565,7 +610,7 @@ highly adaptive lasso (HAL):</p>
 constructed above in practice, such a library will be too computationally
 intensive for our examples. To reduce computation time, we construct a simpler
 library, using only a subset of the above learning algorithms:</p>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># create simpler learner library and instantiate super learner ensemble</span>
 <span class="va">lrnr_lib</span> <span class="op">&lt;-</span> <span class="va"><a href="https://tlverse.org/sl3/reference/Stack.html">Stack</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">mean_lrnr</span>, <span class="va">fglm_lrnr</span>, <span class="va">lasso_lrnr</span>, <span class="va">rf_lrnr</span><span class="op">)</span>
 <span class="va">sl_lrnr</span> <span class="op">&lt;-</span> <span class="va"><a href="https://tlverse.org/sl3/reference/Lrnr_sl.html">Lrnr_sl</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>learners <span class="op">=</span> <span class="va">lrnr_lib</span>, metalearner <span class="op">=</span> <span class="va"><a href="https://tlverse.org/sl3/reference/Lrnr_nnls.html">Lrnr_nnls</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
@@ -602,7 +647,7 @@ estimator. As noted above, this is done separately for each of the two contrasts
 <span class="math inline">\((a' = 0, a^{\star} = 0)\)</span> and <span class="math inline">\((a' = 1, a^{\star} = 0)\)</span>. Thus, the one-step
 estimator of this direct effect is constructed by application of the delta
 method to each of the one-step estimators (and EIFs) for these contrasts.</p>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># compute one-step estimate of the interventional direct effect</span>
 <span class="va">os_de</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medoutcon/man/medoutcon.html">medoutcon</a></span><span class="op">(</span>
   W <span class="op">=</span> <span class="va">example_data</span><span class="op">[</span>, <span class="va">..w_names</span><span class="op">]</span>,
@@ -623,7 +668,7 @@ method to each of the one-step estimators (and EIFs) for these contrasts.</p>
 <p>Next, let’s compare the one-step estimate to the TML estimate. Analogous to the
 case of the one-step estimator, the TML estimator can be evaluated via a single
 call to the <code>medoutcon</code> function:</p>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># compute targeted minimum loss estimate of the interventional direct effect</span>
 <span class="va">tmle_de</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medoutcon/man/medoutcon.html">medoutcon</a></span><span class="op">(</span>
   W <span class="op">=</span> <span class="va">example_data</span><span class="op">[</span>, <span class="va">..w_names</span><span class="op">]</span>,
@@ -641,10 +686,10 @@ call to the <code>medoutcon</code> function:</p>
   estimator_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>cv_folds <span class="op">=</span> <span class="fl">2</span>, max_iter <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
 <span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">tmle_de</span><span class="op">)</span></code></pre></div>
-<p>Here, we recall that the TML
-estimator generally exhibits better finite-sample performance than the one-step
-estimator <span class="citation">(van der Laan and Rose <a href="references.html#ref-vdl2011targeted" role="doc-biblioref">2011</a>, <a href="references.html#ref-vdl2018targeted" role="doc-biblioref">2018</a>)</span>, so the TML estimate is likely to
-be more reliable in modest (realistic) sample sizes.</p>
+<p>Here, we recall that the TML estimator generally exhibits better finite-sample
+performance than the one-step estimator <span class="citation">(van der Laan and Rose <a href="references.html#ref-vdl2011targeted" role="doc-biblioref">2011</a>, <a href="references.html#ref-vdl2018targeted" role="doc-biblioref">2018</a>)</span>, so
+the TML estimate is likely to be more reliable in modest (realistic) sample
+sizes.</p>
 </div>
 <div id="estimating-the-indirect-effect" class="section level4">
 <h4>
@@ -666,7 +711,7 @@ estimator. As noted above, this is done separately for each of the two contrasts
 <span class="math inline">\((a' = 1, a^{\star} = 1)\)</span> and <span class="math inline">\((a' = 1, a^{\star} = 0)\)</span>. Thus, the one-step
 estimator of this indirect effect is constructed by application of the delta
 method to each of the one-step estimators (and EIFs) for the contrasts.</p>
-<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># compute one-step estimate of the interventional indirect effect</span>
 <span class="va">os_ie</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medoutcon/man/medoutcon.html">medoutcon</a></span><span class="op">(</span>
   W <span class="op">=</span> <span class="va">example_data</span><span class="op">[</span>, <span class="va">..w_names</span><span class="op">]</span>,
@@ -686,7 +731,7 @@ method to each of the one-step estimators (and EIFs) for the contrasts.</p>
 <p>As before, let’s compare the one-step estimate to the TML estimate. Analogous
 to the case of the one-step estimator, the TML estimator can be evaluated via a
 single call to the <code>medoutcon</code> function, as demonstrated below</p>
-<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># compute targeted minimum loss estimate of the interventional indirect effect</span>
 <span class="va">tmle_ie</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medoutcon/man/medoutcon.html">medoutcon</a></span><span class="op">(</span>
   W <span class="op">=</span> <span class="va">example_data</span><span class="op">[</span>, <span class="va">..w_names</span><span class="op">]</span>,
@@ -749,7 +794,7 @@ one-step estimator, so it may be preferred in this example.</p>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: May 15, 2021.</p>
+    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: May 16, 2021.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

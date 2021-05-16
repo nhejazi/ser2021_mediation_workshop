@@ -4,7 +4,14 @@
 
 Recall:
 
+\begin{figure}
 
+{\centering \includegraphics[width=0.8\linewidth]{06-estimation-natural-interventional_files/figure-latex/unnamed-chunk-1-1} 
+
+}
+
+\caption{Directed acyclic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-1)
+\end{figure}
 
 - Assuming a binary $A$, we define the natural direct effect as: $$NDE = E(Y_{1,M_{0}} - Y_{0,M_{0}}),$$
 
@@ -135,7 +142,7 @@ Can be computed  in the following steps:
 ```r
 library(mgcv)
 ## fit model for E(Y | A, W)
-b_fit <- gam(y ~ m:a + s(w, by = a)
+b_fit <- gam(y ~ m:a + s(w, by = a))
 ## fit model for P(A = 1 | M, W)
 e_fit <- gam(a ~ m + w + s(w, by = m), family = binomial)
 ## fit model for P(A = 1 | W)
@@ -181,13 +188,13 @@ q_pred <- predict(q_fit, newdata = data.frame(a = 0, w = w))
   using the above predictions:
 
 ```r
-weights <- a / g0_pred * e0_pred / e1_pred - (1 - a) / g0_pred
+ip_weights <- a / g0_pred * e0_pred / e1_pred - (1 - a) / g0_pred
 ```
 
 5. Compute the uncentered EIF:
 
 ```r
-eif <- weights * (y - b_pred) + (1 - a) / g0_pred * (pseudo - q_pred) +
+eif <- ip_weights * (y - b_pred) + (1 - a) / g0_pred * (pseudo - q_pred) +
   q_pred
 ```
 
@@ -196,6 +203,7 @@ eif <- weights * (y - b_pred) + (1 - a) / g0_pred * (pseudo - q_pred) +
 ```r
 ## One-step estimator
 mean(eif)
+#> [1] 0.55085
 ```
 
 ### Performance of the one-step estimator in a small simulation study
@@ -219,8 +227,8 @@ one_step <- function(y, m, a, w) {
   pseudo <- b1_pred - b0_pred
   q_fit <- gam(pseudo ~ a + w + s(w, by = a))
   q_pred <- predict(q_fit, newdata = data.frame(a = 0, w = w))
-  weights <- a / g0_pred * e0_pred / e1_pred - (1 - a) / g0_pred
-  eif <- weights * (y - b_pred) + (1 - a) / g0_pred *
+  ip_weights <- a / g0_pred * e0_pred / e1_pred - (1 - a) / g0_pred
+  eif <- ip_weights * (y - b_pred) + (1 - a) / g0_pred *
     (pseudo - q_pred) + q_pred
   return(mean(eif))
 }
@@ -236,25 +244,30 @@ w_big <- runif(1e6, -1, 1)
 trueval <- mean((mean_y(1, 1, w_big) - mean_y(1, 0, w_big)) * mean_m(0, w_big) +
   (mean_y(0, 1, w_big) - mean_y(0, 0, w_big)) * (1 - mean_m(0, w_big)))
 print(trueval)
+#> [1] 0.58061
 ```
 
 - Bias simulation
 
 ```r
-estimate <- numeric(1000)
-for (i in 1:1000) {
+estimate <- lapply(seq_len(1000), function(iter) {
   n <- 1000
   w <- runif(n, -1, 1)
   a <- rbinom(n, 1, pscore(w))
   m <- rbinom(n, 1, mean_m(a, w))
   y <- rnorm(n, mean_y(m, a, w))
-
-  estimate[i] <- one_step(y, m, a, w)
-}
+  estimate <- one_step(y, m, a, w)
+  return(estimate)
+})
+estimate <- do.call(c, estimate)
 
 hist(estimate)
 abline(v = trueval, col = "red", lwd = 4)
 ```
+
+
+
+\begin{center}\includegraphics[width=0.8\linewidth]{06-estimation-natural-interventional_files/figure-latex/unnamed-chunk-11-1} \end{center}
 
 - And now the confidence intervals:
 
@@ -283,3 +296,7 @@ text(450, 0.01, paste0(
   mean(lower < trueval & trueval < upper), "%"
 ), cex = 1.2)
 ```
+
+
+
+\begin{center}\includegraphics[width=0.8\linewidth]{06-estimation-natural-interventional_files/figure-latex/unnamed-chunk-12-1} \end{center}
