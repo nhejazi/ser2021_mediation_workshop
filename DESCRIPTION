@@ -47,7 +47,8 @@ Suggests:
   speedglm,
   ranger,
   hal9001,
-  SuperLearner
+  SuperLearner,
+  tidyverse
 Remotes:
   github::rstudio/bslib,
   github::rstudio/bookdown,
