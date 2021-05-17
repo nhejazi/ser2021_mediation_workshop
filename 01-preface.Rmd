@@ -1,8 +1,11 @@
-# Preliminaries on causal mediation analysis {#mediation}
+# Causal mediation analysis intro {#mediation}
 
 ## Motivating study
 
-Do differences in the effects of treatment (comparing two medications for opioid use disorder, naltrexone vs buprenorphine) on risk of relapse operate through  mediators of adherence, opioid use, pain, and depressive symptoms? [@rudolph2020explaining]
+Do differences in the effects of treatment (comparing two medications for opioid
+use disorder, naltrexone vs buprenorphine) on risk of relapse operate through
+mediators of adherence, opioid use, pain, and depressive symptoms?
+[@rudolph2020explaining]
 <!--
 ID: Need to fix format of the following figure
 -->
@@ -23,11 +26,12 @@ about what is crucial to include vs not.
 
 ### Why are the methods that we will discuss today important?
 
-- Assume you are interested in the effect of a treatment assignment $A$ (naltrexone vs.
-  buprenorphine) on an outcome $Y$ (risk of relapse) through mediators $M$
-  (opioid use, pain, depressive symptoms)
+- Assume you are interested in the effect of a treatment assignment $A$
+  (naltrexone vs.  buprenorphine) on an outcome $Y$ (risk of relapse) through
+  mediators $M$ (opioid use, pain, depressive symptoms)
 - We have pre-treatment confounders $W$
-- There is a confounder $Z$ of $M\rightarrow Y$ ffected by treatment assignment (adherence)
+- There is a confounder $Z$ of $M\rightarrow Y$ ffected by treatment assignment
+  (adherence)
 - We could fit the following models:
     \begin{align}
       \E(M\mid A=a, W=w, Z=z) & = \gamma_0 + \gamma_1 a + \gamma_2 w + \gamma_3 z \\
@@ -65,8 +69,10 @@ coef(lm_y)[2] * coef(lm_m)[2]
 
 Among other things, in this workshop:
 
-- We will provide some understanding for why the above method fails in this example
-- We will study estimators that are robust to misspecification in the above models
+- We will provide some understanding for why the above method fails in this
+  example
+- We will study estimators that are robust to misspecification in the above
+  models
 
 ## Causal mediation models
 

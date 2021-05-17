@@ -1,4 +1,4 @@
-# Path-specific casual mediation effect types {#estimands}
+# Types of path-specific causal mediation effects {#estimands}
 
 - Controlled direct effects
 - Natural direct and indirect effects

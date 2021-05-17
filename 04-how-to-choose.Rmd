@@ -1,4 +1,4 @@
-# How to choose an estimand: Real world example {#estimandirl}
+# How to choose an estimand: Real-world example {#estimandirl}
 
 ## Comparative effectivness of two medications for opioid use disorder (OUD)
 
