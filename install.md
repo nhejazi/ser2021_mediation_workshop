@@ -16,7 +16,7 @@ versions). A few important notes to keep in mind:
 * Upon an initial attempt, `renv` will prompt you to install packages listed in
   the `renv.lock` file, by printing a message like the following:
   ```r
-  * Project '~/git/ser2021_mediation_workshop' loaded. [renv 0.13.2]
+  * Project 'PATH/TO/ser2021_mediation_workshop' loaded. [renv 0.13.2]
   * The project may be out of sync -- use `renv::status()` for more details.
   > renv::status()
   The following package(s) are recorded in the lockfile, but not installed:
