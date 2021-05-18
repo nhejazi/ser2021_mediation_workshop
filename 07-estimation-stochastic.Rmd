@@ -173,8 +173,8 @@ sl_lrnr <- Lrnr_sl$new(learners = lrnr_lib, metalearner = Lrnr_nnls$new())
   - $b(a, m, w)$, which denotes $\E(Y \mid A=a, M=m, W=w)$
 * While we recommend the use of Super Learning, we opt to instead estimate all
   nuisance parameters with Lasso regression below (to save computational time).
-* Now, we're ready to use the `medoutcon` function to estimate the _natural
-  direct effect_:
+* Now, let's use the `medoutcon()` function to estimate the _natural direct
+  effect_:
 ```{r natural_de_os}
 # compute one-step estimate of the natural direct effect
 nde_onestep <- medoutcon(
@@ -193,8 +193,7 @@ nde_onestep <- medoutcon(
 summary(nde_onestep)
 ```
 
-* We can similarly call the `medoutcon` function to estimate the _natural
-  indirect effect_:
+* We can similarly call `medoutcon()` to estimate the _natural indirect effect_:
 ```{r natural_ie_os}
 # compute one-step estimate of the natural indirect effect
 nie_onestep <- medoutcon(
@@ -310,7 +309,8 @@ Recall that the interventional (in)direct effects are defined via the decomposit
   participation on a sports team might subsequently affect snacking, which then
   could affect mediators like the amount of exercises and overweight status.
 * The interventional direct and indirect effects may also be easily estimated
-  with the [`medoutcon` `R` package](https://github.com/nhejazi/medoutcon).
+  with the [`medoutcon` `R` package](https://github.com/nhejazi/medoutcon)
+  [@hejazi2021medoutcon].
 * Just as for the natural (in)direct effects, `medoutcon` implements
   cross-validated one-step and TML estimators of the interventional effects.
 
@@ -322,10 +322,11 @@ Recall that the interventional (in)direct effects are defined via the decomposit
     conditional only on treatment and baseline covariates;
   * $r(z \mid a, m, w)$, the conditional density of the intermediate
     confounders, conditional on mediators, treatment, and baseline covariates.
+* To estimate the interventional effects, we only need to set the argument `Z`
+  of `medoutcon` to a value other than `NULL`.
 * Note that the implementation in `medoutcon` is currently limited to settings
   with only binary intermediate confounders, i.e., $Z \in \{0, 1\}$.
-* Now, we're ready to use the `medoutcon` function to estimate the
-  _interventional direct effect_:
+* Let's use `medoutcon()` to estimate the _interventional direct effect_:
 ```{r interv_de_os}
 # compute one-step estimate of the interventional direct effect
 interv_de_onestep <- medoutcon(
@@ -344,8 +345,7 @@ interv_de_onestep <- medoutcon(
 summary(interv_de_onestep)
 ```
 
-* We can similarly call the `medoutcon` function to estimate the
-  _interventional indirect effect_:
+* We can similarly estimate the _interventional indirect effect_:
 ```{r interv_ie_os}
 # compute one-step estimate of the interventional indirect effect
 interv_ie_onestep <- medoutcon(
