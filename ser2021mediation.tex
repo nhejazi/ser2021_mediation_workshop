@@ -1447,7 +1447,7 @@ mean(pred_pseudo)
 \end{figure}
 
 \hypertarget{stochastic}{%
-\chapter{Stochastic Direct and Indirect Effects}\label{stochastic}}
+\chapter{Stochastic direct and indirect effects}\label{stochastic}}
 
 \hypertarget{definition-of-the-effects}{%
 \section{Definition of the effects}\label{definition-of-the-effects}}
@@ -1515,9 +1515,8 @@ There are two possible ways of defining stochastic effects:
   \emph{stochastic intervention}
 \end{itemize}
 
-\hypertarget{example-incremental-propensity-score-interventions-ipsi-kennedy2018nonparametric}{%
-\subsection*{\texorpdfstring{Example: incremental propensity score interventions (IPSI) \citep{kennedy2018nonparametric}}{Example: incremental propensity score interventions (IPSI) {[}@kennedy2018nonparametric{]}}}\label{example-incremental-propensity-score-interventions-ipsi-kennedy2018nonparametric}}
-
+\hypertarget{ipsi}{%
+\subsection{\texorpdfstring{Example: incremental propensity score interventions (IPSI) \citep{kennedy2018nonparametric}}{Example: incremental propensity score interventions (IPSI) {[}@kennedy2018nonparametric{]}}}\label{ipsi}}
 
 \hypertarget{definition-of-the-intervention}{%
 \subsubsection*{Definition of the intervention}\label{definition-of-the-intervention}}
@@ -2735,9 +2734,10 @@ which, we recall, are defined as follows
 \begin{itemize}
 \tightlist
 \item
-  Our \href{https://github.com/nhejazi/medoutcon}{\passthrough{\lstinline!medoutcon!} \passthrough{\lstinline!R!} package}, which
-  accompanies \citet{diaz2020nonparametric}, implements one-step and TML estimators of
-  both the natural and interventional (in)direct effects.
+  Our \href{https://github.com/nhejazi/medoutcon}{\passthrough{\lstinline!medoutcon!} \passthrough{\lstinline!R!} package}
+  \citep{hejazi2021medoutcon}, which accompanies \citet{diaz2020nonparametric}, implements
+  one-step and TML estimators of both the natural and interventional (in)direct
+  effects.
 \item
   Both types of estimators are capable of accommodating flexible modeling
   strategies (e.g., ensemble machine learning) for the initial estimation of
@@ -2750,7 +2750,7 @@ which, we recall, are defined as follows
 \item
   To this end, \passthrough{\lstinline!medoutcon!} integrates with the \passthrough{\lstinline!sl3!} \passthrough{\lstinline!R!} package, which is
   extensively documented in this \href{https://tlverse.org/tlverse-handbook/sl3}{book
-  chapter}.
+  chapter} \citep{vdl2022targeted}.
 \end{itemize}
 
 \hypertarget{interlude-sl3-for-nuisance-parameter-estimation}{%
@@ -2768,11 +2768,11 @@ which, we recall, are defined as follows
   Choosing among the diversity of available machine learning algorithms can be
   challenging, so we recommend using the Super Learner algorithm for ensemble
   machine learning \citep{vdl2007super}, which is implemented in the \href{https://github.com/tlverse/sl3}{\passthrough{\lstinline!sl3!} R
-  package}.
+  package} \citep{coyle2021sl3}.
 \item
   Below, we demonstrate the construction of an ensemble learner based on a
   limited library of algorithms, including n intercept model, a main terms GLM,
-  Lasso (\(\ell_1\)-penalized) regression, and random forests (\passthrough{\lstinline!ranger!}).
+  Lasso (\(\ell_1\)-penalized) regression, and random forest (\passthrough{\lstinline!ranger!}).
 \end{itemize}
 
 \begin{lstlisting}[language=R]
@@ -2816,8 +2816,8 @@ sl_lrnr <- Lrnr_sl$new(learners = lrnr_lib, metalearner = Lrnr_nnls$new())
   While we recommend the use of Super Learning, we opt to instead estimate all
   nuisance parameters with Lasso regression below (to save computational time).
 \item
-  Now, we're ready to use the \passthrough{\lstinline!medoutcon!} function to estimate the \emph{natural
-  direct effect}:
+  Now, let's use the \passthrough{\lstinline!medoutcon()!} function to estimate the \emph{natural direct
+  effect}:
 \end{itemize}
 
 \begin{lstlisting}[language=R]
@@ -2845,8 +2845,7 @@ summary(nde_onestep)
 \begin{itemize}
 \tightlist
 \item
-  We can similarly call the \passthrough{\lstinline!medoutcon!} function to estimate the \emph{natural
-  indirect effect}:
+  We can similarly call \passthrough{\lstinline!medoutcon()!} to estimate the \emph{natural indirect effect}:
 \end{itemize}
 
 \begin{lstlisting}[language=R]
@@ -2922,7 +2921,8 @@ Recall that the interventional (in)direct effects are defined via the decomposit
   could affect mediators like the amount of exercises and overweight status.
 \item
   The interventional direct and indirect effects may also be easily estimated
-  with the \href{https://github.com/nhejazi/medoutcon}{\passthrough{\lstinline!medoutcon!} \passthrough{\lstinline!R!} package}.
+  with the \href{https://github.com/nhejazi/medoutcon}{\passthrough{\lstinline!medoutcon!} \passthrough{\lstinline!R!} package}
+  \citep{hejazi2021medoutcon}.
 \item
   Just as for the natural (in)direct effects, \passthrough{\lstinline!medoutcon!} implements
   cross-validated one-step and TML estimators of the interventional effects.
@@ -2947,11 +2947,13 @@ Recall that the interventional (in)direct effects are defined via the decomposit
     confounders, conditional on mediators, treatment, and baseline covariates.
   \end{itemize}
 \item
+  To estimate the interventional effects, we only need to set the argument \passthrough{\lstinline!Z!}
+  of \passthrough{\lstinline!medoutcon!} to a value other than \passthrough{\lstinline!NULL!}.
+\item
   Note that the implementation in \passthrough{\lstinline!medoutcon!} is currently limited to settings
   with only binary intermediate confounders, i.e., \(Z \in \{0, 1\}\).
 \item
-  Now, we're ready to use the \passthrough{\lstinline!medoutcon!} function to estimate the
-  \emph{interventional direct effect}:
+  Let's use \passthrough{\lstinline!medoutcon()!} to estimate the \emph{interventional direct effect}:
 \end{itemize}
 
 \begin{lstlisting}[language=R]
@@ -2979,8 +2981,7 @@ summary(interv_de_onestep)
 \begin{itemize}
 \tightlist
 \item
-  We can similarly call the \passthrough{\lstinline!medoutcon!} function to estimate the
-  \emph{interventional indirect effect}:
+  We can similarly estimate the \emph{interventional indirect effect}:
 \end{itemize}
 
 \begin{lstlisting}[language=R]
@@ -3023,92 +3024,103 @@ summary(interv_ie_onestep)
 
 While the analyses using the natural and interventional effects have been
 illuminating, we may also go beyond the restrictive static interventions
-required to define these (in)direct effects.
+required to define these (in)direct effects. In fact, it may be more realistic
+to consider interventions that do not directly force children to join athletic
+teams, but instead motivate them to make their participation on such teams more
+likely. Importantly, such interventions are often far more realistic and
+actionable in real-world studies.
 
-We are interested in assessing the population intervention direct effect and
-the population intervention indirect effect, based on the effect decomposition
-of the population intervention effect introduced in \citet{diaz2020causal}.
-
-Finally, in our analysis, we consider an incremental propensity score
-intervention (IPSI), as first proposed by \citet{kennedy2017nonparametric}, wherein the
-\emph{odds of participating in a sports team} is modulated by some fixed amount
-(\(0 \leq \delta \leq \infty\)) for each individual. Such an intervention may be
-interpreted as the effect of a school program that motivates children to
-participate in sports teams. To exemplify our approach, we postulate a
-motivational intervention that \emph{triples the odds} of participating in a sports
-team for each individual:
-
-\begin{lstlisting}[language=R]
-delta_shift_ipsi <- 3
-\end{lstlisting}
-
-\hypertarget{decomposing-the-population-intervention-effect}{%
-\subsection{Decomposing the population intervention effect}\label{decomposing-the-population-intervention-effect}}
-
-We may decompose the population intervention effect (PIE) in terms of a
-\emph{population intervention direct effect} (PIDE) and a \emph{population
-intervention indirect effect} (PIIE):
-\begin{equation*}
-  \overbrace{\mathbb{E}\{Y(A_\delta, Z(A_\delta)) -
-    Y(A_\delta, Z)\}}^{\text{PIIE}} +
-    \overbrace{\mathbb{E}\{Y(A_\delta, Z) - Y(A, Z)\}}^{\text{PIDE}}.
-\end{equation*}
-
-This decomposition of the PIE as the sum of the population intervention direct
-and indirect effects has an interpretation analogous to the corresponding
-standard decomposition of the average treatment effect. In the sequel, we will
-compute each of the components of the direct and indirect effects above using
-appropriate estimators as follows
+\hypertarget{formulating-the-stochastic-indirect-effects}{%
+\subsection{Formulating the stochastic (in)direct effects}\label{formulating-the-stochastic-indirect-effects}}
 
 \begin{itemize}
 \tightlist
 \item
-  For \(\mathbb{E}\{Y(A, Z)\}\), the sample mean \(\frac{1}{n}\sum_{i=1}^n Y_i\) is
-  sufficient;
+  These more flexible intervention regimes are incompatible with (in)direct
+  effect definitions based on decomposing the average treatment effect.
 \item
-  for \(\mathbb{E}\{Y(A_{\delta}, Z)\}\), an efficient one-step estimator for the
-  effect of a joint intervention altering the exposure mechanism but not the
-  mediation mechanism, as proposed in \citet{diaz2020causal}; and,
+  Instead, consider the decomposition of the population intervention effect
+  (PIE) of a \emph{stochastic intervention} into direct and indirect effects
+  \citep{diaz2020causal}:
+  \begin{align*}
+  \E[Y&_{A_\delta,M_{A_\delta}} - Y_{A,M_A}] = \\
+  &\underbrace{\E[Y_{\color{red}{A_\delta},\color{blue}{M_{A_\delta}}} -
+    Y_{\color{red}{A_\delta},\color{blue}{M}}]}_{\text{stochastic natural indirect effect}} +
+    \underbrace{\E[Y_{\color{blue}{A_\delta},\color{red}{M}} -
+    Y_{\color{blue}{A},\color{red}{M}}]}_{\text{stochastic natural direct effect}}
+  \end{align*}
 \item
-  for \(\mathbb{E}\{Y(A_{\delta}, Z_{A_{\delta}})\}\), an efficient one-step
-  estimator for the effect of a joint intervention altering both the exposure
-  and mediation mechanisms, as proposed in \citet{kennedy2017nonparametric} and
-  implemented in the \href{https://github.com/ehkennedy/npcausal}{\passthrough{\lstinline!npcausal!} R
-  package}.
+  Recall from our discussion of the \protect\hyperlink{ipsi}{incremental propensity score
+  interventions} \citep{kennedy2018nonparametric} that such stochastic
+  interventions can compare the pre- and post-intervention odds of exposure:
+  \begin{equation*}
+  \delta = \frac{\text{odds}(A_\delta = 1\mid W=w)}
+  {\text{odds}(A = 1\mid W=w)}.
+  \end{equation*}
+\item
+  In our analysis, we will modulate the \emph{odds of participating in a sports
+  team} by a fixed amount for each individual, setting, for example,
+  \(\delta = 2\):
 \end{itemize}
 
-\hypertarget{estimating-the-effect-decomposition-term}{%
-\subsection{Estimating the effect decomposition term}\label{estimating-the-effect-decomposition-term}}
+\begin{lstlisting}[language=R]
+delta_shift_ipsi <- 2
+\end{lstlisting}
 
-As given in \citet{diaz2020causal}, the statistical functional identifying the
-decomposition term that appears in both the PIDE and PIIE
-\(\mathbb{E}\{Y(A_{\delta}, Z)\}\), which corresponds to altering the exposure
-mechanism while keeping the mediation mechanism fixed, is
-\begin{equation*}
-  \theta_0(\delta) = \int m_0(a, z, w) g_{0,\delta}(a \mid w) p_0(z, w)
-    d\nu(a, z, w),
-\end{equation*}
-for which a one-step estimator is available. The corresponding \emph{efficient
-influence function} (EIF) with respect to the nonparametric model \(\mathcal{M}\)
-is \(D_{\eta,\delta}(o) = D^Y_{\eta,\delta}(o) + D^A_{\eta,\delta}(o) + D^{Z,W}_{\eta,\delta}(o) - \theta(\delta)\). The
-one-step estimator may be computed using the EIF estimating equation, making use
-of cross-fitting \citep{zheng2011cross, chernozhukov2018double} to circumvent any
-need for entropy conditions (i.e., Donsker class restrictions). The resultant
-estimator is
-\begin{equation*}
-  \hat{\theta}(\delta) = \frac{1}{n} \sum_{i = 1}^n D_{\hat{\eta}_{j(i)},
-  \delta}(O_i) = \frac{1}{n} \sum_{i = 1}^n \left\{ D^Y_{\hat{\eta}_{j(i)},
-  \delta}(O_i) + D^A_{\hat{\eta}_{j(i)}, \delta}(O_i) +
-  D^{Z,W}_{\hat{\eta}_{j(i)}, \delta}(O_i) \right\},
-\end{equation*}
-which is implemented in the \passthrough{\lstinline!medshift!} R package. We make use of that
-implementation to estimate \(\mathbb{E}\{Y(A_{\delta}, Z)\}\) via its one-step
-estimator \(\hat{\theta}(\delta)\) below
+\begin{itemize}
+\tightlist
+\item
+  Such an intervention may be interpreted as the effect of a school program that
+  motivates children to participate in sports teams.
+\end{itemize}
+
+\hypertarget{efficient-estimation-of-the-stochastic-indirect-effects}{%
+\subsection{Efficient estimation of the stochastic (in)direct effects}\label{efficient-estimation-of-the-stochastic-indirect-effects}}
+
+\begin{itemize}
+\tightlist
+\item
+  The decomposition of the PIE into the direct and indirect effects leads to a
+  common term \(\E[Y_{\color{red}{A_\delta},\color{blue}{M}}]\) involved in both
+  the direct and indirect effect definitions. This term may be estimated via the
+  \href{https://github.com/nhejazi/medshift}{\passthrough{\lstinline!medshift!} \passthrough{\lstinline!R!} package}
+  \citep{hejazi2020medshift}.
+\item
+  For the direct effect, the remaining term is the
+  \(\E[Y_{\color{blue}{A},\color{red}{M}}]\), which may be estimated by a simple
+  mean in the observed data (i.e., no intervention).
+\item
+  For the indirect effect, the remaining term is the joint effect of stochastic
+  interventions on both \(A\) and \(M\):
+  \(\E[Y_{\color{red}{A_\delta},\color{blue}{M_{A_\delta}}}\).
+
+  \begin{itemize}
+  \tightlist
+  \item
+    For the case of an IPSI on binary \(A\), this may be estimated by the tools
+    in the \href{https://github.com/ehkennedy/npcausal}{\passthrough{\lstinline!npcausal!} \passthrough{\lstinline!R!} package}.
+  \item
+    For the case of an MTP on continuous \(A\), this may be estimated by the tools
+    in the \href{https://github.com/nhejazi/txshift}{\passthrough{\lstinline!txshift!} \passthrough{\lstinline!R!} package}
+    \citep{hejazi2020txshift-rpkg, hejazi2020txshift-joss}.
+  \end{itemize}
+\item
+  Like the implementation in \passthrough{\lstinline!medoutcon!}, the \passthrough{\lstinline!medshift!} package makes use of
+  cross-validation in constructing initial estimates of nuisance parameters,
+  resulting in more robust, cross-validated efficient estimators
+  \citep{klaassen1987consistent, zheng2011cross, chernozhukov2018double}.
+\item
+  Now, we're ready to use the \passthrough{\lstinline!medshift!} function to estimate the decomposition
+  term common to both the \emph{stochastic direct and indirect effects}:
+\end{itemize}
 
 \begin{lstlisting}[language=R]
-# let's compute the parameter where A (but not Z) are shifted
-pide_decomp_onestep <- medshift(
-  W = W, A = A, Z = Z, Y = Y,
+# compute one-step estimate of the decomposition term of the (in)direct effects
+stoch_decomp_onestep <- medshift(
+  W = weight_behavior[, c("age", "sex", "race", "tvhours")],
+  A = (as.numeric(weight_behavior$sports) - 1),
+  Z = weight_behavior[, c("snack", "exercises", "overweigh")],
+  Y = weight_behavior$bmi,
   delta = delta_shift_ipsi,
   g_learners = lasso_lrnr,
   e_learners = lasso_lrnr,
@@ -3116,25 +3128,17 @@ pide_decomp_onestep <- medshift(
   estimator = "onestep",
   estimator_args = list(cv_folds = 5)
 )
-summary(pide_decomp_onestep)
+summary(stoch_decomp_onestep)
+#>      lwr_ci   param_est      upr_ci   param_var    eif_mean   estimator 
+#>   18.770026   19.103221   19.436415      0.0289 -1.7263e-15     onestep
 \end{lstlisting}
 
-\hypertarget{estimating-the-direct-effect}{%
-\subsection{Estimating the direct effect}\label{estimating-the-direct-effect}}
-
-Recall that, based on the decomposition outlined previously, the population
-intervention direct effect may be denoted \(\beta_{\text{PIDE}}(\delta) = \theta_0(\delta) - \mathbb{E}Y\). Thus, an estimator of the PIDE,
-\(\hat{\beta}_{\text{PIDE}}(\delta)\) may be expressed as a composition of
-estimators of its constituent parameters:
-\begin{equation*}
-  \hat{\beta}_{\text{PIDE}}({\delta}) = \hat{\theta}(\delta) -
-  \frac{1}{n} \sum_{i = 1}^n Y_i.
-\end{equation*}
-
-Based on the above, we may construct an estimator of the PIDE using quantities
-already computed. The convenience function below applies the simple delta method
-required in the case of a linear contrast between the two constituent
-parameters:
+\begin{itemize}
+\tightlist
+\item
+  To estimate the stochastic direct effect, an extra step is necessary -- we
+  must apply the delta method:
+\end{itemize}
 
 \begin{lstlisting}[language=R]
 # convenience function to compute inference via delta method: EY1 - EY0
@@ -3152,20 +3156,33 @@ linear_contrast <- function(params, eifs, ci_level = 0.95) {
 }
 \end{lstlisting}
 
-With the above convenience function in hand, we'll construct or extract the
-necessary components from existing objects and simply apply the function:
+\begin{itemize}
+\tightlist
+\item
+  Straightforward application of this procedure yields,
+\end{itemize}
 
 \begin{lstlisting}[language=R]
 # parameter estimates and EIFs for components of direct effect
-EY <- mean(Y)
-eif_EY <- Y - EY
-params_de <- list(theta_eff$theta, EY)
-eifs_de <- list(theta_eff$eif, eif_EY)
+EY <- mean(weight_behavior$bmi)
+eif_EY <- weight_behavior$bmi - EY
+params_de <- list(stoch_decomp_onestep$theta, EY)
+eifs_de <- list(stoch_decomp_onestep$theta, eif_EY)
 
 # direct effect = EY - estimated quantity
 de_est <- linear_contrast(params_de, eifs_de)
 de_est
+#>    lwr_ci param_est    upr_ci 
+#> -0.347205 -0.023887  0.299430
 \end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  From the above, we can conclude that the effect of increasing the odds of
+  participation on a sports team on BMI leads only to a relatively small direct
+  effect.
+\end{itemize}
 
   \bibliography{book.bib,packages.bib}
 

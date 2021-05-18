@@ -83,9 +83,10 @@ which, we recall, are defined as follows
     Y_{\color{blue}{0},\color{red}{M_0}}]}_{\text{natural direct effect}}.
 \end{equation*}
 
-* Our [`medoutcon` `R` package](https://github.com/nhejazi/medoutcon), which
-  accompanies @diaz2020nonparametric, implements one-step and TML estimators of
-  both the natural and interventional (in)direct effects.
+* Our [`medoutcon` `R` package](https://github.com/nhejazi/medoutcon)
+  [@hejazi2021medoutcon], which accompanies @diaz2020nonparametric, implements
+  one-step and TML estimators of both the natural and interventional (in)direct
+  effects.
 * Both types of estimators are capable of accommodating flexible modeling
   strategies (e.g., ensemble machine learning) for the initial estimation of
   nuisance parameters.
@@ -95,7 +96,7 @@ which, we recall, are defined as follows
   exhibit greater robustness than their non-sample-splitting analogs.
 * To this end, `medoutcon` integrates with the `sl3` `R` package, which is
   extensively documented in this [book
-  chapter](https://tlverse.org/tlverse-handbook/sl3).
+  chapter](https://tlverse.org/tlverse-handbook/sl3) [@vdl2022targeted].
 
 ### Interlude: `sl3` for nuisance parameter estimation
 
@@ -106,10 +107,10 @@ which, we recall, are defined as follows
 * Choosing among the diversity of available machine learning algorithms can be
   challenging, so we recommend using the Super Learner algorithm for ensemble
   machine learning [@vdl2007super], which is implemented in the [`sl3` R
-  package](https://github.com/tlverse/sl3).
+  package](https://github.com/tlverse/sl3) [@coyle2021sl3].
 * Below, we demonstrate the construction of an ensemble learner based on a
   limited library of algorithms, including n intercept model, a main terms GLM,
-  Lasso ($\ell_1$-penalized) regression, and random forests (`ranger`).
+  Lasso ($\ell_1$-penalized) regression, and random forest (`ranger`).
 
 ```r
 # instantiate learners
@@ -135,8 +136,8 @@ sl_lrnr <- Lrnr_sl$new(learners = lrnr_lib, metalearner = Lrnr_nnls$new())
   - $b(a, m, w)$, which denotes $\E(Y \mid A=a, M=m, W=w)$
 * While we recommend the use of Super Learning, we opt to instead estimate all
   nuisance parameters with Lasso regression below (to save computational time).
-* Now, we're ready to use the `medoutcon` function to estimate the _natural
-  direct effect_:
+* Now, let's use the `medoutcon()` function to estimate the _natural direct
+  effect_:
 
 ```r
 # compute one-step estimate of the natural direct effect
@@ -160,8 +161,7 @@ summary(nde_onestep)
 #> 1 -0.490   -0.0280  0.434  0.0555 2.84e-15 onestep   direct_natural
 ```
 
-* We can similarly call the `medoutcon` function to estimate the _natural
-  indirect effect_:
+* We can similarly call `medoutcon()` to estimate the _natural indirect effect_:
 
 ```r
 # compute one-step estimate of the natural indirect effect
@@ -226,7 +226,8 @@ Recall that the interventional (in)direct effects are defined via the decomposit
   participation on a sports team might subsequently affect snacking, which then
   could affect mediators like the amount of exercises and overweight status.
 * The interventional direct and indirect effects may also be easily estimated
-  with the [`medoutcon` `R` package](https://github.com/nhejazi/medoutcon).
+  with the [`medoutcon` `R` package](https://github.com/nhejazi/medoutcon)
+  [@hejazi2021medoutcon].
 * Just as for the natural (in)direct effects, `medoutcon` implements
   cross-validated one-step and TML estimators of the interventional effects.
 
@@ -238,10 +239,11 @@ Recall that the interventional (in)direct effects are defined via the decomposit
     conditional only on treatment and baseline covariates;
   * $r(z \mid a, m, w)$, the conditional density of the intermediate
     confounders, conditional on mediators, treatment, and baseline covariates.
+* To estimate the interventional effects, we only need to set the argument `Z`
+  of `medoutcon` to a value other than `NULL`.
 * Note that the implementation in `medoutcon` is currently limited to settings
   with only binary intermediate confounders, i.e., $Z \in \{0, 1\}$.
-* Now, we're ready to use the `medoutcon` function to estimate the
-  _interventional direct effect_:
+* Let's use `medoutcon()` to estimate the _interventional direct effect_:
 
 ```r
 # compute one-step estimate of the interventional direct effect
@@ -265,8 +267,7 @@ summary(interv_de_onestep)
 #> 1 -0.476   -0.0107  0.454  0.0562 -9.93e-16 onestep   direct_interventional
 ```
 
-* We can similarly call the `medoutcon` function to estimate the
-  _interventional indirect effect_:
+* We can similarly estimate the _interventional indirect effect_:
 
 ```r
 # compute one-step estimate of the interventional indirect effect
@@ -302,88 +303,75 @@ summary(interv_ie_onestep)
 
 While the analyses using the natural and interventional effects have been
 illuminating, we may also go beyond the restrictive static interventions
-required to define these (in)direct effects.
+required to define these (in)direct effects. In fact, it may be more realistic
+to consider interventions that do not directly force children to join athletic
+teams, but instead motivate them to make their participation on such teams more
+likely. Importantly, such interventions are often far more realistic and
+actionable in real-world studies.
 
-We are interested in assessing the population intervention direct effect and
-the population intervention indirect effect, based on the effect decomposition
-of the population intervention effect introduced in @diaz2020causal.
+### Formulating the stochastic (in)direct effects
 
-
-Finally, in our analysis, we consider an incremental propensity score
-intervention (IPSI), as first proposed by @kennedy2017nonparametric, wherein the
-_odds of participating in a sports team_ is modulated by some fixed amount
-($0 \leq \delta \leq \infty$) for each individual. Such an intervention may be
-interpreted as the effect of a school program that motivates children to
-participate in sports teams. To exemplify our approach, we postulate a
-motivational intervention that _triples the odds_ of participating in a sports
-team for each individual:
-
+* These more flexible intervention regimes are incompatible with (in)direct
+  effect definitions based on decomposing the average treatment effect.
+* Instead, consider the decomposition of the population intervention effect
+  (PIE) of a _stochastic intervention_ into direct and indirect effects
+  [@diaz2020causal]:
+\begin{align*}
+  \E[Y&_{A_\delta,M_{A_\delta}} - Y_{A,M_A}] = \\
+  &\underbrace{\E[Y_{\color{red}{A_\delta},\color{blue}{M_{A_\delta}}} -
+    Y_{\color{red}{A_\delta},\color{blue}{M}}]}_{\text{stochastic natural indirect effect}} +
+    \underbrace{\E[Y_{\color{blue}{A_\delta},\color{red}{M}} -
+    Y_{\color{blue}{A},\color{red}{M}}]}_{\text{stochastic natural direct effect}}
+\end{align*}
+* Recall from our discussion of the [incremental propensity score
+  interventions](#ipsi) [@kennedy2018nonparametric] that such stochastic
+  interventions can compare the pre- and post-intervention odds of exposure:
+\begin{equation*}
+  \delta = \frac{\text{odds}(A_\delta = 1\mid W=w)}
+  {\text{odds}(A = 1\mid W=w)}.
+\end{equation*}
+* In our analysis, we will modulate the _odds of participating in a sports
+  team_ by a fixed amount for each individual, setting, for example,
+  $\delta = 2$:
 
 ```r
-delta_shift_ipsi <- 3
+delta_shift_ipsi <- 2
 ```
+* Such an intervention may be interpreted as the effect of a school program that
+  motivates children to participate in sports teams.
 
-### Decomposing the population intervention effect
+### Efficient estimation of the stochastic (in)direct effects
 
-We may decompose the population intervention effect (PIE) in terms of a
-_population intervention direct effect_ (PIDE) and a _population
-intervention indirect effect_ (PIIE):
-\begin{equation*}
-  \overbrace{\mathbb{E}\{Y(A_\delta, Z(A_\delta)) -
-    Y(A_\delta, Z)\}}^{\text{PIIE}} +
-    \overbrace{\mathbb{E}\{Y(A_\delta, Z) - Y(A, Z)\}}^{\text{PIDE}}.
-\end{equation*}
-
-This decomposition of the PIE as the sum of the population intervention direct
-and indirect effects has an interpretation analogous to the corresponding
-standard decomposition of the average treatment effect. In the sequel, we will
-compute each of the components of the direct and indirect effects above using
-appropriate estimators as follows
-
-* For $\mathbb{E}\{Y(A, Z)\}$, the sample mean $\frac{1}{n}\sum_{i=1}^n Y_i$ is
-  sufficient;
-* for $\mathbb{E}\{Y(A_{\delta}, Z)\}$, an efficient one-step estimator for the
-  effect of a joint intervention altering the exposure mechanism but not the
-  mediation mechanism, as proposed in @diaz2020causal; and,
-* for $\mathbb{E}\{Y(A_{\delta}, Z_{A_{\delta}})\}$, an efficient one-step
-  estimator for the effect of a joint intervention altering both the exposure
-  and mediation mechanisms, as proposed in @kennedy2017nonparametric and
-  implemented in the [`npcausal` R
-  package](https://github.com/ehkennedy/npcausal).
-
-### Estimating the effect decomposition term
-
-As given in @diaz2020causal, the statistical functional identifying the
-decomposition term that appears in both the PIDE and PIIE
-$\mathbb{E}\{Y(A_{\delta}, Z)\}$, which corresponds to altering the exposure
-mechanism while keeping the mediation mechanism fixed, is
-\begin{equation*}
-  \theta_0(\delta) = \int m_0(a, z, w) g_{0,\delta}(a \mid w) p_0(z, w)
-    d\nu(a, z, w),
-\end{equation*}
-for which a one-step estimator is available. The corresponding _efficient
-influence function_ (EIF) with respect to the nonparametric model $\mathcal{M}$
-is $D_{\eta,\delta}(o) = D^Y_{\eta,\delta}(o)
-+ D^A_{\eta,\delta}(o) + D^{Z,W}_{\eta,\delta}(o) - \theta(\delta)$. The
-one-step estimator may be computed using the EIF estimating equation, making use
-of cross-fitting [@zheng2011cross; @chernozhukov2018double] to circumvent any
-need for entropy conditions (i.e., Donsker class restrictions). The resultant
-estimator is
-\begin{equation*}
-  \hat{\theta}(\delta) = \frac{1}{n} \sum_{i = 1}^n D_{\hat{\eta}_{j(i)},
-  \delta}(O_i) = \frac{1}{n} \sum_{i = 1}^n \left\{ D^Y_{\hat{\eta}_{j(i)},
-  \delta}(O_i) + D^A_{\hat{\eta}_{j(i)}, \delta}(O_i) +
-  D^{Z,W}_{\hat{\eta}_{j(i)}, \delta}(O_i) \right\},
-\end{equation*}
-which is implemented in the `medshift` R package. We make use of that
-implementation to estimate $\mathbb{E}\{Y(A_{\delta}, Z)\}$ via its one-step
-estimator $\hat{\theta}(\delta)$ below
-
+* The decomposition of the PIE into the direct and indirect effects leads to a
+  common term $\E[Y_{\color{red}{A_\delta},\color{blue}{M}}]$ involved in both
+  the direct and indirect effect definitions. This term may be estimated via the
+  [`medshift` `R` package](https://github.com/nhejazi/medshift)
+  [@hejazi2020medshift].
+* For the direct effect, the remaining term is the
+  $\E[Y_{\color{blue}{A},\color{red}{M}}]$, which may be estimated by a simple
+  mean in the observed data (i.e., no intervention).
+* For the indirect effect, the remaining term is the joint effect of stochastic
+  interventions on both $A$ and $M$:
+  $\E[Y_{\color{red}{A_\delta},\color{blue}{M_{A_\delta}}}$.
+  * For the case of an IPSI on binary $A$, this may be estimated by the tools
+    in the [`npcausal` `R` package](https://github.com/ehkennedy/npcausal).
+  * For the case of an MTP on continuous $A$, this may be estimated by the tools
+    in the [`txshift` `R` package](https://github.com/nhejazi/txshift)
+    [@hejazi2020txshift-rpkg; @hejazi2020txshift-joss].
+* Like the implementation in `medoutcon`, the `medshift` package makes use of
+  cross-validation in constructing initial estimates of nuisance parameters,
+  resulting in more robust, cross-validated efficient estimators
+  [@klaassen1987consistent; @zheng2011cross; @chernozhukov2018double].
+* Now, we're ready to use the `medshift` function to estimate the decomposition
+  term common to both the _stochastic direct and indirect effects_:
 
 ```r
-# let's compute the parameter where A (but not Z) are shifted
-pide_decomp_onestep <- medshift(
-  W = W, A = A, Z = Z, Y = Y,
+# compute one-step estimate of the decomposition term of the (in)direct effects
+stoch_decomp_onestep <- medshift(
+  W = weight_behavior[, c("age", "sex", "race", "tvhours")],
+  A = (as.numeric(weight_behavior$sports) - 1),
+  Z = weight_behavior[, c("snack", "exercises", "overweigh")],
+  Y = weight_behavior$bmi,
   delta = delta_shift_ipsi,
   g_learners = lasso_lrnr,
   e_learners = lasso_lrnr,
@@ -391,25 +379,14 @@ pide_decomp_onestep <- medshift(
   estimator = "onestep",
   estimator_args = list(cv_folds = 5)
 )
-summary(pide_decomp_onestep)
+summary(stoch_decomp_onestep)
+#>      lwr_ci   param_est      upr_ci   param_var    eif_mean   estimator 
+#>   18.770026   19.103221   19.436415      0.0289 -1.7263e-15     onestep
 ```
+<!-- Nima: note the notational differences from the above -->
 
-### Estimating the direct effect
-
-Recall that, based on the decomposition outlined previously, the population
-intervention direct effect may be denoted $\beta_{\text{PIDE}}(\delta) =
-\theta_0(\delta) - \mathbb{E}Y$. Thus, an estimator of the PIDE,
-$\hat{\beta}_{\text{PIDE}}(\delta)$ may be expressed as a composition of
-estimators of its constituent parameters:
-\begin{equation*}
-  \hat{\beta}_{\text{PIDE}}({\delta}) = \hat{\theta}(\delta) -
-  \frac{1}{n} \sum_{i = 1}^n Y_i.
-\end{equation*}
-
-Based on the above, we may construct an estimator of the PIDE using quantities
-already computed. The convenience function below applies the simple delta method
-required in the case of a linear contrast between the two constituent
-parameters:
+* To estimate the stochastic direct effect, an extra step is necessary -- we
+  must apply the delta method:
 
 ```r
 # convenience function to compute inference via delta method: EY1 - EY0
@@ -426,18 +403,21 @@ linear_contrast <- function(params, eifs, ci_level = 0.95) {
   return(out)
 }
 ```
-
-With the above convenience function in hand, we'll construct or extract the
-necessary components from existing objects and simply apply the function:
+* Straightforward application of this procedure yields,
 
 ```r
 # parameter estimates and EIFs for components of direct effect
-EY <- mean(Y)
-eif_EY <- Y - EY
-params_de <- list(theta_eff$theta, EY)
-eifs_de <- list(theta_eff$eif, eif_EY)
+EY <- mean(weight_behavior$bmi)
+eif_EY <- weight_behavior$bmi - EY
+params_de <- list(stoch_decomp_onestep$theta, EY)
+eifs_de <- list(stoch_decomp_onestep$theta, eif_EY)
 
 # direct effect = EY - estimated quantity
 de_est <- linear_contrast(params_de, eifs_de)
 de_est
+#>    lwr_ci param_est    upr_ci 
+#> -0.347205 -0.023887  0.299430
 ```
+* From the above, we can conclude that the effect of increasing the odds of
+  participation on a sports team on BMI leads only to a relatively small direct
+  effect.

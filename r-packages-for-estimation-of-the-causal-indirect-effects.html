@@ -25,7 +25,838 @@
   \(\newcommand{\I}{\mathbb{I}}\)
   \(\newcommand{\1}{\mathbbm{1}}\)
   </span>
-    <script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/mark.js@8.11.1/dist/mark.min.js"></script><!-- CSS --><div class="container-fluid">
+    
+  <script>
+  /* ========================================================================
+   * Bootstrap: transition.js v3.3.7
+   * http://getbootstrap.com/javascript/#transitions
+   * ========================================================================
+   * Copyright 2011-2016 Twitter, Inc.
+   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+   * ======================================================================== */
+  
+  
+  +function ($) {
+    'use strict';
+  
+    // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)
+    // ============================================================
+  
+    function transitionEnd() {
+      var el = document.createElement('bootstrap')
+  
+      var transEndEventNames = {
+        WebkitTransition : 'webkitTransitionEnd',
+        MozTransition    : 'transitionend',
+        OTransition      : 'oTransitionEnd otransitionend',
+        transition       : 'transitionend'
+      }
+  
+      for (var name in transEndEventNames) {
+        if (el.style[name] !== undefined) {
+          return { end: transEndEventNames[name] }
+        }
+      }
+  
+      return false // explicit for ie8 (  ._.)
+    }
+  
+    // http://blog.alexmaccaw.com/css-transitions
+    $.fn.emulateTransitionEnd = function (duration) {
+      var called = false
+      var $el = this
+      $(this).one('bsTransitionEnd', function () { called = true })
+      var callback = function () { if (!called) $($el).trigger($.support.transition.end) }
+      setTimeout(callback, duration)
+      return this
+    }
+  
+    $(function () {
+      $.support.transition = transitionEnd()
+  
+      if (!$.support.transition) return
+  
+      $.event.special.bsTransitionEnd = {
+        bindType: $.support.transition.end,
+        delegateType: $.support.transition.end,
+        handle: function (e) {
+          if ($(e.target).is(this)) return e.handleObj.handler.apply(this, arguments)
+        }
+      }
+    })
+  
+  }(jQuery);
+  </script><script>
+  /* ========================================================================
+   * Bootstrap: collapse.js v3.3.7
+   * http://getbootstrap.com/javascript/#collapse
+   * ========================================================================
+   * Copyright 2011-2016 Twitter, Inc.
+   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+   * ======================================================================== */
+  
+  /* jshint latedef: false */
+  
+  +function ($) {
+    'use strict';
+  
+    // COLLAPSE PUBLIC CLASS DEFINITION
+    // ================================
+  
+    var Collapse = function (element, options) {
+      this.$element      = $(element)
+      this.options       = $.extend({}, Collapse.DEFAULTS, options)
+      this.$trigger      = $('[data-toggle="collapse"][href="#' + element.id + '"],' +
+                             '[data-toggle="collapse"][data-target="#' + element.id + '"]')
+      this.transitioning = null
+  
+      if (this.options.parent) {
+        this.$parent = this.getParent()
+      } else {
+        this.addAriaAndCollapsedClass(this.$element, this.$trigger)
+      }
+  
+      if (this.options.toggle) this.toggle()
+    }
+  
+    Collapse.VERSION  = '3.3.7'
+  
+    Collapse.TRANSITION_DURATION = 350
+  
+    Collapse.DEFAULTS = {
+      toggle: true
+    }
+  
+    Collapse.prototype.dimension = function () {
+      var hasWidth = this.$element.hasClass('width')
+      return hasWidth ? 'width' : 'height'
+    }
+  
+    Collapse.prototype.show = function () {
+      if (this.transitioning || this.$element.hasClass('in')) return
+  
+      var activesData
+      var actives = this.$parent && this.$parent.children('.panel').children('.in, .collapsing')
+  
+      if (actives && actives.length) {
+        activesData = actives.data('bs.collapse')
+        if (activesData && activesData.transitioning) return
+      }
+  
+      var startEvent = $.Event('show.bs.collapse')
+      this.$element.trigger(startEvent)
+      if (startEvent.isDefaultPrevented()) return
+  
+      if (actives && actives.length) {
+        Plugin.call(actives, 'hide')
+        activesData || actives.data('bs.collapse', null)
+      }
+  
+      var dimension = this.dimension()
+  
+      this.$element
+        .removeClass('collapse')
+        .addClass('collapsing')[dimension](0)
+        .attr('aria-expanded', true)
+  
+      this.$trigger
+        .removeClass('collapsed')
+        .attr('aria-expanded', true)
+  
+      this.transitioning = 1
+  
+      var complete = function () {
+        this.$element
+          .removeClass('collapsing')
+          .addClass('collapse in')[dimension]('')
+        this.transitioning = 0
+        this.$element
+          .trigger('shown.bs.collapse')
+      }
+  
+      if (!$.support.transition) return complete.call(this)
+  
+      var scrollSize = $.camelCase(['scroll', dimension].join('-'))
+  
+      this.$element
+        .one('bsTransitionEnd', $.proxy(complete, this))
+        .emulateTransitionEnd(Collapse.TRANSITION_DURATION)[dimension](this.$element[0][scrollSize])
+    }
+  
+    Collapse.prototype.hide = function () {
+      if (this.transitioning || !this.$element.hasClass('in')) return
+  
+      var startEvent = $.Event('hide.bs.collapse')
+      this.$element.trigger(startEvent)
+      if (startEvent.isDefaultPrevented()) return
+  
+      var dimension = this.dimension()
+  
+      this.$element[dimension](this.$element[dimension]())[0].offsetHeight
+  
+      this.$element
+        .addClass('collapsing')
+        .removeClass('collapse in')
+        .attr('aria-expanded', false)
+  
+      this.$trigger
+        .addClass('collapsed')
+        .attr('aria-expanded', false)
+  
+      this.transitioning = 1
+  
+      var complete = function () {
+        this.transitioning = 0
+        this.$element
+          .removeClass('collapsing')
+          .addClass('collapse')
+          .trigger('hidden.bs.collapse')
+      }
+  
+      if (!$.support.transition) return complete.call(this)
+  
+      this.$element
+        [dimension](0)
+        .one('bsTransitionEnd', $.proxy(complete, this))
+        .emulateTransitionEnd(Collapse.TRANSITION_DURATION)
+    }
+  
+    Collapse.prototype.toggle = function () {
+      this[this.$element.hasClass('in') ? 'hide' : 'show']()
+    }
+  
+    Collapse.prototype.getParent = function () {
+      return $(this.options.parent)
+        .find('[data-toggle="collapse"][data-parent="' + this.options.parent + '"]')
+        .each($.proxy(function (i, element) {
+          var $element = $(element)
+          this.addAriaAndCollapsedClass(getTargetFromTrigger($element), $element)
+        }, this))
+        .end()
+    }
+  
+    Collapse.prototype.addAriaAndCollapsedClass = function ($element, $trigger) {
+      var isOpen = $element.hasClass('in')
+  
+      $element.attr('aria-expanded', isOpen)
+      $trigger
+        .toggleClass('collapsed', !isOpen)
+        .attr('aria-expanded', isOpen)
+    }
+  
+    function getTargetFromTrigger($trigger) {
+      var href
+      var target = $trigger.attr('data-target')
+        || (href = $trigger.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') // strip for ie7
+  
+      return $(target)
+    }
+  
+  
+    // COLLAPSE PLUGIN DEFINITION
+    // ==========================
+  
+    function Plugin(option) {
+      return this.each(function () {
+        var $this   = $(this)
+        var data    = $this.data('bs.collapse')
+        var options = $.extend({}, Collapse.DEFAULTS, $this.data(), typeof option == 'object' && option)
+  
+        if (!data && options.toggle && /show|hide/.test(option)) options.toggle = false
+        if (!data) $this.data('bs.collapse', (data = new Collapse(this, options)))
+        if (typeof option == 'string') data[option]()
+      })
+    }
+  
+    var old = $.fn.collapse
+  
+    $.fn.collapse             = Plugin
+    $.fn.collapse.Constructor = Collapse
+  
+  
+    // COLLAPSE NO CONFLICT
+    // ====================
+  
+    $.fn.collapse.noConflict = function () {
+      $.fn.collapse = old
+      return this
+    }
+  
+  
+    // COLLAPSE DATA-API
+    // =================
+  
+    $(document).on('click.bs.collapse.data-api', '[data-toggle="collapse"]', function (e) {
+      var $this   = $(this)
+  
+      if (!$this.attr('data-target')) e.preventDefault()
+  
+      var $target = getTargetFromTrigger($this)
+      var data    = $target.data('bs.collapse')
+      var option  = data ? 'toggle' : $this.data()
+  
+      Plugin.call($target, option)
+    })
+  
+  }(jQuery);
+  </script><script>
+  window.initializeCodeFolding = function(show) {
+  
+    // handlers for show-all and hide all
+    $("#rmd-show-all-code").click(function() {
+      // close the dropdown menu when an option is clicked
+      $("#allCodeButton").dropdown("toggle");
+        // R show code
+        $('div.r-code-collapse').each(function() {
+          $(this).collapse('show');
+        });
+        // Python show code
+        $('div.py-code-collapse').each(function() {
+          $(this).collapse('show');
+        }); 
+        // Bash show code
+        $('div.sh-code-collapse').each(function() {
+          $(this).collapse('show');
+        }); 
+        
+    });
+    $("#rmd-hide-all-code").click(function() {
+        // close the dropdown menu when an option is clicked
+        $("#allCodeButton").dropdown("toggle");
+        // Hide R code
+        $('div.r-code-collapse').each(function() {
+          $(this).collapse('hide');
+        });
+        // Hide Python code
+        $('div.py-code-collapse').each(function() {
+          $(this).collapse('hide');
+        });
+        // Hide Bash code
+        $('div.sh-code-collapse').each(function() {
+          $(this).collapse('hide');
+        });
+    });
+  
+  
+    // index for unique code element ids
+    var r_currentIndex  = 1;   // for R code
+    var py_currentIndex = 1;   // for Python code
+    var sh_currentIndex  = 1;   // for shell code
+  
+    // select Python chunks
+    var pyCodeBlocks = $('pre.python');
+    pyCodeBlocks.each(function() {
+      // create a collapsable div to wrap the code in
+      var div = $('<div class="collapse py-code-collapse"></div>');
+      if (show)
+        div.addClass('in');
+      var id = 'pycode-643E0F36' + py_currentIndex++;
+      div.attr('id', id);
+      // "this" refers the code chunk
+      $(this).before(div);
+      $(this).detach().appendTo(div);
+      $(this).css('background-color','#ebfaeb');  // change color of chunk background
+      
+      // add a show code button right above
+      var showCodeText = $('<span>' + (show ? 'Hide Python code' : 'Python code') + '</span>');
+      var showCodeButton = $('<button type="button" class="btn btn-default btn-xs code-folding-btn pull-right"></button>');
+      showCodeButton.append(showCodeText);
+      showCodeButton
+          .attr('data-toggle', 'collapse')
+          .attr('data-target', '#' + id)
+          .attr('aria-expanded', show)
+          .attr('aria-controls', id);    
+          
+      // change the background color of the button
+      showCodeButton.css('background-color','#009900');
+          
+      var buttonRow = $('<div class="row"></div>');
+      var buttonCol = $('<div class="col-md-12"></div>');
+      buttonCol.append(showCodeButton);
+      buttonRow.append(buttonCol);
+      div.before(buttonRow);    
+      
+      // update state of button on show/hide
+      div.on('hidden.bs.collapse', function () {
+        showCodeText.text('Python code');
+      });
+      div.on('show.bs.collapse', function () {
+        showCodeText.text('Hide Python code');
+      });  
+     });
+    
+    
+  
+    // select Bash shell chunks
+    var shCodeBlocks = $('pre.bash');
+    shCodeBlocks.each(function() {
+      // create a collapsable div to wrap the code in
+      var div = $('<div class="collapse sh-code-collapse"></div>');
+      if (show)
+        div.addClass('in');
+      var id = 'shcode-643E0F36' + sh_currentIndex++;
+      div.attr('id', id);
+      // "this" refers the code chunk
+      $(this).before(div);
+      $(this).detach().appendTo(div);
+      $(this).css('background-color','#A0A0A0');  // change color of chunk background
+      
+      // add a show code button right above
+      var showCodeText = $('<span>' + (show ? 'Hide Bash code' : 'Bash code') + '</span>');
+      var showCodeButton = $('<button type="button" class="btn btn-default btn-xs code-folding-btn pull-right"></button>');
+      showCodeButton.append(showCodeText);
+      showCodeButton
+          .attr('data-toggle', 'collapse')
+          .attr('data-target', '#' + id)
+          .attr('aria-expanded', show)
+          .attr('aria-controls', id);    
+          
+      // change the background color of the button
+      showCodeButton.css('background-color','#cc7a00');
+          
+      var buttonRow = $('<div class="row"></div>');
+      var buttonCol = $('<div class="col-md-12"></div>');
+      buttonCol.append(showCodeButton);
+      buttonRow.append(buttonCol);
+      div.before(buttonRow);    
+      
+      // update state of button on show/hide
+      div.on('hidden.bs.collapse', function () {
+        showCodeText.text('Bash code');
+      });
+      div.on('show.bs.collapse', function () {
+        showCodeText.text('Hide Bash code');
+      });  
+     });  
+  
+  
+    // select all R code blocks
+    // var rCodeBlocks = $('pre.sourceCode, pre.r, pre.bash, pre.sql, pre.cpp, pre.stan');
+    // adding pre.sourceCode confuses the Python button
+    var rCodeBlocks = $('pre.r, pre.sql, pre.cpp, pre.stan');
+    rCodeBlocks.each(function() {
+      // create a collapsable div to wrap the code in
+      var div = $('<div class="collapse r-code-collapse"></div>');
+      if (show)
+        div.addClass('in');
+      var id = 'rcode-643E0F36' + r_currentIndex++;
+      div.attr('id', id);
+      $(this).before(div);
+      $(this).detach().appendTo(div);
+      $(this).css('background-color','#e6faff'); // change color of chunk background
+  
+      // add a show code button right above
+      var showCodeText = $('<span>' + (show ? 'Hide R code' : 'R code') + '</span>');
+      var showCodeButton = $('<button type="button" class="btn btn-default btn-xs code-folding-btn pull-right"></button>');
+      showCodeButton.append(showCodeText);
+      showCodeButton
+          .attr('data-toggle', 'collapse')
+          .attr('data-target', '#' + id)
+          .attr('aria-expanded', show)
+          .attr('aria-controls', id);
+      
+      // change the background color of the button        
+      showCodeButton.css('background-color','#0000ff');
+      
+      var buttonRow = $('<div class="row"></div>');
+      var buttonCol = $('<div class="col-md-12"></div>');
+      buttonCol.append(showCodeButton);
+      buttonRow.append(buttonCol);
+      div.before(buttonRow);
+  
+      // update state of button on show/hide
+      div.on('hidden.bs.collapse', function () {
+        showCodeText.text('R code');
+      });
+      div.on('show.bs.collapse', function () {
+        showCodeText.text('Hide R code');
+      });
+    });
+  
+  }
+  </script><script>
+  /* ========================================================================
+   * Bootstrap: dropdown.js v3.3.7
+   * http://getbootstrap.com/javascript/#dropdowns
+   * ========================================================================
+   * Copyright 2011-2016 Twitter, Inc.
+   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+   * ======================================================================== */
+  
+  
+  +function ($) {
+    'use strict';
+  
+    // DROPDOWN CLASS DEFINITION
+    // =========================
+  
+    var backdrop = '.dropdown-backdrop'
+    var toggle   = '[data-toggle="dropdown"]'
+    var Dropdown = function (element) {
+      $(element).on('click.bs.dropdown', this.toggle)
+    }
+  
+    Dropdown.VERSION = '3.3.7'
+  
+    function getParent($this) {
+      var selector = $this.attr('data-target')
+  
+      if (!selector) {
+        selector = $this.attr('href')
+        selector = selector && /#[A-Za-z]/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+      }
+  
+      var $parent = selector && $(selector)
+  
+      return $parent && $parent.length ? $parent : $this.parent()
+    }
+  
+    function clearMenus(e) {
+      if (e && e.which === 3) return
+      $(backdrop).remove()
+      $(toggle).each(function () {
+        var $this         = $(this)
+        var $parent       = getParent($this)
+        var relatedTarget = { relatedTarget: this }
+  
+        if (!$parent.hasClass('open')) return
+  
+        if (e && e.type == 'click' && /input|textarea/i.test(e.target.tagName) && $.contains($parent[0], e.target)) return
+  
+        $parent.trigger(e = $.Event('hide.bs.dropdown', relatedTarget))
+  
+        if (e.isDefaultPrevented()) return
+  
+        $this.attr('aria-expanded', 'false')
+        $parent.removeClass('open').trigger($.Event('hidden.bs.dropdown', relatedTarget))
+      })
+    }
+  
+    Dropdown.prototype.toggle = function (e) {
+      var $this = $(this)
+  
+      if ($this.is('.disabled, :disabled')) return
+  
+      var $parent  = getParent($this)
+      var isActive = $parent.hasClass('open')
+  
+      clearMenus()
+  
+      if (!isActive) {
+        if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
+          // if mobile we use a backdrop because click events don't delegate
+          $(document.createElement('div'))
+            .addClass('dropdown-backdrop')
+            .insertAfter($(this))
+            .on('click', clearMenus)
+        }
+  
+        var relatedTarget = { relatedTarget: this }
+        $parent.trigger(e = $.Event('show.bs.dropdown', relatedTarget))
+  
+        if (e.isDefaultPrevented()) return
+  
+        $this
+          .trigger('focus')
+          .attr('aria-expanded', 'true')
+  
+        $parent
+          .toggleClass('open')
+          .trigger($.Event('shown.bs.dropdown', relatedTarget))
+      }
+  
+      return false
+    }
+  
+    Dropdown.prototype.keydown = function (e) {
+      if (!/(38|40|27|32)/.test(e.which) || /input|textarea/i.test(e.target.tagName)) return
+  
+      var $this = $(this)
+  
+      e.preventDefault()
+      e.stopPropagation()
+  
+      if ($this.is('.disabled, :disabled')) return
+  
+      var $parent  = getParent($this)
+      var isActive = $parent.hasClass('open')
+  
+      if (!isActive && e.which != 27 || isActive && e.which == 27) {
+        if (e.which == 27) $parent.find(toggle).trigger('focus')
+        return $this.trigger('click')
+      }
+  
+      var desc = ' li:not(.disabled):visible a'
+      var $items = $parent.find('.dropdown-menu' + desc)
+  
+      if (!$items.length) return
+  
+      var index = $items.index(e.target)
+  
+      if (e.which == 38 && index > 0)                 index--         // up
+      if (e.which == 40 && index < $items.length - 1) index++         // down
+      if (!~index)                                    index = 0
+  
+      $items.eq(index).trigger('focus')
+    }
+  
+  
+    // DROPDOWN PLUGIN DEFINITION
+    // ==========================
+  
+    function Plugin(option) {
+      return this.each(function () {
+        var $this = $(this)
+        var data  = $this.data('bs.dropdown')
+  
+        if (!data) $this.data('bs.dropdown', (data = new Dropdown(this)))
+        if (typeof option == 'string') data[option].call($this)
+      })
+    }
+  
+    var old = $.fn.dropdown
+  
+    $.fn.dropdown             = Plugin
+    $.fn.dropdown.Constructor = Dropdown
+  
+  
+    // DROPDOWN NO CONFLICT
+    // ====================
+  
+    $.fn.dropdown.noConflict = function () {
+      $.fn.dropdown = old
+      return this
+    }
+  
+  
+    // APPLY TO STANDARD DROPDOWN ELEMENTS
+    // ===================================
+  
+    $(document)
+      .on('click.bs.dropdown.data-api', clearMenus)
+      .on('click.bs.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
+      .on('click.bs.dropdown.data-api', toggle, Dropdown.prototype.toggle)
+      .on('keydown.bs.dropdown.data-api', toggle, Dropdown.prototype.keydown)
+      .on('keydown.bs.dropdown.data-api', '.dropdown-menu', Dropdown.prototype.keydown)
+  
+  }(jQuery);
+  </script><style type="text/css">
+  .code-folding-btn {
+    margin-bottom: 4px;
+  }
+  
+  .row { display: flex; }
+  .collapse { display: none; }
+  .in { display:block }
+  .pull-right > .dropdown-menu {
+      right: 0;
+      left: auto;
+  }
+  
+  .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      z-index: 1000;
+      display: none;
+      float: left;
+      min-width: 160px;
+      padding: 5px 0;
+      margin: 2px 0 0;
+      font-size: 14px;
+      text-align: left;
+      list-style: none;
+      background-color: #fff;
+      -webkit-background-clip: padding-box;
+      background-clip: padding-box;
+      border: 1px solid #ccc;
+      border: 1px solid rgba(0,0,0,.15);
+      border-radius: 4px;
+      -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+      box-shadow: 0 6px 12px rgba(0,0,0,.175);
+  }
+  
+  .open > .dropdown-menu {
+      display: block;
+      color: #ffffff;
+      background-color: #ffffff;
+      background-image: none;
+      border-color: #92897e;
+  }
+  
+  .dropdown-menu > li > a {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: 400;
+    line-height: 1.42857143;
+    color: #000000;
+    white-space: nowrap;
+  }
+  
+  .dropdown-menu > li > a:hover,
+  .dropdown-menu > li > a:focus {
+    color: #ffffff;
+    text-decoration: none;
+    background-color: #e95420;
+  }
+  
+  .dropdown-menu > .active > a,
+  .dropdown-menu > .active > a:hover,
+  .dropdown-menu > .active > a:focus {
+    color: #ffffff;
+    text-decoration: none;
+    background-color: #e95420;
+    outline: 0;
+  }
+  .dropdown-menu > .disabled > a,
+  .dropdown-menu > .disabled > a:hover,
+  .dropdown-menu > .disabled > a:focus {
+    color: #aea79f;
+  }
+  
+  .dropdown-menu > .disabled > a:hover,
+  .dropdown-menu > .disabled > a:focus {
+    text-decoration: none;
+    cursor: not-allowed;
+    background-color: transparent;
+    background-image: none;
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+  }
+  
+  .btn {
+    display: inline-block;
+    margin-bottom: 1;
+    font-weight: normal;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+        touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    padding: 4px 8px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    border-radius: 4px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  .btn:focus,
+  .btn:active:focus,
+  .btn.active:focus,
+  .btn.focus,
+  .btn:active.focus,
+  .btn.active.focus {
+    outline: 5px auto -webkit-focus-ring-color;
+    outline-offset: -2px;
+  }
+  .btn:hover,
+  .btn:focus,
+  .btn.focus {
+    color: #ffffff;
+    text-decoration: none;
+  }
+  .btn:active,
+  .btn.active {
+    background-image: none;
+    outline: 0;
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  }
+  .btn.disabled,
+  .btn[disabled],
+  fieldset[disabled] .btn {
+    cursor: not-allowed;
+    filter: alpha(opacity=65);
+    opacity: 0.65;
+    box-shadow: none;
+  }
+  a.btn.disabled,
+  fieldset[disabled] a.btn {
+    pointer-events: none;
+  }
+  .btn-default {
+    color: #ffffff;
+    background-color: #aea79f; #important
+    border-color: #aea79f;
+  }
+  
+  .btn-default:focus,
+  .btn-default.focus {
+    color: #ffffff;
+    background-color: #978e83;
+    border-color: #6f675e;
+  }
+  
+  .btn-default:hover {
+    color: #ffffff;
+    background-color: #978e83;
+    border-color: #92897e;
+  }
+  .btn-default:active,
+  .btn-default.active,
+  .btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
+    border-radius: 0;
+  }
+  .btn-group > .btn:first-child {
+    margin-left: 0;
+  }
+  .btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .btn-group > .btn:last-child:not(:first-child),
+  .btn-group > .dropdown-toggle:not(:first-child) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  .btn-group > .btn-group {
+    float: left;
+  }
+  .btn-group > .btn-group:not(:first-child):not(:last-child) > .btn {
+    border-radius: 0;
+  }
+  .btn-group > .btn-group:first-child:not(:last-child) > .btn:last-child,
+  .btn-group > .btn-group:first-child:not(:last-child) > .dropdown-toggle {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .btn-group > .btn-group:last-child:not(:first-child) > .btn:first-child {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  .btn-group .dropdown-toggle:active,
+  .btn-group.open .dropdown-toggle {
+    outline: 0;
+  }
+  .btn-group > .btn + .dropdown-toggle {
+    padding-right: 8px;
+    padding-left: 8px;
+  }
+  .btn-group > .btn-lg + .dropdown-toggle {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+  .btn-group.open .dropdown-toggle {
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  }
+  .btn-group.open .dropdown-toggle.btn-link {
+    box-shadow: none;
+  }
+  </style>
+<script>
+  var str = '<div class="btn-group pull-right" style="position: fixed; right: 50px; top: 10px; z-index: 200"><button type="button" class="btn btn-default btn-xs dropdown-toggle" id="allCodeButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-_extension-text-contrast=""><span>Code</span> <span class="caret"></span></button><ul class="dropdown-menu" style="min-width: 50px;"><li><a id="rmd-show-all-code" href="#">Show All Code</a></li><li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li></ul></div>';
+  document.write(str);
+  </script><script>
+  $(document).ready(function () {
+    // show code by default. Use "show" === "hide" to hide
+    window.initializeCodeFolding("show" === "show");
+  });
+  </script><script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/mark.js@8.11.1/dist/mark.min.js"></script><!-- CSS --><div class="container-fluid">
 <div class="row">
   <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
 
@@ -46,7 +877,7 @@
 <li><a class="" href="index.html">Welcome to SER!</a></li>
 <li><a class="" href="mediation.html"><span class="header-section-number">1</span> Causal mediation analysis intro</a></li>
 <li><a class="" href="estimands.html"><span class="header-section-number">2</span> Types of path-specific causal mediation effects</a></li>
-<li><a class="" href="stochastic.html"><span class="header-section-number">3</span> Stochastic Direct and Indirect Effects</a></li>
+<li><a class="" href="stochastic.html"><span class="header-section-number">3</span> Stochastic direct and indirect effects</a></li>
 <li><a class="" href="estimandirl.html"><span class="header-section-number">4</span> How to choose an estimand: Real-world example</a></li>
 <li><a class="" href="preliminaries-on-semiparametric-estimation.html"><span class="header-section-number">5</span> Preliminaries on semiparametric estimation</a></li>
 <li><a class="" href="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html"><span class="header-section-number">6</span> Using the EIF to construct an estimator: the case of the natural direct effect</a></li>
@@ -137,19 +968,20 @@ which, we recall, are defined as follows
     Y_{\color{blue}{0},\color{red}{M_0}}]}_{\text{natural direct effect}}.
 \end{equation*}\]</span></p>
 <ul>
-<li>Our <a href="https://github.com/nhejazi/medoutcon"><code>medoutcon</code> <code>R</code> package</a>, which
-accompanies <span class="citation">(<span class="citeproc-not-found" data-reference-id="diaz2020nonparametric"><strong>???</strong></span>)</span>, implements one-step and TML estimators of
-both the natural and interventional (in)direct effects.</li>
+<li>Our <a href="https://github.com/nhejazi/medoutcon"><code>medoutcon</code> <code>R</code> package</a>
+<span class="citation">(Hejazi, Dı́az, and Rudolph <a href="references.html#ref-hejazi2021medoutcon" role="doc-biblioref">2021</a>)</span>, which accompanies <span class="citation">Dı́az et al. (<a href="references.html#ref-diaz2020nonparametric" role="doc-biblioref">2020</a>)</span>, implements
+one-step and TML estimators of both the natural and interventional (in)direct
+effects.</li>
 <li>Both types of estimators are capable of accommodating flexible modeling
 strategies (e.g., ensemble machine learning) for the initial estimation of
 nuisance parameters.</li>
 <li>The <code>medoutcon</code> <code>R</code> package uses cross-validation in initial estimation: this
 results in cross-validated (or “cross-fitted”) one-step and TML estimators
-<span class="citation">(<span class="citeproc-not-found" data-reference-id="klaassen1987consistent"><strong>???</strong></span>; <span class="citeproc-not-found" data-reference-id="zheng2011cross"><strong>???</strong></span>; <span class="citeproc-not-found" data-reference-id="chernozhukov2018double"><strong>???</strong></span>)</span>, which
+<span class="citation">(Klaassen <a href="references.html#ref-klaassen1987consistent" role="doc-biblioref">1987</a>; Zheng and van der Laan <a href="references.html#ref-zheng2011cross" role="doc-biblioref">2011</a>; Chernozhukov et al. <a href="references.html#ref-chernozhukov2018double" role="doc-biblioref">2018</a>)</span>, which
 exhibit greater robustness than their non-sample-splitting analogs.</li>
 <li>To this end, <code>medoutcon</code> integrates with the <code>sl3</code> <code>R</code> package, which is
 extensively documented in this <a href="https://tlverse.org/tlverse-handbook/sl3">book
-chapter</a>.</li>
+chapter</a> <span class="citation">(van der Laan et al. <a href="references.html#ref-vdl2022targeted" role="doc-biblioref">2022</a>)</span>.</li>
 </ul>
 </div>
 <div id="interlude-sl3-for-nuisance-parameter-estimation" class="section level3">
@@ -164,10 +996,10 @@ analytic conclusions.</li>
 <li>Choosing among the diversity of available machine learning algorithms can be
 challenging, so we recommend using the Super Learner algorithm for ensemble
 machine learning <span class="citation">(van der Laan, Polley, and Hubbard <a href="references.html#ref-vdl2007super" role="doc-biblioref">2007</a>)</span>, which is implemented in the <a href="https://github.com/tlverse/sl3"><code>sl3</code> R
-package</a>.</li>
+package</a> <span class="citation">(Coyle et al. <a href="references.html#ref-coyle2021sl3" role="doc-biblioref">2021</a>)</span>.</li>
 <li>Below, we demonstrate the construction of an ensemble learner based on a
 limited library of algorithms, including n intercept model, a main terms GLM,
-Lasso (<span class="math inline">\(\ell_1\)</span>-penalized) regression, and random forests (<code>ranger</code>).</li>
+Lasso (<span class="math inline">\(\ell_1\)</span>-penalized) regression, and random forest (<code>ranger</code>).</li>
 </ul>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># instantiate learners</span>
@@ -205,8 +1037,8 @@ few nuisance parameters. Recall that these are
 </li>
 <li>While we recommend the use of Super Learning, we opt to instead estimate all
 nuisance parameters with Lasso regression below (to save computational time).</li>
-<li>Now, we’re ready to use the <code>medoutcon</code> function to estimate the <em>natural
-direct effect</em>:</li>
+<li>Now, let’s use the <code><a href="https://rdrr.io/pkg/medoutcon/man/medoutcon.html">medoutcon()</a></code> function to estimate the <em>natural direct
+effect</em>:</li>
 </ul>
 <div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># compute one-step estimate of the natural direct effect</span>
@@ -229,8 +1061,7 @@ direct effect</em>:</li>
 <span class="co">#&gt;    &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;         </span>
 <span class="co">#&gt; 1 -0.490   -0.0280  0.434  0.0555 2.84e-15 onestep   direct_natural</span></code></pre></div>
 <ul>
-<li>We can similarly call the <code>medoutcon</code> function to estimate the <em>natural
-indirect effect</em>:</li>
+<li>We can similarly call <code><a href="https://rdrr.io/pkg/medoutcon/man/medoutcon.html">medoutcon()</a></code> to estimate the <em>natural indirect effect</em>:</li>
 </ul>
 <div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># compute one-step estimate of the natural indirect effect</span>
@@ -293,7 +1124,8 @@ intermediate confounder, since one might reasonably hypothesize that
 participation on a sports team might subsequently affect snacking, which then
 could affect mediators like the amount of exercises and overweight status.</li>
 <li>The interventional direct and indirect effects may also be easily estimated
-with the <a href="https://github.com/nhejazi/medoutcon"><code>medoutcon</code> <code>R</code> package</a>.</li>
+with the <a href="https://github.com/nhejazi/medoutcon"><code>medoutcon</code> <code>R</code> package</a>
+<span class="citation">(Hejazi, Dı́az, and Rudolph <a href="references.html#ref-hejazi2021medoutcon" role="doc-biblioref">2021</a>)</span>.</li>
 <li>Just as for the natural (in)direct effects, <code>medoutcon</code> implements
 cross-validated one-step and TML estimators of the interventional effects.</li>
 </ul>
@@ -314,10 +1146,11 @@ conditional only on treatment and baseline covariates;</li>
 confounders, conditional on mediators, treatment, and baseline covariates.</li>
 </ul>
 </li>
+<li>To estimate the interventional effects, we only need to set the argument <code>Z</code>
+of <code>medoutcon</code> to a value other than <code>NULL</code>.</li>
 <li>Note that the implementation in <code>medoutcon</code> is currently limited to settings
 with only binary intermediate confounders, i.e., <span class="math inline">\(Z \in \{0, 1\}\)</span>.</li>
-<li>Now, we’re ready to use the <code>medoutcon</code> function to estimate the
-<em>interventional direct effect</em>:</li>
+<li>Let’s use <code><a href="https://rdrr.io/pkg/medoutcon/man/medoutcon.html">medoutcon()</a></code> to estimate the <em>interventional direct effect</em>:</li>
 </ul>
 <div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># compute one-step estimate of the interventional direct effect</span>
@@ -340,8 +1173,7 @@ with only binary intermediate confounders, i.e., <span class="math inline">\(Z \
 <span class="co">#&gt;    &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;                </span>
 <span class="co">#&gt; 1 -0.476   -0.0107  0.454  0.0562 -9.93e-16 onestep   direct_interventional</span></code></pre></div>
 <ul>
-<li>We can similarly call the <code>medoutcon</code> function to estimate the
-<em>interventional indirect effect</em>:</li>
+<li>We can similarly estimate the <em>interventional indirect effect</em>:</li>
 </ul>
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># compute one-step estimate of the interventional indirect effect</span>
@@ -380,82 +1212,86 @@ one-step estimators. Doing this is as simple as setting the
 </h2>
 <p>While the analyses using the natural and interventional effects have been
 illuminating, we may also go beyond the restrictive static interventions
-required to define these (in)direct effects.</p>
-<p>We are interested in assessing the population intervention direct effect and
-the population intervention indirect effect, based on the effect decomposition
-of the population intervention effect introduced in <span class="citation">Dı́az and Hejazi (<a href="references.html#ref-diaz2020causal" role="doc-biblioref">2020</a>)</span>.</p>
-<p>Finally, in our analysis, we consider an incremental propensity score
-intervention (IPSI), as first proposed by <span class="citation">(<span class="citeproc-not-found" data-reference-id="kennedy2017nonparametric"><strong>???</strong></span>)</span>, wherein the
-<em>odds of participating in a sports team</em> is modulated by some fixed amount
-(<span class="math inline">\(0 \leq \delta \leq \infty\)</span>) for each individual. Such an intervention may be
-interpreted as the effect of a school program that motivates children to
-participate in sports teams. To exemplify our approach, we postulate a
-motivational intervention that <em>triples the odds</em> of participating in a sports
-team for each individual:</p>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">delta_shift_ipsi</span> <span class="op">&lt;-</span> <span class="fl">3</span></code></pre></div>
-<div id="decomposing-the-population-intervention-effect" class="section level3">
+required to define these (in)direct effects. In fact, it may be more realistic
+to consider interventions that do not directly force children to join athletic
+teams, but instead motivate them to make their participation on such teams more
+likely. Importantly, such interventions are often far more realistic and
+actionable in real-world studies.</p>
+<div id="formulating-the-stochastic-indirect-effects" class="section level3">
 <h3>
-<span class="header-section-number">7.2.1</span> Decomposing the population intervention effect<a class="anchor" aria-label="anchor" href="#decomposing-the-population-intervention-effect"><i class="fas fa-link"></i></a>
+<span class="header-section-number">7.2.1</span> Formulating the stochastic (in)direct effects<a class="anchor" aria-label="anchor" href="#formulating-the-stochastic-indirect-effects"><i class="fas fa-link"></i></a>
 </h3>
-<p>We may decompose the population intervention effect (PIE) in terms of a
-<em>population intervention direct effect</em> (PIDE) and a <em>population
-intervention indirect effect</em> (PIIE):
-<span class="math display">\[\begin{equation*}
-  \overbrace{\mathbb{E}\{Y(A_\delta, Z(A_\delta)) -
-    Y(A_\delta, Z)\}}^{\text{PIIE}} +
-    \overbrace{\mathbb{E}\{Y(A_\delta, Z) - Y(A, Z)\}}^{\text{PIDE}}.
-\end{equation*}\]</span></p>
-<p>This decomposition of the PIE as the sum of the population intervention direct
-and indirect effects has an interpretation analogous to the corresponding
-standard decomposition of the average treatment effect. In the sequel, we will
-compute each of the components of the direct and indirect effects above using
-appropriate estimators as follows</p>
 <ul>
-<li>For <span class="math inline">\(\mathbb{E}\{Y(A, Z)\}\)</span>, the sample mean <span class="math inline">\(\frac{1}{n}\sum_{i=1}^n Y_i\)</span> is
-sufficient;</li>
-<li>for <span class="math inline">\(\mathbb{E}\{Y(A_{\delta}, Z)\}\)</span>, an efficient one-step estimator for the
-effect of a joint intervention altering the exposure mechanism but not the
-mediation mechanism, as proposed in <span class="citation">Dı́az and Hejazi (<a href="references.html#ref-diaz2020causal" role="doc-biblioref">2020</a>)</span>; and,</li>
-<li>for <span class="math inline">\(\mathbb{E}\{Y(A_{\delta}, Z_{A_{\delta}})\}\)</span>, an efficient one-step
-estimator for the effect of a joint intervention altering both the exposure
-and mediation mechanisms, as proposed in <span class="citation">(<span class="citeproc-not-found" data-reference-id="kennedy2017nonparametric"><strong>???</strong></span>)</span> and
-implemented in the <a href="https://github.com/ehkennedy/npcausal"><code>npcausal</code> R
-package</a>.</li>
+<li>These more flexible intervention regimes are incompatible with (in)direct
+effect definitions based on decomposing the average treatment effect.</li>
+<li>Instead, consider the decomposition of the population intervention effect
+(PIE) of a <em>stochastic intervention</em> into direct and indirect effects
+<span class="citation">(Dı́az and Hejazi <a href="references.html#ref-diaz2020causal" role="doc-biblioref">2020</a>)</span>:
+<span class="math display">\[\begin{align*}
+\E[Y&amp;_{A_\delta,M_{A_\delta}} - Y_{A,M_A}] = \\
+&amp;\underbrace{\E[Y_{\color{red}{A_\delta},\color{blue}{M_{A_\delta}}} -
+  Y_{\color{red}{A_\delta},\color{blue}{M}}]}_{\text{stochastic natural indirect effect}} +
+  \underbrace{\E[Y_{\color{blue}{A_\delta},\color{red}{M}} -
+  Y_{\color{blue}{A},\color{red}{M}}]}_{\text{stochastic natural direct effect}}
+\end{align*}\]</span>
+</li>
+<li>Recall from our discussion of the <a href="stochastic.html#ipsi">incremental propensity score
+interventions</a> <span class="citation">(Kennedy <a href="references.html#ref-kennedy2018nonparametric" role="doc-biblioref">2018</a>)</span> that such stochastic
+interventions can compare the pre- and post-intervention odds of exposure:
+<span class="math display">\[\begin{equation*}
+\delta = \frac{\text{odds}(A_\delta = 1\mid W=w)}
+{\text{odds}(A = 1\mid W=w)}.
+\end{equation*}\]</span>
+</li>
+<li>In our analysis, we will modulate the <em>odds of participating in a sports
+team</em> by a fixed amount for each individual, setting, for example,
+<span class="math inline">\(\delta = 2\)</span>:</li>
+</ul>
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">delta_shift_ipsi</span> <span class="op">&lt;-</span> <span class="fl">2</span></code></pre></div>
+<ul>
+<li>Such an intervention may be interpreted as the effect of a school program that
+motivates children to participate in sports teams.</li>
 </ul>
 </div>
-<div id="estimating-the-effect-decomposition-term" class="section level3">
+<div id="efficient-estimation-of-the-stochastic-indirect-effects" class="section level3">
 <h3>
-<span class="header-section-number">7.2.2</span> Estimating the effect decomposition term<a class="anchor" aria-label="anchor" href="#estimating-the-effect-decomposition-term"><i class="fas fa-link"></i></a>
+<span class="header-section-number">7.2.2</span> Efficient estimation of the stochastic (in)direct effects<a class="anchor" aria-label="anchor" href="#efficient-estimation-of-the-stochastic-indirect-effects"><i class="fas fa-link"></i></a>
 </h3>
-<p>As given in <span class="citation">Dı́az and Hejazi (<a href="references.html#ref-diaz2020causal" role="doc-biblioref">2020</a>)</span>, the statistical functional identifying the
-decomposition term that appears in both the PIDE and PIIE
-<span class="math inline">\(\mathbb{E}\{Y(A_{\delta}, Z)\}\)</span>, which corresponds to altering the exposure
-mechanism while keeping the mediation mechanism fixed, is
-<span class="math display">\[\begin{equation*}
-  \theta_0(\delta) = \int m_0(a, z, w) g_{0,\delta}(a \mid w) p_0(z, w)
-    d\nu(a, z, w),
-\end{equation*}\]</span>
-for which a one-step estimator is available. The corresponding <em>efficient
-influence function</em> (EIF) with respect to the nonparametric model <span class="math inline">\(\mathcal{M}\)</span>
-is <span class="math inline">\(D_{\eta,\delta}(o) = D^Y_{\eta,\delta}(o) + D^A_{\eta,\delta}(o) + D^{Z,W}_{\eta,\delta}(o) - \theta(\delta)\)</span>. The
-one-step estimator may be computed using the EIF estimating equation, making use
-of cross-fitting <span class="citation">(<span class="citeproc-not-found" data-reference-id="zheng2011cross"><strong>???</strong></span>; <span class="citeproc-not-found" data-reference-id="chernozhukov2018double"><strong>???</strong></span>)</span> to circumvent any
-need for entropy conditions (i.e., Donsker class restrictions). The resultant
-estimator is
-<span class="math display">\[\begin{equation*}
-  \hat{\theta}(\delta) = \frac{1}{n} \sum_{i = 1}^n D_{\hat{\eta}_{j(i)},
-  \delta}(O_i) = \frac{1}{n} \sum_{i = 1}^n \left\{ D^Y_{\hat{\eta}_{j(i)},
-  \delta}(O_i) + D^A_{\hat{\eta}_{j(i)}, \delta}(O_i) +
-  D^{Z,W}_{\hat{\eta}_{j(i)}, \delta}(O_i) \right\},
-\end{equation*}\]</span>
-which is implemented in the <code>medshift</code> R package. We make use of that
-implementation to estimate <span class="math inline">\(\mathbb{E}\{Y(A_{\delta}, Z)\}\)</span> via its one-step
-estimator <span class="math inline">\(\hat{\theta}(\delta)\)</span> below</p>
+<ul>
+<li>The decomposition of the PIE into the direct and indirect effects leads to a
+common term <span class="math inline">\(\E[Y_{\color{red}{A_\delta},\color{blue}{M}}]\)</span> involved in both
+the direct and indirect effect definitions. This term may be estimated via the
+<a href="https://github.com/nhejazi/medshift"><code>medshift</code> <code>R</code> package</a>
+<span class="citation">(Hejazi and Dı́az <a href="references.html#ref-hejazi2020medshift" role="doc-biblioref">2020</a>)</span>.</li>
+<li>For the direct effect, the remaining term is the
+<span class="math inline">\(\E[Y_{\color{blue}{A},\color{red}{M}}]\)</span>, which may be estimated by a simple
+mean in the observed data (i.e., no intervention).</li>
+<li>For the indirect effect, the remaining term is the joint effect of stochastic
+interventions on both <span class="math inline">\(A\)</span> and <span class="math inline">\(M\)</span>:
+<span class="math inline">\(\E[Y_{\color{red}{A_\delta},\color{blue}{M_{A_\delta}}}\)</span>.
+<ul>
+<li>For the case of an IPSI on binary <span class="math inline">\(A\)</span>, this may be estimated by the tools
+in the <a href="https://github.com/ehkennedy/npcausal"><code>npcausal</code> <code>R</code> package</a>.</li>
+<li>For the case of an MTP on continuous <span class="math inline">\(A\)</span>, this may be estimated by the tools
+in the <a href="https://github.com/nhejazi/txshift"><code>txshift</code> <code>R</code> package</a>
+<span class="citation">(Hejazi and Benkeser <a href="references.html#ref-hejazi2020txshift-rpkg" role="doc-biblioref">2020</a><a href="references.html#ref-hejazi2020txshift-rpkg" role="doc-biblioref">a</a>, <a href="references.html#ref-hejazi2020txshift-joss" role="doc-biblioref">2020</a><a href="references.html#ref-hejazi2020txshift-joss" role="doc-biblioref">b</a>)</span>.</li>
+</ul>
+</li>
+<li>Like the implementation in <code>medoutcon</code>, the <code>medshift</code> package makes use of
+cross-validation in constructing initial estimates of nuisance parameters,
+resulting in more robust, cross-validated efficient estimators
+<span class="citation">(Klaassen <a href="references.html#ref-klaassen1987consistent" role="doc-biblioref">1987</a>; Zheng and van der Laan <a href="references.html#ref-zheng2011cross" role="doc-biblioref">2011</a>; Chernozhukov et al. <a href="references.html#ref-chernozhukov2018double" role="doc-biblioref">2018</a>)</span>.</li>
+<li>Now, we’re ready to use the <code>medshift</code> function to estimate the decomposition
+term common to both the <em>stochastic direct and indirect effects</em>:</li>
+</ul>
 <div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># let's compute the parameter where A (but not Z) are shifted</span>
-<span class="va">pide_decomp_onestep</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medshift/man/medshift.html">medshift</a></span><span class="op">(</span>
-  W <span class="op">=</span> <span class="va">W</span>, A <span class="op">=</span> <span class="va">A</span>, Z <span class="op">=</span> <span class="va">Z</span>, Y <span class="op">=</span> <span class="va">Y</span>,
+<code class="sourceCode R"><span class="co"># compute one-step estimate of the decomposition term of the (in)direct effects</span>
+<span class="va">stoch_decomp_onestep</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/medshift/man/medshift.html">medshift</a></span><span class="op">(</span>
+  W <span class="op">=</span> <span class="va">weight_behavior</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"age"</span>, <span class="st">"sex"</span>, <span class="st">"race"</span>, <span class="st">"tvhours"</span><span class="op">)</span><span class="op">]</span>,
+  A <span class="op">=</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">weight_behavior</span><span class="op">$</span><span class="va">sports</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>,
+  Z <span class="op">=</span> <span class="va">weight_behavior</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"snack"</span>, <span class="st">"exercises"</span>, <span class="st">"overweigh"</span><span class="op">)</span><span class="op">]</span>,
+  Y <span class="op">=</span> <span class="va">weight_behavior</span><span class="op">$</span><span class="va">bmi</span>,
   delta <span class="op">=</span> <span class="va">delta_shift_ipsi</span>,
   g_learners <span class="op">=</span> <span class="va">lasso_lrnr</span>,
   e_learners <span class="op">=</span> <span class="va">lasso_lrnr</span>,
@@ -463,24 +1299,14 @@ estimator <span class="math inline">\(\hat{\theta}(\delta)\)</span> below</p>
   estimator <span class="op">=</span> <span class="st">"onestep"</span>,
   estimator_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>cv_folds <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
 <span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">pide_decomp_onestep</span><span class="op">)</span></code></pre></div>
-</div>
-<div id="estimating-the-direct-effect" class="section level3">
-<h3>
-<span class="header-section-number">7.2.3</span> Estimating the direct effect<a class="anchor" aria-label="anchor" href="#estimating-the-direct-effect"><i class="fas fa-link"></i></a>
-</h3>
-<p>Recall that, based on the decomposition outlined previously, the population
-intervention direct effect may be denoted <span class="math inline">\(\beta_{\text{PIDE}}(\delta) = \theta_0(\delta) - \mathbb{E}Y\)</span>. Thus, an estimator of the PIDE,
-<span class="math inline">\(\hat{\beta}_{\text{PIDE}}(\delta)\)</span> may be expressed as a composition of
-estimators of its constituent parameters:
-<span class="math display">\[\begin{equation*}
-  \hat{\beta}_{\text{PIDE}}({\delta}) = \hat{\theta}(\delta) -
-  \frac{1}{n} \sum_{i = 1}^n Y_i.
-\end{equation*}\]</span></p>
-<p>Based on the above, we may construct an estimator of the PIDE using quantities
-already computed. The convenience function below applies the simple delta method
-required in the case of a linear contrast between the two constituent
-parameters:</p>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">stoch_decomp_onestep</span><span class="op">)</span>
+<span class="co">#&gt;      lwr_ci   param_est      upr_ci   param_var    eif_mean   estimator </span>
+<span class="co">#&gt;   18.770026   19.103221   19.436415      0.0289 -1.7263e-15     onestep</span></code></pre></div>
+<!-- Nima: note the notational differences from the above -->
+<ul>
+<li>To estimate the stochastic direct effect, an extra step is necessary – we
+must apply the delta method:</li>
+</ul>
 <div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># convenience function to compute inference via delta method: EY1 - EY0</span>
 <span class="va">linear_contrast</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">params</span>, <span class="va">eifs</span>, <span class="va">ci_level</span> <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span> <span class="op">{</span>
@@ -495,19 +1321,26 @@ parameters:</p>
   <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"lwr_ci"</span>, <span class="st">"param_est"</span>, <span class="st">"upr_ci"</span><span class="op">)</span>
   <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
-<p>With the above convenience function in hand, we’ll construct or extract the
-necessary components from existing objects and simply apply the function:</p>
+<ul>
+<li>Straightforward application of this procedure yields,</li>
+</ul>
 <div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># parameter estimates and EIFs for components of direct effect</span>
-<span class="va">EY</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">Y</span><span class="op">)</span>
-<span class="va">eif_EY</span> <span class="op">&lt;-</span> <span class="va">Y</span> <span class="op">-</span> <span class="va">EY</span>
-<span class="va">params_de</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">theta_eff</span><span class="op">$</span><span class="va">theta</span>, <span class="va">EY</span><span class="op">)</span>
-<span class="va">eifs_de</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">theta_eff</span><span class="op">$</span><span class="va">eif</span>, <span class="va">eif_EY</span><span class="op">)</span>
+<span class="va">EY</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">weight_behavior</span><span class="op">$</span><span class="va">bmi</span><span class="op">)</span>
+<span class="va">eif_EY</span> <span class="op">&lt;-</span> <span class="va">weight_behavior</span><span class="op">$</span><span class="va">bmi</span> <span class="op">-</span> <span class="va">EY</span>
+<span class="va">params_de</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">stoch_decomp_onestep</span><span class="op">$</span><span class="va">theta</span>, <span class="va">EY</span><span class="op">)</span>
+<span class="va">eifs_de</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">stoch_decomp_onestep</span><span class="op">$</span><span class="va">theta</span>, <span class="va">eif_EY</span><span class="op">)</span>
 
 <span class="co"># direct effect = EY - estimated quantity</span>
 <span class="va">de_est</span> <span class="op">&lt;-</span> <span class="fu">linear_contrast</span><span class="op">(</span><span class="va">params_de</span>, <span class="va">eifs_de</span><span class="op">)</span>
-<span class="va">de_est</span></code></pre></div>
-
+<span class="va">de_est</span>
+<span class="co">#&gt;    lwr_ci param_est    upr_ci </span>
+<span class="co">#&gt; -0.347205 -0.023887  0.299430</span></code></pre></div>
+<ul>
+<li>From the above, we can conclude that the effect of increasing the odds of
+participation on a sports team on BMI leads only to a relatively small direct
+effect.</li>
+</ul>
 </div>
 </div>
 </div>
@@ -529,9 +1362,8 @@ necessary components from existing objects and simply apply the function:</p>
 </li>
 <li>
 <a class="nav-link" href="#medshift-stochastic-indirect-effects"><span class="header-section-number">7.2</span> medshift: Stochastic (in)direct effects</a><ul class="nav navbar-nav">
-<li><a class="nav-link" href="#decomposing-the-population-intervention-effect"><span class="header-section-number">7.2.1</span> Decomposing the population intervention effect</a></li>
-<li><a class="nav-link" href="#estimating-the-effect-decomposition-term"><span class="header-section-number">7.2.2</span> Estimating the effect decomposition term</a></li>
-<li><a class="nav-link" href="#estimating-the-direct-effect"><span class="header-section-number">7.2.3</span> Estimating the direct effect</a></li>
+<li><a class="nav-link" href="#formulating-the-stochastic-indirect-effects"><span class="header-section-number">7.2.1</span> Formulating the stochastic (in)direct effects</a></li>
+<li><a class="nav-link" href="#efficient-estimation-of-the-stochastic-indirect-effects"><span class="header-section-number">7.2.2</span> Efficient estimation of the stochastic (in)direct effects</a></li>
 </ul>
 </li>
 </ul>
@@ -551,7 +1383,7 @@ necessary components from existing objects and simply apply the function:</p>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: May 17, 2021.</p>
+    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: May 18, 2021.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

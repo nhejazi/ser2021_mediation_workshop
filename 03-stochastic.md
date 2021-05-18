@@ -1,4 +1,4 @@
-# Stochastic Direct and Indirect Effects {#stochastic}
+# Stochastic direct and indirect effects {#stochastic}
 
 ## Definition of the effects
 
@@ -37,7 +37,7 @@ There are two possible ways of defining stochastic effects:
 - In both cases $A \mid W$ is a non-deterministic intervention, thus the name
   _stochastic intervention_
 
-### Example: incremental propensity score interventions (IPSI) [@kennedy2018nonparametric] {-}
+### Example: incremental propensity score interventions (IPSI) [@kennedy2018nonparametric] {#ipsi}
 
 #### Definition of the intervention {-}
 
