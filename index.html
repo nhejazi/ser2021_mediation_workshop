@@ -1,898 +1,1114 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="" xml:lang="">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Welcome to SER! | [SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</title>
-<meta name="author" content="Iván Díaz, Nima Hejazi, Kara Rudolph">
-<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.2"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.5.1/jquery-3.5.1.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
-<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.2.4.9003/tabs.js"></script><script src="libs/bs3compat-0.2.4.9003/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
-<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-</head>
-<body>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Causal Mediation: Modern Methods for Path Analysis</title>
+  <meta name="description" content="Open source, reproducible teaching materials accompanying a workshop on modern methods for causal mediation analysis, given at the SER 2021 Meeting on Monday, 24 May 2021." />
+  <meta name="generator" content="bookdown 0.21.11 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Causal Mediation: Modern Methods for Path Analysis" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="https://code.nimahejazi.org/ser2021_mediation_workshop/" />
+  
+  <meta property="og:description" content="Open source, reproducible teaching materials accompanying a workshop on modern methods for causal mediation analysis, given at the SER 2021 Meeting on Monday, 24 May 2021." />
+  <meta name="github-repo" content="nhejazi/ser2021_mediation_workshop" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Causal Mediation: Modern Methods for Path Analysis" />
+  
+  <meta name="twitter:description" content="Open source, reproducible teaching materials accompanying a workshop on modern methods for causal mediation analysis, given at the SER 2021 Meeting on Monday, 24 May 2021." />
+  
+
+<meta name="author" content="Iván Díaz, Nima Hejazi, Kara Rudolph" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+
+<link rel="next" href="mediation.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
 <span class="math inline">
-  \(\DeclareMathOperator{\expit}{expit}\)
-  \(\DeclareMathOperator{\logit}{logit}\)
-  \(\DeclareMathOperator*{\argmin}{\arg\!\min}\)
-  \(\newcommand{\indep}{\perp\!\!\!\perp}\)
-  \(\newcommand{\coloneqq}{\mathrel{=}}\)
-  \(\newcommand{\R}{\mathbb{R}}\)
-  \(\newcommand{\E}{\mathbb{E}}\)
-  \(\newcommand{\M}{\mathcal{M}}\)
-  \(\renewcommand{\P}{\mathbb{P}}\)
-  \(\newcommand{\I}{\mathbb{I}}\)
-  \(\newcommand{\1}{\mathbbm{1}}\)
-  </span>
-    
-  <script>
-  /* ========================================================================
-   * Bootstrap: transition.js v3.3.7
-   * http://getbootstrap.com/javascript/#transitions
-   * ========================================================================
-   * Copyright 2011-2016 Twitter, Inc.
-   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
-   * ======================================================================== */
-  
-  
-  +function ($) {
-    'use strict';
-  
-    // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)
-    // ============================================================
-  
-    function transitionEnd() {
-      var el = document.createElement('bootstrap')
-  
-      var transEndEventNames = {
-        WebkitTransition : 'webkitTransitionEnd',
-        MozTransition    : 'transitionend',
-        OTransition      : 'oTransitionEnd otransitionend',
-        transition       : 'transitionend'
-      }
-  
-      for (var name in transEndEventNames) {
-        if (el.style[name] !== undefined) {
-          return { end: transEndEventNames[name] }
-        }
-      }
-  
-      return false // explicit for ie8 (  ._.)
+\(\DeclareMathOperator{\expit}{expit}\)
+\(\DeclareMathOperator{\logit}{logit}\)
+\(\DeclareMathOperator*{\argmin}{\arg\!\min}\)
+\(\newcommand{\indep}{\perp\!\!\!\perp}\)
+\(\newcommand{\coloneqq}{\mathrel{=}}\)
+\(\newcommand{\R}{\mathbb{R}}\)
+\(\newcommand{\E}{\mathbb{E}}\)
+\(\newcommand{\M}{\mathcal{M}}\)
+\(\renewcommand{\P}{\mathbb{P}}\)
+\(\newcommand{\I}{\mathbb{I}}\)
+\(\newcommand{\1}{\mathbbm{1}}\)
+</span>
+
+<script>
+/* ========================================================================
+ * Bootstrap: transition.js v3.3.7
+ * http://getbootstrap.com/javascript/#transitions
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)
+  // ============================================================
+
+  function transitionEnd() {
+    var el = document.createElement('bootstrap')
+
+    var transEndEventNames = {
+      WebkitTransition : 'webkitTransitionEnd',
+      MozTransition    : 'transitionend',
+      OTransition      : 'oTransitionEnd otransitionend',
+      transition       : 'transitionend'
     }
-  
-    // http://blog.alexmaccaw.com/css-transitions
-    $.fn.emulateTransitionEnd = function (duration) {
-      var called = false
-      var $el = this
-      $(this).one('bsTransitionEnd', function () { called = true })
-      var callback = function () { if (!called) $($el).trigger($.support.transition.end) }
-      setTimeout(callback, duration)
-      return this
-    }
-  
-    $(function () {
-      $.support.transition = transitionEnd()
-  
-      if (!$.support.transition) return
-  
-      $.event.special.bsTransitionEnd = {
-        bindType: $.support.transition.end,
-        delegateType: $.support.transition.end,
-        handle: function (e) {
-          if ($(e.target).is(this)) return e.handleObj.handler.apply(this, arguments)
-        }
+
+    for (var name in transEndEventNames) {
+      if (el.style[name] !== undefined) {
+        return { end: transEndEventNames[name] }
       }
-    })
-  
-  }(jQuery);
-  </script><script>
-  /* ========================================================================
-   * Bootstrap: collapse.js v3.3.7
-   * http://getbootstrap.com/javascript/#collapse
-   * ========================================================================
-   * Copyright 2011-2016 Twitter, Inc.
-   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
-   * ======================================================================== */
-  
-  /* jshint latedef: false */
-  
-  +function ($) {
-    'use strict';
-  
-    // COLLAPSE PUBLIC CLASS DEFINITION
-    // ================================
-  
-    var Collapse = function (element, options) {
-      this.$element      = $(element)
-      this.options       = $.extend({}, Collapse.DEFAULTS, options)
-      this.$trigger      = $('[data-toggle="collapse"][href="#' + element.id + '"],' +
-                             '[data-toggle="collapse"][data-target="#' + element.id + '"]')
-      this.transitioning = null
-  
-      if (this.options.parent) {
-        this.$parent = this.getParent()
-      } else {
-        this.addAriaAndCollapsedClass(this.$element, this.$trigger)
-      }
-  
-      if (this.options.toggle) this.toggle()
     }
-  
-    Collapse.VERSION  = '3.3.7'
-  
-    Collapse.TRANSITION_DURATION = 350
-  
-    Collapse.DEFAULTS = {
-      toggle: true
-    }
-  
-    Collapse.prototype.dimension = function () {
-      var hasWidth = this.$element.hasClass('width')
-      return hasWidth ? 'width' : 'height'
-    }
-  
-    Collapse.prototype.show = function () {
-      if (this.transitioning || this.$element.hasClass('in')) return
-  
-      var activesData
-      var actives = this.$parent && this.$parent.children('.panel').children('.in, .collapsing')
-  
-      if (actives && actives.length) {
-        activesData = actives.data('bs.collapse')
-        if (activesData && activesData.transitioning) return
+
+    return false // explicit for ie8 (  ._.)
+  }
+
+  // http://blog.alexmaccaw.com/css-transitions
+  $.fn.emulateTransitionEnd = function (duration) {
+    var called = false
+    var $el = this
+    $(this).one('bsTransitionEnd', function () { called = true })
+    var callback = function () { if (!called) $($el).trigger($.support.transition.end) }
+    setTimeout(callback, duration)
+    return this
+  }
+
+  $(function () {
+    $.support.transition = transitionEnd()
+
+    if (!$.support.transition) return
+
+    $.event.special.bsTransitionEnd = {
+      bindType: $.support.transition.end,
+      delegateType: $.support.transition.end,
+      handle: function (e) {
+        if ($(e.target).is(this)) return e.handleObj.handler.apply(this, arguments)
       }
-  
-      var startEvent = $.Event('show.bs.collapse')
-      this.$element.trigger(startEvent)
-      if (startEvent.isDefaultPrevented()) return
-  
-      if (actives && actives.length) {
-        Plugin.call(actives, 'hide')
-        activesData || actives.data('bs.collapse', null)
-      }
-  
-      var dimension = this.dimension()
-  
+    }
+  })
+
+}(jQuery);
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: collapse.js v3.3.7
+ * http://getbootstrap.com/javascript/#collapse
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+/* jshint latedef: false */
+
++function ($) {
+  'use strict';
+
+  // COLLAPSE PUBLIC CLASS DEFINITION
+  // ================================
+
+  var Collapse = function (element, options) {
+    this.$element      = $(element)
+    this.options       = $.extend({}, Collapse.DEFAULTS, options)
+    this.$trigger      = $('[data-toggle="collapse"][href="#' + element.id + '"],' +
+                           '[data-toggle="collapse"][data-target="#' + element.id + '"]')
+    this.transitioning = null
+
+    if (this.options.parent) {
+      this.$parent = this.getParent()
+    } else {
+      this.addAriaAndCollapsedClass(this.$element, this.$trigger)
+    }
+
+    if (this.options.toggle) this.toggle()
+  }
+
+  Collapse.VERSION  = '3.3.7'
+
+  Collapse.TRANSITION_DURATION = 350
+
+  Collapse.DEFAULTS = {
+    toggle: true
+  }
+
+  Collapse.prototype.dimension = function () {
+    var hasWidth = this.$element.hasClass('width')
+    return hasWidth ? 'width' : 'height'
+  }
+
+  Collapse.prototype.show = function () {
+    if (this.transitioning || this.$element.hasClass('in')) return
+
+    var activesData
+    var actives = this.$parent && this.$parent.children('.panel').children('.in, .collapsing')
+
+    if (actives && actives.length) {
+      activesData = actives.data('bs.collapse')
+      if (activesData && activesData.transitioning) return
+    }
+
+    var startEvent = $.Event('show.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    if (actives && actives.length) {
+      Plugin.call(actives, 'hide')
+      activesData || actives.data('bs.collapse', null)
+    }
+
+    var dimension = this.dimension()
+
+    this.$element
+      .removeClass('collapse')
+      .addClass('collapsing')[dimension](0)
+      .attr('aria-expanded', true)
+
+    this.$trigger
+      .removeClass('collapsed')
+      .attr('aria-expanded', true)
+
+    this.transitioning = 1
+
+    var complete = function () {
       this.$element
-        .removeClass('collapse')
-        .addClass('collapsing')[dimension](0)
-        .attr('aria-expanded', true)
-  
-      this.$trigger
-        .removeClass('collapsed')
-        .attr('aria-expanded', true)
-  
-      this.transitioning = 1
-  
-      var complete = function () {
-        this.$element
-          .removeClass('collapsing')
-          .addClass('collapse in')[dimension]('')
-        this.transitioning = 0
-        this.$element
-          .trigger('shown.bs.collapse')
-      }
-  
-      if (!$.support.transition) return complete.call(this)
-  
-      var scrollSize = $.camelCase(['scroll', dimension].join('-'))
-  
+        .removeClass('collapsing')
+        .addClass('collapse in')[dimension]('')
+      this.transitioning = 0
       this.$element
-        .one('bsTransitionEnd', $.proxy(complete, this))
-        .emulateTransitionEnd(Collapse.TRANSITION_DURATION)[dimension](this.$element[0][scrollSize])
+        .trigger('shown.bs.collapse')
     }
-  
-    Collapse.prototype.hide = function () {
-      if (this.transitioning || !this.$element.hasClass('in')) return
-  
-      var startEvent = $.Event('hide.bs.collapse')
-      this.$element.trigger(startEvent)
-      if (startEvent.isDefaultPrevented()) return
-  
-      var dimension = this.dimension()
-  
-      this.$element[dimension](this.$element[dimension]())[0].offsetHeight
-  
+
+    if (!$.support.transition) return complete.call(this)
+
+    var scrollSize = $.camelCase(['scroll', dimension].join('-'))
+
+    this.$element
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)[dimension](this.$element[0][scrollSize])
+  }
+
+  Collapse.prototype.hide = function () {
+    if (this.transitioning || !this.$element.hasClass('in')) return
+
+    var startEvent = $.Event('hide.bs.collapse')
+    this.$element.trigger(startEvent)
+    if (startEvent.isDefaultPrevented()) return
+
+    var dimension = this.dimension()
+
+    this.$element[dimension](this.$element[dimension]())[0].offsetHeight
+
+    this.$element
+      .addClass('collapsing')
+      .removeClass('collapse in')
+      .attr('aria-expanded', false)
+
+    this.$trigger
+      .addClass('collapsed')
+      .attr('aria-expanded', false)
+
+    this.transitioning = 1
+
+    var complete = function () {
+      this.transitioning = 0
       this.$element
-        .addClass('collapsing')
-        .removeClass('collapse in')
-        .attr('aria-expanded', false)
-  
-      this.$trigger
-        .addClass('collapsed')
-        .attr('aria-expanded', false)
-  
-      this.transitioning = 1
-  
-      var complete = function () {
-        this.transitioning = 0
-        this.$element
-          .removeClass('collapsing')
-          .addClass('collapse')
-          .trigger('hidden.bs.collapse')
-      }
-  
-      if (!$.support.transition) return complete.call(this)
-  
-      this.$element
-        [dimension](0)
-        .one('bsTransitionEnd', $.proxy(complete, this))
-        .emulateTransitionEnd(Collapse.TRANSITION_DURATION)
+        .removeClass('collapsing')
+        .addClass('collapse')
+        .trigger('hidden.bs.collapse')
     }
-  
-    Collapse.prototype.toggle = function () {
-      this[this.$element.hasClass('in') ? 'hide' : 'show']()
-    }
-  
-    Collapse.prototype.getParent = function () {
-      return $(this.options.parent)
-        .find('[data-toggle="collapse"][data-parent="' + this.options.parent + '"]')
-        .each($.proxy(function (i, element) {
-          var $element = $(element)
-          this.addAriaAndCollapsedClass(getTargetFromTrigger($element), $element)
-        }, this))
-        .end()
-    }
-  
-    Collapse.prototype.addAriaAndCollapsedClass = function ($element, $trigger) {
-      var isOpen = $element.hasClass('in')
-  
-      $element.attr('aria-expanded', isOpen)
-      $trigger
-        .toggleClass('collapsed', !isOpen)
-        .attr('aria-expanded', isOpen)
-    }
-  
-    function getTargetFromTrigger($trigger) {
-      var href
-      var target = $trigger.attr('data-target')
-        || (href = $trigger.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') // strip for ie7
-  
-      return $(target)
-    }
-  
-  
-    // COLLAPSE PLUGIN DEFINITION
-    // ==========================
-  
-    function Plugin(option) {
-      return this.each(function () {
-        var $this   = $(this)
-        var data    = $this.data('bs.collapse')
-        var options = $.extend({}, Collapse.DEFAULTS, $this.data(), typeof option == 'object' && option)
-  
-        if (!data && options.toggle && /show|hide/.test(option)) options.toggle = false
-        if (!data) $this.data('bs.collapse', (data = new Collapse(this, options)))
-        if (typeof option == 'string') data[option]()
-      })
-    }
-  
-    var old = $.fn.collapse
-  
-    $.fn.collapse             = Plugin
-    $.fn.collapse.Constructor = Collapse
-  
-  
-    // COLLAPSE NO CONFLICT
-    // ====================
-  
-    $.fn.collapse.noConflict = function () {
-      $.fn.collapse = old
-      return this
-    }
-  
-  
-    // COLLAPSE DATA-API
-    // =================
-  
-    $(document).on('click.bs.collapse.data-api', '[data-toggle="collapse"]', function (e) {
+
+    if (!$.support.transition) return complete.call(this)
+
+    this.$element
+      [dimension](0)
+      .one('bsTransitionEnd', $.proxy(complete, this))
+      .emulateTransitionEnd(Collapse.TRANSITION_DURATION)
+  }
+
+  Collapse.prototype.toggle = function () {
+    this[this.$element.hasClass('in') ? 'hide' : 'show']()
+  }
+
+  Collapse.prototype.getParent = function () {
+    return $(this.options.parent)
+      .find('[data-toggle="collapse"][data-parent="' + this.options.parent + '"]')
+      .each($.proxy(function (i, element) {
+        var $element = $(element)
+        this.addAriaAndCollapsedClass(getTargetFromTrigger($element), $element)
+      }, this))
+      .end()
+  }
+
+  Collapse.prototype.addAriaAndCollapsedClass = function ($element, $trigger) {
+    var isOpen = $element.hasClass('in')
+
+    $element.attr('aria-expanded', isOpen)
+    $trigger
+      .toggleClass('collapsed', !isOpen)
+      .attr('aria-expanded', isOpen)
+  }
+
+  function getTargetFromTrigger($trigger) {
+    var href
+    var target = $trigger.attr('data-target')
+      || (href = $trigger.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') // strip for ie7
+
+    return $(target)
+  }
+
+
+  // COLLAPSE PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
       var $this   = $(this)
-  
-      if (!$this.attr('data-target')) e.preventDefault()
-  
-      var $target = getTargetFromTrigger($this)
-      var data    = $target.data('bs.collapse')
-      var option  = data ? 'toggle' : $this.data()
-  
-      Plugin.call($target, option)
+      var data    = $this.data('bs.collapse')
+      var options = $.extend({}, Collapse.DEFAULTS, $this.data(), typeof option == 'object' && option)
+
+      if (!data && options.toggle && /show|hide/.test(option)) options.toggle = false
+      if (!data) $this.data('bs.collapse', (data = new Collapse(this, options)))
+      if (typeof option == 'string') data[option]()
     })
-  
-  }(jQuery);
-  </script><script>
-  window.initializeCodeFolding = function(show) {
-  
-    // handlers for show-all and hide all
-    $("#rmd-show-all-code").click(function() {
+  }
+
+  var old = $.fn.collapse
+
+  $.fn.collapse             = Plugin
+  $.fn.collapse.Constructor = Collapse
+
+
+  // COLLAPSE NO CONFLICT
+  // ====================
+
+  $.fn.collapse.noConflict = function () {
+    $.fn.collapse = old
+    return this
+  }
+
+
+  // COLLAPSE DATA-API
+  // =================
+
+  $(document).on('click.bs.collapse.data-api', '[data-toggle="collapse"]', function (e) {
+    var $this   = $(this)
+
+    if (!$this.attr('data-target')) e.preventDefault()
+
+    var $target = getTargetFromTrigger($this)
+    var data    = $target.data('bs.collapse')
+    var option  = data ? 'toggle' : $this.data()
+
+    Plugin.call($target, option)
+  })
+
+}(jQuery);
+</script>
+<script>
+window.initializeCodeFolding = function(show) {
+
+  // handlers for show-all and hide all
+  $("#rmd-show-all-code").click(function() {
+    // close the dropdown menu when an option is clicked
+    $("#allCodeButton").dropdown("toggle");
+      // R show code
+      $('div.r-code-collapse').each(function() {
+        $(this).collapse('show');
+      });
+      // Python show code
+      $('div.py-code-collapse').each(function() {
+        $(this).collapse('show');
+      }); 
+      // Bash show code
+      $('div.sh-code-collapse').each(function() {
+        $(this).collapse('show');
+      }); 
+      
+  });
+  $("#rmd-hide-all-code").click(function() {
       // close the dropdown menu when an option is clicked
       $("#allCodeButton").dropdown("toggle");
-        // R show code
-        $('div.r-code-collapse').each(function() {
-          $(this).collapse('show');
-        });
-        // Python show code
-        $('div.py-code-collapse').each(function() {
-          $(this).collapse('show');
-        }); 
-        // Bash show code
-        $('div.sh-code-collapse').each(function() {
-          $(this).collapse('show');
-        }); 
-        
-    });
-    $("#rmd-hide-all-code").click(function() {
-        // close the dropdown menu when an option is clicked
-        $("#allCodeButton").dropdown("toggle");
-        // Hide R code
-        $('div.r-code-collapse').each(function() {
-          $(this).collapse('hide');
-        });
-        // Hide Python code
-        $('div.py-code-collapse').each(function() {
-          $(this).collapse('hide');
-        });
-        // Hide Bash code
-        $('div.sh-code-collapse').each(function() {
-          $(this).collapse('hide');
-        });
-    });
-  
-  
-    // index for unique code element ids
-    var r_currentIndex  = 1;   // for R code
-    var py_currentIndex = 1;   // for Python code
-    var sh_currentIndex  = 1;   // for shell code
-  
-    // select Python chunks
-    var pyCodeBlocks = $('pre.python');
-    pyCodeBlocks.each(function() {
-      // create a collapsable div to wrap the code in
-      var div = $('<div class="collapse py-code-collapse"></div>');
-      if (show)
-        div.addClass('in');
-      var id = 'pycode-643E0F36' + py_currentIndex++;
-      div.attr('id', id);
-      // "this" refers the code chunk
-      $(this).before(div);
-      $(this).detach().appendTo(div);
-      $(this).css('background-color','#ebfaeb');  // change color of chunk background
-      
-      // add a show code button right above
-      var showCodeText = $('<span>' + (show ? 'Hide Python code' : 'Python code') + '</span>');
-      var showCodeButton = $('<button type="button" class="btn btn-default btn-xs code-folding-btn pull-right"></button>');
-      showCodeButton.append(showCodeText);
-      showCodeButton
-          .attr('data-toggle', 'collapse')
-          .attr('data-target', '#' + id)
-          .attr('aria-expanded', show)
-          .attr('aria-controls', id);    
-          
-      // change the background color of the button
-      showCodeButton.css('background-color','#009900');
-          
-      var buttonRow = $('<div class="row"></div>');
-      var buttonCol = $('<div class="col-md-12"></div>');
-      buttonCol.append(showCodeButton);
-      buttonRow.append(buttonCol);
-      div.before(buttonRow);    
-      
-      // update state of button on show/hide
-      div.on('hidden.bs.collapse', function () {
-        showCodeText.text('Python code');
+      // Hide R code
+      $('div.r-code-collapse').each(function() {
+        $(this).collapse('hide');
       });
-      div.on('show.bs.collapse', function () {
-        showCodeText.text('Hide Python code');
-      });  
-     });
-    
-    
-  
-    // select Bash shell chunks
-    var shCodeBlocks = $('pre.bash');
-    shCodeBlocks.each(function() {
-      // create a collapsable div to wrap the code in
-      var div = $('<div class="collapse sh-code-collapse"></div>');
-      if (show)
-        div.addClass('in');
-      var id = 'shcode-643E0F36' + sh_currentIndex++;
-      div.attr('id', id);
-      // "this" refers the code chunk
-      $(this).before(div);
-      $(this).detach().appendTo(div);
-      $(this).css('background-color','#A0A0A0');  // change color of chunk background
-      
-      // add a show code button right above
-      var showCodeText = $('<span>' + (show ? 'Hide Bash code' : 'Bash code') + '</span>');
-      var showCodeButton = $('<button type="button" class="btn btn-default btn-xs code-folding-btn pull-right"></button>');
-      showCodeButton.append(showCodeText);
-      showCodeButton
-          .attr('data-toggle', 'collapse')
-          .attr('data-target', '#' + id)
-          .attr('aria-expanded', show)
-          .attr('aria-controls', id);    
-          
-      // change the background color of the button
-      showCodeButton.css('background-color','#cc7a00');
-          
-      var buttonRow = $('<div class="row"></div>');
-      var buttonCol = $('<div class="col-md-12"></div>');
-      buttonCol.append(showCodeButton);
-      buttonRow.append(buttonCol);
-      div.before(buttonRow);    
-      
-      // update state of button on show/hide
-      div.on('hidden.bs.collapse', function () {
-        showCodeText.text('Bash code');
+      // Hide Python code
+      $('div.py-code-collapse').each(function() {
+        $(this).collapse('hide');
       });
-      div.on('show.bs.collapse', function () {
-        showCodeText.text('Hide Bash code');
-      });  
-     });  
-  
-  
-    // select all R code blocks
-    // var rCodeBlocks = $('pre.sourceCode, pre.r, pre.bash, pre.sql, pre.cpp, pre.stan');
-    // adding pre.sourceCode confuses the Python button
-    var rCodeBlocks = $('pre.r, pre.sql, pre.cpp, pre.stan');
-    rCodeBlocks.each(function() {
-      // create a collapsable div to wrap the code in
-      var div = $('<div class="collapse r-code-collapse"></div>');
-      if (show)
-        div.addClass('in');
-      var id = 'rcode-643E0F36' + r_currentIndex++;
-      div.attr('id', id);
-      $(this).before(div);
-      $(this).detach().appendTo(div);
-      $(this).css('background-color','#e6faff'); // change color of chunk background
-  
-      // add a show code button right above
-      var showCodeText = $('<span>' + (show ? 'Hide R code' : 'R code') + '</span>');
-      var showCodeButton = $('<button type="button" class="btn btn-default btn-xs code-folding-btn pull-right"></button>');
-      showCodeButton.append(showCodeText);
-      showCodeButton
-          .attr('data-toggle', 'collapse')
-          .attr('data-target', '#' + id)
-          .attr('aria-expanded', show)
-          .attr('aria-controls', id);
-      
-      // change the background color of the button        
-      showCodeButton.css('background-color','#0000ff');
-      
-      var buttonRow = $('<div class="row"></div>');
-      var buttonCol = $('<div class="col-md-12"></div>');
-      buttonCol.append(showCodeButton);
-      buttonRow.append(buttonCol);
-      div.before(buttonRow);
-  
-      // update state of button on show/hide
-      div.on('hidden.bs.collapse', function () {
-        showCodeText.text('R code');
+      // Hide Bash code
+      $('div.sh-code-collapse').each(function() {
+        $(this).collapse('hide');
       });
-      div.on('show.bs.collapse', function () {
-        showCodeText.text('Hide R code');
-      });
-    });
-  
-  }
-  </script><script>
-  /* ========================================================================
-   * Bootstrap: dropdown.js v3.3.7
-   * http://getbootstrap.com/javascript/#dropdowns
-   * ========================================================================
-   * Copyright 2011-2016 Twitter, Inc.
-   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
-   * ======================================================================== */
-  
-  
-  +function ($) {
-    'use strict';
-  
-    // DROPDOWN CLASS DEFINITION
-    // =========================
-  
-    var backdrop = '.dropdown-backdrop'
-    var toggle   = '[data-toggle="dropdown"]'
-    var Dropdown = function (element) {
-      $(element).on('click.bs.dropdown', this.toggle)
-    }
-  
-    Dropdown.VERSION = '3.3.7'
-  
-    function getParent($this) {
-      var selector = $this.attr('data-target')
-  
-      if (!selector) {
-        selector = $this.attr('href')
-        selector = selector && /#[A-Za-z]/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
-      }
-  
-      var $parent = selector && $(selector)
-  
-      return $parent && $parent.length ? $parent : $this.parent()
-    }
-  
-    function clearMenus(e) {
-      if (e && e.which === 3) return
-      $(backdrop).remove()
-      $(toggle).each(function () {
-        var $this         = $(this)
-        var $parent       = getParent($this)
-        var relatedTarget = { relatedTarget: this }
-  
-        if (!$parent.hasClass('open')) return
-  
-        if (e && e.type == 'click' && /input|textarea/i.test(e.target.tagName) && $.contains($parent[0], e.target)) return
-  
-        $parent.trigger(e = $.Event('hide.bs.dropdown', relatedTarget))
-  
-        if (e.isDefaultPrevented()) return
-  
-        $this.attr('aria-expanded', 'false')
-        $parent.removeClass('open').trigger($.Event('hidden.bs.dropdown', relatedTarget))
-      })
-    }
-  
-    Dropdown.prototype.toggle = function (e) {
-      var $this = $(this)
-  
-      if ($this.is('.disabled, :disabled')) return
-  
-      var $parent  = getParent($this)
-      var isActive = $parent.hasClass('open')
-  
-      clearMenus()
-  
-      if (!isActive) {
-        if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
-          // if mobile we use a backdrop because click events don't delegate
-          $(document.createElement('div'))
-            .addClass('dropdown-backdrop')
-            .insertAfter($(this))
-            .on('click', clearMenus)
-        }
-  
-        var relatedTarget = { relatedTarget: this }
-        $parent.trigger(e = $.Event('show.bs.dropdown', relatedTarget))
-  
-        if (e.isDefaultPrevented()) return
-  
-        $this
-          .trigger('focus')
-          .attr('aria-expanded', 'true')
-  
-        $parent
-          .toggleClass('open')
-          .trigger($.Event('shown.bs.dropdown', relatedTarget))
-      }
-  
-      return false
-    }
-  
-    Dropdown.prototype.keydown = function (e) {
-      if (!/(38|40|27|32)/.test(e.which) || /input|textarea/i.test(e.target.tagName)) return
-  
-      var $this = $(this)
-  
-      e.preventDefault()
-      e.stopPropagation()
-  
-      if ($this.is('.disabled, :disabled')) return
-  
-      var $parent  = getParent($this)
-      var isActive = $parent.hasClass('open')
-  
-      if (!isActive && e.which != 27 || isActive && e.which == 27) {
-        if (e.which == 27) $parent.find(toggle).trigger('focus')
-        return $this.trigger('click')
-      }
-  
-      var desc = ' li:not(.disabled):visible a'
-      var $items = $parent.find('.dropdown-menu' + desc)
-  
-      if (!$items.length) return
-  
-      var index = $items.index(e.target)
-  
-      if (e.which == 38 && index > 0)                 index--         // up
-      if (e.which == 40 && index < $items.length - 1) index++         // down
-      if (!~index)                                    index = 0
-  
-      $items.eq(index).trigger('focus')
-    }
-  
-  
-    // DROPDOWN PLUGIN DEFINITION
-    // ==========================
-  
-    function Plugin(option) {
-      return this.each(function () {
-        var $this = $(this)
-        var data  = $this.data('bs.dropdown')
-  
-        if (!data) $this.data('bs.dropdown', (data = new Dropdown(this)))
-        if (typeof option == 'string') data[option].call($this)
-      })
-    }
-  
-    var old = $.fn.dropdown
-  
-    $.fn.dropdown             = Plugin
-    $.fn.dropdown.Constructor = Dropdown
-  
-  
-    // DROPDOWN NO CONFLICT
-    // ====================
-  
-    $.fn.dropdown.noConflict = function () {
-      $.fn.dropdown = old
-      return this
-    }
-  
-  
-    // APPLY TO STANDARD DROPDOWN ELEMENTS
-    // ===================================
-  
-    $(document)
-      .on('click.bs.dropdown.data-api', clearMenus)
-      .on('click.bs.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
-      .on('click.bs.dropdown.data-api', toggle, Dropdown.prototype.toggle)
-      .on('keydown.bs.dropdown.data-api', toggle, Dropdown.prototype.keydown)
-      .on('keydown.bs.dropdown.data-api', '.dropdown-menu', Dropdown.prototype.keydown)
-  
-  }(jQuery);
-  </script><style type="text/css">
-  .code-folding-btn {
-    margin-bottom: 4px;
-  }
-  
-  .row { display: flex; }
-  .collapse { display: none; }
-  .in { display:block }
-  .pull-right > .dropdown-menu {
-      right: 0;
-      left: auto;
-  }
-  
-  .dropdown-menu {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      z-index: 1000;
-      display: none;
-      float: left;
-      min-width: 160px;
-      padding: 5px 0;
-      margin: 2px 0 0;
-      font-size: 14px;
-      text-align: left;
-      list-style: none;
-      background-color: #fff;
-      -webkit-background-clip: padding-box;
-      background-clip: padding-box;
-      border: 1px solid #ccc;
-      border: 1px solid rgba(0,0,0,.15);
-      border-radius: 4px;
-      -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
-      box-shadow: 0 6px 12px rgba(0,0,0,.175);
-  }
-  
-  .open > .dropdown-menu {
-      display: block;
-      color: #ffffff;
-      background-color: #ffffff;
-      background-image: none;
-      border-color: #92897e;
-  }
-  
-  .dropdown-menu > li > a {
-    display: block;
-    padding: 3px 20px;
-    clear: both;
-    font-weight: 400;
-    line-height: 1.42857143;
-    color: #000000;
-    white-space: nowrap;
-  }
-  
-  .dropdown-menu > li > a:hover,
-  .dropdown-menu > li > a:focus {
-    color: #ffffff;
-    text-decoration: none;
-    background-color: #e95420;
-  }
-  
-  .dropdown-menu > .active > a,
-  .dropdown-menu > .active > a:hover,
-  .dropdown-menu > .active > a:focus {
-    color: #ffffff;
-    text-decoration: none;
-    background-color: #e95420;
-    outline: 0;
-  }
-  .dropdown-menu > .disabled > a,
-  .dropdown-menu > .disabled > a:hover,
-  .dropdown-menu > .disabled > a:focus {
-    color: #aea79f;
-  }
-  
-  .dropdown-menu > .disabled > a:hover,
-  .dropdown-menu > .disabled > a:focus {
-    text-decoration: none;
-    cursor: not-allowed;
-    background-color: transparent;
-    background-image: none;
-    filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
-  }
-  
-  .btn {
-    display: inline-block;
-    margin-bottom: 1;
-    font-weight: normal;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
-    -ms-touch-action: manipulation;
-        touch-action: manipulation;
-    cursor: pointer;
-    background-image: none;
-    border: 1px solid transparent;
-    padding: 4px 8px;
-    font-size: 14px;
-    line-height: 1.42857143;
-    border-radius: 4px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-  }
-  
-  .btn:focus,
-  .btn:active:focus,
-  .btn.active:focus,
-  .btn.focus,
-  .btn:active.focus,
-  .btn.active.focus {
-    outline: 5px auto -webkit-focus-ring-color;
-    outline-offset: -2px;
-  }
-  .btn:hover,
-  .btn:focus,
-  .btn.focus {
-    color: #ffffff;
-    text-decoration: none;
-  }
-  .btn:active,
-  .btn.active {
-    background-image: none;
-    outline: 0;
-    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-  }
-  .btn.disabled,
-  .btn[disabled],
-  fieldset[disabled] .btn {
-    cursor: not-allowed;
-    filter: alpha(opacity=65);
-    opacity: 0.65;
-    box-shadow: none;
-  }
-  a.btn.disabled,
-  fieldset[disabled] a.btn {
-    pointer-events: none;
-  }
-  .btn-default {
-    color: #ffffff;
-    background-color: #aea79f; #important
-    border-color: #aea79f;
-  }
-  
-  .btn-default:focus,
-  .btn-default.focus {
-    color: #ffffff;
-    background-color: #978e83;
-    border-color: #6f675e;
-  }
-  
-  .btn-default:hover {
-    color: #ffffff;
-    background-color: #978e83;
-    border-color: #92897e;
-  }
-  .btn-default:active,
-  .btn-default.active,
-  .btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
-    border-radius: 0;
-  }
-  .btn-group > .btn:first-child {
-    margin-left: 0;
-  }
-  .btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  .btn-group > .btn:last-child:not(:first-child),
-  .btn-group > .dropdown-toggle:not(:first-child) {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
-  .btn-group > .btn-group {
-    float: left;
-  }
-  .btn-group > .btn-group:not(:first-child):not(:last-child) > .btn {
-    border-radius: 0;
-  }
-  .btn-group > .btn-group:first-child:not(:last-child) > .btn:last-child,
-  .btn-group > .btn-group:first-child:not(:last-child) > .dropdown-toggle {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  .btn-group > .btn-group:last-child:not(:first-child) > .btn:first-child {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
-  .btn-group .dropdown-toggle:active,
-  .btn-group.open .dropdown-toggle {
-    outline: 0;
-  }
-  .btn-group > .btn + .dropdown-toggle {
-    padding-right: 8px;
-    padding-left: 8px;
-  }
-  .btn-group > .btn-lg + .dropdown-toggle {
-    padding-right: 12px;
-    padding-left: 12px;
-  }
-  .btn-group.open .dropdown-toggle {
-    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-  }
-  .btn-group.open .dropdown-toggle.btn-link {
-    box-shadow: none;
-  }
-  </style>
-<script>
-  var str = '<div class="btn-group pull-right" style="position: fixed; right: 50px; top: 10px; z-index: 200"><button type="button" class="btn btn-default btn-xs dropdown-toggle" id="allCodeButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-_extension-text-contrast=""><span>Code</span> <span class="caret"></span></button><ul class="dropdown-menu" style="min-width: 50px;"><li><a id="rmd-show-all-code" href="#">Show All Code</a></li><li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li></ul></div>';
-  document.write(str);
-  </script><script>
-  $(document).ready(function () {
-    // show code by default. Use "show" === "hide" to hide
-    window.initializeCodeFolding("show" === "show");
   });
-  </script><script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/mark.js@8.11.1/dist/mark.min.js"></script><!-- CSS --><div class="container-fluid">
-<div class="row">
-  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
 
-    <div class="d-flex align-items-start justify-content-between">
-      <h1>
-        <a href="index.html" title="">[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</a>
-      </h1>
-      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
-    </div>
 
-    <div id="main-nav" class="collapse-lg">
-      <form role="search">
-        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
-</form>
+  // index for unique code element ids
+  var r_currentIndex  = 1;   // for R code
+  var py_currentIndex = 1;   // for Python code
+  var sh_currentIndex  = 1;   // for shell code
 
-      <nav aria-label="Table of contents"><h2>Table of contents</h2>
-        <ul class="book-toc list-unstyled">
-<li><a class="active" href="index.html">Welcome to SER!</a></li>
-<li><a class="" href="mediation.html"><span class="header-section-number">1</span> Causal mediation analysis intro</a></li>
-<li><a class="" href="estimands.html"><span class="header-section-number">2</span> Types of path-specific causal mediation effects</a></li>
-<li><a class="" href="stochastic.html"><span class="header-section-number">3</span> Stochastic direct and indirect effects</a></li>
-<li><a class="" href="estimandirl.html"><span class="header-section-number">4</span> How to choose an estimand: Real-world example</a></li>
-<li><a class="" href="preliminaries-on-semiparametric-estimation.html"><span class="header-section-number">5</span> Preliminaries on semiparametric estimation</a></li>
-<li><a class="" href="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html"><span class="header-section-number">6</span> Using the EIF to construct an estimator: the case of the natural direct effect</a></li>
-<li><a class="" href="r-packages-for-estimation-of-the-causal-indirect-effects.html"><span class="header-section-number">7</span> R packages for estimation of the causal (in)direct effects</a></li>
-<li><a class="" href="references.html">References</a></li>
+  // select Python chunks
+  var pyCodeBlocks = $('pre.python');
+  pyCodeBlocks.each(function() {
+    // create a collapsable div to wrap the code in
+    var div = $('<div class="collapse py-code-collapse"></div>');
+    if (show)
+      div.addClass('in');
+    var id = 'pycode-643E0F36' + py_currentIndex++;
+    div.attr('id', id);
+    // "this" refers the code chunk
+    $(this).before(div);
+    $(this).detach().appendTo(div);
+    $(this).css('background-color','#ebfaeb');  // change color of chunk background
+    
+    // add a show code button right above
+    var showCodeText = $('<span>' + (show ? 'Hide Python code' : 'Python code') + '</span>');
+    var showCodeButton = $('<button type="button" class="btn btn-default btn-xs code-folding-btn pull-right"></button>');
+    showCodeButton.append(showCodeText);
+    showCodeButton
+        .attr('data-toggle', 'collapse')
+        .attr('data-target', '#' + id)
+        .attr('aria-expanded', show)
+        .attr('aria-controls', id);    
+        
+    // change the background color of the button
+    showCodeButton.css('background-color','#009900');
+        
+    var buttonRow = $('<div class="row"></div>');
+    var buttonCol = $('<div class="col-md-12"></div>');
+    buttonCol.append(showCodeButton);
+    buttonRow.append(buttonCol);
+    div.before(buttonRow);    
+    
+    // update state of button on show/hide
+    div.on('hidden.bs.collapse', function () {
+      showCodeText.text('Python code');
+    });
+    div.on('show.bs.collapse', function () {
+      showCodeText.text('Hide Python code');
+    });  
+   });
+  
+  
+
+  // select Bash shell chunks
+  var shCodeBlocks = $('pre.bash');
+  shCodeBlocks.each(function() {
+    // create a collapsable div to wrap the code in
+    var div = $('<div class="collapse sh-code-collapse"></div>');
+    if (show)
+      div.addClass('in');
+    var id = 'shcode-643E0F36' + sh_currentIndex++;
+    div.attr('id', id);
+    // "this" refers the code chunk
+    $(this).before(div);
+    $(this).detach().appendTo(div);
+    $(this).css('background-color','#A0A0A0');  // change color of chunk background
+    
+    // add a show code button right above
+    var showCodeText = $('<span>' + (show ? 'Hide Bash code' : 'Bash code') + '</span>');
+    var showCodeButton = $('<button type="button" class="btn btn-default btn-xs code-folding-btn pull-right"></button>');
+    showCodeButton.append(showCodeText);
+    showCodeButton
+        .attr('data-toggle', 'collapse')
+        .attr('data-target', '#' + id)
+        .attr('aria-expanded', show)
+        .attr('aria-controls', id);    
+        
+    // change the background color of the button
+    showCodeButton.css('background-color','#cc7a00');
+        
+    var buttonRow = $('<div class="row"></div>');
+    var buttonCol = $('<div class="col-md-12"></div>');
+    buttonCol.append(showCodeButton);
+    buttonRow.append(buttonCol);
+    div.before(buttonRow);    
+    
+    // update state of button on show/hide
+    div.on('hidden.bs.collapse', function () {
+      showCodeText.text('Bash code');
+    });
+    div.on('show.bs.collapse', function () {
+      showCodeText.text('Hide Bash code');
+    });  
+   });  
+
+
+  // select all R code blocks
+  // var rCodeBlocks = $('pre.sourceCode, pre.r, pre.bash, pre.sql, pre.cpp, pre.stan');
+  // adding pre.sourceCode confuses the Python button
+  var rCodeBlocks = $('pre.r, pre.sql, pre.cpp, pre.stan');
+  rCodeBlocks.each(function() {
+    // create a collapsable div to wrap the code in
+    var div = $('<div class="collapse r-code-collapse"></div>');
+    if (show)
+      div.addClass('in');
+    var id = 'rcode-643E0F36' + r_currentIndex++;
+    div.attr('id', id);
+    $(this).before(div);
+    $(this).detach().appendTo(div);
+    $(this).css('background-color','#e6faff'); // change color of chunk background
+
+    // add a show code button right above
+    var showCodeText = $('<span>' + (show ? 'Hide R code' : 'R code') + '</span>');
+    var showCodeButton = $('<button type="button" class="btn btn-default btn-xs code-folding-btn pull-right"></button>');
+    showCodeButton.append(showCodeText);
+    showCodeButton
+        .attr('data-toggle', 'collapse')
+        .attr('data-target', '#' + id)
+        .attr('aria-expanded', show)
+        .attr('aria-controls', id);
+    
+    // change the background color of the button        
+    showCodeButton.css('background-color','#0000ff');
+    
+    var buttonRow = $('<div class="row"></div>');
+    var buttonCol = $('<div class="col-md-12"></div>');
+    buttonCol.append(showCodeButton);
+    buttonRow.append(buttonCol);
+    div.before(buttonRow);
+
+    // update state of button on show/hide
+    div.on('hidden.bs.collapse', function () {
+      showCodeText.text('R code');
+    });
+    div.on('show.bs.collapse', function () {
+      showCodeText.text('Hide R code');
+    });
+  });
+
+}
+</script>
+<script>
+/* ========================================================================
+ * Bootstrap: dropdown.js v3.3.7
+ * http://getbootstrap.com/javascript/#dropdowns
+ * ========================================================================
+ * Copyright 2011-2016 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ * ======================================================================== */
+
+
++function ($) {
+  'use strict';
+
+  // DROPDOWN CLASS DEFINITION
+  // =========================
+
+  var backdrop = '.dropdown-backdrop'
+  var toggle   = '[data-toggle="dropdown"]'
+  var Dropdown = function (element) {
+    $(element).on('click.bs.dropdown', this.toggle)
+  }
+
+  Dropdown.VERSION = '3.3.7'
+
+  function getParent($this) {
+    var selector = $this.attr('data-target')
+
+    if (!selector) {
+      selector = $this.attr('href')
+      selector = selector && /#[A-Za-z]/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+    }
+
+    var $parent = selector && $(selector)
+
+    return $parent && $parent.length ? $parent : $this.parent()
+  }
+
+  function clearMenus(e) {
+    if (e && e.which === 3) return
+    $(backdrop).remove()
+    $(toggle).each(function () {
+      var $this         = $(this)
+      var $parent       = getParent($this)
+      var relatedTarget = { relatedTarget: this }
+
+      if (!$parent.hasClass('open')) return
+
+      if (e && e.type == 'click' && /input|textarea/i.test(e.target.tagName) && $.contains($parent[0], e.target)) return
+
+      $parent.trigger(e = $.Event('hide.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this.attr('aria-expanded', 'false')
+      $parent.removeClass('open').trigger($.Event('hidden.bs.dropdown', relatedTarget))
+    })
+  }
+
+  Dropdown.prototype.toggle = function (e) {
+    var $this = $(this)
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    clearMenus()
+
+    if (!isActive) {
+      if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
+        // if mobile we use a backdrop because click events don't delegate
+        $(document.createElement('div'))
+          .addClass('dropdown-backdrop')
+          .insertAfter($(this))
+          .on('click', clearMenus)
+      }
+
+      var relatedTarget = { relatedTarget: this }
+      $parent.trigger(e = $.Event('show.bs.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this
+        .trigger('focus')
+        .attr('aria-expanded', 'true')
+
+      $parent
+        .toggleClass('open')
+        .trigger($.Event('shown.bs.dropdown', relatedTarget))
+    }
+
+    return false
+  }
+
+  Dropdown.prototype.keydown = function (e) {
+    if (!/(38|40|27|32)/.test(e.which) || /input|textarea/i.test(e.target.tagName)) return
+
+    var $this = $(this)
+
+    e.preventDefault()
+    e.stopPropagation()
+
+    if ($this.is('.disabled, :disabled')) return
+
+    var $parent  = getParent($this)
+    var isActive = $parent.hasClass('open')
+
+    if (!isActive && e.which != 27 || isActive && e.which == 27) {
+      if (e.which == 27) $parent.find(toggle).trigger('focus')
+      return $this.trigger('click')
+    }
+
+    var desc = ' li:not(.disabled):visible a'
+    var $items = $parent.find('.dropdown-menu' + desc)
+
+    if (!$items.length) return
+
+    var index = $items.index(e.target)
+
+    if (e.which == 38 && index > 0)                 index--         // up
+    if (e.which == 40 && index < $items.length - 1) index++         // down
+    if (!~index)                                    index = 0
+
+    $items.eq(index).trigger('focus')
+  }
+
+
+  // DROPDOWN PLUGIN DEFINITION
+  // ==========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this = $(this)
+      var data  = $this.data('bs.dropdown')
+
+      if (!data) $this.data('bs.dropdown', (data = new Dropdown(this)))
+      if (typeof option == 'string') data[option].call($this)
+    })
+  }
+
+  var old = $.fn.dropdown
+
+  $.fn.dropdown             = Plugin
+  $.fn.dropdown.Constructor = Dropdown
+
+
+  // DROPDOWN NO CONFLICT
+  // ====================
+
+  $.fn.dropdown.noConflict = function () {
+    $.fn.dropdown = old
+    return this
+  }
+
+
+  // APPLY TO STANDARD DROPDOWN ELEMENTS
+  // ===================================
+
+  $(document)
+    .on('click.bs.dropdown.data-api', clearMenus)
+    .on('click.bs.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
+    .on('click.bs.dropdown.data-api', toggle, Dropdown.prototype.toggle)
+    .on('keydown.bs.dropdown.data-api', toggle, Dropdown.prototype.keydown)
+    .on('keydown.bs.dropdown.data-api', '.dropdown-menu', Dropdown.prototype.keydown)
+
+}(jQuery);
+</script>
+<style type="text/css">
+.code-folding-btn {
+  margin-bottom: 4px;
+}
+
+.row { display: flex; }
+.collapse { display: none; }
+.in { display:block }
+.pull-right > .dropdown-menu {
+    right: 0;
+    left: auto;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+}
+
+.open > .dropdown-menu {
+    display: block;
+    color: #ffffff;
+    background-color: #ffffff;
+    background-image: none;
+    border-color: #92897e;
+}
+
+.dropdown-menu > li > a {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: 400;
+  line-height: 1.42857143;
+  color: #000000;
+  white-space: nowrap;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+}
+
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #e95420;
+  outline: 0;
+}
+.dropdown-menu > .disabled > a,
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  color: #aea79f;
+}
+
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  text-decoration: none;
+  cursor: not-allowed;
+  background-color: transparent;
+  background-image: none;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+
+.btn {
+  display: inline-block;
+  margin-bottom: 1;
+  font-weight: normal;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+      touch-action: manipulation;
+  cursor: pointer;
+  background-image: none;
+  border: 1px solid transparent;
+  padding: 4px 8px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+.btn:hover,
+.btn:focus,
+.btn.focus {
+  color: #ffffff;
+  text-decoration: none;
+}
+.btn:active,
+.btn.active {
+  background-image: none;
+  outline: 0;
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn.disabled,
+.btn[disabled],
+fieldset[disabled] .btn {
+  cursor: not-allowed;
+  filter: alpha(opacity=65);
+  opacity: 0.65;
+  box-shadow: none;
+}
+a.btn.disabled,
+fieldset[disabled] a.btn {
+  pointer-events: none;
+}
+.btn-default {
+  color: #ffffff;
+  background-color: #aea79f; #important
+  border-color: #aea79f;
+}
+
+.btn-default:focus,
+.btn-default.focus {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #6f675e;
+}
+
+.btn-default:hover {
+  color: #ffffff;
+  background-color: #978e83;
+  border-color: #92897e;
+}
+.btn-default:active,
+.btn-default.active,
+.btn-group > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
+  border-radius: 0;
+}
+.btn-group > .btn:first-child {
+  margin-left: 0;
+}
+.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn:last-child:not(:first-child),
+.btn-group > .dropdown-toggle:not(:first-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group > .btn-group {
+  float: left;
+}
+.btn-group > .btn-group:not(:first-child):not(:last-child) > .btn {
+  border-radius: 0;
+}
+.btn-group > .btn-group:first-child:not(:last-child) > .btn:last-child,
+.btn-group > .btn-group:first-child:not(:last-child) > .dropdown-toggle {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.btn-group > .btn-group:last-child:not(:first-child) > .btn:first-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.btn-group .dropdown-toggle:active,
+.btn-group.open .dropdown-toggle {
+  outline: 0;
+}
+.btn-group > .btn + .dropdown-toggle {
+  padding-right: 8px;
+  padding-left: 8px;
+}
+.btn-group > .btn-lg + .dropdown-toggle {
+  padding-right: 12px;
+  padding-left: 12px;
+}
+.btn-group.open .dropdown-toggle {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+.btn-group.open .dropdown-toggle.btn-link {
+  box-shadow: none;
+}
+</style>
+<script>
+var str = '<div class="btn-group pull-right" style="position: fixed; right: 50px; top: 10px; z-index: 200"><button type="button" class="btn btn-default btn-xs dropdown-toggle" id="allCodeButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-_extension-text-contrast=""><span>Code</span> <span class="caret"></span></button><ul class="dropdown-menu" style="min-width: 50px;"><li><a id="rmd-show-all-code" href="#">Show All Code</a></li><li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li></ul></div>';
+document.write(str);
+</script>
+<script>
+$(document).ready(function () {
+  // show code by default. Use "show" === "hide" to hide
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+<link rel="stylesheet" href="css/toc.css" type="text/css" />
+<link rel="stylesheet" href="css/center.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><strong><a href="./">Causal Mediation Analysis</a></strong></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome to SER!</a><ul>
+<li class="chapter" data-level="0.1" data-path="index.html"><a href="index.html#about"><i class="fa fa-check"></i><b>0.1</b> About this workshop</a></li>
+<li class="chapter" data-level="0.2" data-path="index.html"><a href="index.html#schedule"><i class="fa fa-check"></i><b>0.2</b> Workshop schedule</a></li>
+<li class="chapter" data-level="0.3" data-path="index.html"><a href="index.html#instructors"><i class="fa fa-check"></i><b>0.3</b> About the instructors</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#iván-díaz"><i class="fa fa-check"></i>Iván Díaz</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#nima-hejazi"><i class="fa fa-check"></i>Nima Hejazi</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#kara-rudolph"><i class="fa fa-check"></i>Kara Rudolph</a></li>
+</ul></li>
+<li class="chapter" data-level="0.4" data-path="index.html"><a href="index.html#repro"><i class="fa fa-check"></i><b>0.4</b> Reproduciblity</a></li>
+<li class="chapter" data-level="0.5" data-path="index.html"><a href="index.html#setup"><i class="fa fa-check"></i><b>0.5</b> Setup instructions</a><ul>
+<li class="chapter" data-level="0.5.1" data-path="index.html"><a href="index.html#r-and-rstudio"><i class="fa fa-check"></i><b>0.5.1</b> R and RStudio</a></li>
+<li class="chapter" data-level="0.5.2" data-path="index.html"><a href="index.html#renv"><i class="fa fa-check"></i><b>0.5.2</b> Virtual Enironment setup with <code>renv</code></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="mediation.html"><a href="mediation.html"><i class="fa fa-check"></i><b>1</b> Causal mediation analysis intro</a><ul>
+<li class="chapter" data-level="1.1" data-path="mediation.html"><a href="mediation.html#motivating-study"><i class="fa fa-check"></i><b>1.1</b> Motivating study</a></li>
+<li class="chapter" data-level="1.2" data-path="mediation.html"><a href="mediation.html#what-is-causal-mediation-analysis"><i class="fa fa-check"></i><b>1.2</b> What is causal mediation analysis?</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="mediation.html"><a href="mediation.html#why-are-the-methods-that-we-will-discuss-today-important"><i class="fa fa-check"></i><b>1.2.1</b> Why are the methods that we will discuss today important?</a></li>
+<li class="chapter" data-level="1.2.2" data-path="mediation.html"><a href="mediation.html#r-example"><i class="fa fa-check"></i><b>1.2.2</b> <code>R</code> Example:</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="mediation.html"><a href="mediation.html#causal-mediation-models"><i class="fa fa-check"></i><b>1.3</b> Causal mediation models</a><ul>
+<li class="chapter" data-level="1.3.1" data-path="mediation.html"><a href="mediation.html#no-intermediate-confounders"><i class="fa fa-check"></i><b>1.3.1</b> No intermediate confounders</a></li>
+<li class="chapter" data-level="1.3.2" data-path="mediation.html"><a href="mediation.html#intermediate-confounders"><i class="fa fa-check"></i><b>1.3.2</b> Intermediate confounders</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="mediation.html"><a href="mediation.html#counterfactuals"><i class="fa fa-check"></i><b>1.4</b> Counterfactuals</a><ul>
+<li class="chapter" data-level="1.4.1" data-path="mediation.html"><a href="mediation.html#how-are-counterfactuals-defined"><i class="fa fa-check"></i><b>1.4.1</b> How are counterfactuals defined?</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="estimands.html"><a href="estimands.html"><i class="fa fa-check"></i><b>2</b> Types of path-specific causal mediation effects</a><ul>
+<li class="chapter" data-level="2.1" data-path="estimands.html"><a href="estimands.html#controlled-direct-effects"><i class="fa fa-check"></i><b>2.1</b> Controlled direct effects</a><ul>
+<li class="chapter" data-level="2.1.1" data-path="estimands.html"><a href="estimands.html#identification-assumptions"><i class="fa fa-check"></i><b>2.1.1</b> Identification assumptions:</a></li>
+<li class="chapter" data-level="2.1.2" data-path="estimands.html"><a href="estimands.html#is-this-the-estimand-i-want"><i class="fa fa-check"></i><b>2.1.2</b> Is this the estimand I want?</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="estimands.html"><a href="estimands.html#natural-direct-and-indirect-effects"><i class="fa fa-check"></i><b>2.2</b> Natural direct and indirect effects</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="estimands.html"><a href="estimands.html#identification-assumptions-1"><i class="fa fa-check"></i><b>2.2.1</b> Identification assumptions:</a></li>
+<li class="chapter" data-level="2.2.2" data-path="estimands.html"><a href="estimands.html#cross-world-independence-assumption"><i class="fa fa-check"></i><b>2.2.2</b> Cross-world independence assumption</a></li>
+<li class="chapter" data-level="2.2.3" data-path="estimands.html"><a href="estimands.html#identification-formula"><i class="fa fa-check"></i><b>2.2.3</b> Identification formula:</a></li>
+<li class="chapter" data-level="2.2.4" data-path="estimands.html"><a href="estimands.html#is-this-the-estimand-i-want-1"><i class="fa fa-check"></i><b>2.2.4</b> Is this the estimand I want?</a></li>
+<li class="chapter" data-level="2.2.5" data-path="estimands.html"><a href="estimands.html#unidentifiability-of-the-nde-and-nie-in-this-setting"><i class="fa fa-check"></i><b>2.2.5</b> Unidentifiability of the NDE and NIE in this setting</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="estimands.html"><a href="estimands.html#interventional-indirect-effects"><i class="fa fa-check"></i><b>2.3</b> Interventional (in)direct effects</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="estimands.html"><a href="estimands.html#an-alternative-definition-of-the-effects"><i class="fa fa-check"></i><b>2.3.1</b> An alternative definition of the effects:</a></li>
+<li class="chapter" data-level="2.3.2" data-path="estimands.html"><a href="estimands.html#identification-assumptions-2"><i class="fa fa-check"></i><b>2.3.2</b> Identification assumptions:</a></li>
+<li class="chapter" data-level="2.3.3" data-path="estimands.html"><a href="estimands.html#is-this-the-estimand-i-want-2"><i class="fa fa-check"></i><b>2.3.3</b> Is this the estimand I want?</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="estimands.html"><a href="estimands.html#estimand-summary"><i class="fa fa-check"></i><b>2.4</b> Estimand Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="stochastic.html"><a href="stochastic.html"><i class="fa fa-check"></i><b>3</b> Stochastic direct and indirect effects</a><ul>
+<li class="chapter" data-level="3.1" data-path="stochastic.html"><a href="stochastic.html#definition-of-the-effects"><i class="fa fa-check"></i><b>3.1</b> Definition of the effects</a></li>
+<li class="chapter" data-level="3.2" data-path="stochastic.html"><a href="stochastic.html#motivation-for-stochastic-interventions"><i class="fa fa-check"></i><b>3.2</b> Motivation for stochastic interventions</a></li>
+<li class="chapter" data-level="3.3" data-path="stochastic.html"><a href="stochastic.html#definition-of-stochastic-effects"><i class="fa fa-check"></i><b>3.3</b> Definition of stochastic effects</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="stochastic.html"><a href="stochastic.html#ipsi"><i class="fa fa-check"></i><b>3.3.1</b> Example: incremental propensity score interventions (IPSI) <span class="citation">(Kennedy 2018)</span></a></li>
+<li><a href="stochastic.html#example-modified-treatment-policies-mtp-diaz2020causal">Example: modified treatment policies (MTP) <span class="citation">(Dı́az and Hejazi 2020)</span></a></li>
+<li class="chapter" data-level="3.3.2" data-path="stochastic.html"><a href="stochastic.html#mediation-analysis-for-stochastic-interventions"><i class="fa fa-check"></i><b>3.3.2</b> Mediation analysis for stochastic interventions</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="stochastic.html"><a href="stochastic.html#identification-assumptions-3"><i class="fa fa-check"></i><b>3.4</b> Identification assumptions</a></li>
+<li class="chapter" data-level="3.5" data-path="stochastic.html"><a href="stochastic.html#what-are-the-odds-of-exposure-under-intervention-vs-real-world"><i class="fa fa-check"></i><b>3.5</b> What are the odds of exposure under intervention vs real world?</a></li>
+<li class="chapter" data-level="3.6" data-path="stochastic.html"><a href="stochastic.html#summary"><i class="fa fa-check"></i><b>3.6</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="estimandirl.html"><a href="estimandirl.html"><i class="fa fa-check"></i><b>4</b> How to choose an estimand: Real-world example</a><ul>
+<li class="chapter" data-level="4.1" data-path="estimandirl.html"><a href="estimandirl.html#comparative-effectivness-of-two-medications-for-opioid-use-disorder-oud"><i class="fa fa-check"></i><b>4.1</b> Comparative effectivness of two medications for opioid use disorder (OUD)</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="estimandirl.html"><a href="estimandirl.html#getting-specific-about-the-question"><i class="fa fa-check"></i><b>4.1.1</b> Getting specific about the question</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html"><i class="fa fa-check"></i><b>5</b> Preliminaries on semiparametric estimation</a><ul>
+<li class="chapter" data-level="5.1" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#from-causal-to-statistical-quantities"><i class="fa fa-check"></i><b>5.1</b> From causal to statistical quantities</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#computing-identification-formulas-if-you-know-the-true-distribution"><i class="fa fa-check"></i><b>5.1.1</b> Computing identification formulas if you know the true distribution</a></li>
+<li class="chapter" data-level="5.1.2" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#estimating-identification-formulas"><i class="fa fa-check"></i><b>5.1.2</b> Estimating identification formulas</a></li>
+<li class="chapter" data-level="5.1.3" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#how-can-g-estimation-be-implemented-in-practice"><i class="fa fa-check"></i><b>5.1.3</b> How can g-estimation be implemented in practice?</a></li>
+<li class="chapter" data-level="5.1.4" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#pros-and-cons-of-parametric-models"><i class="fa fa-check"></i><b>5.1.4</b> Pros and cons of parametric models</a></li>
+<li class="chapter" data-level="5.1.5" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#an-example-of-the-bias-of-a-g-computation-estimator-of-the-natural-direct-effect"><i class="fa fa-check"></i><b>5.1.5</b> An example of the bias of a g-computation estimator of the natural direct effect</a></li>
+<li class="chapter" data-level="5.1.6" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#pros-and-cons-of-g-computation-with-data-adaptive-regression"><i class="fa fa-check"></i><b>5.1.6</b> Pros and cons of g-computation with data-adaptive regression</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#semiparametric-estimation-or-correcting-the-bias-of-g-computation-estimators"><i class="fa fa-check"></i><b>5.2</b> Semiparametric estimation (or correcting the bias of g-computation estimators)</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html"><a href="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html"><i class="fa fa-check"></i><b>6</b> Using the EIF to construct an estimator: the case of the natural direct effect</a><ul>
+<li class="chapter" data-level="6.1" data-path="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html"><a href="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html#natural-direct-effect"><i class="fa fa-check"></i><b>6.1</b> Natural direct effect</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html"><a href="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html#the-efficient-influence-function-for-the-nde"><i class="fa fa-check"></i><b>6.1.1</b> The efficient influence function for the NDE</a></li>
+<li class="chapter" data-level="6.1.2" data-path="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html"><a href="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html#how-to-compute-the-one-step-estimator-akin-to-augmented-ipw"><i class="fa fa-check"></i><b>6.1.2</b> How to compute the one-step estimator (akin to Augmented IPW)</a></li>
+<li class="chapter" data-level="6.1.3" data-path="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html"><a href="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html#performance-of-the-one-step-estimator-in-a-small-simulation-study"><i class="fa fa-check"></i><b>6.1.3</b> Performance of the one-step estimator in a small simulation study</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="r-packages-for-estimation-of-the-causal-indirect-effects.html"><a href="r-packages-for-estimation-of-the-causal-indirect-effects.html"><i class="fa fa-check"></i><b>7</b> <code>R</code> packages for estimation of the causal (in)direct effects</a><ul>
+<li class="chapter" data-level="7.1" data-path="r-packages-for-estimation-of-the-causal-indirect-effects.html"><a href="r-packages-for-estimation-of-the-causal-indirect-effects.html#medoutcon-natural-and-interventional-indirect-effects"><i class="fa fa-check"></i><b>7.1</b> <code>medoutcon</code>: Natural and interventional (in)direct effects</a><ul>
+<li class="chapter" data-level="7.1.1" data-path="r-packages-for-estimation-of-the-causal-indirect-effects.html"><a href="r-packages-for-estimation-of-the-causal-indirect-effects.html#natural-indirect-effects"><i class="fa fa-check"></i><b>7.1.1</b> Natural (in)direct effects</a></li>
+<li class="chapter" data-level="7.1.2" data-path="r-packages-for-estimation-of-the-causal-indirect-effects.html"><a href="r-packages-for-estimation-of-the-causal-indirect-effects.html#interlude-sl3-for-nuisance-parameter-estimation"><i class="fa fa-check"></i><b>7.1.2</b> Interlude: <code>sl3</code> for nuisance parameter estimation</a></li>
+<li class="chapter" data-level="7.1.3" data-path="r-packages-for-estimation-of-the-causal-indirect-effects.html"><a href="r-packages-for-estimation-of-the-causal-indirect-effects.html#efficient-estimation-of-the-natural-indirect-effects"><i class="fa fa-check"></i><b>7.1.3</b> Efficient estimation of the natural (in)direct effects</a></li>
+<li class="chapter" data-level="7.1.4" data-path="r-packages-for-estimation-of-the-causal-indirect-effects.html"><a href="r-packages-for-estimation-of-the-causal-indirect-effects.html#interventional-indirect-effects-1"><i class="fa fa-check"></i><b>7.1.4</b> Interventional (in)direct effects</a></li>
+<li class="chapter" data-level="7.1.5" data-path="r-packages-for-estimation-of-the-causal-indirect-effects.html"><a href="r-packages-for-estimation-of-the-causal-indirect-effects.html#efficient-estimation-of-the-interventional-indirect-effects"><i class="fa fa-check"></i><b>7.1.5</b> Efficient estimation of the interventional (in)direct effects</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="r-packages-for-estimation-of-the-causal-indirect-effects.html"><a href="r-packages-for-estimation-of-the-causal-indirect-effects.html#medshift-stochastic-indirect-effects"><i class="fa fa-check"></i><b>7.2</b> <code>medshift</code>: Stochastic (in)direct effects</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="r-packages-for-estimation-of-the-causal-indirect-effects.html"><a href="r-packages-for-estimation-of-the-causal-indirect-effects.html#formulating-the-stochastic-indirect-effects"><i class="fa fa-check"></i><b>7.2.1</b> Formulating the stochastic (in)direct effects</a></li>
+<li class="chapter" data-level="7.2.2" data-path="r-packages-for-estimation-of-the-causal-indirect-effects.html"><a href="r-packages-for-estimation-of-the-causal-indirect-effects.html#efficient-estimation-of-the-stochastic-indirect-effects"><i class="fa fa-check"></i><b>7.2.2</b> Efficient estimation of the stochastic (in)direct effects</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
 
-        <div class="book-extra">
-          <p><a id="book-repo" href="https://github.com/nhejazi/ser2021_mediation_workshop">View book source <i class="fab fa-github"></i></a></p>
-        </div>
       </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Causal Mediation: Modern Methods for Path Analysis</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="header">
+<h1 class="title">Causal Mediation: Modern Methods for Path Analysis</h1>
+<h2 class="subtitle"><em>A Workshop at SER 2021</em></h2>
+<p class="author"><em>Iván Díaz, Nima Hejazi, Kara Rudolph</em></p>
+<p class="date" style="margin-top: 1.5em;"><em>updated: May 18, 2021</em></p>
 </div>
-  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><!--bookdown:title:end--><!--bookdown:title:start--><div id="welcome-to-ser" class="section level1 unnumbered">
-<h1>Welcome to SER!<a class="anchor" aria-label="anchor" href="#welcome-to-ser"><i class="fas fa-link"></i></a>
-</h1>
+<div id="welcome-to-ser" class="section level1 unnumbered">
+<h1>Welcome to SER!</h1>
 <p>This open source, reproducible vignette accompanies a half-day workshop on
 modern methods for <em>causal mediation analysis</em>, given at the <a href="https://epiresearch.org/annual-meeting/2021-meeting/workshop/">SER 2021
 Meeting</a> on
@@ -903,9 +1119,7 @@ Discussion will take place <em>on Slack</em> – first join the workspace
 <a href="https://join.slack.com/t/moderncausalmediation/shared_invite/zt-qd2ocx45-XlKvMA9FXlsixnwI7VnbHQ">here</a>,
 then the “#ser2021” channel.</p>
 <div id="about" class="section level2">
-<h2>
-<span class="header-section-number">0.1</span> About this workshop<a class="anchor" aria-label="anchor" href="#about"><i class="fas fa-link"></i></a>
-</h2>
+<h2><span class="header-section-number">0.1</span> About this workshop</h2>
 <p>Causal mediation analysis can provide a mechanistic understanding of how an
 exposure impacts an outcome, a central goal in epidemiology and health sciences.
 However, rapid methodologic developments coupled with few formal courses
@@ -930,44 +1144,32 @@ parameter estimable from the observed data distribution). Familiarity with the
 <code>R</code> programming language is also recommended.</p>
 </div>
 <div id="schedule" class="section level2">
-<h2>
-<span class="header-section-number">0.2</span> Workshop schedule<a class="anchor" aria-label="anchor" href="#schedule"><i class="fas fa-link"></i></a>
-</h2>
+<h2><span class="header-section-number">0.2</span> Workshop schedule</h2>
 <ul>
 <li>09:00A-09:30A: Introductions + mediation set-up
-<!-- Ivan-->
-</li>
+<!-- Ivan--></li>
 <li>09:30A-10:15A: Controlled direct effects, natural direct/indirect effects,
 interventional direct/indirect effects
-<!-- Kara-->
-</li>
+<!-- Kara--></li>
 <li>10:15A-10:45A: Stochastic mediation estimands
-<!-- Nima-->
-</li>
+<!-- Nima--></li>
 <li>10:45A-11:00A: Choosing an estimand in real-world examples
-<!-- Kara-->
-</li>
+<!-- Kara--></li>
 <li>11:00A-11:15A: Break + discussion</li>
 <li>11:15A-11:45A: What is the EIF?!
-<!-- Ivan-->
-</li>
+<!-- Ivan--></li>
 <li>11:45A-12:00P: Using the EIF for estimating the natural direct effect
-<!-- Ivan-->
-</li>
+<!-- Ivan--></li>
 <li>12:00P-12:45P: Example walkthrough with <code>R</code> packages for effect estimation
-<!-- Nima-->
-</li>
+<!-- Nima--></li>
 <li>12:45P-01:00P: Wrap-up</li>
 </ul>
 <p><strong>NOTE: All times listed in Pacific Time.</strong></p>
 </div>
 <div id="instructors" class="section level2">
-<h2>
-<span class="header-section-number">0.3</span> About the instructors<a class="anchor" aria-label="anchor" href="#instructors"><i class="fas fa-link"></i></a>
-</h2>
+<h2><span class="header-section-number">0.3</span> About the instructors</h2>
 <div id="iván-díaz" class="section level3 unnumbered">
-<h3>Iván Díaz<a class="anchor" aria-label="anchor" href="#iv%C3%A1n-d%C3%ADaz"><i class="fas fa-link"></i></a>
-</h3>
+<h3>Iván Díaz</h3>
 <p>I am an Assistant Professor at Weill Cornel Medicine. My research focuses on the
 development of non-parametric statistical methods for causal inference from
 observational and randomized studies with complex datasets, using machine
@@ -978,8 +1180,7 @@ interested in general semi-parametric theory, machine learning, and
 high-dimensional data.</p>
 </div>
 <div id="nima-hejazi" class="section level3 unnumbered">
-<h3>Nima Hejazi<a class="anchor" aria-label="anchor" href="#nima-hejazi"><i class="fas fa-link"></i></a>
-</h3>
+<h3>Nima Hejazi</h3>
 <p>I am a PhD candidate in biostatistics at UC Berkeley, working under the joint
 direction of Mark van der Laan and Alan Hubbard. My research interests fall at
 the intersection of causal inference and machine learning, drawing on ideas from
@@ -990,8 +1191,7 @@ applications in vaccine efficacy trials. I am also passionate about statistical
 computing and open source software development for applied statistics.</p>
 </div>
 <div id="kara-rudolph" class="section level3 unnumbered">
-<h3>Kara Rudolph<a class="anchor" aria-label="anchor" href="#kara-rudolph"><i class="fas fa-link"></i></a>
-</h3>
+<h3>Kara Rudolph</h3>
 <p>I am an Assistant Professor of Epidemiology at Columbia University. My research
 interests are in developing and applying causal inference methods to understand
 social and contextual influences on mental health, substance use, and violence
@@ -1006,40 +1206,151 @@ target available policy and program resources.</p>
 </div>
 </div>
 <div id="repro" class="section level2">
-<h2>
-<span class="header-section-number">0.4</span> Reproduciblity<a class="anchor" aria-label="anchor" href="#repro"><i class="fas fa-link"></i></a>
-</h2>
+<h2><span class="header-section-number">0.4</span> Reproduciblity</h2>
 <p>These workshop materials were written using <a href="http://bookdown.org/">bookdown</a>,
 and the complete source is available on
 <a href="https://github.com/tlverse/tlverse-handbook">GitHub</a>. This version of the book
 was built with R version 4.0.5 (2021-03-31), <a href="https://pandoc.org/">pandoc</a> version <code>r rmarkdown::pandoc_version()</code>, and the following packages:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">package</th>
+<th align="left">version</th>
+<th align="left">source</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">bookdown</td>
+<td align="left">0.21.11</td>
+<td align="left">Github (rstudio/bookdown@33c4f70)</td>
+</tr>
+<tr class="even">
+<td align="left">bslib</td>
+<td align="left">0.2.4.9003</td>
+<td align="left">Github (rstudio/bslib@e09af88)</td>
+</tr>
+<tr class="odd">
+<td align="left">data.table</td>
+<td align="left">1.14.0</td>
+<td align="left">CRAN (R 4.0.5)</td>
+</tr>
+<tr class="even">
+<td align="left">downlit</td>
+<td align="left">0.2.1</td>
+<td align="left">CRAN (R 4.0.5)</td>
+</tr>
+<tr class="odd">
+<td align="left">dplyr</td>
+<td align="left">1.0.6</td>
+<td align="left">CRAN (R 4.0.5)</td>
+</tr>
+<tr class="even">
+<td align="left">ggfortify</td>
+<td align="left">0.4.11</td>
+<td align="left">CRAN (R 4.0.5)</td>
+</tr>
+<tr class="odd">
+<td align="left">ggplot2</td>
+<td align="left">3.3.3</td>
+<td align="left">CRAN (R 4.0.5)</td>
+</tr>
+<tr class="even">
+<td align="left">kableExtra</td>
+<td align="left">1.3.4</td>
+<td align="left">CRAN (R 4.0.5)</td>
+</tr>
+<tr class="odd">
+<td align="left">knitr</td>
+<td align="left">1.32</td>
+<td align="left">CRAN (R 4.0.5)</td>
+</tr>
+<tr class="even">
+<td align="left">magick</td>
+<td align="left">2.7.1</td>
+<td align="left">CRAN (R 4.0.5)</td>
+</tr>
+<tr class="odd">
+<td align="left">medoutcon</td>
+<td align="left">0.1.5</td>
+<td align="left">Github (nhejazi/medoutcon@39820e2)</td>
+</tr>
+<tr class="even">
+<td align="left">medshift</td>
+<td align="left">0.1.4</td>
+<td align="left">Github (nhejazi/medshift@f9e11a9)</td>
+</tr>
+<tr class="odd">
+<td align="left">mvtnorm</td>
+<td align="left">1.1-1</td>
+<td align="left">CRAN (R 4.0.5)</td>
+</tr>
+<tr class="even">
+<td align="left">origami</td>
+<td align="left">1.0.3</td>
+<td align="left">CRAN (R 4.0.5)</td>
+</tr>
+<tr class="odd">
+<td align="left">pdftools</td>
+<td align="left">2.3.1</td>
+<td align="left">CRAN (R 4.0.5)</td>
+</tr>
+<tr class="even">
+<td align="left">readr</td>
+<td align="left">1.4.0</td>
+<td align="left">CRAN (R 4.0.5)</td>
+</tr>
+<tr class="odd">
+<td align="left">rmarkdown</td>
+<td align="left">2.7.11</td>
+<td align="left">Github (rstudio/rmarkdown@e340d75)</td>
+</tr>
+<tr class="even">
+<td align="left">skimr</td>
+<td align="left">2.1.3</td>
+<td align="left">CRAN (R 4.0.5)</td>
+</tr>
+<tr class="odd">
+<td align="left">sl3</td>
+<td align="left">1.4.3</td>
+<td align="left">Github (tlverse/sl3@5cddc6c)</td>
+</tr>
+<tr class="even">
+<td align="left">stringr</td>
+<td align="left">1.4.0</td>
+<td align="left">CRAN (R 4.0.5)</td>
+</tr>
+<tr class="odd">
+<td align="left">tibble</td>
+<td align="left">3.1.1</td>
+<td align="left">CRAN (R 4.0.5)</td>
+</tr>
+<tr class="even">
+<td align="left">tidyr</td>
+<td align="left">1.1.3</td>
+<td align="left">CRAN (R 4.0.5)</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="setup" class="section level2">
-<h2>
-<span class="header-section-number">0.5</span> Setup instructions<a class="anchor" aria-label="anchor" href="#setup"><i class="fas fa-link"></i></a>
-</h2>
+<h2><span class="header-section-number">0.5</span> Setup instructions</h2>
 <div id="r-and-rstudio" class="section level3">
-<h3>
-<span class="header-section-number">0.5.1</span> R and RStudio<a class="anchor" aria-label="anchor" href="#r-and-rstudio"><i class="fas fa-link"></i></a>
-</h3>
+<h3><span class="header-section-number">0.5.1</span> R and RStudio</h3>
 <p><strong>R</strong> and <strong>RStudio</strong> are separate downloads and installations. R is the
 underlying statistical computing environment. RStudio is a graphical integrated
 development environment (IDE) that makes using R much easier and more
 interactive. You need to install R before you install RStudio.</p>
 <div id="windows" class="section level4">
-<h4>
-<span class="header-section-number">0.5.1.1</span> Windows<a class="anchor" aria-label="anchor" href="#windows"><i class="fas fa-link"></i></a>
-</h4>
+<h4><span class="header-section-number">0.5.1.1</span> Windows</h4>
 <div id="if-you-already-have-r-and-rstudio-installed" class="section level5">
-<h5>
-<span class="header-section-number">0.5.1.1.1</span> If you already have R and RStudio installed<a class="anchor" aria-label="anchor" href="#if-you-already-have-r-and-rstudio-installed"><i class="fas fa-link"></i></a>
-</h5>
+<h5><span class="header-section-number">0.5.1.1.1</span> If you already have R and RStudio installed</h5>
 <ul>
 <li>Open RStudio, and click on “Help” &gt; “Check for updates”. If a new version is
 available, quit RStudio, and download the latest version for RStudio.</li>
 <li>To check which version of R you are using, start RStudio and the first thing
 that appears in the console indicates the version of R you are
-running. Alternatively, you can type <code><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo()</a></code>, which will also display
+running. Alternatively, you can type <code>sessionInfo()</code>, which will also display
 which version of R you are running. Go on the <a href="https://cran.r-project.org/bin/windows/base/">CRAN
 website</a> and check whether a
 more recent version is available. If so, please download and install it. You
@@ -1049,16 +1360,13 @@ wish to do so.</li>
 </ul>
 </div>
 <div id="if-you-dont-have-r-and-rstudio-installed" class="section level5">
-<h5>
-<span class="header-section-number">0.5.1.1.2</span> If you don’t have R and RStudio installed<a class="anchor" aria-label="anchor" href="#if-you-dont-have-r-and-rstudio-installed"><i class="fas fa-link"></i></a>
-</h5>
+<h5><span class="header-section-number">0.5.1.1.2</span> If you don’t have R and RStudio installed</h5>
 <ul>
 <li>Download R from
 the <a href="http://cran.r-project.org/bin/windows/base/release.htm">CRAN website</a>.</li>
 <li>Run the <code>.exe</code> file that was just downloaded</li>
 <li>Go to the <a href="https://www.rstudio.com/products/rstudio/download/#download">RStudio download
-page</a>
-</li>
+page</a></li>
 <li>Under <em>Installers</em> select <strong>RStudio x.yy.zzz - Windows
 XP/Vista/7/8</strong> (where x, y, and z represent version numbers)</li>
 <li>Double click the file to install it</li>
@@ -1068,28 +1376,22 @@ error messages.</li>
 </div>
 </div>
 <div id="mac-osx" class="section level4">
-<h4>
-<span class="header-section-number">0.5.1.2</span> Mac OSX<a class="anchor" aria-label="anchor" href="#mac-osx"><i class="fas fa-link"></i></a>
-</h4>
+<h4><span class="header-section-number">0.5.1.2</span> Mac OSX</h4>
 <div id="if-you-already-have-r-and-rstudio-installed-1" class="section level5">
-<h5>
-<span class="header-section-number">0.5.1.2.1</span> If you already have R and RStudio installed<a class="anchor" aria-label="anchor" href="#if-you-already-have-r-and-rstudio-installed-1"><i class="fas fa-link"></i></a>
-</h5>
+<h5><span class="header-section-number">0.5.1.2.1</span> If you already have R and RStudio installed</h5>
 <ul>
 <li>Open RStudio, and click on “Help” &gt; “Check for updates”. If a new version is
 available, quit RStudio, and download the latest version for RStudio.</li>
 <li>To check the version of R you are using, start RStudio and the first thing
 that appears on the terminal indicates the version of R you are running.
-Alternatively, you can type <code><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo()</a></code>, which will also display which
+Alternatively, you can type <code>sessionInfo()</code>, which will also display which
 version of R you are running. Go on the <a href="https://cran.r-project.org/bin/macosx/">CRAN
 website</a> and check whether a more
 recent version is available. If so, please download and install it.</li>
 </ul>
 </div>
 <div id="if-you-dont-have-r-and-rstudio-installed-1" class="section level5">
-<h5>
-<span class="header-section-number">0.5.1.2.2</span> If you don’t have R and RStudio installed<a class="anchor" aria-label="anchor" href="#if-you-dont-have-r-and-rstudio-installed-1"><i class="fas fa-link"></i></a>
-</h5>
+<h5><span class="header-section-number">0.5.1.2.2</span> If you don’t have R and RStudio installed</h5>
 <ul>
 <li>Download R from the <a href="http://cran.r-project.org/bin/macosx">CRAN website</a>.</li>
 <li>Select the <code>.pkg</code> file for the latest R version</li>
@@ -1097,8 +1399,7 @@ recent version is available. If so, please download and install it.</li>
 <li>It is also a good idea to install <a href="https://www.xquartz.org/">XQuartz</a> (needed
 by some packages)</li>
 <li>Go to the <a href="https://www.rstudio.com/products/rstudio/download/#download">RStudio download
-page</a>
-</li>
+page</a></li>
 <li>Under <em>Installers</em> select <strong>RStudio x.yy.zzz - Mac OS X 10.6+ (64-bit)</strong>
 (where x, y, and z represent version numbers)</li>
 <li>Double click the file to install RStudio</li>
@@ -1108,9 +1409,7 @@ error messages.</li>
 </div>
 </div>
 <div id="linux" class="section level4">
-<h4>
-<span class="header-section-number">0.5.1.3</span> Linux<a class="anchor" aria-label="anchor" href="#linux"><i class="fas fa-link"></i></a>
-</h4>
+<h4><span class="header-section-number">0.5.1.3</span> Linux</h4>
 <ul>
 <li>Follow the instructions for your distribution from
 <a href="https://cloud.r-project.org/bin/linux">CRAN</a>, they provide information to get
@@ -1119,8 +1418,7 @@ you could use your package manager (e.g., for Debian/Ubuntu run <code>sudo apt-g
 this approach as the versions provided by this are usually out of date. In any
 case, make sure you have at least R 3.3.1.</li>
 <li>Go to the <a href="https://www.rstudio.com/products/rstudio/download/#download">RStudio download
-page</a>
-</li>
+page</a></li>
 <li>Under <em>Installers</em> select the version that matches your distribution, and
 install it with your preferred method (e.g., with Debian/Ubuntu <code>sudo dpkg -i rstudio-x.yy.zzz-amd64.deb</code> at the terminal).</li>
 <li>Once it’s installed, open RStudio to make sure it works and you don’t get any
@@ -1132,9 +1430,7 @@ Data</a>.</p>
 </div>
 </div>
 <div id="renv" class="section level3">
-<h3>
-<span class="header-section-number">0.5.2</span> Virtual Enironment setup with <code>renv</code><a class="anchor" aria-label="anchor" href="#renv"><i class="fas fa-link"></i></a>
-</h3>
+<h3><span class="header-section-number">0.5.2</span> Virtual Enironment setup with <code>renv</code></h3>
 <p>These instructions are intended to help with setting up the included <a href="https://rstudio.github.io/renv/index.html"><code>renv</code>
 virtual environment</a>, which ensures
 all participants are using the same exact set of <code>R</code> packages (and package
@@ -1151,14 +1447,14 @@ installed elsewhere on the computing system in use.</li>
 <li>Upon an initial attempt, <code>renv</code> will prompt you to install packages listed in
 the <code>renv.lock</code> file, by printing a message like the following:</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="index.html#cb1-1"></a><span class="co"># * Project 'PATH/TO/ser2021_mediation_workshop' loaded. [renv 0.13.2]</span></span>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="index.html#cb1-1"></a><span class="co"># * Project &#39;PATH/TO/ser2021_mediation_workshop&#39; loaded. [renv 0.13.2]</span></span>
 <span id="cb1-2"><a href="index.html#cb1-2"></a><span class="co"># * The project may be out of sync -- use `renv::status()` for more details.</span></span>
 <span id="cb1-3"><a href="index.html#cb1-3"></a><span class="op">&gt;</span><span class="st"> </span>renv<span class="op">::</span><span class="kw">status</span>()</span>
 <span id="cb1-4"><a href="index.html#cb1-4"></a><span class="co"># The following package(s) are recorded in the lockfile, but not installed:</span></span>
 <span id="cb1-5"><a href="index.html#cb1-5"></a><span class="co"># Use `renv::restore()` to install these packages.</span></span></code></pre></div>
-<p>In any such case, please call <code><a href="https://rstudio.github.io/renv//reference/restore.html">renv::restore()</a></code> to install any missing packages.
+<p>In any such case, please call <code>renv::restore()</code> to install any missing packages.
 Note that you do <em>not</em> need to manually install the packages via
-<code><a href="https://rdrr.io/r/utils/install.packages.html">install.packages()</a></code>, <code>remotes::install_github()</code>, or similar.</p>
+<code>install.packages()</code>, <code>remotes::install_github()</code>, or similar.</p>
 <p>For details on how the <code>renv</code> system works, the following references may be
 helpful:</p>
 <ol style="list-style-type: decimal">
@@ -1167,7 +1463,7 @@ helpful:</p>
 <li><a href="https://rstudio.github.io/renv/articles/renv.html">Introduction to <code>renv</code></a></li>
 </ol>
 <p>In some rare cases, <code>R</code> packages that <code>renv</code> automatically tries to install as
-part of the <code><a href="https://rstudio.github.io/renv//reference/restore.html">renv::restore()</a></code> process may fail due to missing systems-level
+part of the <code>renv::restore()</code> process may fail due to missing systems-level
 dependencies. In such cases, a reference to the missing dependencies and
 system-specific instructions their installation involving, e.g., <a href="http://manpages.ubuntu.com/manpages/bionic/man8/apt.8.html">Ubuntu
 Linux’s <code>apt</code></a> or
@@ -1176,55 +1472,55 @@ Linux’s <code>apt</code></a> or
 </div>
 </div>
 </div>
-  <div class="chapter-nav">
-<div class="empty"></div>
-<div class="next"><a href="mediation.html"><span class="header-section-number">1</span> Causal mediation analysis intro</a></div>
-</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
-    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
-      <ul class="nav navbar-nav">
-<li><a class="nav-link" href="#welcome-to-ser">Welcome to SER!</a></li>
-<li><a class="nav-link" href="#about"><span class="header-section-number">0.1</span> About this workshop</a></li>
-<li><a class="nav-link" href="#schedule"><span class="header-section-number">0.2</span> Workshop schedule</a></li>
-<li>
-<a class="nav-link" href="#instructors"><span class="header-section-number">0.3</span> About the instructors</a><ul class="nav navbar-nav">
-<li><a class="nav-link" href="#iv%C3%A1n-d%C3%ADaz">Iván Díaz</a></li>
-<li><a class="nav-link" href="#nima-hejazi">Nima Hejazi</a></li>
-<li><a class="nav-link" href="#kara-rudolph">Kara Rudolph</a></li>
-</ul>
-</li>
-<li><a class="nav-link" href="#repro"><span class="header-section-number">0.4</span> Reproduciblity</a></li>
-<li>
-<a class="nav-link" href="#setup"><span class="header-section-number">0.5</span> Setup instructions</a><ul class="nav navbar-nav">
-<li><a class="nav-link" href="#r-and-rstudio"><span class="header-section-number">0.5.1</span> R and RStudio</a></li>
-<li><a class="nav-link" href="#renv"><span class="header-section-number">0.5.2</span> Virtual Enironment setup with renv</a></li>
-</ul>
-</li>
-</ul>
+            </section>
 
-      <div class="book-extra">
-        <ul class="list-unstyled">
-<li><a id="book-source" href="https://github.com/nhejazi/ser2021_mediation_workshop/blob/master/index.Rmd">View source <i class="fab fa-github"></i></a></li>
-          <li><a id="book-edit" href="https://github.com/nhejazi/ser2021_mediation_workshop/edit/master/index.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
-        </ul>
-</div>
-    </nav>
-</div>
+          </div>
+        </div>
+      </div>
 
-</div>
-</div> <!-- .container -->
-
-<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
-
-  <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: May 18, 2021.</p>
+<a href="mediation.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
   </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": false,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/nhejazi/ser2021_mediation_workshop/edit/master/index.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
 
-  <div class="col-12 col-md-6 mt-3">
-    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
-  </div>
-
-</div></div>
-</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
@@ -1238,4 +1534,5 @@ Linux’s <code>apt</code></a> or
   })();
 </script>
 </body>
+
 </html>

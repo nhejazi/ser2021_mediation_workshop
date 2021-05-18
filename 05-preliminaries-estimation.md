@@ -90,6 +90,7 @@ trueval <- mean((mean_y(1, 1, w_big) - mean_y(1, 0, w_big)) *
   mean_m(0, w_big) + (mean_y(0, 1, w_big) - mean_y(0, 0, w_big)) *
     (1 - mean_m(0, w_big)))
 print(trueval)
+#> [1] 0.58048
 ```
 
 - Let's perform a simulation where we draw 1000 datasets from the above
@@ -125,6 +126,10 @@ hist(estimate)
 abline(v = trueval, col = "red", lwd = 4)
 ```
 
+
+
+\begin{center}\includegraphics[width=0.8\linewidth]{05-preliminaries-estimation_files/figure-latex/unnamed-chunk-4-1} \end{center}
+
 - The bias also affects the confidence intervals:
 
 ```r
@@ -151,6 +156,10 @@ text(450, 0.01, paste0(
   mean(lower < trueval & trueval < upper), "%"
 ), cex = 1.2)
 ```
+
+
+
+\begin{center}\includegraphics[width=0.8\linewidth]{05-preliminaries-estimation_files/figure-latex/unnamed-chunk-5-1} \end{center}
 
 ### Pros and cons of g-computation with data-adaptive regression
 

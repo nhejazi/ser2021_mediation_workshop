@@ -22,12 +22,23 @@ set.seed(429153)
 # load and examine data
 data(weight_behavior)
 dim(weight_behavior)
+#> [1] 691  15
 
 # drop missing values
 weight_behavior <- weight_behavior %>%
   drop_na() %>%
   as_tibble()
 weight_behavior
+#> # A tibble: 567 x 15
+#>     bmi   age sex   race  numpeople   car gotosch snack tvhours cmpthours
+#>   <dbl> <dbl> <fct> <fct>     <int> <int> <fct>   <fct>   <dbl>     <dbl>
+#> 1  18.2  12.2 F     OTHER         5     3 2       1           4         0
+#> 2  22.8  12.8 M     OTHER         4     3 2       1           4         2
+#> 3  25.6  12.1 M     OTHER         2     3 2       1           0         2
+#> 4  15.1  12.3 M     OTHER         4     1 2       1           2         1
+#> 5  23.0  11.8 M     OTHER         4     1 1       1           4         3
+#> # ... with 562 more rows, and 5 more variables: cellhours <dbl>, sports <fct>,
+#> #   exercises <int>, sweat <int>, overweigh <dbl>
 ```
 
 The documentation for the data set describes it as a "database obtained from the
@@ -52,7 +63,14 @@ with the data pooled across all participants denoted $O_1, \ldots, O_n$, for a
 of $n$ i.i.d. observations of $O$. Recall the DAG [from an earlier
 chapter](#estimands), which represents the data-generating process:
 
+\begin{figure}
 
+{\centering \includegraphics[width=0.8\linewidth]{07-estimation-stochastic_files/figure-latex/unnamed-chunk-1-1} 
+
+}
+
+\caption{Directed acyclic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-1)
+\end{figure}
 
 ### Natural (in)direct effects
 
@@ -137,6 +155,10 @@ nde_onestep <- medoutcon(
   estimator_args = list(cv_folds = 5)
 )
 summary(nde_onestep)
+#> # A tibble: 1 x 7
+#>   lwr_ci param_est upr_ci var_est eif_mean estimator param         
+#>    <dbl>     <dbl>  <dbl>   <dbl>    <dbl> <chr>     <chr>         
+#> 1 -0.490   -0.0280  0.434  0.0555 2.84e-15 onestep   direct_natural
 ```
 
 * We can similarly call `medoutcon()` to estimate the _natural indirect effect_:
@@ -157,6 +179,10 @@ nie_onestep <- medoutcon(
   estimator_args = list(cv_folds = 5)
 )
 summary(nie_onestep)
+#> # A tibble: 1 x 7
+#>   lwr_ci param_est upr_ci var_est eif_mean estimator param           
+#>    <dbl>     <dbl>  <dbl>   <dbl>    <dbl> <chr>     <chr>           
+#> 1  0.466      1.09   1.72   0.102 9.02e-16 onestep   indirect_natural
 ```
 
 * From the above, we can conclude that the effect of participation on a sports
@@ -178,7 +204,14 @@ effects are defined by static interventions on the treatment. The interventional
 effects are distinguished by their use of a stochastic intervention on the
 mediator to aid in their identification.
 
+  \begin{figure}
   
+  {\centering \includegraphics[width=0.8\linewidth]{07-estimation-stochastic_files/figure-latex/unnamed-chunk-2-1} 
+  
+  }
+  
+  \caption{Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-2)
+  \end{figure}
 
 Recall that the interventional (in)direct effects are defined via the decomposition:
 \begin{equation*}
@@ -228,6 +261,10 @@ interv_de_onestep <- medoutcon(
   estimator_args = list(cv_folds = 5)
 )
 summary(interv_de_onestep)
+#> # A tibble: 1 x 7
+#>   lwr_ci param_est upr_ci var_est  eif_mean estimator param                
+#>    <dbl>     <dbl>  <dbl>   <dbl>     <dbl> <chr>     <chr>                
+#> 1 -0.476   -0.0107  0.454  0.0562 -9.93e-16 onestep   direct_interventional
 ```
 
 * We can similarly estimate the _interventional indirect effect_:
@@ -248,6 +285,10 @@ interv_ie_onestep <- medoutcon(
   estimator_args = list(cv_folds = 5)
 )
 summary(interv_ie_onestep)
+#> # A tibble: 1 x 7
+#>   lwr_ci param_est upr_ci var_est eif_mean estimator param                  
+#>    <dbl>     <dbl>  <dbl>   <dbl>    <dbl> <chr>     <chr>                  
+#> 1  0.348     0.952   1.56  0.0950 3.15e-15 onestep   indirect_interventional
 ```
 
 * From the above, we can conclude that the effect of participation on a sports
@@ -339,6 +380,8 @@ stoch_decomp_onestep <- medshift(
   estimator_args = list(cv_folds = 5)
 )
 summary(stoch_decomp_onestep)
+#>      lwr_ci   param_est      upr_ci   param_var    eif_mean   estimator 
+#>   18.770026   19.103221   19.436415      0.0289 -1.7263e-15     onestep
 ```
 <!-- Nima: note the notational differences from the above -->
 
@@ -372,6 +415,8 @@ eifs_de <- list(stoch_decomp_onestep$theta, eif_EY)
 # direct effect = EY - estimated quantity
 de_est <- linear_contrast(params_de, eifs_de)
 de_est
+#>    lwr_ci param_est    upr_ci 
+#> -0.347205 -0.023887  0.299430
 ```
 * From the above, we can conclude that the effect of increasing the odds of
   participation on a sports team on BMI leads only to a relatively small direct

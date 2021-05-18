@@ -10,14 +10,16 @@ mediators of adherence, opioid use, pain, and depressive symptoms?
 ID: Need to fix format of the following figure
 -->
 
+\begin{figure}
 
+{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/ctndag} 
+
+}
+
+\end{figure}
 
 ## What is causal mediation analysis?
-<!--
-KER: I think the tone can come off as smug sometimes, so I'd like to delete
-some of this. I also made some edits, but I still think it's worth thinking
-about what is crucial to include vs not.
--->
+
 - Causal mediation analyses assess how the paths behave under interventions
 - Statistical mediation analyses assess associations between the variables
 <!--- Causal mediation analysis is thus useful to understand mechanisms-->
@@ -65,6 +67,8 @@ lm_y <- lm(y ~ m + a + w + z)
 lm_m <- lm(m ~ a + w + z)
 ## product of coefficients
 coef(lm_y)[2] * coef(lm_m)[2]
+#>          m 
+#> -0.0014835
 ```
 
 Among other things, in this workshop:
@@ -81,11 +85,25 @@ types of graph:
 
 ### No intermediate confounders
 
+\begin{figure}
 
+{\centering \includegraphics[width=0.8\linewidth]{01-preface_files/figure-latex/unnamed-chunk-4-1} 
+
+}
+
+\caption{Directed acyclic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-4)
+\end{figure}
 
 ### Intermediate confounders
 
+\begin{figure}
 
+{\centering \includegraphics[width=0.8\linewidth]{01-preface_files/figure-latex/unnamed-chunk-5-1} 
+
+}
+
+\caption{Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-5)
+\end{figure}
 
 The above graphs can be interpreted as a _non-parametric structural equation model_
 (NPSEM), also known as _structural causal model_ (SCM):

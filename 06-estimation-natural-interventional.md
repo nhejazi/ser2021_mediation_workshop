@@ -4,7 +4,14 @@
 
 Recall:
 
+\begin{figure}
 
+{\centering \includegraphics[width=0.8\linewidth]{06-estimation-natural-interventional_files/figure-latex/unnamed-chunk-1-1} 
+
+}
+
+\caption{Directed acyclic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-1)
+\end{figure}
 
 - Assuming a binary $A$, we define the natural direct effect as: $$NDE = E(Y_{1,M_{0}} - Y_{0,M_{0}}),$$
 
@@ -196,6 +203,7 @@ eif <- ip_weights * (y - b_pred) + (1 - a) / g0_pred * (pseudo - q_pred) +
 ```r
 ## One-step estimator
 mean(eif)
+#> [1] 0.55085
 ```
 
 ### Performance of the one-step estimator in a small simulation study
@@ -236,6 +244,7 @@ w_big <- runif(1e6, -1, 1)
 trueval <- mean((mean_y(1, 1, w_big) - mean_y(1, 0, w_big)) * mean_m(0, w_big) +
   (mean_y(0, 1, w_big) - mean_y(0, 0, w_big)) * (1 - mean_m(0, w_big)))
 print(trueval)
+#> [1] 0.58061
 ```
 
 - Bias simulation
@@ -255,6 +264,10 @@ estimate <- do.call(c, estimate)
 hist(estimate)
 abline(v = trueval, col = "red", lwd = 4)
 ```
+
+
+
+\begin{center}\includegraphics[width=0.8\linewidth]{06-estimation-natural-interventional_files/figure-latex/unnamed-chunk-11-1} \end{center}
 
 - And now the confidence intervals:
 
@@ -283,3 +296,7 @@ text(450, 0.01, paste0(
   mean(lower < trueval & trueval < upper), "%"
 ), cex = 1.2)
 ```
+
+
+
+\begin{center}\includegraphics[width=0.8\linewidth]{06-estimation-natural-interventional_files/figure-latex/unnamed-chunk-12-1} \end{center}
