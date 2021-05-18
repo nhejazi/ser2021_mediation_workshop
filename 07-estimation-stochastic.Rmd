@@ -436,7 +436,7 @@ delta_shift_ipsi <- 2
   [@klaassen1987consistent; @zheng2011cross; @chernozhukov2018double].
 * Now, we're ready to use the `medshift` function to estimate the decomposition
   term common to both the _stochastic direct and indirect effects_:
-```{r interv_de_os}
+```{r stoch_decomp_os}
 # compute one-step estimate of the decomposition term of the (in)direct effects
 stoch_decomp_onestep <- medshift(
   W = weight_behavior[, c("age", "sex", "race", "tvhours")],
@@ -472,7 +472,7 @@ linear_contrast <- function(params, eifs, ci_level = 0.95) {
 }
 ```
 * Straightforward application of this procedure yields,
-```{r comp_de_binary}
+```{r stoch_de_ipsi}
 # parameter estimates and EIFs for components of direct effect
 EY <- mean(weight_behavior$bmi)
 eif_EY <- weight_behavior$bmi - EY

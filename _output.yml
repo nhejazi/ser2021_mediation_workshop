@@ -3,13 +3,13 @@ bookdown::bs4_book:
     primary: "#0098db"
   repo: https://github.com/nhejazi/ser2021_mediation_workshop
   includes:
-    in_header: html_extras/mathjax_header.html
+    in_header: [html_extras/mathjax_header.html, html_extras/hide_code.html]
 
 bookdown::gitbook:
   css: [css/style.css, css/toc.css, css/center.css]
   dev: svg
   includes:
-    in_header: html_extras/mathjax_header.html
+    in_header: [html_extras/mathjax_header.html, html_extras/hide_code.html]
   config:
     toc:
       collapse: section
