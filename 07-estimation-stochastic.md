@@ -1,107 +1,313 @@
-# Estimating (in)direct effects with `R` packages
+# `R` packages for estimation of the causal (in)direct effects
+
+We'll now turn to working through a few examples of estimating the natural,
+interventional, and stochastic direct and indirect effects. As our running
+example, we'll a simple data set from an observational study of the relationship
+between BMI and kids' behavior, freely distributed with the [`mma` `R` package
+on CRAN](https://CRAN.R-project.org/package=mma). First, let's load the packages
+we'll be using and set a seed; then, load this data set and take a quick look
+
+
+```r
+library(tidyverse)
+library(sl3)
+library(medoutcon)
+library(medshift)
+library(mma)
+set.seed(429153)
+```
+
+
+```r
+# load and examine data
+data(weight_behavior)
+dim(weight_behavior)
+#> [1] 691  15
+
+# drop missing values
+weight_behavior <- weight_behavior %>%
+  drop_na() %>%
+  as_tibble()
+weight_behavior
+#> # A tibble: 567 x 15
+#>     bmi   age sex   race  numpeople   car gotosch snack tvhours cmpthours
+#>   <dbl> <dbl> <fct> <fct>     <int> <int> <fct>   <fct>   <dbl>     <dbl>
+#> 1  18.2  12.2 F     OTHER         5     3 2       1           4         0
+#> 2  22.8  12.8 M     OTHER         4     3 2       1           4         2
+#> 3  25.6  12.1 M     OTHER         2     3 2       1           0         2
+#> 4  15.1  12.3 M     OTHER         4     1 2       1           2         1
+#> 5  23.0  11.8 M     OTHER         4     1 1       1           4         3
+#> # ... with 562 more rows, and 5 more variables: cellhours <dbl>, sports <fct>,
+#> #   exercises <int>, sweat <int>, overweigh <dbl>
+```
+
+The documentation for the data set describes it as a "database obtained from the
+Louisiana State University Health Sciences Center, New Orleans, by Dr. Richard
+Scribner. He explored the relationship between BMI and kids' behavior through a
+survey at children, teachers and parents in Grenada in 2014. This data set
+includes 691 observations and 15 variables." Note that the data set contained
+several observations with missing values, which we removed above to simplify the
+demonstration of our analytic methods. In practice, we recommend instead using
+appropriate corrections (e.g., imputation, inverse weighting) to fully take
+advantage of the observed data.
+
+Following the motivation of the original study, we focus on the causal effects
+of participating in a sports team (`sports`) on the BMI of children (`bmi`),
+taking into consideration several mediators (`snack`, `exercises`, `overweigh`);
+all other measured covariates are taken to be potential baseline confounders.
+
+## `medoutcon`: Natural and interventional (in)direct effects
+
+The data on a single observational unit can be represented $O = (W, A, M, Y)$,
+with the data pooled across all participants denoted $O_1, \ldots, O_n$, for a
+of $n$ i.i.d. observations of $O$. Recall the DAG [from an earlier
+chapter](#estimands), which represents the data-generating process:
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.8\linewidth]{07-estimation-stochastic_files/figure-latex/unnamed-chunk-1-1} 
+
+}
+
+\caption{Directed acyclic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-1)
+\end{figure}
+
+### Natural (in)direct effects
+
+To start, we will consider estimation of the _natural_ direct and indirect effects,
+which, we recall, are defined as follows
+\begin{equation*}
+  \E[Y_{1,M_1} - Y_{0,M_0}] = \underbrace{\E[Y_{\color{red}{1},\color{blue}{M_1}} -
+    Y_{\color{red}{1},\color{blue}{M_0}}]}_{\text{natural indirect effect}} +
+    \underbrace{\E[Y_{\color{blue}{1},\color{red}{M_0}} -
+    Y_{\color{blue}{0},\color{red}{M_0}}]}_{\text{natural direct effect}}.
+\end{equation*}
+
+* Our [`medoutcon` `R` package](https://github.com/nhejazi/medoutcon), which
+  accompanies @diaz2020nonparametric, implements one-step and TML estimators of
+  both the natural and interventional (in)direct effects.
+* Both types of estimators are capable of accommodating flexible modeling
+  strategies (e.g., ensemble machine learning) for the initial estimation of
+  nuisance parameters.
+* The `medoutcon` `R` package uses cross-validation in initial estimation: this
+  results in cross-validated (or "cross-fitted") one-step and TML estimators
+  [@klaassen1987consistent; @zheng2011cross; @chernozhukov2018double], which
+  exhibit greater robustness than their non-sample-splitting analogs.
+* To this end, `medoutcon` integrates with the `sl3` `R` package, which is
+  extensively documented in this [book
+  chapter](https://tlverse.org/tlverse-handbook/sl3).
+
+### Interlude: `sl3` for nuisance parameter estimation
+
+* To fully take advantage of the one-step and TML estimators, we'd like to rely
+  on flexible, data adaptive strategies for nuisance parameter estimation.
+* Doing so minimizes opportunities for model misspecification to compromise our
+  analytic conclusions.
+* Choosing among the diversity of available machine learning algorithms can be
+  challenging, so we recommend using the Super Learner algorithm for ensemble
+  machine learning [@vdl2007super], which is implemented in the [`sl3` R
+  package](https://github.com/tlverse/sl3).
+* Below, we demonstrate the construction of an ensemble learner based on a
+  limited library of algorithms, including n intercept model, a main terms GLM,
+  Lasso ($\ell_1$-penalized) regression, and random forests (`ranger`).
+
+```r
+# instantiate learners
+mean_lrnr <- Lrnr_mean$new()
+fglm_lrnr <- Lrnr_glm_fast$new()
+lasso_lrnr <- Lrnr_glmnet$new(alpha = 1, nfolds = 3)
+rf_lrnr <- Lrnr_ranger$new(num.trees = 200)
+
+# create learner library and instantiate super learner ensemble
+lrnr_lib <- Stack$new(mean_lrnr, fglm_lrnr, lasso_lrnr, rf_lrnr)
+sl_lrnr <- Lrnr_sl$new(learners = lrnr_lib, metalearner = Lrnr_nnls$new())
+```
+
+* Of course, there are many alternatives for learning algorithms to be included
+  in such a modeling library. Feel free to explore!
+
+### Efficient estimation of the natural (in)direct effects
+
+* Estimation of the natural direct and indirect effects requires estimation of a
+  few nuisance parameters. Recall that these are
+  - $g(a\mid w)$, which denotes $\P(A=a \mid W=w)$
+  - $h(a\mid m, w)$, which denotes $\P(A=a \mid M=m, W=w)$
+  - $b(a, m, w)$, which denotes $\E(Y \mid A=a, M=m, W=w)$
+* While we recommend the use of Super Learning, we opt to instead estimate all
+  nuisance parameters with Lasso regression below (to save computational time).
+* Now, we're ready to use the `medoutcon` function to estimate the _natural
+  direct effect_:
+
+```r
+# compute one-step estimate of the natural direct effect
+nde_onestep <- medoutcon(
+  W = weight_behavior[, c("age", "sex", "race", "tvhours")],
+  A = (as.numeric(weight_behavior$sports) - 1),
+  Z = NULL,
+  M = weight_behavior[, c("snack", "exercises", "overweigh")],
+  Y = weight_behavior$bmi,
+  g_learners = lasso_lrnr,
+  h_learners = lasso_lrnr,
+  b_learners = lasso_lrnr,
+  effect = "direct",
+  estimator = "onestep",
+  estimator_args = list(cv_folds = 5)
+)
+summary(nde_onestep)
+#> # A tibble: 1 x 7
+#>   lwr_ci param_est upr_ci var_est eif_mean estimator param         
+#>    <dbl>     <dbl>  <dbl>   <dbl>    <dbl> <chr>     <chr>         
+#> 1 -0.490   -0.0280  0.434  0.0555 2.84e-15 onestep   direct_natural
+```
+
+* We can similarly call the `medoutcon` function to estimate the _natural
+  indirect effect_:
+
+```r
+# compute one-step estimate of the natural indirect effect
+nie_onestep <- medoutcon(
+  W = weight_behavior[, c("age", "sex", "race", "tvhours")],
+  A = (as.numeric(weight_behavior$sports) - 1),
+  Z = NULL,
+  M = weight_behavior[, c("snack", "exercises", "overweigh")],
+  Y = weight_behavior$bmi,
+  g_learners = lasso_lrnr,
+  h_learners = lasso_lrnr,
+  b_learners = lasso_lrnr,
+  effect = "indirect",
+  estimator = "onestep",
+  estimator_args = list(cv_folds = 5)
+)
+summary(nie_onestep)
+#> # A tibble: 1 x 7
+#>   lwr_ci param_est upr_ci var_est eif_mean estimator param           
+#>    <dbl>     <dbl>  <dbl>   <dbl>    <dbl> <chr>     <chr>           
+#> 1  0.466      1.09   1.72   0.102 9.02e-16 onestep   indirect_natural
+```
+
+* From the above, we can conclude that the effect of participation on a sports
+  team on BMI is primarily mediated by the variables `snack`, `exercises`, and
+  `overweigh`, as the natural indirect effect is several times larger than the
+  natural direct effect.
+* Note that we could have instead used the TML estimators, which have improved
+  finite-sample performance, instead of the one-step estimators. Doing this is
+  as simple as setting the `estimator = "tmle"` in the relevant argument.
+
+### Interventional (in)direct effects
+
+Since our knowledge of the system under study is incomplete, we might worry that
+one (or more) of the measured variables are not mediators, but, in fact,
+intermediate confounders affected by treatment. While the natural (in)direct
+effects are not identified in this setting, their interventional (in)direct
+counterparts are, as we saw in an earlier section. Recall that both types of
+effects are defined by static interventions on the treatment. The interventional
+effects are distinguished by their use of a stochastic intervention on the
+mediator to aid in their identification.
+
+  \begin{figure}
+  
+  {\centering \includegraphics[width=0.8\linewidth]{07-estimation-stochastic_files/figure-latex/unnamed-chunk-2-1} 
+  
+  }
+  
+  \caption{Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-2)
+  \end{figure}
+
+Recall that the interventional (in)direct effects are defined via the decomposition:
+\begin{equation*}
+\E[Y_{1,G_1} - Y_{0,G_0}] = \underbrace{\E[Y_{\color{red}{1},\color{blue}{G_1}} -
+    Y_{\color{red}{1},\color{blue}{G_0}}]}_{\text{interventional indirect effect}} +
+    \underbrace{\E[Y_{\color{blue}{1},\color{red}{G_0}} -
+    Y_{\color{blue}{0},\color{red}{G_0}}]}_{\text{interventional direct effect}}
+\end{equation*}
+
+* In our data example, we'll consider the eating of snacks as a potential
+  intermediate confounder, since one might reasonably hypothesize that
+  participation on a sports team might subsequently affect snacking, which then
+  could affect mediators like the amount of exercises and overweight status.
+* The interventional direct and indirect effects may also be easily estimated
+  with the [`medoutcon` `R` package](https://github.com/nhejazi/medoutcon).
+* Just as for the natural (in)direct effects, `medoutcon` implements
+  cross-validated one-step and TML estimators of the interventional effects.
+
+### Efficient estimation of the interventional (in)direct effects
+
+* Estimation of these effects is more complex, so a few additional nuisance
+  parameters arise when expressing the (more general) EIF for these effects:
+  * $q(z \mid a, w)$, the conditional density of the intermediate confounders,
+    conditional only on treatment and baseline covariates;
+  * $r(z \mid a, m, w)$, the conditional density of the intermediate
+    confounders, conditional on mediators, treatment, and baseline covariates.
+* Note that the implementation in `medoutcon` is currently limited to settings
+  with only binary intermediate confounders, i.e., $Z \in \{0, 1\}$.
+* Now, we're ready to use the `medoutcon` function to estimate the
+  _interventional direct effect_:
+
+```r
+# compute one-step estimate of the interventional direct effect
+interv_de_onestep <- medoutcon(
+  W = weight_behavior[, c("age", "sex", "race", "tvhours")],
+  A = (as.numeric(weight_behavior$sports) - 1),
+  Z = (as.numeric(weight_behavior$snack) - 1),
+  M = weight_behavior[, c("exercises", "overweigh")],
+  Y = weight_behavior$bmi,
+  g_learners = lasso_lrnr,
+  h_learners = lasso_lrnr,
+  b_learners = lasso_lrnr,
+  effect = "direct",
+  estimator = "onestep",
+  estimator_args = list(cv_folds = 5)
+)
+summary(interv_de_onestep)
+#> # A tibble: 1 x 7
+#>   lwr_ci param_est upr_ci var_est  eif_mean estimator param                
+#>    <dbl>     <dbl>  <dbl>   <dbl>     <dbl> <chr>     <chr>                
+#> 1 -0.476   -0.0107  0.454  0.0562 -9.93e-16 onestep   direct_interventional
+```
+
+* We can similarly call the `medoutcon` function to estimate the
+  _interventional indirect effect_:
+
+```r
+# compute one-step estimate of the interventional indirect effect
+interv_ie_onestep <- medoutcon(
+  W = weight_behavior[, c("age", "sex", "race", "tvhours")],
+  A = (as.numeric(weight_behavior$sports) - 1),
+  Z = (as.numeric(weight_behavior$snack) - 1),
+  M = weight_behavior[, c("exercises", "overweigh")],
+  Y = weight_behavior$bmi,
+  g_learners = lasso_lrnr,
+  h_learners = lasso_lrnr,
+  b_learners = lasso_lrnr,
+  effect = "indirect",
+  estimator = "onestep",
+  estimator_args = list(cv_folds = 5)
+)
+summary(interv_ie_onestep)
+#> # A tibble: 1 x 7
+#>   lwr_ci param_est upr_ci var_est eif_mean estimator param                  
+#>    <dbl>     <dbl>  <dbl>   <dbl>    <dbl> <chr>     <chr>                  
+#> 1  0.348     0.952   1.56  0.0950 3.15e-15 onestep   indirect_interventional
+```
+
+* From the above, we can conclude that the effect of participation on a sports
+  team on BMI is largely through the interventional indirect effect (i.e.,
+  through the pathways involving the mediating variables) rather than via its
+  direct effect.
+* Just as before, we could have instead used the TML estimators, instead of the
+  one-step estimators. Doing this is as simple as setting the
+  `estimator = "tmle"` in the relevant argument.
 
 ## `medshift`: Stochastic (in)direct effects
+
+While the analyses using the natural and interventional effects have been
+illuminating, we may also go beyond the restrictive static interventions
+required to define these (in)direct effects.
 
 We are interested in assessing the population intervention direct effect and
 the population intervention indirect effect, based on the effect decomposition
 of the population intervention effect introduced in @diaz2020causal.
 
-To proceed, we'll use as our running example a simple data set from an
-observational study of the relationship between BMI and kids behavior,
-distributed as part of the [`mma` R package on
-CRAN](https://CRAN.R-project.org/package=mma). First, let's load the packages
-we'll be using and set a seed; then, load this data set and take a quick look
-at it
-
-
-```r
-# preliminaries
-library(data.table)
-library(dplyr)
-library(sl3)
-library(medshift)
-library(mma)
-set.seed(429153)
-
-# load and examine data
-data(weight_behavior)
-dim(weight_behavior)
-#> [1] 691  15
-head(weight_behavior)
-#>      bmi  age sex  race numpeople car gotosch snack tvhours cmpthours cellhours
-#> 1 18.207 12.2   F OTHER         5   3       2     1       4         0         0
-#> 2 22.784 12.8   M OTHER         4   3       2     1       4         2         0
-#> 3 19.607 12.6   F OTHER         4   2       4     2      NA        NA        NA
-#> 4 25.568 12.1   M OTHER         2   3       2     1       0         2         0
-#> 5 15.074 12.3   M OTHER         4   1       2     1       2         1         3
-#> 6 22.983 11.8   M OTHER         4   1       1     1       4         3         2
-#>   sports exercises sweat overweigh
-#> 1      2         2     1         0
-#> 2      1         8     2         0
-#> 3   <NA>         4     2         0
-#> 4      2         9     1         1
-#> 5      1        12     1         0
-#> 6      1         1     1         0
-```
-
-The documentation for the data set describes it as a "database obtained from the
-Louisiana State University Health Sciences Center, New Orleans, by  Dr. Richard
-Scribner. He  explored the relationship  between BMI and kids behavior through a
-survey at children, teachers and parents in Grenada in 2014. This data set
-includes 691 observations and 15 variables."
-
-Unfortunately, the data set contains a few observations with missing values. As
-these are unrelated to the object of our analysis, we'll simply remove these for
-the time being. Note that in a real data analysis, we might consider strategies
-to fully make of the observed data, perhaps by imputing missing values. For now,
-we simply remove the incomplete observations, resulting in a data set with fewer
-observations but much the same structure as the original:
-
-
-```r
-# remove missing values
-is_na <- unique(do.call(c, apply(apply(weight_behavior, 2, is.na), 2, which)))
-weight_behavior_complete <- weight_behavior[-is_na, ]
-weight_behavior_complete$sports <-
-  as.numeric(weight_behavior_complete$sports) - 1
-dim(weight_behavior_complete)
-#> [1] 567  15
-head(weight_behavior_complete)
-#>      bmi  age sex  race numpeople car gotosch snack tvhours cmpthours cellhours
-#> 1 18.207 12.2   F OTHER         5   3       2     1       4         0         0
-#> 2 22.784 12.8   M OTHER         4   3       2     1       4         2         0
-#> 4 25.568 12.1   M OTHER         2   3       2     1       0         2         0
-#> 5 15.074 12.3   M OTHER         4   1       2     1       2         1         3
-#> 6 22.983 11.8   M OTHER         4   1       1     1       4         3         2
-#> 8 19.157 12.1   F OTHER         3   3       2     1       0         0         1
-#>   sports exercises sweat overweigh
-#> 1      1         2     1         0
-#> 2      0         8     2         0
-#> 4      1         9     1         1
-#> 5      0        12     1         0
-#> 6      0         1     1         0
-#> 8      0         1     3         0
-```
-
-For the analysis of this observational data set, we focus on the effect of
-participating in a sports team (`sports`) on the BMI of children (`bmi`), taking
-several related covariates as mediators (`snack`, `exercises`, `overweigh`) and
-all other collected covariates as potential confounders. Considering an NPSEM,
-we separate the observed variables from the data set into their corresponding
-nodes as follows
-
-
-```r
-Y <- weight_behavior_complete$bmi
-A <- weight_behavior_complete$sports
-Z <- weight_behavior_complete %>%
-  select(snack, exercises, overweigh)
-W <- weight_behavior_complete %>%
-  select(
-    age, sex, race, numpeople, car, gotosch, tvhours, cmpthours,
-    cellhours, sweat
-  )
-```
 
 Finally, in our analysis, we consider an incremental propensity score
 intervention (IPSI), as first proposed by @kennedy2017nonparametric, wherein the
@@ -115,62 +321,6 @@ team for each individual:
 
 ```r
 delta_shift_ipsi <- 3
-```
-
-To easily incorporate ensemble machine learning into the estimation procedure,
-we rely on the facilities provided in the [`sl3` R
-package](https://tlverse.org/sl3) [@coyle2020sl3]. For a complete guide on using
-the `sl3` R package, consider consulting https://tlverse.org/sl3, or
-https://tlverse.org (and https://github.com/tlverse) for the `tlverse`
-ecosystem, of which `sl3` is a major part. We construct an ensemble learner
-using a handful of popular machine learning algorithms below
-
-
-```r
-# SL learners used for continuous data (the nuisance parameter M)
-xgb_contin_lrnr <- Lrnr_xgboost$new(nrounds = 50, objective = "reg:linear")
-enet_contin_lrnr <- Lrnr_glmnet$new(
-  alpha = 0.5, family = "gaussian",
-  nfolds = 3
-)
-lasso_contin_lrnr <- Lrnr_glmnet$new(
-  alpha = 1, family = "gaussian",
-  nfolds = 3
-)
-fglm_contin_lrnr <- Lrnr_glm_fast$new(family = gaussian())
-contin_lrnr_lib <- Stack$new(
-  enet_contin_lrnr, lasso_contin_lrnr,
-  fglm_contin_lrnr, xgb_contin_lrnr
-)
-sl_contin_lrnr <- Lrnr_sl$new(
-  learners = contin_lrnr_lib,
-  metalearner = Lrnr_nnls$new()
-)
-
-# SL learners used for binary data (nuisance parameters G and E in this case)
-xgb_binary_lrnr <- Lrnr_xgboost$new(nrounds = 50, objective = "reg:logistic")
-enet_binary_lrnr <- Lrnr_glmnet$new(
-  alpha = 0.5, family = "binomial",
-  nfolds = 3
-)
-lasso_binary_lrnr <- Lrnr_glmnet$new(
-  alpha = 1, family = "binomial",
-  nfolds = 3
-)
-fglm_binary_lrnr <- Lrnr_glm_fast$new(family = binomial())
-binary_lrnr_lib <- Stack$new(
-  enet_binary_lrnr, lasso_binary_lrnr,
-  fglm_binary_lrnr, xgb_binary_lrnr
-)
-logistic_metalearner <- make_learner(
-  Lrnr_solnp,
-  metalearner_logistic_binomial,
-  loss_loglik_binomial
-)
-sl_binary_lrnr <- Lrnr_sl$new(
-  learners = binary_lrnr_lib,
-  metalearner = logistic_metalearner
-)
 ```
 
 ### Decomposing the population intervention effect
@@ -232,17 +382,16 @@ estimator $\hat{\theta}(\delta)$ below
 
 ```r
 # let's compute the parameter where A (but not Z) are shifted
-theta_eff <- medshift(
+pide_decomp_onestep <- medshift(
   W = W, A = A, Z = Z, Y = Y,
   delta = delta_shift_ipsi,
-  g_learners = sl_binary_lrnr,
-  e_learners = sl_binary_lrnr,
-  m_learners = sl_contin_lrnr,
-  phi_learners = Lrnr_hal9001$new(),
+  g_learners = lasso_lrnr,
+  e_learners = lasso_lrnr,
+  m_learners = lasso_lrnr,
   estimator = "onestep",
-  estimator_args = list(cv_folds = 3)
+  estimator_args = list(cv_folds = 5)
 )
-summary(theta_eff)
+summary(pide_decomp_onestep)
 ```
 
 ### Estimating the direct effect
@@ -292,460 +441,3 @@ eifs_de <- list(theta_eff$eif, eif_EY)
 de_est <- linear_contrast(params_de, eifs_de)
 de_est
 ```
-
-## `medoutcon`: Natural/Interventional Effects
-
-An exposure of interest often affects an outcome directly, or indirectly by the
-mediation of some intermediate variables. Identifying and quantifying the
-mechanisms underlying causal effects is an increasingly popular endeavor in
-public health, medicine, and the social sciences, as knowledge of such
-mechanisms can improve understanding of both _why and how_ treatments can be
-effective. Such mechanistic knowledge may be arguably even more important in
-cases where treatments result in unanticipated ineffective or even harmful
-effects.
-
-Traditional techniques for mediation analysis fare poorly in the face of
-intermediate confounding. Classical parameters like the natural (in)direct
-effects face a lack of identifiability in cases where mediator-outcome (i.e.,
-intermediate) confounders affected by exposure complicate the relationship
-between the exposure, mediators, and outcome. @diaz2020nonparametric provide a
-theoretical and computational study of the properties of newly developed
-interventional (in)direct effect estimands within the non-parametric statistical
-model. Among their contributions, @diaz2020nonparametric
-
-- derive the efficient influence function (EIF), an key object in
-  semiparametric efficiency theory;
-- use the EIF to develop two asymptotically optimal, non-parametric estimators,
-  each of which is capable of leveraging machine learning for the estimation of
-  nuisance parameters; and
-- present theoretical conditions under which their proposed estimators are
-  consistent, multiply robust, and efficient.
-
-### Problem Setup and Notation
-
-The problem addressed by the work of @diaz2020nonparametric may be represented
-by the following nonparametric structural equation model (NPSEM):
-\begin{align*}
-  W &= f_W(U_W); A = f_A(W, U_A); Z=f_Z(W, A, U_Z);\\ \nonumber
-  M &= f_M(W, A, Z, U_M); Y = f_Y(W, A, Z, M, U_Y).
-\end{align*}
-In the NPSEM, $W$ denotes a vector of observed pre-treatment covariates, $A$
-denotes a categorical treatment variable, $Z$ denotes an intermediate confounder
-affected by treatment, $M$ denotes a (possibly multivariate) mediator, and $Y$
-denotes a continuous or binary outcome.  The vector of exogenous factors
-$U=(U_W,U_A,U_Z,U_M,U_Y)$, and the functions $f$, are assumed deterministic but
-unknown.  Importantly, the NPSEM encodes a time-ordering between these variables
-and allows the evaluation of counterfactual quantities defined by intervening on
-a set of nodes of the NPSEM.  The observed data unit can be represented by the
-random variable $O = (W, A, Z, M, Y)$; we consider access to $O_1, \ldots, O_n$,
-a sample of $n$ i.i.d. observations of $O$.
-
-@diaz2020nonparametric additionally define the following parameterizations,
-familiarity with which will be useful for using the [`medoutcon` `R`
-package](https://github.com/nhejazi/medoutcon). In particular, these authors
-define $g(a \mid w)$ as the probability mass function of $A = a$ conditional on
-$W = w$ and use $h(a \mid m, w)$ to denote the probability mass function of $A
-= a$ conditional on $(M, W) = (m, w)$. Further, @diaz2020nonparametric use
-$b(a, z, m, w)$ to denote the outcome regression function $\mathbb{E}(Y \mid A
-= a, Z = z, M = m, W = w)$, as well as $q(z \mid a,w)$ and $r(z \mid a, m, w)$
-to denote the corresponding conditional densities of $Z$.
-
-### Interventional (In)Direct Effects
-
-@diaz2020nonparametric define the _total effect_ of $A$ on $Y$ in terms of a
-contrast between two user-supplied values $a', a^{\star} \in \mathcal{A}$.
-Examination of the NPSEM reveals that there are four paths involved in this
-effect, namely $A \rightarrow Y$, $A \rightarrow M \rightarrow Y$, $A
-\rightarrow Z \rightarrow Y$, and $A \rightarrow Z \rightarrow M \rightarrow Y$.
-Mediation analysis has classically considered the _natural direct effect_ (NDE)
-and the _natural indirect effect_ (NIE), which are defined as
-$\mathbb{E}_c(Y_{a', M_{a^{\star}}} - Y_{a^{\star}, M_{a^{\star}}})$ and
-$\mathbb{E}_c(Y_{a',M_{a'}} - Y_{a',M_{a^{\star}}})$, respectively. The natural
-direct effect measures the effect through paths _not_ involving the mediator
-($A \rightarrow Y$ and $A \rightarrow Z \rightarrow Y$), whereas the natural
-indirect effect measures the effect through paths involving the mediator
-($A \rightarrow M \rightarrow Y$ and $A \rightarrow Z \rightarrow M \rightarrow
-Y$). As the sum of the natural direct and indirect effects equals the average
-treatment effect $\mathbb{E}_c(Y_1-Y_0)$, this effect decomposition is
-appealing. Unfortunately, the natural direct and indirect effects are
-not generally identified in the presence of an intermediate confounder affected
-by treatment.
-
-To circumvent this issue, @diaz2020nonparametric define the direct and indirect
-effects using stochastic interventions on the mediator, following a strategy
-previously outlined by @vanderweele2014effect and @rudolph2017robust, among
-others. Let $G_a$ denote a random draw from the conditional distribution of
-$M_a$ conditional on $W$. Consider the effect of $A$ on $Y$ defined as the
-difference in expected outcome in hypothetical worlds in which $(A,M) = (a',
-G_{a'})$ versus $(A,M) = (a^{\star}, G_{a^{\star}})$ with probability one, which
-may be decomposed into direct and indirect effects as follows
-\begin{equation*}
-\mathbb{E}_c(Y_{a', G_{a'}} - Y_{a^{\star}, G_{a^{\star}}}) =
-  \underbrace{\mathbb{E}_c(Y_{a', G_{a'}} - Y_{a',
-    G_{a^{\star}}})}_{\text{Indirect effect (through $M$)}} +
-  \underbrace{\mathbb{E}_c(Y_{a', G_{a^{\star}}} - Y_{a^{\star},
-      G_{a^{\star}}})}_{\text{Direct effect (not through $M$)}}.
-\end{equation*}
-Like the natural direct effect, this interventional direct effect measures the
-effects through paths not involving the mediator. Likewise, the interventional
-indirect effect measures the effect through paths involving the mediator. Note,
-however, that natural and interventional mediation effects have different
-interpretations. That is, the interventional indirect effect measures the effect
-of fixing the exposure at $a'$ while setting the mediator to a random draw
-$G_{a^{\star}}$ from those with exposure $a'$ versus a random draw $G_{a'}$ from
-those with exposure $a^{\star}$, given covariates $W$. As is clear from the
-effect decomposition, the term $\theta_c = \mathbb{E}_c(Y_{a', G_{a^{\star}}})$
-is required for estimation of both the interventional direct and indirect
-effects; thus, @diaz2020nonparametric focus on estimation of this quantity.
-Importantly, it has been shown that $\theta_c$ is identified by the statistical
-functional
-\begin{equation*}
-  \theta = \int b(a', z, m, w) q(z \mid a', w) p(m \mid a^{\star}, w)
-    p(w) d\nu(w,z,m)
-\end{equation*}
-under a set of standard identifiability conditions [@vanderweele2014effect],
-which are further reviewed in @diaz2020nonparametric.
-
-### Efficient Estimation
-
-@diaz2020nonparametric define two efficient estimators of their interventional
-(in)direct effects. These are based on the one-step estimation and targeted
-minimum loss (TML) estimation frameworks, respectively. Briefly, both estimation
-strategies proceed in two stages, starting by first constructing initial
-estimates of the nuisance parameters present in the EIF, then proceeding to
-apply distinct bias-correction strategies in their second stages. Both
-estimation strategies require an assumption about the behavior of initial
-estimators of the nuisance parameters (specifically, that these lie in a Donsker
-class); however, the need for such an assumption may be avoided by making use of
-cross-validation in the fitting fo initial estimators. The `medoutcon` `R`
-package requires the use of cross-validation in the construction of these
-initial estimates, resulting in cross-fitted one-step and and cross-validated
-TML estimators [@klaassen1987consistent; @zheng2011cross;
-@chernozhukov2018double].
-
-The one-step estimator $\hat{\theta}_{\text{os}}$ is constructed by adding the
-empirical mean of the EIF (evaluated at initial estimates of the nuisance
-parameters) to the substitution estimator. By constrast, the TML estimator
-$\hat{\theta}_{\text{tmle}}$ updates the components of the substitution
-estimator via logistic tilting models formulated to ensure that relevant score
-equations appearing in the EIF are (approximately) solved.  While the estimators
-are asymptotically equivalent, TML estimators have been shown to exhibit
-superior finite-sample performance, making them potentially more reliable than
-one-step estimators. For the exact form of the EIF as well as those of the
-one-step and TML estimators, consult @diaz2020nonparametric.
-
-### Data Analysis Example
-
-#### Setting up the data example
-
-Now, we'll take a look at how to estimate the interventional direct and indirect
-effects using a simulated data example. @diaz2020nonparametric illustrate the
-use of their estimators of these effects in an application in which they seek to
-elucidate the mechanisms behind the unintended harmful effects that a housing
-intervention had on adolescent girls' risk behavior.
-
-First, let's load a few required packages and set a seed for our simulation.
-
-
-```r
-library(data.table)
-library(medoutcon)
-library(sl3)
-set.seed(75681)
-n_obs <- 500
-```
-
-Next, we'll generate a very simple simulated dataset. The function
-`make_example_data`, defined below, generates three binary baseline covariates
-$W = (W_1, W_2, W_3)$, a binary exposure variable $A$, a single binary mediateor
-$M$ an intermediate confounder $Z$ that affects the mediator $M$ and is itself
-affected by the exposure $A$, and, finally, a binary outcome $Y$ that is a
-function of $(W, A, Z, M)$.
-
-
-```r
-# produces a simple data set based on ca causal model with mediation
-make_example_data <- function(n_obs = 1000) {
-  ## baseline covariates
-  w_1 <- rbinom(n_obs, 1, prob = 0.6)
-  w_2 <- rbinom(n_obs, 1, prob = 0.3)
-  w_3 <- rbinom(n_obs, 1, prob = pmin(0.2 + (w_1 + w_2) / 3, 1))
-  w <- cbind(w_1, w_2, w_3)
-  w_names <- paste("W", seq_len(ncol(w)), sep = "_")
-
-  ## exposure
-  a <- as.numeric(rbinom(n_obs, 1, plogis(rowSums(w) - 2)))
-
-  ## mediator-outcome confounder affected by treatment
-  z <- rbinom(n_obs, 1, plogis(rowMeans(-log(2) + w - a) + 0.2))
-
-  ## mediator -- could be multivariate
-  m <- rbinom(n_obs, 1, plogis(rowSums(log(3) * w[, -3] + a - z)))
-  m_names <- "M"
-
-  ## outcome
-  y <- rbinom(n_obs, 1, plogis(1 / (rowSums(w) - z + a + m)))
-
-  ## construct output
-  dat <- as.data.table(cbind(w = w, a = a, z = z, m = m, y = y))
-  setnames(dat, c(w_names, "A", "Z", m_names, "Y"))
-  return(dat)
-}
-
-# set seed and simulate example data
-example_data <- make_example_data(n_obs)
-w_names <- stringr::str_subset(colnames(example_data), "W")
-m_names <- stringr::str_subset(colnames(example_data), "M")
-```
-
-Now, let's take a quick look at our simulated data:
-
-
-```r
-# quick look at the data
-head(example_data)
-#>    W_1 W_2 W_3 A Z M Y
-#> 1:   0   0   1 0 0 0 1
-#> 2:   0   1   1 0 0 0 1
-#> 3:   1   1   0 0 1 1 1
-#> 4:   1   0   1 0 1 0 0
-#> 5:   0   0   0 1 1 1 1
-#> 6:   1   0   1 1 0 1 1
-```
-
-As noted above, all covariates in our dataset are binary; however, note that
-this need not be the case for using our methodology --- in particular, the only
-current limitation is that the intermediate confounder $Z$ must be binary when
-using our implemented TML estimator of the (in)direct effects.
-
-Using this dataset, we'll proceed to estimate the interventional (in)direct
-effects. In order to do so, we'll need to estimate several nuisance parameters,
-including the exposure mechanism $g(A \mid W)$, a re-parameterized exposure
-mechanism that conditions on the mediators $h(A \mid M, W)$, the outcome
-mechanism $b(Y \mid M, Z, A, W)$, and two variants of the intermediate
-confounding mechanism $q(Z \mid A, W)$ and $r(Z \mid M, A, W)$. In order to
-estimate each of these nuisance parameters flexibly, we'll rely on data adaptive
-regression strategies in order to avoid the potential for (parametric) model
-misspecification.
-
-#### Ensemble learning of nuisance functions
-
-As we'd like to rely on flexible, data adaptive regression strategies for
-estimating each of the nuisance parameters $(g, h, b, q, r)$, we require a
-method for choosing among or combining the wide variety of available regression
-strategies. For this, we recommend the use of the Super Learner algorithm for
-ensemble machine learning [@vdl2007super].  The recently developed [`sl3` R
-package](https://tlverse.org/sl3) [@coyle2020sl3] provides a unified interface
-for deploying a wide variety of machine learning algorithms (simply called
-_learners_ in the `sl3` nomenclature) as well as for constructing Super Learner
-ensemble models of such learners. For a complete guide on using the `sl3` R
-package, consider consulting https://tlverse.org/sl3, or https://tlverse.org
-(and https://github.com/tlverse) for the `tlverse` ecosystem, of which `sl3` is
-an integral part.
-
-To construct an ensemble learner using a handful of popular machine learning
-algorithms, we'll first instantiate variants of learners from the appropriate
-classes for each algorithm, and then create a Super Learner ensemble via the
-`Lrnr_sl` class. Below, we demonstrate the construction of an ensemble learner
-based on a modeling library including an intercept model, a main-terms GLM,
-$\ell_1$-penalized Lasso regression, an elastic net regression that equally
-weights the $\ell_1$ and $\ell_2$ penalties, random forests (`ranger`), and the
-highly adaptive lasso (HAL):
-
-
-```r
-# instantiate learners
-mean_lrnr <- Lrnr_mean$new()
-fglm_lrnr <- Lrnr_glm_fast$new(family = binomial())
-lasso_lrnr <- Lrnr_glmnet$new(alpha = 1, family = "binomial", nfolds = 3)
-enet_lrnr <- Lrnr_glmnet$new(alpha = 0.5, family = "binomial", nfolds = 3)
-rf_lrnr <- Lrnr_ranger$new(num.trees = 200)
-
-# for HAL, use linear probability formulation, with bounding in unit interval
-hal_gaussian_lrnr <- Lrnr_hal9001$new(
-  family = "gaussian",
-  fit_control = list(
-    max_degree = 3,
-    n_folds = 3,
-    use_min = TRUE,
-    type.measure = "mse"
-  )
-)
-bound_lrnr <- Lrnr_bound$new(bound = 1e-6)
-hal_bounded_lrnr <- Pipeline$new(hal_gaussian_lrnr, bound_lrnr)
-
-# create learner library and instantiate super learner ensemble
-lrnr_lib <- Stack$new(
-  mean_lrnr, fglm_lrnr, enet_lrnr, lasso_lrnr,
-  rf_lrnr, hal_bounded_lrnr
-)
-sl_lrnr <- Lrnr_sl$new(learners = lrnr_lib, metalearner = Lrnr_nnls$new())
-```
-
-While we recommend the use of a Super Learner ensemble model like the one
-constructed above in practice, such a library will be too computationally
-intensive for our examples. To reduce computation time, we construct a simpler
-library, using only a subset of the above learning algorithms:
-
-
-```r
-# create simpler learner library and instantiate super learner ensemble
-lrnr_lib <- Stack$new(mean_lrnr, fglm_lrnr, lasso_lrnr, rf_lrnr)
-sl_lrnr <- Lrnr_sl$new(learners = lrnr_lib, metalearner = Lrnr_nnls$new())
-```
-
-Having set up our ensemble learner, we're now ready to estimate each of the
-interventional effects using the efficient estimators exposed in the `medoutcon`
-package.
-
-#### Estimating the direct effect
-
-We're now ready to estimate the interventional direct effect. This direct effect
-is computed as a contrast between the interventions $(a' = 1, a^{\star} = 0)$
-and $(a' = 0, a^{\star} = 0)$. In particular, our efficient estimators of the
-interventional direct effect proceed by constructing estimators
-$\hat{\theta}(a' = 1, a^{\star} = 0)$ and $\hat{\theta}(a' = 0, a^{\star} = 0)$.
-Then, an efficient estimator of the direct effect is available by application
-of the delta method, that is, $\hat{\theta}^{\text{DE}} =
-\hat{\theta}(a' = 1, a^{\star} = 0) - \hat{\theta}(a' = 0, a^{\star} = 0)$.
-Applying the same principle to the EIF estimates, one can derive variance
-estimates and construct asymptotically correct Wald-style confidence intervals
-for $\hat{\theta}^{\text{DE}}$.
-
-The `medoutcon` package makes the estimation task quite simple, as only a single
-call to the eponymous `medoutcon` function is required. As demonstrated below,
-we need only feed in each component of the observed data $O = (W, A, Z, M, Y)$
-(of which $W$ and $M$ can be multivariate), specify the effect type, and the
-estimator. Additionally, for each nuisance parameter we may specify a separate
-regression function --- in the examples below, we use the simpler Super Learner
-ensemble constructed above for fitting each nuisance function, but this need not
-be the case (i.e., different estimators may be used for each nuisance function).
-
-First, we examine the one-step estimator of the interventional direct effect.
-Recall that the one-step estimator is constructed by adding the mean of the EIF
-(evaluated at initial estimates of the nuisance parameters) to the substitution
-estimator. As noted above, this is done separately for each of the two contrasts
-$(a' = 0, a^{\star} = 0)$ and $(a' = 1, a^{\star} = 0)$. Thus, the one-step
-estimator of this direct effect is constructed by application of the delta
-method to each of the one-step estimators (and EIFs) for these contrasts.
-
-
-```r
-# compute one-step estimate of the interventional direct effect
-os_de <- medoutcon(
-  W = example_data[, ..w_names],
-  A = example_data$A,
-  Z = example_data$Z,
-  M = example_data[, ..m_names],
-  Y = example_data$Y,
-  g_learners = sl_lrnr,
-  h_learners = sl_lrnr,
-  b_learners = sl_lrnr,
-  q_learners = sl_lrnr,
-  r_learners = sl_lrnr,
-  effect = "direct",
-  estimator = "onestep",
-  estimator_args = list(cv_folds = 2)
-)
-summary(os_de)
-```
-
-Next, let's compare the one-step estimate to the TML estimate. Analogous to the
-case of the one-step estimator, the TML estimator can be evaluated via a single
-call to the `medoutcon` function:
-
-
-```r
-# compute targeted minimum loss estimate of the interventional direct effect
-tmle_de <- medoutcon(
-  W = example_data[, ..w_names],
-  A = example_data$A,
-  Z = example_data$Z,
-  M = example_data[, ..m_names],
-  Y = example_data$Y,
-  g_learners = sl_lrnr,
-  h_learners = sl_lrnr,
-  b_learners = sl_lrnr,
-  q_learners = sl_lrnr,
-  r_learners = sl_lrnr,
-  effect = "direct",
-  estimator = "tmle",
-  estimator_args = list(cv_folds = 2, max_iter = 5)
-)
-summary(tmle_de)
-```
-
-Here, we recall that the TML estimator generally exhibits better finite-sample
-performance than the one-step estimator [@vdl2011targeted; @vdl2018targeted], so
-the TML estimate is likely to be more reliable in modest (realistic) sample
-sizes.
-
-#### Estimating the indirect effect
-
-Estimation of the interventional indirect effect proceeds similarly to the
-strategy discussed above for the corresponding direct effect. An efficient
-estimator can be computed as a contrast between the interventions $(a' = 1,
-a^{\star} = 0)$ and $(a' = 1, a^{\star} = 1)$. Specifically, our efficient
-estimators of the interventional indirect effect proceed by constructing
-estimators $\hat{\theta}(a' = 1, a^{\star} = 0)$ and $\hat{\theta}(a' = 1,
-a^{\star} = 1)$.  Then, application of the delta method yields an efficient
-estimator of the indirect effect, that is, $\hat{\theta}^{\text{IE}} =
-\hat{\theta}(a' = 1, a^{\star} = 0) - \hat{\theta}(a' = 1, a^{\star} = 1)$. The
-same principle may be applied to the EIF estimates to derive variance estimates
-and construct asymptotically correct Wald-style confidence intervals for
-$\hat{\theta}^{\text{IE}}$.
-
-Now, we examine the one-step estimator of the interventional indirect effect.
-The one-step estimator is constructed by adding the mean of the EIF
-(evaluated at initial estimates of the nuisance parameters) to the substitution
-estimator. As noted above, this is done separately for each of the two contrasts
-$(a' = 1, a^{\star} = 1)$ and $(a' = 1, a^{\star} = 0)$. Thus, the one-step
-estimator of this indirect effect is constructed by application of the delta
-method to each of the one-step estimators (and EIFs) for the contrasts.
-
-
-```r
-# compute one-step estimate of the interventional indirect effect
-os_ie <- medoutcon(
-  W = example_data[, ..w_names],
-  A = example_data$A,
-  Z = example_data$Z,
-  M = example_data[, ..m_names],
-  Y = example_data$Y,
-  g_learners = sl_lrnr,
-  h_learners = sl_lrnr,
-  b_learners = sl_lrnr,
-  q_learners = sl_lrnr,
-  r_learners = sl_lrnr,
-  effect = "indirect",
-  estimator = "onestep"
-)
-summary(os_ie)
-```
-
-As before, let's compare the one-step estimate to the TML estimate. Analogous
-to the case of the one-step estimator, the TML estimator can be evaluated via a
-single call to the `medoutcon` function, as demonstrated below
-
-
-```r
-# compute targeted minimum loss estimate of the interventional indirect effect
-tmle_ie <- medoutcon(
-  W = example_data[, ..w_names],
-  A = example_data$A,
-  Z = example_data$Z,
-  M = example_data[, ..m_names],
-  Y = example_data$Y,
-  g_learners = sl_lrnr,
-  h_learners = sl_lrnr,
-  b_learners = sl_lrnr,
-  q_learners = sl_lrnr,
-  r_learners = sl_lrnr,
-  effect = "indirect",
-  estimator = "tmle"
-)
-summary(tmle_ie)
-```
-
-As before, the TML estimator provides better finite-sample performance than the
-one-step estimator, so it may be preferred in this example.

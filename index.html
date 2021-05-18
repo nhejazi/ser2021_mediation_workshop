@@ -44,13 +44,13 @@
       <nav aria-label="Table of contents"><h2>Table of contents</h2>
         <ul class="book-toc list-unstyled">
 <li><a class="active" href="index.html">Welcome to SER!</a></li>
-<li><a class="" href="mediation.html"><span class="header-section-number">1</span> Preliminaries on causal mediation analysis</a></li>
-<li><a class="" href="estimands.html"><span class="header-section-number">2</span> Path-specific casual mediation effect types</a></li>
+<li><a class="" href="mediation.html"><span class="header-section-number">1</span> Causal mediation analysis intro</a></li>
+<li><a class="" href="estimands.html"><span class="header-section-number">2</span> Types of path-specific causal mediation effects</a></li>
 <li><a class="" href="stochastic.html"><span class="header-section-number">3</span> Stochastic Direct and Indirect Effects</a></li>
-<li><a class="" href="estimandirl.html"><span class="header-section-number">4</span> How to choose an estimand: Real world example</a></li>
+<li><a class="" href="estimandirl.html"><span class="header-section-number">4</span> How to choose an estimand: Real-world example</a></li>
 <li><a class="" href="preliminaries-on-semiparametric-estimation.html"><span class="header-section-number">5</span> Preliminaries on semiparametric estimation</a></li>
 <li><a class="" href="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html"><span class="header-section-number">6</span> Using the EIF to construct an estimator: the case of the natural direct effect</a></li>
-<li><a class="" href="estimating-indirect-effects-with-r-packages.html"><span class="header-section-number">7</span> Estimating (in)direct effects with R packages</a></li>
+<li><a class="" href="r-packages-for-estimation-of-the-causal-indirect-effects.html"><span class="header-section-number">7</span> R packages for estimation of the causal (in)direct effects</a></li>
 <li><a class="" href="references.html">References</a></li>
 </ul>
 
@@ -103,24 +103,30 @@ parameter estimable from the observed data distribution). Familiarity with the
 <span class="header-section-number">0.2</span> Workshop schedule<a class="anchor" aria-label="anchor" href="#schedule"><i class="fas fa-link"></i></a>
 </h2>
 <ul>
-<li>10:00A-10:30A: introductions/mediation set up <!-- Ivan-->
+<li>09:00A-09:30A: Introductions + mediation set-up
+<!-- Ivan-->
 </li>
-<li>10:30A-11:15A: controlled direct effects, natural direct and indirect effects,
-interventional direct and indirect effects <!-- Kara-->
+<li>09:30A-10:15A: Controlled direct effects, natural direct/indirect effects,
+interventional direct/indirect effects
+<!-- Kara-->
 </li>
-<li>11:15A-11:45A: stochastic mediation estimands <!-- Nima-->
+<li>10:15A-10:45A: Stochastic mediation estimands
+<!-- Nima-->
 </li>
-<li>11:45A-12:00P: how to choose an estimand in real-world examples <!-- Kara-->
+<li>10:45A-11:00A: Choosing an estimand in real-world examples
+<!-- Kara-->
 </li>
-<li>12:00P-12:15P break/discussion</li>
-<li>12:15P-12:45P: what is the EIF <!-- Ivan-->
+<li>11:00A-11:15A: Break + discussion</li>
+<li>11:15A-11:45A: What is the EIF?!
+<!-- Ivan-->
 </li>
-<li>12:45P-01:00P: using the EIF for estimating the natural direct
-effect <!-- Ivan-->
+<li>11:45A-12:00P: Using the EIF for estimating the natural direct effect
+<!-- Ivan-->
 </li>
-<li>01:00P-01:45P: practice: <code>R</code> code for estimation <!-- Nima-->
+<li>12:00P-12:45P: Example walkthrough with <code>R</code> packages for effect estimation
+<!-- Nima-->
 </li>
-<li>01:45P-02:00P: Wrap-up</li>
+<li>12:45P-01:00P: Wrap-up</li>
 </ul>
 <p><strong>NOTE: All times listed in Pacific Time.</strong></p>
 </div>
@@ -359,9 +365,9 @@ error messages.</li>
 </ul>
 </div>
 </div>
-<div id="macos-mac-os-x" class="section level4">
+<div id="mac-osx" class="section level4">
 <h4>
-<span class="header-section-number">0.5.1.2</span> macOS / Mac OS X<a class="anchor" aria-label="anchor" href="#macos-mac-os-x"><i class="fas fa-link"></i></a>
+<span class="header-section-number">0.5.1.2</span> Mac OSX<a class="anchor" aria-label="anchor" href="#mac-osx"><i class="fas fa-link"></i></a>
 </h4>
 <div id="if-you-already-have-r-and-rstudio-installed-1" class="section level5">
 <h5>
@@ -383,8 +389,7 @@ recent version is available. If so, please download and install it.</li>
 <span class="header-section-number">0.5.1.2.2</span> If you don’t have R and RStudio installed<a class="anchor" aria-label="anchor" href="#if-you-dont-have-r-and-rstudio-installed-1"><i class="fas fa-link"></i></a>
 </h5>
 <ul>
-<li>Download R from
-the <a href="http://cran.r-project.org/bin/macosx">CRAN website</a>.</li>
+<li>Download R from the <a href="http://cran.r-project.org/bin/macosx">CRAN website</a>.</li>
 <li>Select the <code>.pkg</code> file for the latest R version</li>
 <li>Double click on the downloaded file to install R</li>
 <li>It is also a good idea to install <a href="https://www.xquartz.org/">XQuartz</a> (needed
@@ -405,13 +410,12 @@ error messages.</li>
 <span class="header-section-number">0.5.1.3</span> Linux<a class="anchor" aria-label="anchor" href="#linux"><i class="fas fa-link"></i></a>
 </h4>
 <ul>
-<li>Follow the instructions for your distribution
-from <a href="https://cloud.r-project.org/bin/linux">CRAN</a>, they provide information
-to get the most recent version of R for common distributions. For most
-distributions, you could use your package manager (e.g., for Debian/Ubuntu run
-<code>sudo apt-get install r-base</code>, and for Fedora <code>sudo yum install R</code>), but we
-don’t recommend this approach as the versions provided by this are
-usually out of date. In any case, make sure you have at least R 3.3.1.</li>
+<li>Follow the instructions for your distribution from
+<a href="https://cloud.r-project.org/bin/linux">CRAN</a>, they provide information to get
+the most recent version of R for common distributions. For most distributions,
+you could use your package manager (e.g., for Debian/Ubuntu run <code>sudo apt-get install r-base</code>, and for Fedora <code>sudo yum install R</code>), but we don’t recommend
+this approach as the versions provided by this are usually out of date. In any
+case, make sure you have at least R 3.3.1.</li>
 <li>Go to the <a href="https://www.rstudio.com/products/rstudio/download/#download">RStudio download
 page</a>
 </li>
@@ -423,14 +427,56 @@ error messages.</li>
 <p>These setup instructions are adapted from those written for <a href="http://www.datacarpentry.org/R-ecology-lesson/">Data Carpentry: R
 for Data Analysis and Visualization of Ecological
 Data</a>.</p>
-
 </div>
+</div>
+<div id="renv" class="section level3">
+<h3>
+<span class="header-section-number">0.5.2</span> Virtual Enironment setup with <code>renv</code><a class="anchor" aria-label="anchor" href="#renv"><i class="fas fa-link"></i></a>
+</h3>
+<p>These instructions are intended to help with setting up the included <a href="https://rstudio.github.io/renv/index.html"><code>renv</code>
+virtual environment</a>, which ensures
+all participants are using the same exact set of <code>R</code> packages (and package
+versions). A few important notes to keep in mind:</p>
+<ul>
+<li>When <code>R</code> is started from the top level of this repository, <code>renv</code> is
+activated automatically. There is no further action required on your part. If
+<code>renv</code> is not installed, it will be installed automatically, assuming that you
+have an active internet connection.</li>
+<li>While <code>renv</code> is active, the <code>R</code> session will only have access to the packages
+(and their dependencies) that are listed in the <code>renv.lock</code> file – that is,
+you should not expect to have access to any other <code>R</code> packages that may be
+installed elsewhere on the computing system in use.</li>
+<li>Upon an initial attempt, <code>renv</code> will prompt you to install packages listed in
+the <code>renv.lock</code> file, by printing a message like the following:</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="index.html#cb1-1"></a><span class="co"># * Project 'PATH/TO/ser2021_mediation_workshop' loaded. [renv 0.13.2]</span></span>
+<span id="cb1-2"><a href="index.html#cb1-2"></a><span class="co"># * The project may be out of sync -- use `renv::status()` for more details.</span></span>
+<span id="cb1-3"><a href="index.html#cb1-3"></a><span class="op">&gt;</span><span class="st"> </span>renv<span class="op">::</span><span class="kw">status</span>()</span>
+<span id="cb1-4"><a href="index.html#cb1-4"></a><span class="co"># The following package(s) are recorded in the lockfile, but not installed:</span></span>
+<span id="cb1-5"><a href="index.html#cb1-5"></a><span class="co"># Use `renv::restore()` to install these packages.</span></span></code></pre></div>
+<p>In any such case, please call <code><a href="https://rstudio.github.io/renv//reference/restore.html">renv::restore()</a></code> to install any missing packages.
+Note that you do <em>not</em> need to manually install the packages via
+<code><a href="https://rdrr.io/r/utils/install.packages.html">install.packages()</a></code>, <code>remotes::install_github()</code>, or similar.</p>
+<p>For details on how the <code>renv</code> system works, the following references may be
+helpful:</p>
+<ol style="list-style-type: decimal">
+<li><a href="https://rstudio.github.io/renv/articles/collaborating.html">Collaborating with
+<code>renv</code></a></li>
+<li><a href="https://rstudio.github.io/renv/articles/renv.html">Introduction to <code>renv</code></a></li>
+</ol>
+<p>In some rare cases, <code>R</code> packages that <code>renv</code> automatically tries to install as
+part of the <code><a href="https://rstudio.github.io/renv//reference/restore.html">renv::restore()</a></code> process may fail due to missing systems-level
+dependencies. In such cases, a reference to the missing dependencies and
+system-specific instructions their installation involving, e.g., <a href="http://manpages.ubuntu.com/manpages/bionic/man8/apt.8.html">Ubuntu
+Linux’s <code>apt</code></a> or
+<a href="https://brew.sh/"><code>homebrew</code> for macOS</a>, will usually be displayed.</p>
+
 </div>
 </div>
 </div>
   <div class="chapter-nav">
 <div class="empty"></div>
-<div class="next"><a href="mediation.html"><span class="header-section-number">1</span> Preliminaries on causal mediation analysis</a></div>
+<div class="next"><a href="mediation.html"><span class="header-section-number">1</span> Causal mediation analysis intro</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
@@ -446,7 +492,10 @@ Data</a>.</p>
 </li>
 <li><a class="nav-link" href="#repro"><span class="header-section-number">0.4</span> Reproduciblity</a></li>
 <li>
-<a class="nav-link" href="#setup"><span class="header-section-number">0.5</span> Setup instructions</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#r-and-rstudio"><span class="header-section-number">0.5.1</span> R and RStudio</a></li></ul>
+<a class="nav-link" href="#setup"><span class="header-section-number">0.5</span> Setup instructions</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#r-and-rstudio"><span class="header-section-number">0.5.1</span> R and RStudio</a></li>
+<li><a class="nav-link" href="#renv"><span class="header-section-number">0.5.2</span> Virtual Enironment setup with renv</a></li>
+</ul>
 </li>
 </ul>
 
@@ -465,7 +514,7 @@ Data</a>.</p>
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: May 16, 2021.</p>
+    <p>"<strong>[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis</strong>" was written by Iván Díaz, Nima Hejazi, Kara Rudolph. It was last built on updated: May 17, 2021.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
