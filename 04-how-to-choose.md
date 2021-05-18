@@ -2,24 +2,12 @@
 
 ## Comparative effectivness of two medications for opioid use disorder (OUD)
 
-\begin{figure}
 
-{\centering \includegraphics[width=1\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/ctndag} 
-
-}
-
-\end{figure}
 
 _Motivation_: Opposite overall treatment effects for homeless versus
 nonhomeless participants.
 
-\begin{figure}
 
-{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/tmleesttotal} 
-
-}
-
-\end{figure}
 
 ### Getting specific about the question
 

@@ -355,38 +355,6 @@ and the complete source is available on
 \href{https://github.com/tlverse/tlverse-handbook}{GitHub}. This version of the book
 was built with R version 4.0.5 (2021-03-31), \href{https://pandoc.org/}{pandoc} version \passthrough{\lstinline!r rmarkdown::pandoc\_version()!}, and the following packages:
 
-\begin{longtable}[]{@{}lll@{}}
-\toprule
-package & version & source\tabularnewline
-\midrule
-\endhead
-bookdown & 0.21.11 & Github (rstudio/bookdown@33c4f70)\tabularnewline
-bslib & 0.2.4.9003 & Github (rstudio/bslib@e09af88)\tabularnewline
-dagitty & 0.3-1 & CRAN (R 4.0.5)\tabularnewline
-data.table & 1.14.0 & CRAN (R 4.0.5)\tabularnewline
-downlit & 0.2.1 & CRAN (R 4.0.5)\tabularnewline
-dplyr & 1.0.6 & CRAN (R 4.0.5)\tabularnewline
-ggdag & 0.2.3 & CRAN (R 4.0.5)\tabularnewline
-ggfortify & 0.4.11 & CRAN (R 4.0.5)\tabularnewline
-ggplot2 & 3.3.3 & CRAN (R 4.0.5)\tabularnewline
-kableExtra & 1.3.4 & CRAN (R 4.0.5)\tabularnewline
-knitr & 1.32 & CRAN (R 4.0.5)\tabularnewline
-magick & 2.7.1 & CRAN (R 4.0.5)\tabularnewline
-medoutcon & 0.1.5 & Github (nhejazi/medoutcon@39820e2)\tabularnewline
-medshift & 0.1.4 & Github (nhejazi/medshift@f9e11a9)\tabularnewline
-mvtnorm & 1.1-1 & CRAN (R 4.0.5)\tabularnewline
-origami & 1.0.3 & CRAN (R 4.0.5)\tabularnewline
-pdftools & 2.3.1 & CRAN (R 4.0.5)\tabularnewline
-readr & 1.4.0 & CRAN (R 4.0.5)\tabularnewline
-rmarkdown & 2.7.11 & Github (rstudio/rmarkdown@e340d75)\tabularnewline
-skimr & 2.1.3 & CRAN (R 4.0.5)\tabularnewline
-sl3 & 1.4.3 & Github (tlverse/sl3@5cddc6c)\tabularnewline
-stringr & 1.4.0 & CRAN (R 4.0.5)\tabularnewline
-tibble & 3.1.1 & CRAN (R 4.0.5)\tabularnewline
-tidyr & 1.1.3 & CRAN (R 4.0.5)\tabularnewline
-\bottomrule
-\end{longtable}
-
 \hypertarget{setup}{%
 \section{Setup instructions}\label{setup}}
 
@@ -586,14 +554,6 @@ use disorder, naltrexone vs buprenorphine) on risk of relapse operate through
 mediators of adherence, opioid use, pain, and depressive symptoms?
 \citep{rudolph2020explaining}
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/ctndag} 
-
-}
-
-\end{figure}
-
 \hypertarget{what-is-causal-mediation-analysis}{%
 \section{What is causal mediation analysis?}\label{what-is-causal-mediation-analysis}}
 
@@ -675,8 +635,6 @@ lm_y <- lm(y ~ m + a + w + z)
 lm_m <- lm(m ~ a + w + z)
 ## product of coefficients
 coef(lm_y)[2] * coef(lm_m)[2]
-#>          m 
-#> -0.0014835
 \end{lstlisting}
 
 Among other things, in this workshop:
@@ -700,26 +658,8 @@ types of graph:
 \hypertarget{no-intermediate-confounders}{%
 \subsection{No intermediate confounders}\label{no-intermediate-confounders}}
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.8\linewidth]{01-preface_files/figure-latex/unnamed-chunk-4-1} 
-
-}
-
-\caption{Directed acyclic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-4}
-\end{figure}
-
 \hypertarget{intermediate-confounders}{%
 \subsection{Intermediate confounders}\label{intermediate-confounders}}
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.8\linewidth]{01-preface_files/figure-latex/unnamed-chunk-5-1} 
-
-}
-
-\caption{Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-5}
-\end{figure}
 
 The above graphs can be interpreted as a \emph{non-parametric structural equation model}
 (NPSEM), also known as \emph{structural causal model} (SCM):
@@ -818,15 +758,6 @@ The above graphs can be interpreted as a \emph{non-parametric structural equatio
   Interventional direct and indirect effects
 \end{itemize}
 
-\begin{figure}
-
-{\centering \includegraphics[width=0.8\linewidth]{02-effects-def_files/figure-latex/unnamed-chunk-1-1} 
-
-}
-
-\caption{Directed acyclic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-1}
-\end{figure}
-
 \hypertarget{controlled-direct-effects}{%
 \section{Controlled direct effects}\label{controlled-direct-effects}}
 
@@ -840,14 +771,6 @@ The above graphs can be interpreted as a \emph{non-parametric structural equatio
 \end{itemize}
 
 \[\psi_{\text{CDE}} = \E(Y_{1,m} - Y_{0,m}) \]
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/graphic4a3} 
-
-}
-
-\end{figure}
 
 \hypertarget{identification-assumptions}{%
 \subsection{Identification assumptions:}\label{identification-assumptions}}
@@ -929,7 +852,6 @@ pred_y0 <- predict(lm_y, newdata = data.frame(a = 0, m = 0, w = w))
 \begin{lstlisting}[language=R]
 ## CDE at m = 0
 mean(pred_y1 - pred_y0)
-#> [1] 1.0009
 \end{lstlisting}
 
 \hypertarget{is-this-the-estimand-i-want}{%
@@ -983,14 +905,6 @@ Still using the same DAG as above,
   Interpreted as \emph{the outcome for an individual in a hypothetical world where
   treatment was given but the mediator was held at the value it would have
   taken under no treatment}
-
-  \begin{figure}
-
-  {\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/graphic4a} 
-
-  }
-
-  \end{figure}
 \item
   Recall that, because of the definition of counterfactuals
   \begin{equation*}
@@ -1153,7 +1067,6 @@ lm_pseudo <- lm(pseudo ~ a + w)
 pred_pseudo <- predict(lm_pseudo, newdata = data.frame(a = 0, w = w))
 ## NDE:
 mean(pred_pseudo)
-#> [1] 0.99655
 \end{lstlisting}
 
 \hypertarget{is-this-the-estimand-i-want-1}{%
@@ -1174,23 +1087,6 @@ mean(pred_pseudo)
 
 \emph{What if our data structure involves a post-treatment confounder of the
 mediator-outcome relationship (e.g., adherence)?}
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.8\linewidth]{02-effects-def_files/figure-latex/unnamed-chunk-12-1} 
-
-}
-
-\caption{Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-12}
-\end{figure}
-
-\begin{figure}
-
-{\centering \includegraphics[width=1\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/ctndag} 
-
-}
-
-\end{figure}
 
 \hypertarget{unidentifiability-of-the-nde-and-nie-in-this-setting}{%
 \subsection{Unidentifiability of the NDE and NIE in this setting}\label{unidentifiability-of-the-nde-and-nie-in-this-setting}}
@@ -1274,14 +1170,6 @@ intervention.
   We gain in the ability to solve a problem, but lose in terms of interpretation
   of the causal effect (cannot decompose the ATE)
 \end{itemize}
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/graphic4b} 
-
-}
-
-\end{figure}
 
 \hypertarget{an-alternative-definition-of-the-effects}{%
 \subsection{An alternative definition of the effects:}\label{an-alternative-definition-of-the-effects}}
@@ -1401,7 +1289,6 @@ pred_pseudo <- predict(fit_pseudo, data.frame(a = 0, w = w))
 \begin{lstlisting}[language=R]
 ## Mean(Y(1, G(0)))
 mean(pred_pseudo)
-#> [1] 1.1979
 \end{lstlisting}
 
 \begin{itemize}
@@ -1438,14 +1325,6 @@ mean(pred_pseudo)
 \hypertarget{estimand-summary}{%
 \section{Estimand Summary}\label{estimand-summary}}
 
-\begin{figure}
-
-{\centering \includegraphics[width=1.25\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/table1} 
-
-}
-
-\end{figure}
-
 \hypertarget{stochastic}{%
 \chapter{Stochastic direct and indirect effects}\label{stochastic}}
 
@@ -1453,15 +1332,6 @@ mean(pred_pseudo)
 \section{Definition of the effects}\label{definition-of-the-effects}}
 
 Consider the following directed acyclic graph.
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.8\linewidth]{03-stochastic_files/figure-latex/unnamed-chunk-1-1} 
-
-}
-
-\caption{Directed acyclic graph under no intermediate confounders of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-1}
-\end{figure}
 
 \hypertarget{motivation-for-stochastic-interventions}{%
 \section{Motivation for stochastic interventions}\label{motivation-for-stochastic-interventions}}
@@ -1751,16 +1621,12 @@ plot(pscore, pscore_delta, xlab = 'Observed prop. score',
 abline(0, 1)
 \end{lstlisting}
 
-\begin{center}\includegraphics[width=0.8\linewidth]{03-stochastic_files/figure-latex/unnamed-chunk-7-1} \end{center}
-
 \hypertarget{what-are-the-odds-of-exposure-under-intervention-vs-real-world}{%
 \section{What are the odds of exposure under intervention vs real world?}\label{what-are-the-odds-of-exposure-under-intervention-vs-real-world}}
 
 \begin{lstlisting}[language=R]
 odds <- (pscore_delta / (1 - pscore_delta)) / (pscore / (1 - pscore))
 summary(odds)
-#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>       2       2       2       2       2       2
 \end{lstlisting}
 
 \begin{itemize}
@@ -1783,7 +1649,6 @@ indirect <- pseudo_a1 * pscore_delta + pseudo_a0 * (1 - pscore_delta)
 \begin{lstlisting}[language=R]
 ## E[Y(Adelta) - Y(Adelta, M)]
 mean(indirect)
-#> [1] 0.1091
 \end{lstlisting}
 
 \begin{itemize}
@@ -1801,7 +1666,6 @@ mean(indirect)
 direct <- (pred_y1_a1 - y) * pscore_delta +
        (pred_y1_a0 - y) * (1 - pscore_delta)
 mean(direct)
-#> [1] 0.10934
 \end{lstlisting}
 
 \hypertarget{summary}{%
@@ -1843,24 +1707,8 @@ mean(direct)
 \hypertarget{comparative-effectivness-of-two-medications-for-opioid-use-disorder-oud}{%
 \section{Comparative effectivness of two medications for opioid use disorder (OUD)}\label{comparative-effectivness-of-two-medications-for-opioid-use-disorder-oud}}
 
-\begin{figure}
-
-{\centering \includegraphics[width=1\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/ctndag} 
-
-}
-
-\end{figure}
-
 \emph{Motivation}: Opposite overall treatment effects for homeless versus
 nonhomeless participants.
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/tmleesttotal} 
-
-}
-
-\end{figure}
 
 \hypertarget{getting-specific-about-the-question}{%
 \subsection{Getting specific about the question}\label{getting-specific-about-the-question}}
@@ -2129,7 +1977,6 @@ trueval <- mean((mean_y(1, 1, w_big) - mean_y(1, 0, w_big)) *
   mean_m(0, w_big) + (mean_y(0, 1, w_big) - mean_y(0, 0, w_big)) *
     (1 - mean_m(0, w_big)))
 print(trueval)
-#> [1] 0.58048
 \end{lstlisting}
 
 \begin{itemize}
@@ -2168,8 +2015,6 @@ hist(estimate)
 abline(v = trueval, col = "red", lwd = 4)
 \end{lstlisting}
 
-\begin{center}\includegraphics[width=0.8\linewidth]{05-preliminaries-estimation_files/figure-latex/unnamed-chunk-4-1} \end{center}
-
 \begin{itemize}
 \tightlist
 \item
@@ -2200,8 +2045,6 @@ text(450, 0.01, paste0(
   mean(lower < trueval & trueval < upper), "%"
 ), cex = 1.2)
 \end{lstlisting}
-
-\begin{center}\includegraphics[width=0.8\linewidth]{05-preliminaries-estimation_files/figure-latex/unnamed-chunk-5-1} \end{center}
 
 \hypertarget{pros-and-cons-of-g-computation-with-data-adaptive-regression}{%
 \subsection{Pros and cons of g-computation with data-adaptive regression}\label{pros-and-cons-of-g-computation-with-data-adaptive-regression}}
@@ -2284,15 +2127,6 @@ loss based estimation.
 \section{Natural direct effect}\label{natural-direct-effect}}
 
 Recall:
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.8\linewidth]{06-estimation-natural-interventional_files/figure-latex/unnamed-chunk-1-1} 
-
-}
-
-\caption{Directed acyclic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-1}
-\end{figure}
 
 \begin{itemize}
 \item
@@ -2540,7 +2374,6 @@ eif <- ip_weights * (y - b_pred) + (1 - a) / g0_pred * (pseudo - q_pred) +
 \begin{lstlisting}[language=R]
 ## One-step estimator
 mean(eif)
-#> [1] 0.55085
 \end{lstlisting}
 
 \hypertarget{performance-of-the-one-step-estimator-in-a-small-simulation-study}{%
@@ -2585,7 +2418,6 @@ w_big <- runif(1e6, -1, 1)
 trueval <- mean((mean_y(1, 1, w_big) - mean_y(1, 0, w_big)) * mean_m(0, w_big) +
   (mean_y(0, 1, w_big) - mean_y(0, 0, w_big)) * (1 - mean_m(0, w_big)))
 print(trueval)
-#> [1] 0.58061
 \end{lstlisting}
 
 \begin{itemize}
@@ -2609,8 +2441,6 @@ estimate <- do.call(c, estimate)
 hist(estimate)
 abline(v = trueval, col = "red", lwd = 4)
 \end{lstlisting}
-
-\begin{center}\includegraphics[width=0.8\linewidth]{06-estimation-natural-interventional_files/figure-latex/unnamed-chunk-11-1} \end{center}
 
 \begin{itemize}
 \tightlist
@@ -2643,8 +2473,6 @@ text(450, 0.01, paste0(
 ), cex = 1.2)
 \end{lstlisting}
 
-\begin{center}\includegraphics[width=0.8\linewidth]{06-estimation-natural-interventional_files/figure-latex/unnamed-chunk-12-1} \end{center}
-
 \hypertarget{r-packages-for-estimation-of-the-causal-indirect-effects}{%
 \chapter{\texorpdfstring{\texttt{R} packages for estimation of the causal (in)direct effects}{R packages for estimation of the causal (in)direct effects}}\label{r-packages-for-estimation-of-the-causal-indirect-effects}}
 
@@ -2668,23 +2496,12 @@ set.seed(429153)
 # load and examine data
 data(weight_behavior)
 dim(weight_behavior)
-#> [1] 691  15
 
 # drop missing values
 weight_behavior <- weight_behavior %>%
   drop_na() %>%
   as_tibble()
 weight_behavior
-#> # A tibble: 567 x 15
-#>     bmi   age sex   race  numpeople   car gotosch snack tvhours cmpthours
-#>   <dbl> <dbl> <fct> <fct>     <int> <int> <fct>   <fct>   <dbl>     <dbl>
-#> 1  18.2  12.2 F     OTHER         5     3 2       1           4         0
-#> 2  22.8  12.8 M     OTHER         4     3 2       1           4         2
-#> 3  25.6  12.1 M     OTHER         2     3 2       1           0         2
-#> 4  15.1  12.3 M     OTHER         4     1 2       1           2         1
-#> 5  23.0  11.8 M     OTHER         4     1 1       1           4         3
-#> # ... with 562 more rows, and 5 more variables: cellhours <dbl>, sports <fct>,
-#> #   exercises <int>, sweat <int>, overweigh <dbl>
 \end{lstlisting}
 
 The documentation for the data set describes it as a ``database obtained from the
@@ -2709,15 +2526,6 @@ The data on a single observational unit can be represented \(O = (W, A, M, Y)\),
 with the data pooled across all participants denoted \(O_1, \ldots, O_n\), for a
 of \(n\) i.i.d. observations of \(O\). Recall the DAG \protect\hyperlink{estimands}{from an earlier
 chapter}, which represents the data-generating process:
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.8\linewidth]{07-estimation-stochastic_files/figure-latex/unnamed-chunk-1-1} 
-
-}
-
-\caption{Directed acyclic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-1}
-\end{figure}
 
 \hypertarget{natural-indirect-effects}{%
 \subsection{Natural (in)direct effects}\label{natural-indirect-effects}}
@@ -2836,10 +2644,6 @@ nde_onestep <- medoutcon(
   estimator_args = list(cv_folds = 5)
 )
 summary(nde_onestep)
-#> # A tibble: 1 x 7
-#>   lwr_ci param_est upr_ci var_est eif_mean estimator param         
-#>    <dbl>     <dbl>  <dbl>   <dbl>    <dbl> <chr>     <chr>         
-#> 1 -0.490   -0.0280  0.434  0.0555 2.84e-15 onestep   direct_natural
 \end{lstlisting}
 
 \begin{itemize}
@@ -2864,10 +2668,6 @@ nie_onestep <- medoutcon(
   estimator_args = list(cv_folds = 5)
 )
 summary(nie_onestep)
-#> # A tibble: 1 x 7
-#>   lwr_ci param_est upr_ci var_est eif_mean estimator param           
-#>    <dbl>     <dbl>  <dbl>   <dbl>    <dbl> <chr>     <chr>           
-#> 1  0.466      1.09   1.72   0.102 9.02e-16 onestep   indirect_natural
 \end{lstlisting}
 
 \begin{itemize}
@@ -2894,15 +2694,6 @@ counterparts are, as we saw in an earlier section. Recall that both types of
 effects are defined by static interventions on the treatment. The interventional
 effects are distinguished by their use of a stochastic intervention on the
 mediator to aid in their identification.
-
-\begin{figure}
-  
-  {\centering \includegraphics[width=0.8\linewidth]{07-estimation-stochastic_files/figure-latex/unnamed-chunk-2-1} 
-  
-  }
-  
-  \caption{Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment}\label{fig:unnamed-chunk-2}
-  \end{figure}
 
 Recall that the interventional (in)direct effects are defined via the decomposition:
 \begin{equation*}
@@ -2972,10 +2763,6 @@ interv_de_onestep <- medoutcon(
   estimator_args = list(cv_folds = 5)
 )
 summary(interv_de_onestep)
-#> # A tibble: 1 x 7
-#>   lwr_ci param_est upr_ci var_est  eif_mean estimator param                
-#>    <dbl>     <dbl>  <dbl>   <dbl>     <dbl> <chr>     <chr>                
-#> 1 -0.476   -0.0107  0.454  0.0562 -9.93e-16 onestep   direct_interventional
 \end{lstlisting}
 
 \begin{itemize}
@@ -3000,10 +2787,6 @@ interv_ie_onestep <- medoutcon(
   estimator_args = list(cv_folds = 5)
 )
 summary(interv_ie_onestep)
-#> # A tibble: 1 x 7
-#>   lwr_ci param_est upr_ci var_est eif_mean estimator param                  
-#>    <dbl>     <dbl>  <dbl>   <dbl>    <dbl> <chr>     <chr>                  
-#> 1  0.348     0.952   1.56  0.0950 3.15e-15 onestep   indirect_interventional
 \end{lstlisting}
 
 \begin{itemize}
@@ -3129,8 +2912,6 @@ stoch_decomp_onestep <- medshift(
   estimator_args = list(cv_folds = 5)
 )
 summary(stoch_decomp_onestep)
-#>      lwr_ci   param_est      upr_ci   param_var    eif_mean   estimator 
-#>   18.770026   19.103221   19.436415      0.0289 -1.7263e-15     onestep
 \end{lstlisting}
 
 \begin{itemize}
@@ -3172,8 +2953,6 @@ eifs_de <- list(stoch_decomp_onestep$theta, eif_EY)
 # direct effect = EY - estimated quantity
 de_est <- linear_contrast(params_de, eifs_de)
 de_est
-#>    lwr_ci param_est    upr_ci 
-#> -0.347205 -0.023887  0.299430
 \end{lstlisting}
 
 \begin{itemize}

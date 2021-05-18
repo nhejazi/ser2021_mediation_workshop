@@ -130,32 +130,6 @@ was built with R version 4.0.5 (2021-03-31), [pandoc](https://pandoc.org/) versi
 rmarkdown::pandoc_version()`, and the following packages:
 
 
-|package    |version    |source                              |
-|:----------|:----------|:-----------------------------------|
-|bookdown   |0.21.11    |Github (rstudio/bookdown\@33c4f70)  |
-|bslib      |0.2.4.9003 |Github (rstudio/bslib\@e09af88)     |
-|dagitty    |0.3-1      |CRAN (R 4.0.5)                      |
-|data.table |1.14.0     |CRAN (R 4.0.5)                      |
-|downlit    |0.2.1      |CRAN (R 4.0.5)                      |
-|dplyr      |1.0.6      |CRAN (R 4.0.5)                      |
-|ggdag      |0.2.3      |CRAN (R 4.0.5)                      |
-|ggfortify  |0.4.11     |CRAN (R 4.0.5)                      |
-|ggplot2    |3.3.3      |CRAN (R 4.0.5)                      |
-|kableExtra |1.3.4      |CRAN (R 4.0.5)                      |
-|knitr      |1.32       |CRAN (R 4.0.5)                      |
-|magick     |2.7.1      |CRAN (R 4.0.5)                      |
-|medoutcon  |0.1.5      |Github (nhejazi/medoutcon\@39820e2) |
-|medshift   |0.1.4      |Github (nhejazi/medshift\@f9e11a9)  |
-|mvtnorm    |1.1-1      |CRAN (R 4.0.5)                      |
-|origami    |1.0.3      |CRAN (R 4.0.5)                      |
-|pdftools   |2.3.1      |CRAN (R 4.0.5)                      |
-|readr      |1.4.0      |CRAN (R 4.0.5)                      |
-|rmarkdown  |2.7.11     |Github (rstudio/rmarkdown\@e340d75) |
-|skimr      |2.1.3      |CRAN (R 4.0.5)                      |
-|sl3        |1.4.3      |Github (tlverse/sl3\@5cddc6c)       |
-|stringr    |1.4.0      |CRAN (R 4.0.5)                      |
-|tibble     |3.1.1      |CRAN (R 4.0.5)                      |
-|tidyr      |1.1.3      |CRAN (R 4.0.5)                      |
 
 ## Setup instructions {#setup}
 

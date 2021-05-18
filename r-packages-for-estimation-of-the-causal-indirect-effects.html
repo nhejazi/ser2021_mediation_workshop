@@ -911,23 +911,12 @@ we’ll be using and set a seed; then, load this data set and take a quick look<
 <code class="sourceCode R"><span class="co"># load and examine data</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">weight_behavior</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">weight_behavior</span><span class="op">)</span>
-<span class="co">#&gt; [1] 691  15</span>
 
 <span class="co"># drop missing values</span>
 <span class="va">weight_behavior</span> <span class="op">&lt;-</span> <span class="va">weight_behavior</span> <span class="op">%&gt;%</span>
   <span class="fu">drop_na</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">as_tibble</span><span class="op">(</span><span class="op">)</span>
-<span class="va">weight_behavior</span>
-<span class="co">#&gt; # A tibble: 567 x 15</span>
-<span class="co">#&gt;     bmi   age sex   race  numpeople   car gotosch snack tvhours cmpthours</span>
-<span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt;     &lt;int&gt; &lt;int&gt; &lt;fct&gt;   &lt;fct&gt;   &lt;dbl&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  18.2  12.2 F     OTHER         5     3 2       1           4         0</span>
-<span class="co">#&gt; 2  22.8  12.8 M     OTHER         4     3 2       1           4         2</span>
-<span class="co">#&gt; 3  25.6  12.1 M     OTHER         2     3 2       1           0         2</span>
-<span class="co">#&gt; 4  15.1  12.3 M     OTHER         4     1 2       1           2         1</span>
-<span class="co">#&gt; 5  23.0  11.8 M     OTHER         4     1 1       1           4         3</span>
-<span class="co">#&gt; # … with 562 more rows, and 5 more variables: cellhours &lt;dbl&gt;, sports &lt;fct&gt;,</span>
-<span class="co">#&gt; #   exercises &lt;int&gt;, sweat &lt;int&gt;, overweigh &lt;dbl&gt;</span></code></pre></div>
+<span class="va">weight_behavior</span></code></pre></div>
 <p>The documentation for the data set describes it as a “database obtained from the
 Louisiana State University Health Sciences Center, New Orleans, by Dr. Richard
 Scribner. He explored the relationship between BMI and kids’ behavior through a
@@ -949,12 +938,6 @@ all other measured covariates are taken to be potential baseline confounders.</p
 with the data pooled across all participants denoted <span class="math inline">\(O_1, \ldots, O_n\)</span>, for a
 of <span class="math inline">\(n\)</span> i.i.d. observations of <span class="math inline">\(O\)</span>. Recall the DAG <a href="estimands.html#estimands">from an earlier
 chapter</a>, which represents the data-generating process:</p>
-<div class="figure" style="text-align: center">
-<span id="fig:unnamed-chunk-1"></span>
-<img src="07-estimation-stochastic_files/figure-html/unnamed-chunk-1-1.png" alt="Directed acyclic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment" width="80%"><p class="caption">
-FIGURE 2.1: Directed acyclic graph under <em>no intermediate confounders</em> of the mediator-outcome relation affected by treatment
-</p>
-</div>
 <div id="natural-indirect-effects" class="section level3">
 <h3>
 <span class="header-section-number">7.1.1</span> Natural (in)direct effects<a class="anchor" aria-label="anchor" href="#natural-indirect-effects"><i class="fas fa-link"></i></a>
@@ -1055,11 +1038,7 @@ effect</em>:</li>
   estimator <span class="op">=</span> <span class="st">"onestep"</span>,
   estimator_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>cv_folds <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
 <span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">nde_onestep</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 1 x 7</span>
-<span class="co">#&gt;   lwr_ci param_est upr_ci var_est eif_mean estimator param         </span>
-<span class="co">#&gt;    &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;         </span>
-<span class="co">#&gt; 1 -0.490   -0.0280  0.434  0.0555 2.84e-15 onestep   direct_natural</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">nde_onestep</span><span class="op">)</span></code></pre></div>
 <ul>
 <li>We can similarly call <code><a href="https://rdrr.io/pkg/medoutcon/man/medoutcon.html">medoutcon()</a></code> to estimate the <em>natural indirect effect</em>:</li>
 </ul>
@@ -1078,11 +1057,7 @@ effect</em>:</li>
   estimator <span class="op">=</span> <span class="st">"onestep"</span>,
   estimator_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>cv_folds <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
 <span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">nie_onestep</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 1 x 7</span>
-<span class="co">#&gt;   lwr_ci param_est upr_ci var_est eif_mean estimator param           </span>
-<span class="co">#&gt;    &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;           </span>
-<span class="co">#&gt; 1  0.466      1.09   1.72   0.102 9.02e-16 onestep   indirect_natural</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">nie_onestep</span><span class="op">)</span></code></pre></div>
 <ul>
 <li>From the above, we can conclude that the effect of participation on a sports
 team on BMI is primarily mediated by the variables <code>snack</code>, <code>exercises</code>, and
@@ -1105,12 +1080,6 @@ counterparts are, as we saw in an earlier section. Recall that both types of
 effects are defined by static interventions on the treatment. The interventional
 effects are distinguished by their use of a stochastic intervention on the
 mediator to aid in their identification.</p>
-<div class="figure" style="text-align: center">
-<span id="fig:unnamed-chunk-2"></span>
-<img src="07-estimation-stochastic_files/figure-html/unnamed-chunk-2-1.png" alt="Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment" width="80%"><p class="caption">
-FIGURE 7.1: Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment
-</p>
-</div>
 <p>Recall that the interventional (in)direct effects are defined via the decomposition:
 <span class="math display">\[\begin{equation*}
 \E[Y_{1,G_1} - Y_{0,G_0}] = \underbrace{\E[Y_{\color{red}{1},\color{blue}{G_1}} -
@@ -1167,11 +1136,7 @@ with only binary intermediate confounders, i.e., <span class="math inline">\(Z \
   estimator <span class="op">=</span> <span class="st">"onestep"</span>,
   estimator_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>cv_folds <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
 <span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">interv_de_onestep</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 1 x 7</span>
-<span class="co">#&gt;   lwr_ci param_est upr_ci var_est  eif_mean estimator param                </span>
-<span class="co">#&gt;    &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;                </span>
-<span class="co">#&gt; 1 -0.476   -0.0107  0.454  0.0562 -9.93e-16 onestep   direct_interventional</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">interv_de_onestep</span><span class="op">)</span></code></pre></div>
 <ul>
 <li>We can similarly estimate the <em>interventional indirect effect</em>:</li>
 </ul>
@@ -1190,11 +1155,7 @@ with only binary intermediate confounders, i.e., <span class="math inline">\(Z \
   estimator <span class="op">=</span> <span class="st">"onestep"</span>,
   estimator_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>cv_folds <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
 <span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">interv_ie_onestep</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 1 x 7</span>
-<span class="co">#&gt;   lwr_ci param_est upr_ci var_est eif_mean estimator param                  </span>
-<span class="co">#&gt;    &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;                  </span>
-<span class="co">#&gt; 1  0.348     0.952   1.56  0.0950 3.15e-15 onestep   indirect_interventional</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">interv_ie_onestep</span><span class="op">)</span></code></pre></div>
 <ul>
 <li>From the above, we can conclude that the effect of participation on a sports
 team on BMI is largely through the interventional indirect effect (i.e.,
@@ -1299,9 +1260,7 @@ term common to both the <em>stochastic direct and indirect effects</em>:</li>
   estimator <span class="op">=</span> <span class="st">"onestep"</span>,
   estimator_args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>cv_folds <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
 <span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">stoch_decomp_onestep</span><span class="op">)</span>
-<span class="co">#&gt;      lwr_ci   param_est      upr_ci   param_var    eif_mean   estimator </span>
-<span class="co">#&gt;   18.770026   19.103221   19.436415      0.0289 -1.7263e-15     onestep</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">stoch_decomp_onestep</span><span class="op">)</span></code></pre></div>
 <!-- Nima: note the notational differences from the above -->
 <ul>
 <li>To estimate the stochastic direct effect, an extra step is necessary – we
@@ -1333,9 +1292,7 @@ must apply the delta method:</li>
 
 <span class="co"># direct effect = EY - estimated quantity</span>
 <span class="va">de_est</span> <span class="op">&lt;-</span> <span class="fu">linear_contrast</span><span class="op">(</span><span class="va">params_de</span>, <span class="va">eifs_de</span><span class="op">)</span>
-<span class="va">de_est</span>
-<span class="co">#&gt;    lwr_ci param_est    upr_ci </span>
-<span class="co">#&gt; -0.347205 -0.023887  0.299430</span></code></pre></div>
+<span class="va">de_est</span></code></pre></div>
 <ul>
 <li>From the above, we can conclude that the effect of increasing the odds of
 participation on a sports team on BMI leads only to a relatively small direct

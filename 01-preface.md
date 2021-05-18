@@ -10,13 +10,7 @@ mediators of adherence, opioid use, pain, and depressive symptoms?
 ID: Need to fix format of the following figure
 -->
 
-\begin{figure}
 
-{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/ctndag} 
-
-}
-
-\end{figure}
 
 ## What is causal mediation analysis?
 <!--
@@ -71,8 +65,6 @@ lm_y <- lm(y ~ m + a + w + z)
 lm_m <- lm(m ~ a + w + z)
 ## product of coefficients
 coef(lm_y)[2] * coef(lm_m)[2]
-#>          m 
-#> -0.0014835
 ```
 
 Among other things, in this workshop:
@@ -89,25 +81,11 @@ types of graph:
 
 ### No intermediate confounders
 
-\begin{figure}
 
-{\centering \includegraphics[width=0.8\linewidth]{01-preface_files/figure-latex/unnamed-chunk-4-1} 
-
-}
-
-\caption{Directed acyclic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-4)
-\end{figure}
 
 ### Intermediate confounders
 
-\begin{figure}
 
-{\centering \includegraphics[width=0.8\linewidth]{01-preface_files/figure-latex/unnamed-chunk-5-1} 
-
-}
-
-\caption{Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-5)
-\end{figure}
 
 The above graphs can be interpreted as a _non-parametric structural equation model_
 (NPSEM), also known as _structural causal model_ (SCM):

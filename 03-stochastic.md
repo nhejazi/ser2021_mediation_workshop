@@ -4,14 +4,7 @@
 
 Consider the following directed acyclic graph.
 
-\begin{figure}
 
-{\centering \includegraphics[width=0.8\linewidth]{03-stochastic_files/figure-latex/unnamed-chunk-1-1} 
-
-}
-
-\caption{Directed acyclic graph under no intermediate confounders of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-1)
-\end{figure}
 
 ## Motivation for stochastic interventions
 
@@ -189,17 +182,11 @@ plot(pscore, pscore_delta, xlab = 'Observed prop. score',
 abline(0, 1)
 ```
 
-
-
-\begin{center}\includegraphics[width=0.8\linewidth]{03-stochastic_files/figure-latex/unnamed-chunk-7-1} \end{center}
-
 ## What are the odds of exposure under intervention vs real world?
 
 ```r
 odds <- (pscore_delta / (1 - pscore_delta)) / (pscore / (1 - pscore))
 summary(odds)
-#>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#>       2       2       2       2       2       2
 ```
 
 - Compute the sum
@@ -215,7 +202,6 @@ indirect <- pseudo_a1 * pscore_delta + pseudo_a0 * (1 - pscore_delta)
 ```r
 ## E[Y(Adelta) - Y(Adelta, M)]
 mean(indirect)
-#> [1] 0.1091
 ```
 
 - The direct effect is
@@ -230,7 +216,6 @@ mean(indirect)
 direct <- (pred_y1_a1 - y) * pscore_delta +
        (pred_y1_a0 - y) * (1 - pscore_delta)
 mean(direct)
-#> [1] 0.10934
 ```
 
 ## Summary

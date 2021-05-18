@@ -4,14 +4,7 @@
 - Natural direct and indirect effects
 - Interventional direct and indirect effects
 
-\begin{figure}
 
-{\centering \includegraphics[width=0.8\linewidth]{02-effects-def_files/figure-latex/unnamed-chunk-1-1} 
-
-}
-
-\caption{Directed acyclic graph under *no intermediate confounders* of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-1)
-\end{figure}
 
 ## Controlled direct effects
 
@@ -26,13 +19,7 @@ ID: Reminder to ask Kara about the purpose of these cartoons
 KER: !!
 -->
 
-\begin{figure}
 
-{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/graphic4a3} 
-
-}
-
-\end{figure}
 
 ### Identification assumptions:
 - Confounder assumptions:
@@ -75,7 +62,6 @@ pred_y0 <- predict(lm_y, newdata = data.frame(a = 0, m = 0, w = w))
 ```r
 ## CDE at m = 0
 mean(pred_y1 - pred_y0)
-#> [1] 1.0009
 ```
 
 ### Is this the estimand I want?
@@ -109,13 +95,7 @@ Still using the same DAG as above,
   treatment was given but the mediator was held at the value it would have
   taken under no treatment_
 
-  \begin{figure}
   
-  {\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/graphic4a} 
-  
-  }
-  
-  \end{figure}
 
 - Recall that, because of the definition of counterfactuals
 \begin{equation*}
@@ -231,7 +211,6 @@ lm_pseudo <- lm(pseudo ~ a + w)
 pred_pseudo <- predict(lm_pseudo, newdata = data.frame(a = 0, w = w))
 ## NDE:
 mean(pred_pseudo)
-#> [1] 0.99655
 ```
 
 ### Is this the estimand I want?
@@ -245,22 +224,9 @@ mean(pred_pseudo)
 _What if our data structure involves a post-treatment confounder of the
 mediator-outcome relationship (e.g., adherence)?_
 
-\begin{figure}
 
-{\centering \includegraphics[width=0.8\linewidth]{02-effects-def_files/figure-latex/unnamed-chunk-12-1} 
 
-}
 
-\caption{Directed acyclic graph under intermediate confounders of the mediator-outcome relation affected by treatment}(\#fig:unnamed-chunk-12)
-\end{figure}
-
-\begin{figure}
-
-{\centering \includegraphics[width=1\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/ctndag} 
-
-}
-
-\end{figure}
 
 ### Unidentifiability of the NDE and NIE in this setting
 
@@ -332,13 +298,7 @@ lost on people
 - We gain in the ability to solve a problem, but lose in terms of interpretation
   of the causal effect (cannot decompose the ATE)
 
-\begin{figure}
 
-{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/graphic4b} 
-
-}
-
-\end{figure}
 
 ### An alternative definition of the effects:
 - Above  we defined $G_a$ as a random draw from the distribution of $M_a \mid W$
@@ -434,7 +394,6 @@ pred_pseudo <- predict(fit_pseudo, data.frame(a = 0, w = w))
 ```r
 ## Mean(Y(1, G(0)))
 mean(pred_pseudo)
-#> [1] 1.1979
 ```
 - This was for $(a,a')=(1,0)$. Can do the same with $(a,a')=(1,1)$, and
   $(a,a')=(0,0)$ to obtain an effect decomposition
@@ -462,10 +421,4 @@ mean(pred_pseudo)
 ID: Can we redo the below table fixing the G notation? Also, is it possible to
 fix the formatting? (currently not very amenable to a presentation I think)
 -->
-\begin{figure}
 
-{\centering \includegraphics[width=1.25\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/table1} 
-
-}
-
-\end{figure}
