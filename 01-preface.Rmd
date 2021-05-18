@@ -15,11 +15,7 @@ knitr::include_graphics(here::here("img", "ctndag.png"))
 ```
 
 ## What is causal mediation analysis?
-<!--
-KER: I think the tone can come off as smug sometimes, so I'd like to delete
-some of this. I also made some edits, but I still think it's worth thinking
-about what is crucial to include vs not.
--->
+
 - Causal mediation analyses assess how the paths behave under interventions
 - Statistical mediation analyses assess associations between the variables
 <!--- Causal mediation analysis is thus useful to understand mechanisms-->
