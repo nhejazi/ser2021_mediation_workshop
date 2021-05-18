@@ -1,6 +1,7 @@
 ---
 knit: "bookdown::render_book"
-title: "[SER 2021 Workshop] Causal Mediation: Modern Methods for Path Analysis"
+title: "Causal Mediation: Modern Methods for Path Analysis"
+subtitle: "A Workshop at SER 2021"
 author: "Iván Díaz, Nima Hejazi, Kara Rudolph"
 date: "updated: `r format(Sys.time(), '%B %d, %Y')`"
 documentclass: book
@@ -9,7 +10,7 @@ bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 fontsize: '12pt'
 monofontoptions: "Scale=0.7"
-link-citations: yes
+link-citations: no
 colorlinks: yes
 lot: false
 lof: false

@@ -7,7 +7,7 @@ bookdown::bs4_book:
 
 bookdown::gitbook:
   css: [css/style.css, css/toc.css, css/center.css]
-  dev: svg
+  #dev: svglite
   includes:
     in_header: [html_extras/mathjax_header.html, html_extras/hide_code.html]
   config:
