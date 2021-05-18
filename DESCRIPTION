@@ -33,8 +33,6 @@ Imports:
   mvtnorm,
   magick,
   pdftools,
-  dagitty,
-  ggdag,
   origami,
   sl3,
   medshift,
