@@ -10,7 +10,7 @@ mediators of adherence, opioid use, pain, and depressive symptoms?
 ID: Need to fix format of the following figure
 -->
 
-```{r, echo=FALSE, fig.cap="", out.width = '50%'}
+```{r, echo = FALSE, fig.cap="", out.width = '75%'}
 knitr::include_graphics(here::here("img", "ctndag.png"))
 ```
 
