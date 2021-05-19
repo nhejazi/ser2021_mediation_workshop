@@ -125,9 +125,9 @@ First, we need to introduce some notation to describe the EIF for the NDE
 - We can now introduce the EIF:
 \begin{align*}
     D(O) &= \color{ForestGreen}{\bigg\{ \frac{I(A=1)}{\P(A=1\mid W)}\frac{\P(M\mid A=0,W)}{\P(M\mid A=1,W)} -
-      \frac{I(A=0)}{\P(A=0\mid W)}\bigg\}} \times [Y-\E(Y\mid A,M,W)]  \\
-    &+ \frac{I(A=0)}{\P(A=0\mid W)}\big\{Q(M,W) - \E[Q(M,W) | W,A=0] \big\}\\
-    &+ \E[Q(M,W) | W,A=0] - \psi(\P)
+      \frac{I(A=0)}{\P(A=0\mid W)}\bigg\}} \times \color{Goldenrod}{[Y-\E(Y\mid A,M,W)]}  \\
+    &+ \color{ForestGreen}{\frac{I(A=0)}{\P(A=0\mid W)}}\color{Goldenrod}{\big\{Q(M,W) - \E[Q(M,W) | W,A=0] \big\}}\\
+    &+ \color{Goldenrod}{\E[Q(M,W) | W,A=0] - \psi(\P)}
 \end{align*}
 
 - Estimating $\P(M\mid A, W)$ is a really hard problem when $M$ is
@@ -150,9 +150,9 @@ notation that will be useful later:
 
 \begin{align*}
     D(O) &= \color{ForestGreen}{\bigg\{ \frac{I(A=1)}{g(0\mid W)}\frac{e(0\mid M,W)}{e(1\mid M,W)} -
-      \frac{I(A=0)}{g(0\mid W)}\bigg\}} \times [Y-b(A,M,W)]  \\
-    &+ \frac{I(A=0)}{g(0\mid W)}\big\{Q(M,W) - \E[Q(M,W) | W,A=0] \big\}\\
-    &+ \E[Q(M,W) | W,A=0] - \psi(\P)
+      \frac{I(A=0)}{g(0\mid W)}\bigg\}} \times \color{Goldenrod}{[Y-b(A,M,W)]}  \\
+    &+ \color{ForestGreen}{\frac{I(A=0)}{g(0\mid W)}}\color{Goldenrod}{\big\{Q(M,W) - \E[Q(M,W) | W,A=0] \big\}}\\
+    &+ \color{Goldenrod}{\E[Q(M,W) | W,A=0] - \psi(\P)}
 \end{align*}
 
 ### How to compute the one-step estimator (akin to Augmented IPW)
@@ -184,10 +184,10 @@ g-computation estimator:
 Can be computed  in the following steps:
 
 1. Fit models for $g(a\mid w)$, $e(a\mid m, w)$, and $b(a, m, w)$
-   - In this example we will use Generalized Additive Models [CITE] for
+   - In this example we will use Generalized Additive Models for
      tractability
    - In applied settings we recommend using an ensemble of data-adaptive
-     regression algorithms, such as the Super Learner [CITE]
+     regression algorithms, such as the Super Learner [@vdl2007super]
 ```{r}
 library(mgcv)
 ## fit model for E(Y | A, W)
@@ -245,6 +245,7 @@ eif <- ip_weights * (y - b_pred) + (1 - a) / g0_pred * (pseudo - q_pred) +
 
 6. The one step estimator is the mean of the uncentered EIF
 ```{r}
+
 ## One-step estimator
 mean(eif)
 ```
@@ -330,3 +331,22 @@ text(450, 0.01, paste0(
   mean(lower < trueval & trueval < upper), "%"
 ), cex = 1.2)
 ```
+
+### A note about targeted minimum loss-based estimation (TMLE)
+
+- The above estimator is great because it allows us to use data-adaptive regression to avoid bias, while allowing the computation of correct standard errors
+- This estimator has one problem:
+  - It can yield answers outside of the bounds of the parameter space
+  - E.g., if $Y$ is binary, it could yield direct and indirect effects outside of $[-1,1]$
+  - To solve this, you can compute a TMLE instead (implemented in the R packages, coming up)
+
+### A note about cross-fitting
+
+- When using data-adaptive regression estimators, it is recommended to use cross-fitted estimators
+- Cross-fitting is similar to cross-validation:
+  - Randomly split the sample into K (e.g., K=10) subsets of equal size
+  - For each of the 9/10ths of the sample, fit the regression models
+  - Use the out-of-sample fit to predict in the remaining 1/10th of the sample
+- Cross-fitting further reduces the bias of the estimators
+- Cross-fitting aids in guaranteeing the correctness of the standard errors and confidence intervals
+- Cross-fitting is implemented by default in the R packages that you will see next
