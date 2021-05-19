@@ -1,6 +1,6 @@
 # How to choose an estimand: Real-world example {#estimandirl}
 
-## Comparative effectivness of two medications for opioid use disorder (OUD)
+## Comparative effectivness of two medications for opioid use disorder (OUD)[@rudolph2020explaining]
 
 ```{r pressure, echo=FALSE, fig.cap="", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", out.width = "100%", results="asis"}
 knitr::include_graphics(here::here("img", "ctndag.png"))
@@ -9,7 +9,7 @@ knitr::include_graphics(here::here("img", "ctndag.png"))
 _Motivation_: Opposite overall treatment effects for homeless versus
 nonhomeless participants.
 
-```{r , echo=FALSE, fig.cap="", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", out.width = "50%", results="asis"}
+```{r , echo=FALSE, fig.cap="", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", out.width = "75%", results="asis"}
 knitr::include_graphics(here::here("img", "tmleesttotal.png"))
 ```
 
