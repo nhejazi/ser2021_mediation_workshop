@@ -531,7 +531,7 @@ mean(pred_pseudo)
 - Okay with the assumptions!
 
 
-## Estimand Summary
+## Estimand Summary [@rudolph2019causal]
 <!--
 ID: Can we redo the below table fixing the G notation? Also, is it possible to
 fix the formatting? (currently not very amenable to a presentation I think)
