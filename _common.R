@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
   message = FALSE,
   warning = FALSE,
   echo = TRUE,
-  eval = FALSE
+  eval = TRUE
 )
 
 # global options
