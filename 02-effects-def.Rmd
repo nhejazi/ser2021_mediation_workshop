@@ -531,11 +531,11 @@ mean(pred_pseudo)
 - Okay with the assumptions!
 
 
-## Estimand Summary [@rudolph2019causal]
+## Estimand Summary
 <!--
 ID: Can we redo the below table fixing the G notation? Also, is it possible to
 fix the formatting? (currently not very amenable to a presentation I think)
 -->
-```{r , echo=FALSE, fig.cap="", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", out.width = "125%", results="asis"}
+```{r , echo=FALSE, fig.cap="Excerpted from @rudolph2019causal", fig.ext=if (knitr:::is_latex_output()) "pdf" else "png", out.width = "125%", results="asis"}
 knitr::include_graphics(here::here("img", "table1.png"))
 ```

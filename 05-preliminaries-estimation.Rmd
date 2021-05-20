@@ -197,7 +197,8 @@ semiparametric estimation
   - avoid model misspecification bias,
   - endow the estimators with additional robustness (e.g., double robustness), while
   - allowing the computation of correct standard errors and confidence intervals
-- This can be achieved by adding a bias correction factor the the g-computation as follows:
+- This can be achieved by adding a bias correction factor the the g-computation
+  as follows:
   \begin{equation*}
     \psi(\hat \P) + \frac{1}{n}\sum_{i=1}^n D(O_i)
   \end{equation*}

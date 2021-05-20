@@ -2,22 +2,16 @@
 
 ## Motivating study
 
-- A recent, large, multi-site trial (X:BOT) compared the effectiveness
-of XR-NTX to buprenorphine–naloxone (BUP-NX) in preventing relapse
-among those with OUD starting medication in inpatient treatment
-settings.
-
-- An analysis of potential moderators of medication effectiveness
-found that homeless individuals had a lower risk of relapse on XRNTX,
-whereas non-homeless individuals had a lower risk of relapse on
-BUP-NX.
-
-- The effect sizes were similarly large for these groups but in
-opposite directions.
-
-- The underlying mechanisms for these differences have not yet been
-explored. We can to identify these mechanisms by using mediation
-analysis.
+- A recent, large, multi-site trial (X:BOT) compared the effectiveness of XR-NTX
+  to buprenorphine–naloxone (BUP-NX) in preventing relapse among those with OUD
+  starting medication in inpatient treatment settings.
+- An analysis of potential moderators of medication effectiveness found that
+  homeless individuals had a lower risk of relapse on XRNTX, whereas
+  non-homeless individuals had a lower risk of relapse on BUP-NX.
+- The effect sizes were similarly large for these groups but in opposite
+  directions.
+- The underlying mechanisms for these differences have not yet been explored. We
+  can to identify these mechanisms by using mediation analysis.
 
 - Key questions:
   - Do differences in the effects of treatment (comparing two medications for
@@ -270,13 +264,15 @@ The above graphs can be interpreted as a _non-parametric structural equation mod
 <!-- - You can use counterfactual variables as _primitives_ -->
 - In the NPSEM framework, counterfactuals are quantities _derived_ from the
   model.
-- Once you define a change to the causal system, that change needs to be progragated downstream.
-  - Example: modifying the system to make everyone receive XR-NTX yields counterfactual adherence, mediators, and outcomes.
+- Once you define a change to the causal system, that change needs to be
+  progragated downstream.
+  - Example: modifying the system to make everyone receive XR-NTX yields
+    counterfactual adherence, mediators, and outcomes.
 - Take as example the DAG in Figure 1.2:
   \begin{align}
     A    &= a\\
     Z_a  &= f_Z(W, a, U_M)\\
-    M_a  &= f_M(W, a, Z_a, U_M)\\	
+    M_a  &= f_M(W, a, Z_a, U_M)\\
     Y_a  &= f_Y(W, a, Z_a, M_a, U_Y)\\
 \end{align}
 - We will also be interested in _joint changes to the system:
@@ -294,9 +290,9 @@ The above graphs can be interpreted as a _non-parametric structural equation mod
     M  &= M_0\\	
     Y_{1, M_0} &= f_Y(W, 1, Z_1, M_0, U_Y)\\
 \end{align}
-- $Y_{1, M_0}$ is interpreted as _the outcome for an individual in a hypothetical world where
-  treatment was given but the mediator was held at the value it would have
-  taken under no treatment_
+- $Y_{1, M_0}$ is interpreted as _the outcome for an individual in a
+  hypothetical world where treatment was given but the mediator was held at the
+  value it would have taken under no treatment_
 - Causal mediation effects are often defined in terms of the distribution of these
   nested counterfactuals.
 - That is, causal effects give you information about what would have happened
