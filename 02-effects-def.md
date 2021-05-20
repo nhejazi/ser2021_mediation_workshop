@@ -15,10 +15,6 @@
 
 ## Controlled direct effects
 
-- Set the mediator to a reference value $M=m$ uniformly for everyone in the
-  population
-- Compare $A=1$ vs $A=0$ with $M=m$ fixed
-
 $$\psi_{\text{CDE}} = \E(Y_{1,m} - Y_{0,m}) $$
 
 <!--
@@ -33,6 +29,10 @@ KER: !!
 }
 
 \end{figure}
+
+- Set the mediator to a reference value $M=m$ uniformly for everyone in the
+  population
+- Compare $A=1$ vs $A=0$ with $M=m$ fixed
 
 ### Identification assumptions:
 - Confounder assumptions:
@@ -102,7 +102,7 @@ Still using the same DAG as above,
 - Recall the definition of the nested counterfactual
 
 \begin{equation*}
-    Y_{1, M_0} = f_Y(W, 1, Z_1, M_0, U_Y)
+    Y_{1, M_0} = f_Y(W, 1, M_0, U_Y)
 \end{equation*}
 
 - Interpreted as _the outcome for an individual in a hypothetical world where
@@ -297,12 +297,13 @@ it's useful. Espeically because i think we do essentially adjust for z in our
 sequential regressions if we are estimating controlled direct effects in this
 environment, right?
 -->
-
+<!--
 Intuitively:
 
 - $Z$ is a confounder of the relation $M \rightarrow Y$, which requires
   adjustment
 - But $Z$ is on the pathway $A\rightarrow Y$, which precludes adjustment
+-->
 
 Note: CDEs are still identified in this setting. They can be identified and
 estimated similarly to a longitudinal data sructure with a two-time-point
@@ -314,11 +315,19 @@ intervention.
 I think the distinction between fully conditional and not will be completely
 lost on people
 -->
-
 - Let $G_a$ denote a random draw from the distribution of $M_a \mid W$
 - Define the counterfactual $Y_{1,G_0}$ as the counterfactual
   variable in a hypothetical world where $A$ is set $A=1$ and $M$ is
   set to $M=G_0$ with probability one.
+  
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/graphic4b} 
+
+}
+
+\end{figure}
+
 - Define $Y_{0,G_0}$ and $Y_{1,G_1}$ similarly
 - Then we can define:
 \begin{equation*}
@@ -331,14 +340,6 @@ lost on people
   even if it is different from the ATE $\E[Y_{1} - Y_{0}]$
 - We gain in the ability to solve a problem, but lose in terms of interpretation
   of the causal effect (cannot decompose the ATE)
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/graphic4b} 
-
-}
-
-\end{figure}
 
 ### An alternative definition of the effects:
 - Above  we defined $G_a$ as a random draw from the distribution of $M_a \mid W$
@@ -468,4 +469,5 @@ fix the formatting? (currently not very amenable to a presentation I think)
 
 }
 
+\caption{Excerpted from @rudolph2019causal}(\#fig:unnamed-chunk-21)
 \end{figure}

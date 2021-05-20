@@ -1013,6 +1013,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1.3.2" data-path="mediation.html"><a href="mediation.html#intermediate-confounders"><i class="fa fa-check"></i><b>1.3.2</b> Intermediate confounders</a></li>
 </ul></li>
 <li class="chapter" data-level="1.4" data-path="mediation.html"><a href="mediation.html#counterfactuals"><i class="fa fa-check"></i><b>1.4</b> Counterfactuals</a><ul>
+<li class="chapter" data-level="" data-path="mediation.html"><a href="mediation.html#we-will-constantly-use-the-following-counterfactual-variables"><i class="fa fa-check"></i>We will constantly use the following counterfactual variables:</a></li>
 <li class="chapter" data-level="1.4.1" data-path="mediation.html"><a href="mediation.html#how-are-counterfactuals-defined"><i class="fa fa-check"></i><b>1.4.1</b> How are counterfactuals defined?</a></li>
 </ul></li>
 </ul></li>
@@ -1061,13 +1062,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.1.5" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#an-example-of-the-bias-of-a-g-computation-estimator-of-the-natural-direct-effect"><i class="fa fa-check"></i><b>5.1.5</b> An example of the bias of a g-computation estimator of the natural direct effect</a></li>
 <li class="chapter" data-level="5.1.6" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#pros-and-cons-of-g-computation-with-data-adaptive-regression"><i class="fa fa-check"></i><b>5.1.6</b> Pros and cons of g-computation with data-adaptive regression</a></li>
 </ul></li>
-<li class="chapter" data-level="5.2" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#semiparametric-estimation-or-correcting-the-bias-of-g-computation-estimators"><i class="fa fa-check"></i><b>5.2</b> Semiparametric estimation (or correcting the bias of g-computation estimators)</a></li>
+<li class="chapter" data-level="5.2" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#semiparametric-estimation"><i class="fa fa-check"></i><b>5.2</b> Semiparametric estimation</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html"><a href="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html"><i class="fa fa-check"></i><b>6</b> Using the EIF to construct an estimator: the case of the natural direct effect</a><ul>
 <li class="chapter" data-level="6.1" data-path="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html"><a href="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html#natural-direct-effect"><i class="fa fa-check"></i><b>6.1</b> Natural direct effect</a><ul>
 <li class="chapter" data-level="6.1.1" data-path="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html"><a href="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html#the-efficient-influence-function-for-the-nde"><i class="fa fa-check"></i><b>6.1.1</b> The efficient influence function for the NDE</a></li>
 <li class="chapter" data-level="6.1.2" data-path="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html"><a href="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html#how-to-compute-the-one-step-estimator-akin-to-augmented-ipw"><i class="fa fa-check"></i><b>6.1.2</b> How to compute the one-step estimator (akin to Augmented IPW)</a></li>
 <li class="chapter" data-level="6.1.3" data-path="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html"><a href="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html#performance-of-the-one-step-estimator-in-a-small-simulation-study"><i class="fa fa-check"></i><b>6.1.3</b> Performance of the one-step estimator in a small simulation study</a></li>
+<li class="chapter" data-level="6.1.4" data-path="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html"><a href="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html#a-note-about-targeted-minimum-loss-based-estimation-tmle"><i class="fa fa-check"></i><b>6.1.4</b> A note about targeted minimum loss-based estimation (TMLE)</a></li>
+<li class="chapter" data-level="6.1.5" data-path="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html"><a href="using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect.html#a-note-about-cross-fitting"><i class="fa fa-check"></i><b>6.1.5</b> A note about cross-fitting</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="r-packages-for-estimation-of-the-causal-indirect-effects.html"><a href="r-packages-for-estimation-of-the-causal-indirect-effects.html"><i class="fa fa-check"></i><b>7</b> <code>R</code> packages for estimation of the causal (in)direct effects</a><ul>
@@ -1108,6 +1111,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>We have arrived at identification formulas that express quantities that we
 care about in terms of observable quantities</li>
+<li>That is, these formulas express what would have happened in hypothetical worlds in terms of quantities observable in this world</li>
 <li>This required <strong>causal assumptions</strong>
 <ul>
 <li>Many of these assumptions are empirically unverifiable</li>
@@ -1116,35 +1120,45 @@ cost of changing the parameter interpretation</li>
 <li>and where we could relax the positivity assumption, also at the cost of
 changing the parameter interpretation</li>
 </ul></li>
+<li>We are now ready to tackle the estimation problem, i.e., how do we best learn the value of quantities that are observable?</li>
 <li>The resulting estimation problem can be tackled using <strong>statistical
 assumptions</strong> of various degrees of strength
 <ul>
 <li>Most of these assumptions are verifiable (e.g., a linear model)</li>
 <li>Thus, most are unnecessary (except for convenience)</li>
-<li>The estimation approach we use reduces reliance on these statistical
+<li>We have worked hard to try to satisfy the required causal assumptions</li>
+<li>This is not the time to introcuce unnecessary statistical assumptions</li>
+<li>The estimation approach we will introduce reduces reliance on these statistical
 assumptions</li>
 </ul></li>
 </ul>
 <div id="computing-identification-formulas-if-you-know-the-true-distribution" class="section level3">
 <h3><span class="header-section-number">5.1.1</span> Computing identification formulas if you know the true distribution</h3>
 <ul>
-<li>The mediation parameters that we consider can be
-seen as a function of the joint probability distribution of <span class="math inline">\(O=(W,A,Z,M,Y)\)</span></li>
-<li>For example, under identifiability assumptions the natural direct effect is
+<li><p>The mediation parameters that we consider can be
+seen as a function of the joint probability distribution of <span class="math inline">\(O=(W,A,Z,M,Y)\)</span></p></li>
+<li><p>For example, under identifiability assumptions the natural direct effect is
 equal to
 <span class="math display">\[\begin{equation*}
-  \psi(\P) =  \E[\E\{\E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)\mid A=0,W\}]
-\end{equation*}\]</span></li>
-<li>The notation <span class="math inline">\(\psi(\P)\)</span> implies that the parameter is a function of <span class="math inline">\(\P\)</span></li>
-<li>This means that we can compute it for any distribution <span class="math inline">\(\P\)</span></li>
-<li>For example, if we know the true <span class="math inline">\(\P(W,A,M,Y)\)</span>, we can comnpute the true value
-of the parameter by:
+  \psi(\P) =  \E[\color{Goldenrod}{\E\{\color{ForestGreen}{\{E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)}\mid A=0,W\}}]
+\end{equation*}\]</span></p></li>
+<li><p>The notation <span class="math inline">\(\psi(\P)\)</span> implies that the parameter is a function of <span class="math inline">\(\P\)</span></p></li>
+<li><p>This means that we can compute it for any distribution <span class="math inline">\(\P\)</span></p></li>
+<li><p>For example, if we know the true <span class="math inline">\(\P(W,A,M,Y)\)</span>, we can comnpute the true value
+of the parameter by:</p>
 <ul>
 <li>Computing the conditional expectation <span class="math inline">\(\E(Y\mid A=1,M=m,W=w)\)</span> for all
 values <span class="math inline">\((m,w)\)</span></li>
+<li>Computing the conditional expectation <span class="math inline">\(\E(Y\mid A=0,M=m,W=w)\)</span> for all
+values <span class="math inline">\((m,w)\)</span></li>
 <li>Computing the probability <span class="math inline">\(\P(M=m\mid A=0,W=w)\)</span> for all values <span class="math inline">\((m,w)\)</span></li>
+<li>Compute
+<span class="math display">\[\begin{align*}
+\color{Goldenrod}{\E\{}&amp;\color{ForestGreen}{\E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)}\color{Goldenrod}{\mid A=0,W\}} =\\
+&amp;\color{Goldenrod}{\sum_m\color{ForestGreen}{\{\E(Y \mid A=1, m, w) - \E(Y \mid A=0, m, w)\}}\P(M=m, A=0, W=w)}
+\end{align*}\]</span></li>
 <li>Computing the probability <span class="math inline">\(\P(W=w)\)</span> for all values <span class="math inline">\(w\)</span></li>
-<li>Computing the mean over all values <span class="math inline">\((m,w)\)</span></li>
+<li>Computing the mean over all values <span class="math inline">\(w\)</span></li>
 </ul></li>
 </ul>
 </div>
@@ -1157,6 +1171,7 @@ distribution <span class="math inline">\(\P\)</span></p>
 <li>But we can use the same logic for estimation:
 <ul>
 <li>Fit a regression to estimate, say <span class="math inline">\(\hat\E(Y\mid A=1,M=m,W=w)\)</span></li>
+<li>Fit a regression to estimate, say <span class="math inline">\(\hat\E(Y\mid A=0,M=m,W=w)\)</span></li>
 <li>Fit a regression to estimate, say <span class="math inline">\(\hat\P(M=m\mid A=0,W=w)\)</span></li>
 <li>Estimate <span class="math inline">\(\P(W=w)\)</span> with the empirical distribution</li>
 <li>Evaluate
@@ -1192,6 +1207,7 @@ distribution <span class="math inline">\(\P\)</span></p>
 <li>Unless <span class="math inline">\(W\)</span> and <span class="math inline">\(M\)</span> contain very few categorical variables, it is very easy
 to misspecify the models</li>
 <li>This can introduce sizable bias in the estimators</li>
+<li>This modelling assumptions have become less necessary in the presence of data-adaptive regression tools (a.k.a machine learning)</li>
 </ul></li>
 </ul>
 </div>
@@ -1199,20 +1215,20 @@ to misspecify the models</li>
 <h3><span class="header-section-number">5.1.5</span> An example of the bias of a g-computation estimator of the natural direct effect</h3>
 <ul>
 <li>The following <code>R</code> chunk provides simulation code to exemplify the bias of a
-g-computation estimator in a simple situation</li>
+g-computation parametric estimator in a simple situation</li>
 </ul>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="preliminaries-on-semiparametric-estimation.html#cb29-1"></a>mean_y &lt;-<span class="st"> </span><span class="cf">function</span>(m, a, w) <span class="kw">abs</span>(w) <span class="op">+</span><span class="st"> </span>a <span class="op">*</span><span class="st"> </span>m</span>
 <span id="cb29-2"><a href="preliminaries-on-semiparametric-estimation.html#cb29-2"></a>mean_m &lt;-<span class="st"> </span><span class="cf">function</span>(a, w) <span class="kw">plogis</span>(w<span class="op">^</span><span class="dv">2</span> <span class="op">-</span><span class="st"> </span>a)</span>
 <span id="cb29-3"><a href="preliminaries-on-semiparametric-estimation.html#cb29-3"></a>pscore &lt;-<span class="st"> </span><span class="cf">function</span>(w) <span class="kw">plogis</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">abs</span>(w))</span></code></pre></div>
 <ul>
-<li>This yields a true NDE value of</li>
+<li>This yields a true NDE value of 0.58048</li>
 </ul>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="preliminaries-on-semiparametric-estimation.html#cb30-1"></a>w_big &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="fl">1e6</span>, <span class="dv">-1</span>, <span class="dv">1</span>)</span>
 <span id="cb30-2"><a href="preliminaries-on-semiparametric-estimation.html#cb30-2"></a>trueval &lt;-<span class="st"> </span><span class="kw">mean</span>((<span class="kw">mean_y</span>(<span class="dv">1</span>, <span class="dv">1</span>, w_big) <span class="op">-</span><span class="st"> </span><span class="kw">mean_y</span>(<span class="dv">1</span>, <span class="dv">0</span>, w_big)) <span class="op">*</span></span>
 <span id="cb30-3"><a href="preliminaries-on-semiparametric-estimation.html#cb30-3"></a><span class="st">  </span><span class="kw">mean_m</span>(<span class="dv">0</span>, w_big) <span class="op">+</span><span class="st"> </span>(<span class="kw">mean_y</span>(<span class="dv">0</span>, <span class="dv">1</span>, w_big) <span class="op">-</span><span class="st"> </span><span class="kw">mean_y</span>(<span class="dv">0</span>, <span class="dv">0</span>, w_big)) <span class="op">*</span></span>
 <span id="cb30-4"><a href="preliminaries-on-semiparametric-estimation.html#cb30-4"></a><span class="st">    </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">mean_m</span>(<span class="dv">0</span>, w_big)))</span>
 <span id="cb30-5"><a href="preliminaries-on-semiparametric-estimation.html#cb30-5"></a><span class="kw">print</span>(trueval)</span>
-<span id="cb30-6"><a href="preliminaries-on-semiparametric-estimation.html#cb30-6"></a><span class="co">#&gt; [1] 0.58048</span></span></code></pre></div>
+<span id="cb30-6"><a href="preliminaries-on-semiparametric-estimation.html#cb30-6"></a><span class="co">#&gt; [1] 0.58062</span></span></code></pre></div>
 <ul>
 <li>Let’s perform a simulation where we draw 1000 datasets from the above
 distribution, and compute a g-computation estimator based on</li>
@@ -1240,7 +1256,7 @@ distribution, and compute a g-computation estimator based on</li>
 <span id="cb32-11"><a href="preliminaries-on-semiparametric-estimation.html#cb32-11"></a></span>
 <span id="cb32-12"><a href="preliminaries-on-semiparametric-estimation.html#cb32-12"></a><span class="kw">hist</span>(estimate)</span>
 <span id="cb32-13"><a href="preliminaries-on-semiparametric-estimation.html#cb32-13"></a><span class="kw">abline</span>(<span class="dt">v =</span> trueval, <span class="dt">col =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">lwd =</span> <span class="dv">4</span>)</span></code></pre></div>
-<p><img src="05-preliminaries-estimation_files/figure-html/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="05-preliminaries-estimation_files/figure-html/unnamed-chunk-5-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <ul>
 <li>The bias also affects the confidence intervals:</li>
 </ul>
@@ -1266,7 +1282,7 @@ distribution, and compute a g-computation estimator based on</li>
 <span id="cb33-20"><a href="preliminaries-on-semiparametric-estimation.html#cb33-20"></a>  <span class="st">&quot;Coverage probability = &quot;</span>,</span>
 <span id="cb33-21"><a href="preliminaries-on-semiparametric-estimation.html#cb33-21"></a>  <span class="kw">mean</span>(lower <span class="op">&lt;</span><span class="st"> </span>trueval <span class="op">&amp;</span><span class="st"> </span>trueval <span class="op">&lt;</span><span class="st"> </span>upper), <span class="st">&quot;%&quot;</span></span>
 <span id="cb33-22"><a href="preliminaries-on-semiparametric-estimation.html#cb33-22"></a>), <span class="dt">cex =</span> <span class="fl">1.2</span>)</span></code></pre></div>
-<p><img src="05-preliminaries-estimation_files/figure-html/unnamed-chunk-5-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="05-preliminaries-estimation_files/figure-html/unnamed-chunk-6-1.png" width="80%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="pros-and-cons-of-g-computation-with-data-adaptive-regression" class="section level3">
 <h3><span class="header-section-number">5.1.6</span> Pros and cons of g-computation with data-adaptive regression</h3>
@@ -1287,8 +1303,8 @@ fail in some cases</li>
 </ul>
 </div>
 </div>
-<div id="semiparametric-estimation-or-correcting-the-bias-of-g-computation-estimators" class="section level2">
-<h2><span class="header-section-number">5.2</span> Semiparametric estimation (or correcting the bias of g-computation estimators)</h2>
+<div id="semiparametric-estimation" class="section level2">
+<h2><span class="header-section-number">5.2</span> Semiparametric estimation</h2>
 <!--
 KER this may be just me, but I'm not sure the "incorrect bias/variance
 tradeoff" argument will be super concrete for folks. I think maybe a more
@@ -1298,10 +1314,14 @@ want valid standard errors and confidence intervals. to do this, we need to use
 semiparametric estimation
 -->
 <ul>
-<li>G-computation estimation with data-adaptive regression offers an incorrect
-bias/variance trade-off</li>
-<li>It accepts more bias than necessary</li>
-<li>The bias of a g-computation estimator may be corrected as follows:
+<li>Intuitively, it offers a way to use data-adaptive regression to
+<ul>
+<li>avoid model misspecification bias,</li>
+<li>endow the estimators with additional robustness (e.g., double robustness), while</li>
+<li>allowing the computation of correct standard errors and confidence intervals</li>
+</ul></li>
+<li>This can be achieved by adding a bias correction factor the the g-computation
+as follows:
 <span class="math display">\[\begin{equation*}
   \psi(\hat \P) + \frac{1}{n}\sum_{i=1}^n D(O_i)
 \end{equation*}\]</span>
@@ -1320,10 +1340,11 @@ some of the parameters that we use</li>
 these EIFs</li>
 <li>And the specific form of the EIF may be found in papers in the references</li>
 </ul>
-<p>Note: the bias correction above may have an additional problem of returning
-parameter estimates outside of natural bounds. E.g., probabilities greater than
-one. A solution to this (not discussed in this workshop) is targeted minimum
-loss based estimation.</p>
+<p>Note: the bias correction above may have an additional problem of
+returning parameter estimates outside of natural bounds. E.g.,
+probabilities greater than one. A solution to this (not discussed in
+this workshop but implemented in some of the R packages) is targeted
+minimum loss based estimation.</p>
 
 </div>
 </div>

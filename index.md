@@ -3,7 +3,7 @@ knit: "bookdown::render_book"
 title: "Causal Mediation: Modern Methods for Path Analysis"
 subtitle: "A Workshop at SER 2021"
 author: "Iván Díaz, Nima Hejazi, Kara Rudolph"
-date: "updated: May 19, 2021"
+date: "updated: May 20, 2021"
 documentclass: book
 site: bookdown::bookdown_site
 bibliography: [book.bib, packages.bib]

@@ -213,7 +213,7 @@
 \makeatother
 \subtitle{A Workshop at SER 2021}
 \author{Iván Díaz, Nima Hejazi, Kara Rudolph}
-\date{updated: May 19, 2021}
+\date{updated: May 20, 2021}
 
 \begin{document}
 \maketitle
@@ -586,14 +586,40 @@ Linux's \passthrough{\lstinline!apt!}} or
 \hypertarget{motivating-study}{%
 \section{Motivating study}\label{motivating-study}}
 
-Do differences in the effects of treatment (comparing two medications for opioid
-use disorder, naltrexone vs buprenorphine) on risk of relapse operate through
-mediators of adherence, opioid use, pain, and depressive symptoms?
-\citep{rudolph2020explaining}
+\begin{itemize}
+\item
+  A recent, large, multi-site trial (X:BOT) compared the effectiveness of XR-NTX
+  to buprenorphine--naloxone (BUP-NX) in preventing relapse among those with OUD
+  starting medication in inpatient treatment settings.
+\item
+  An analysis of potential moderators of medication effectiveness found that
+  homeless individuals had a lower risk of relapse on XRNTX, whereas
+  non-homeless individuals had a lower risk of relapse on BUP-NX.
+\item
+  The effect sizes were similarly large for these groups but in opposite
+  directions.
+\item
+  The underlying mechanisms for these differences have not yet been explored. We
+  can to identify these mechanisms by using mediation analysis.
+\item
+  Key questions:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Do differences in the effects of treatment (comparing two medications for
+    opioid use disorder, naltrexone vs buprenorphine) on risk of relapse operate
+    through mediators of adherence, opioid use, pain, and depressive symptoms?
+    \citep{rudolph2020explaining}
+  \item
+    Are those mediated effects different for homeless vs non-homeless
+    individuals?
+  \end{itemize}
+\end{itemize}
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.75\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/ctndag} 
+{\centering \includegraphics[width=1\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/ctndag} 
 
 }
 
@@ -605,9 +631,10 @@ mediators of adherence, opioid use, pain, and depressive symptoms?
 \begin{itemize}
 \tightlist
 \item
-  Causal mediation analyses assess how the paths behave under interventions
-\item
   Statistical mediation analyses assess associations between the variables
+\item
+  Causal mediation analyses assess how the paths behave under circumstances
+  different from the observed circumstances (e.g., interventions)
 \end{itemize}
 
 \hypertarget{why-are-the-methods-that-we-will-discuss-today-important}{%
@@ -616,7 +643,7 @@ mediators of adherence, opioid use, pain, and depressive symptoms?
 \begin{itemize}
 \tightlist
 \item
-  Assume you are interested in the effect of a treatment assignment \(A\)
+  Assume you are interested in the effect of treatment assignment \(A\)
   (naltrexone vs.~buprenorphine) on an outcome \(Y\) (risk of relapse) through
   mediators \(M\) (opioid use, pain, depressive symptoms)
 \item
@@ -745,7 +772,7 @@ The above graphs can be interpreted as a \emph{non-parametric structural equatio
 \item
   The functions \(f\) are assumed fixed but unknown
 \item
-  We posit this model as a system of equations that nature uses to geenrate the
+  We posit this model as a system of equations that nature uses to generate the
   data
 \item
   Therefore we leave the functions \(f\) unspecified (i.e., we do not know the
@@ -761,14 +788,24 @@ The above graphs can be interpreted as a \emph{non-parametric structural equatio
 \begin{itemize}
 \tightlist
 \item
-  We define all the effects of interest using \emph{counterfactuals}
+  Recall that we are interested in assessing how the pathways would behave under circumstances different from the observed circumstances
+\item
+  We operationalize this idea using \emph{counterfactual} variables
 \item
   Counterfactuals are hypothetical random variables that would have been
   observed in an alternative world where something had happened, possibly
   contrary to fact 
+\end{itemize}
+
+\hypertarget{we-will-constantly-use-the-following-counterfactual-variables}{%
+\subsection*{We will constantly use the following counterfactual variables:}\label{we-will-constantly-use-the-following-counterfactual-variables}}
+
+
+\begin{itemize}
+\tightlist
 \item
   \(Y_a\) is a counterfactual variable in a hypothetical world where \(\P(A=a)=1\)
-  with probability one
+  with probability one for some valure \(a\)
 \item
   \(Y_{a,m}\) is the counterfactual outcome in a world where \(\P(A=a,M=m)=1\)
 \item
@@ -785,29 +822,51 @@ The above graphs can be interpreted as a \emph{non-parametric structural equatio
   In the NPSEM framework, counterfactuals are quantities \emph{derived} from the
   model.
 \item
+  Once you define a change to the causal system, that change needs to be
+  progragated downstream.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Example: modifying the system to make everyone receive XR-NTX yields
+    counterfactual adherence, mediators, and outcomes.
+  \end{itemize}
+\item
   Take as example the DAG in Figure 1.2:
   \begin{align}
+    A    &= a\\
+    Z_a  &= f_Z(W, a, U_M)\\
+    M_a  &= f_M(W, a, Z_a, U_M)\\
     Y_a  &= f_Y(W, a, Z_a, M_a, U_Y)\\
-    Y_{a,m}  &= f_Y(W, a, Z_a, m, U_Y)\\
-    M_a  &= f_M(W, a, Z_a, U_M)
   \end{align}
 \item
-  You can also define \emph{nested counterfactuals}
+  We will also be interested in \_joint changes to the system:
+  \begin{align}
+    A    &= a\\
+    Z_a  &= f_Z(W, a, U_M)\\
+    M  &= m\\   
+    Y_{a,m}  &= f_Y(W, a, Z_a, m, U_Y)\\
+  \end{align}
+\item
+  And, perhaps more importantly, we will use \emph{nested counterfactuals}
 \item
   For example, if \(A\) is binary, you can think of the following counterfactual
-  \begin{equation*}
-    Y_{1, M_0} = f_Y(W, 1, Z_1, M_0, U_Y)
-  \end{equation*}
+  \begin{align}
+    A    &= 1\\
+    Z_1  &= f_Z(W, 1, U_M)\\
+    M  &= M_0\\ 
+    Y_{1, M_0} &= f_Y(W, 1, Z_1, M_0, U_Y)\\
+  \end{align}
 \item
-  Interpreted as \emph{the outcome for an individual in a hypothetical world where
-  treatment was given but the mediator was held at the value it would have
-  taken under no treatment}
+  \(Y_{1, M_0}\) is interpreted as \emph{the outcome for an individual in a
+  hypothetical world where treatment was given but the mediator was held at the
+  value it would have taken under no treatment}
 \item
-  Causal effects are defined in terms of the distribution of these
-  counterfactuals.
+  Causal mediation effects are often defined in terms of the distribution of these
+  nested counterfactuals.
 \item
   That is, causal effects give you information about what would have happened
-  \emph{in some hypothetical world}.
+  \emph{in some hypothetical world} where the mediator and treatment mechanisms changed.
 \end{itemize}
 
 \hypertarget{estimands}{%
@@ -835,15 +894,6 @@ The above graphs can be interpreted as a \emph{non-parametric structural equatio
 \hypertarget{controlled-direct-effects}{%
 \section{Controlled direct effects}\label{controlled-direct-effects}}
 
-\begin{itemize}
-\tightlist
-\item
-  Set the mediator to a reference value \(M=m\) uniformly for everyone in the
-  population
-\item
-  Compare \(A=1\) vs \(A=0\) with \(M=m\) fixed
-\end{itemize}
-
 \[\psi_{\text{CDE}} = \E(Y_{1,m} - Y_{0,m}) \]
 
 \begin{figure}
@@ -853,6 +903,15 @@ The above graphs can be interpreted as a \emph{non-parametric structural equatio
 }
 
 \end{figure}
+
+\begin{itemize}
+\tightlist
+\item
+  Set the mediator to a reference value \(M=m\) uniformly for everyone in the
+  population
+\item
+  Compare \(A=1\) vs \(A=0\) with \(M=m\) fixed
+\end{itemize}
 
 \hypertarget{identification-assumptions}{%
 \subsection{Identification assumptions:}\label{identification-assumptions}}
@@ -980,7 +1039,7 @@ Still using the same DAG as above,
 \end{itemize}
 
 \begin{equation*}
-    Y_{1, M_0} = f_Y(W, 1, Z_1, M_0, U_Y)
+    Y_{1, M_0} = f_Y(W, 1, M_0, U_Y)
 \end{equation*}
 
 \begin{itemize}
@@ -1236,17 +1295,6 @@ mediator-outcome relationship (e.g., adherence)?}
   correlated.
 \end{itemize}
 
-Intuitively:
-
-\begin{itemize}
-\tightlist
-\item
-  \(Z\) is a confounder of the relation \(M \rightarrow Y\), which requires
-  adjustment
-\item
-  But \(Z\) is on the pathway \(A\rightarrow Y\), which precludes adjustment
-\end{itemize}
-
 Note: CDEs are still identified in this setting. They can be identified and
 estimated similarly to a longitudinal data sructure with a two-time-point
 intervention.
@@ -1262,6 +1310,18 @@ intervention.
   Define the counterfactual \(Y_{1,G_0}\) as the counterfactual
   variable in a hypothetical world where \(A\) is set \(A=1\) and \(M\) is
   set to \(M=G_0\) with probability one.
+\end{itemize}
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/graphic4b} 
+
+}
+
+\end{figure}
+
+\begin{itemize}
+\tightlist
 \item
   Define \(Y_{0,G_0}\) and \(Y_{1,G_1}\) similarly
 \item
@@ -1279,14 +1339,6 @@ intervention.
   We gain in the ability to solve a problem, but lose in terms of interpretation
   of the causal effect (cannot decompose the ATE)
 \end{itemize}
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/graphic4b} 
-
-}
-
-\end{figure}
 
 \hypertarget{an-alternative-definition-of-the-effects}{%
 \subsection{An alternative definition of the effects:}\label{an-alternative-definition-of-the-effects}}
@@ -1449,6 +1501,7 @@ mean(pred_pseudo)
 
 }
 
+\caption{Excerpted from @rudolph2019causal}\label{fig:unnamed-chunk-21}
 \end{figure}
 
 \hypertarget{stochastic}{%
@@ -1857,11 +1910,12 @@ mean(direct)
 \end{figure}
 
 \emph{Motivation}: Opposite overall treatment effects for homeless versus
-nonhomeless participants.
+nonhomeless participants. This application was explored in detail by
+\citet{rudolph2020explaining}.
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/tmleesttotal} 
+{\centering \includegraphics[width=0.75\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/tmleesttotal} 
 
 }
 
@@ -1962,6 +2016,8 @@ for homeless and nonhomeless individuals?
   We have arrived at identification formulas that express quantities that we
   care about in terms of observable quantities
 \item
+  That is, these formulas express what would have happened in hypothetical worlds in terms of quantities observable in this world
+\item
   This required \textbf{causal assumptions}
 
   \begin{itemize}
@@ -1976,6 +2032,8 @@ for homeless and nonhomeless individuals?
     changing the parameter interpretation
   \end{itemize}
 \item
+  We are now ready to tackle the estimation problem, i.e., how do we best learn the value of quantities that are observable?
+\item
   The resulting estimation problem can be tackled using \textbf{statistical
   assumptions} of various degrees of strength
 
@@ -1986,7 +2044,11 @@ for homeless and nonhomeless individuals?
   \item
     Thus, most are unnecessary (except for convenience)
   \item
-    The estimation approach we use reduces reliance on these statistical
+    We have worked hard to try to satisfy the required causal assumptions
+  \item
+    This is not the time to introcuce unnecessary statistical assumptions
+  \item
+    The estimation approach we will introduce reduces reliance on these statistical
     assumptions
   \end{itemize}
 \end{itemize}
@@ -1995,7 +2057,6 @@ for homeless and nonhomeless individuals?
 \subsection{Computing identification formulas if you know the true distribution}\label{computing-identification-formulas-if-you-know-the-true-distribution}}
 
 \begin{itemize}
-\tightlist
 \item
   The mediation parameters that we consider can be
   seen as a function of the joint probability distribution of \(O=(W,A,Z,M,Y)\)
@@ -2003,7 +2064,7 @@ for homeless and nonhomeless individuals?
   For example, under identifiability assumptions the natural direct effect is
   equal to
   \begin{equation*}
-    \psi(\P) =  \E[\E\{\E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)\mid A=0,W\}]
+    \psi(\P) =  \E[\color{Goldenrod}{\E\{\color{ForestGreen}{\{E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)}\mid A=0,W\}}]
   \end{equation*}
 \item
   The notation \(\psi(\P)\) implies that the parameter is a function of \(\P\)
@@ -2019,11 +2080,20 @@ for homeless and nonhomeless individuals?
     Computing the conditional expectation \(\E(Y\mid A=1,M=m,W=w)\) for all
     values \((m,w)\)
   \item
+    Computing the conditional expectation \(\E(Y\mid A=0,M=m,W=w)\) for all
+    values \((m,w)\)
+  \item
     Computing the probability \(\P(M=m\mid A=0,W=w)\) for all values \((m,w)\)
+  \item
+    Compute
+    \begin{align*}
+    \color{Goldenrod}{\E\{}&\color{ForestGreen}{\E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)}\color{Goldenrod}{\mid A=0,W\}} =\\
+    &\color{Goldenrod}{\sum_m\color{ForestGreen}{\{\E(Y \mid A=1, m, w) - \E(Y \mid A=0, m, w)\}}\P(M=m, A=0, W=w)}
+    \end{align*}
   \item
     Computing the probability \(\P(W=w)\) for all values \(w\)
   \item
-    Computing the mean over all values \((m,w)\)
+    Computing the mean over all values \(w\)
   \end{itemize}
 \end{itemize}
 
@@ -2044,6 +2114,8 @@ distribution \(\P\)
   \tightlist
   \item
     Fit a regression to estimate, say \(\hat\E(Y\mid A=1,M=m,W=w)\)
+  \item
+    Fit a regression to estimate, say \(\hat\E(Y\mid A=0,M=m,W=w)\)
   \item
     Fit a regression to estimate, say \(\hat\P(M=m\mid A=0,W=w)\)
   \item
@@ -2103,6 +2175,8 @@ distribution \(\P\)
     to misspecify the models
   \item
     This can introduce sizable bias in the estimators
+  \item
+    This modelling assumptions have become less necessary in the presence of data-adaptive regression tools (a.k.a machine learning)
   \end{itemize}
 \end{itemize}
 
@@ -2113,7 +2187,7 @@ distribution \(\P\)
 \tightlist
 \item
   The following \passthrough{\lstinline!R!} chunk provides simulation code to exemplify the bias of a
-  g-computation estimator in a simple situation
+  g-computation parametric estimator in a simple situation
 \end{itemize}
 
 \begin{lstlisting}[language=R]
@@ -2125,7 +2199,7 @@ pscore <- function(w) plogis(1 - abs(w))
 \begin{itemize}
 \tightlist
 \item
-  This yields a true NDE value of
+  This yields a true NDE value of 0.58048
 \end{itemize}
 
 \begin{lstlisting}[language=R]
@@ -2134,7 +2208,7 @@ trueval <- mean((mean_y(1, 1, w_big) - mean_y(1, 0, w_big)) *
   mean_m(0, w_big) + (mean_y(0, 1, w_big) - mean_y(0, 0, w_big)) *
     (1 - mean_m(0, w_big)))
 print(trueval)
-#> [1] 0.58048
+#> [1] 0.58062
 \end{lstlisting}
 
 \begin{itemize}
@@ -2173,7 +2247,7 @@ hist(estimate)
 abline(v = trueval, col = "red", lwd = 4)
 \end{lstlisting}
 
-\begin{center}\includegraphics[width=0.8\linewidth]{05-preliminaries-estimation_files/figure-latex/unnamed-chunk-4-1} \end{center}
+\begin{center}\includegraphics[width=0.8\linewidth]{05-preliminaries-estimation_files/figure-latex/unnamed-chunk-5-1} \end{center}
 
 \begin{itemize}
 \tightlist
@@ -2206,7 +2280,7 @@ text(450, 0.01, paste0(
 ), cex = 1.2)
 \end{lstlisting}
 
-\begin{center}\includegraphics[width=0.8\linewidth]{05-preliminaries-estimation_files/figure-latex/unnamed-chunk-5-1} \end{center}
+\begin{center}\includegraphics[width=0.8\linewidth]{05-preliminaries-estimation_files/figure-latex/unnamed-chunk-6-1} \end{center}
 
 \hypertarget{pros-and-cons-of-g-computation-with-data-adaptive-regression}{%
 \subsection{Pros and cons of g-computation with data-adaptive regression}\label{pros-and-cons-of-g-computation-with-data-adaptive-regression}}
@@ -2239,18 +2313,26 @@ text(450, 0.01, paste0(
   \end{itemize}
 \end{itemize}
 
-\hypertarget{semiparametric-estimation-or-correcting-the-bias-of-g-computation-estimators}{%
-\section{Semiparametric estimation (or correcting the bias of g-computation estimators)}\label{semiparametric-estimation-or-correcting-the-bias-of-g-computation-estimators}}
+\hypertarget{semiparametric-estimation}{%
+\section{Semiparametric estimation}\label{semiparametric-estimation}}
 
 \begin{itemize}
 \tightlist
 \item
-  G-computation estimation with data-adaptive regression offers an incorrect
-  bias/variance trade-off
+  Intuitively, it offers a way to use data-adaptive regression to
+
+  \begin{itemize}
+  \tightlist
+  \item
+    avoid model misspecification bias,
+  \item
+    endow the estimators with additional robustness (e.g., double robustness), while
+  \item
+    allowing the computation of correct standard errors and confidence intervals
+  \end{itemize}
 \item
-  It accepts more bias than necessary
-\item
-  The bias of a g-computation estimator may be corrected as follows:
+  This can be achieved by adding a bias correction factor the the g-computation
+  as follows:
   \begin{equation*}
     \psi(\hat \P) + \frac{1}{n}\sum_{i=1}^n D(O_i)
   \end{equation*}
@@ -2277,10 +2359,11 @@ text(450, 0.01, paste0(
   And the specific form of the EIF may be found in papers in the references
 \end{itemize}
 
-Note: the bias correction above may have an additional problem of returning
-parameter estimates outside of natural bounds. E.g., probabilities greater than
-one. A solution to this (not discussed in this workshop) is targeted minimum
-loss based estimation.
+Note: the bias correction above may have an additional problem of
+returning parameter estimates outside of natural bounds. E.g.,
+probabilities greater than one. A solution to this (not discussed in
+this workshop but implemented in some of the R packages) is targeted
+minimum loss based estimation.
 
 \hypertarget{using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect}{%
 \chapter{Using the EIF to construct an estimator: the case of the natural direct effect}\label{using-the-eif-to-construct-an-estimator-the-case-of-the-natural-direct-effect}}
@@ -2366,9 +2449,9 @@ First, we need to introduce some notation to describe the EIF for the NDE
   We can now introduce the EIF:
   \begin{align*}
     D(O) &= \color{ForestGreen}{\bigg\{ \frac{I(A=1)}{\P(A=1\mid W)}\frac{\P(M\mid A=0,W)}{\P(M\mid A=1,W)} -
-      \frac{I(A=0)}{\P(A=0\mid W)}\bigg\}} \times [Y-\E(Y\mid A,M,W)]  \\
-    &+ \frac{I(A=0)}{\P(A=0\mid W)}\big\{Q(M,W) - \E[Q(M,W) | W,A=0] \big\}\\
-    &+ \E[Q(M,W) | W,A=0] - \psi(\P)
+      \frac{I(A=0)}{\P(A=0\mid W)}\bigg\}} \times \color{Goldenrod}{[Y-\E(Y\mid A,M,W)]}  \\
+    &+ \color{ForestGreen}{\frac{I(A=0)}{\P(A=0\mid W)}}\color{Goldenrod}{\big\{Q(M,W) - \E[Q(M,W) | W,A=0] \big\}}\\
+    &+ \color{Goldenrod}{\E[Q(M,W) | W,A=0] - \psi(\P)}
   \end{align*}
 \item
   Estimating \(\P(M\mid A, W)\) is a really hard problem when \(M\) is
@@ -2399,9 +2482,9 @@ notation that will be useful later:
 
 \begin{align*}
     D(O) &= \color{ForestGreen}{\bigg\{ \frac{I(A=1)}{g(0\mid W)}\frac{e(0\mid M,W)}{e(1\mid M,W)} -
-      \frac{I(A=0)}{g(0\mid W)}\bigg\}} \times [Y-b(A,M,W)]  \\
-    &+ \frac{I(A=0)}{g(0\mid W)}\big\{Q(M,W) - \E[Q(M,W) | W,A=0] \big\}\\
-    &+ \E[Q(M,W) | W,A=0] - \psi(\P)
+      \frac{I(A=0)}{g(0\mid W)}\bigg\}} \times \color{Goldenrod}{[Y-b(A,M,W)]}  \\
+    &+ \color{ForestGreen}{\frac{I(A=0)}{g(0\mid W)}}\color{Goldenrod}{\big\{Q(M,W) - \E[Q(M,W) | W,A=0] \big\}}\\
+    &+ \color{Goldenrod}{\E[Q(M,W) | W,A=0] - \psi(\P)}
 \end{align*}
 
 \hypertarget{how-to-compute-the-one-step-estimator-akin-to-augmented-ipw}{%
@@ -2443,11 +2526,11 @@ Can be computed in the following steps:
   \begin{itemize}
   \tightlist
   \item
-    In this example we will use Generalized Additive Models {[}CITE{]} for
+    In this example we will use Generalized Additive Models for
     tractability
   \item
     In applied settings we recommend using an ensemble of data-adaptive
-    regression algorithms, such as the Super Learner {[}CITE{]}
+    regression algorithms, such as the Super Learner \citep{vdl2007super}
   \end{itemize}
 \end{enumerate}
 
@@ -2543,6 +2626,7 @@ eif <- ip_weights * (y - b_pred) + (1 - a) / g0_pred * (pseudo - q_pred) +
 \end{enumerate}
 
 \begin{lstlisting}[language=R]
+
 ## One-step estimator
 mean(eif)
 #> [1] 0.55085
@@ -2649,6 +2733,54 @@ text(450, 0.01, paste0(
 \end{lstlisting}
 
 \begin{center}\includegraphics[width=0.8\linewidth]{06-estimation-natural-interventional_files/figure-latex/unnamed-chunk-12-1} \end{center}
+
+\hypertarget{a-note-about-targeted-minimum-loss-based-estimation-tmle}{%
+\subsection{A note about targeted minimum loss-based estimation (TMLE)}\label{a-note-about-targeted-minimum-loss-based-estimation-tmle}}
+
+\begin{itemize}
+\tightlist
+\item
+  The above estimator is great because it allows us to use data-adaptive regression to avoid bias, while allowing the computation of correct standard errors
+\item
+  This estimator has one problem:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    It can yield answers outside of the bounds of the parameter space
+  \item
+    E.g., if \(Y\) is binary, it could yield direct and indirect effects outside of \([-1,1]\)
+  \item
+    To solve this, you can compute a TMLE instead (implemented in the R packages, coming up)
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{a-note-about-cross-fitting}{%
+\subsection{A note about cross-fitting}\label{a-note-about-cross-fitting}}
+
+\begin{itemize}
+\tightlist
+\item
+  When using data-adaptive regression estimators, it is recommended to use cross-fitted estimators
+\item
+  Cross-fitting is similar to cross-validation:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Randomly split the sample into K (e.g., K=10) subsets of equal size
+  \item
+    For each of the 9/10ths of the sample, fit the regression models
+  \item
+    Use the out-of-sample fit to predict in the remaining 1/10th of the sample
+  \end{itemize}
+\item
+  Cross-fitting further reduces the bias of the estimators
+\item
+  Cross-fitting aids in guaranteeing the correctness of the standard errors and confidence intervals
+\item
+  Cross-fitting is implemented by default in the R packages that you will see next
+\end{itemize}
 
 \hypertarget{r-packages-for-estimation-of-the-causal-indirect-effects}{%
 \chapter{\texorpdfstring{\texttt{R} packages for estimation of the causal (in)direct effects}{R packages for estimation of the causal (in)direct effects}}\label{r-packages-for-estimation-of-the-causal-indirect-effects}}

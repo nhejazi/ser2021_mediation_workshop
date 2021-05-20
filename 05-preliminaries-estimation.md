@@ -4,27 +4,32 @@
 
 - We have arrived at identification formulas that express quantities that we
   care about in terms of observable quantities
+- That is, these formulas express what would have happened in hypothetical worlds in terms of quantities observable in this world
 - This required **causal assumptions**
   - Many of these assumptions are empirically unverifiable
   - We saw an example where we could relax the cross-world assumption, at the
     cost of changing the parameter interpretation
   - and where we could relax the positivity assumption, also at the cost of
     changing the parameter interpretation
+- We are now ready to tackle the estimation problem, i.e., how do we best learn the value of quantities that are observable?
 - The resulting estimation problem can be tackled using **statistical
   assumptions** of various degrees of strength
   - Most of these assumptions are verifiable (e.g., a linear model)
   - Thus, most are unnecessary (except for convenience)
-  - The estimation approach we use reduces reliance on these statistical
+  - We have worked hard to try to satisfy the required causal assumptions
+  - This is not the time to introcuce unnecessary statistical assumptions
+  - The estimation approach we will introduce reduces reliance on these statistical
     assumptions
 
 ### Computing identification formulas if you know the true distribution
 
 - The mediation parameters that we consider can be
   seen as a function of the joint probability distribution of $O=(W,A,Z,M,Y)$
+  
 - For example, under identifiability assumptions the natural direct effect is
   equal to
   \begin{equation*}
-    \psi(\P) =  \E[\E\{\E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)\mid A=0,W\}]
+    \psi(\P) =  \E[\color{Goldenrod}{\E\{\color{ForestGreen}{\{E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)}\mid A=0,W\}}]
   \end{equation*}
 - The notation $\psi(\P)$ implies that the parameter is a function of $\P$
 - This means that we can compute it for any distribution $\P$
@@ -32,9 +37,16 @@
   of the parameter by:
   - Computing the conditional expectation $\E(Y\mid A=1,M=m,W=w)$ for all
     values $(m,w)$
+  - Computing the conditional expectation $\E(Y\mid A=0,M=m,W=w)$ for all
+    values $(m,w)$
   - Computing the probability $\P(M=m\mid A=0,W=w)$ for all values $(m,w)$
+  - Compute
+  \begin{align*}
+    \color{Goldenrod}{\E\{}&\color{ForestGreen}{\E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)}\color{Goldenrod}{\mid A=0,W\}} =\\
+    &\color{Goldenrod}{\sum_m\color{ForestGreen}{\{\E(Y \mid A=1, m, w) - \E(Y \mid A=0, m, w)\}}\P(M=m, A=0, W=w)}
+  \end{align*}
   - Computing the probability $\P(W=w)$ for all values $w$
-  - Computing the mean over all values $(m,w)$
+  - Computing the mean over all values $w$
 
 ### Estimating identification formulas
 
@@ -44,6 +56,7 @@ The above is how you would compute the _true value_ **if you know** the true
 - This is exactly what we did in our R examples before
 - But we can use the same logic for estimation:
   - Fit a regression to estimate, say $\hat\E(Y\mid A=1,M=m,W=w)$
+  - Fit a regression to estimate, say $\hat\E(Y\mid A=0,M=m,W=w)$
   - Fit a regression to estimate, say $\hat\P(M=m\mid A=0,W=w)$
   - Estimate $\P(W=w)$ with the empirical distribution
   - Evaluate
@@ -70,11 +83,12 @@ The above is how you would compute the _true value_ **if you know** the true
   - Unless $W$ and $M$ contain very few categorical variables, it is very easy
     to misspecify the models
   - This can introduce sizable bias in the estimators
+  - This modelling assumptions have become less necessary in the presence of data-adaptive regression tools (a.k.a machine learning)
 
 ### An example of the bias of a g-computation estimator of the natural direct effect
 
 - The following `R` chunk provides simulation code to exemplify the bias of a
-  g-computation estimator in a simple situation
+  g-computation parametric estimator in a simple situation
 
 ```r
 mean_y <- function(m, a, w) abs(w) + a * m
@@ -82,7 +96,8 @@ mean_m <- function(a, w) plogis(w^2 - a)
 pscore <- function(w) plogis(1 - abs(w))
 ```
 
-- This yields a true NDE value of
+
+- This yields a true NDE value of 0.58048
 
 ```r
 w_big <- runif(1e6, -1, 1)
@@ -90,7 +105,7 @@ trueval <- mean((mean_y(1, 1, w_big) - mean_y(1, 0, w_big)) *
   mean_m(0, w_big) + (mean_y(0, 1, w_big) - mean_y(0, 0, w_big)) *
     (1 - mean_m(0, w_big)))
 print(trueval)
-#> [1] 0.58048
+#> [1] 0.58062
 ```
 
 - Let's perform a simulation where we draw 1000 datasets from the above
@@ -128,7 +143,7 @@ abline(v = trueval, col = "red", lwd = 4)
 
 
 
-\begin{center}\includegraphics[width=0.8\linewidth]{05-preliminaries-estimation_files/figure-latex/unnamed-chunk-4-1} \end{center}
+\begin{center}\includegraphics[width=0.8\linewidth]{05-preliminaries-estimation_files/figure-latex/unnamed-chunk-5-1} \end{center}
 
 - The bias also affects the confidence intervals:
 
@@ -159,7 +174,7 @@ text(450, 0.01, paste0(
 
 
 
-\begin{center}\includegraphics[width=0.8\linewidth]{05-preliminaries-estimation_files/figure-latex/unnamed-chunk-5-1} \end{center}
+\begin{center}\includegraphics[width=0.8\linewidth]{05-preliminaries-estimation_files/figure-latex/unnamed-chunk-6-1} \end{center}
 
 ### Pros and cons of g-computation with data-adaptive regression
 
@@ -175,7 +190,7 @@ text(450, 0.01, paste0(
     fail in some cases
 
 
-## Semiparametric estimation (or correcting the bias of g-computation estimators)
+## Semiparametric estimation 
 
 <!--
 KER this may be just me, but I'm not sure the "incorrect bias/variance
@@ -186,10 +201,12 @@ want valid standard errors and confidence intervals. to do this, we need to use
 semiparametric estimation
 -->
 
-- G-computation estimation with data-adaptive regression offers an incorrect
-    bias/variance trade-off
-- It accepts more bias than necessary
-- The bias of a g-computation estimator may be corrected as follows:
+- Intuitively, it offers a way to use data-adaptive regression to
+  - avoid model misspecification bias,
+  - endow the estimators with additional robustness (e.g., double robustness), while
+  - allowing the computation of correct standard errors and confidence intervals
+- This can be achieved by adding a bias correction factor the the g-computation
+  as follows:
   \begin{equation*}
     \psi(\hat \P) + \frac{1}{n}\sum_{i=1}^n D(O_i)
   \end{equation*}
@@ -209,7 +226,8 @@ semiparametric estimation
   these EIFs
 - And the specific form of the EIF may be found in papers in the references
 
-Note: the bias correction above may have an additional problem of returning
-parameter estimates outside of natural bounds. E.g., probabilities greater than
-one. A solution to this (not discussed in this workshop) is targeted minimum
-loss based estimation.
+Note: the bias correction above may have an additional problem of
+returning parameter estimates outside of natural bounds. E.g.,
+probabilities greater than one. A solution to this (not discussed in
+this workshop but implemented in some of the R packages) is targeted
+minimum loss based estimation.

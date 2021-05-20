@@ -11,11 +11,12 @@
 \end{figure}
 
 _Motivation_: Opposite overall treatment effects for homeless versus
-nonhomeless participants.
+nonhomeless participants. This application was explored in detail by
+@rudolph2020explaining.
 
 \begin{figure}
 
-{\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/tmleesttotal} 
+{\centering \includegraphics[width=0.75\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/tmleesttotal} 
 
 }
 
