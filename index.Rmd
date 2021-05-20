@@ -64,22 +64,22 @@ parameter estimable from the observed data distribution). Familiarity with the
 
 ## Workshop schedule {#schedule}
 
-* 09:00A-09:30A: Introductions + mediation set-up
-  <!-- Ivan-->
-* 09:30A-10:15A: Controlled direct effects, natural direct/indirect effects,
+* 09:00A-09:15A: Introductions + mediation set-up
+  <!-- Ivan, 15 min-->
+* 09:15A-10:00A: Controlled direct effects, natural direct/indirect effects,
   interventional direct/indirect effects
-  <!-- Kara-->
-* 10:15A-10:45A: Stochastic mediation estimands
-  <!-- Nima-->
-* 10:45A-11:00A: Choosing an estimand in real-world examples
-  <!-- Kara-->
-* 11:00A-11:15A: Break + discussion
-* 11:15A-11:45A: What is the EIF?!
-  <!-- Ivan-->
-* 11:45A-12:00P: Using the EIF for estimating the natural direct effect
-  <!-- Ivan-->
+  <!-- Kara, 30-->
+* 10:00A-10:20A: Stochastic mediation estimands
+  <!-- Nima, 15-->
+* 10:20A-10:40A: Choosing an estimand in real-world examples
+  <!-- Kara, 10-->
+* 10:40A-10:50A: Break + discussion
+* 10:50A-11:30A: What is the EIF?!
+  <!-- Ivan, 35-->
+* 11:30A-12:00P: Using the EIF for estimating the natural direct effect
+  <!-- Ivan, 30-->
 * 12:00P-12:45P: Example walkthrough with `R` packages for effect estimation
-  <!-- Nima-->
+  <!-- Nima, 45-->
 * 12:45P-01:00P: Wrap-up
 
 __NOTE: All times listed in Pacific Time.__
