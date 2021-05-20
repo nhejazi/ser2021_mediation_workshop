@@ -20,12 +20,13 @@ explored. We can to identify these mechanisms by using mediation
 analysis.
 
 - Key questions:
-  - Do differences in the effects of treatment (comparing two medications for opioid
-  use disorder, naltrexone vs buprenorphine) on risk of relapse operate through
-  mediators of adherence, opioid use, pain, and depressive symptoms? 
-  [@rudolph2020explaining]
-  - Are those mediated effects different for homeless vs non-homeless individuals?
-  
+  - Do differences in the effects of treatment (comparing two medications for
+    opioid use disorder, naltrexone vs buprenorphine) on risk of relapse operate
+    through mediators of adherence, opioid use, pain, and depressive symptoms?
+    [@rudolph2020explaining]
+  - Are those mediated effects different for homeless vs non-homeless
+    individuals?
+
 <!--
 ID: Need to fix format of the following figure
 -->
@@ -37,7 +38,8 @@ knitr::include_graphics(here::here("img", "ctndag.png"))
 ## What is causal mediation analysis?
 
 - Statistical mediation analyses assess associations between the variables
-- Causal mediation analyses assess how the paths behave under circumstances different from the observed circumstances (e.g., interventions)
+- Causal mediation analyses assess how the paths behave under circumstances
+  different from the observed circumstances (e.g., interventions)
 
 <!--- Causal mediation analysis is thus useful to understand mechanisms-->
 
