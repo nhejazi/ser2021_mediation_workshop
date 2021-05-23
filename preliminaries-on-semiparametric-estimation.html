@@ -1057,10 +1057,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.1" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#from-causal-to-statistical-quantities"><i class="fa fa-check"></i><b>5.1</b> From causal to statistical quantities</a><ul>
 <li class="chapter" data-level="5.1.1" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#computing-identification-formulas-if-you-know-the-true-distribution"><i class="fa fa-check"></i><b>5.1.1</b> Computing identification formulas if you know the true distribution</a></li>
 <li class="chapter" data-level="5.1.2" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#estimating-identification-formulas"><i class="fa fa-check"></i><b>5.1.2</b> Estimating identification formulas</a></li>
-<li class="chapter" data-level="5.1.3" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#how-can-g-estimation-be-implemented-in-practice"><i class="fa fa-check"></i><b>5.1.3</b> How can g-estimation be implemented in practice?</a></li>
-<li class="chapter" data-level="5.1.4" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#pros-and-cons-of-parametric-models"><i class="fa fa-check"></i><b>5.1.4</b> Pros and cons of parametric models</a></li>
-<li class="chapter" data-level="5.1.5" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#an-example-of-the-bias-of-a-g-computation-estimator-of-the-natural-direct-effect"><i class="fa fa-check"></i><b>5.1.5</b> An example of the bias of a g-computation estimator of the natural direct effect</a></li>
-<li class="chapter" data-level="5.1.6" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#pros-and-cons-of-g-computation-with-data-adaptive-regression"><i class="fa fa-check"></i><b>5.1.6</b> Pros and cons of g-computation with data-adaptive regression</a></li>
+<li class="chapter" data-level="5.1.3" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#weighted-estimator-akin-to-ipw"><i class="fa fa-check"></i><b>5.1.3</b> Weighted estimator (akin to IPW)</a></li>
+<li class="chapter" data-level="5.1.4" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#how-can-g-estimation-and-weighted-estimation-be-implemented-in-practice"><i class="fa fa-check"></i><b>5.1.4</b> How can g-estimation and weighted estimation be implemented in practice?</a></li>
+<li class="chapter" data-level="5.1.5" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#pros-and-cons-of-g-computation-and-weighting-parametric-models"><i class="fa fa-check"></i><b>5.1.5</b> Pros and cons of g-computation and weighting parametric models</a></li>
+<li class="chapter" data-level="5.1.6" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#an-example-of-the-bias-of-a-g-computation-estimator-of-the-natural-direct-effect"><i class="fa fa-check"></i><b>5.1.6</b> An example of the bias of a g-computation estimator of the natural direct effect</a></li>
+<li class="chapter" data-level="5.1.7" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#pros-and-cons-of-g-computation-or-weighting-with-data-adaptive-regression"><i class="fa fa-check"></i><b>5.1.7</b> Pros and cons of g-computation or weighting with data-adaptive regression</a></li>
 </ul></li>
 <li class="chapter" data-level="5.2" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#semiparametric-estimation"><i class="fa fa-check"></i><b>5.2</b> Semiparametric estimation</a></li>
 </ul></li>
@@ -1183,8 +1184,21 @@ distribution <span class="math inline">\(\P\)</span></p>
 <li>This is known as the g-computation estimator</li>
 </ul>
 </div>
-<div id="how-can-g-estimation-be-implemented-in-practice" class="section level3">
-<h3><span class="header-section-number">5.1.3</span> How can g-estimation be implemented in practice?</h3>
+<div id="weighted-estimator-akin-to-ipw" class="section level3">
+<h3><span class="header-section-number">5.1.3</span> Weighted estimator (akin to IPW)</h3>
+<ul>
+<li>An alternative expresion of the parameter functional (for the NDE) is given by</li>
+</ul>
+<p><span class="math display">\[\E\bigg[\color{RoyalBlue}{\bigg\{ \frac{I(A=1)}{\P(A=1\mid W)}\frac{\P(M\mid A=0,W)}{\P(M\mid A=1,W)} -
+      \frac{I(A=0)}{\P(A=0\mid W)}\bigg\}} \times \color{Goldenrod}{Y}\bigg]\]</span></p>
+<ul>
+<li>Thus, you can also construct a weighted estimator as</li>
+</ul>
+<p><span class="math display">\[\frac{1}{n}\sum_{i=1}^n\bigg[\color{RoyalBlue}{\bigg\{ \frac{I(A_i=1)}{\hat\P(A_i=1\mid W_i)}\frac{\hat\P(M_i\mid A_i=0,W_i)}{\hat\P(M_i\mid A_i=1,W_i)} -
+      \frac{I(A_i=0)}{\hat\P(A_i=0\mid W_i)}\bigg\}} \times \color{Goldenrod}{Y}\bigg]\]</span></p>
+</div>
+<div id="how-can-g-estimation-and-weighted-estimation-be-implemented-in-practice" class="section level3">
+<h3><span class="header-section-number">5.1.4</span> How can g-estimation and weighted estimation be implemented in practice?</h3>
 <ul>
 <li>There are two possible ways to do g-computation estimation:
 <ul>
@@ -1193,8 +1207,8 @@ distribution <span class="math inline">\(\P\)</span></p>
 </ul></li>
 </ul>
 </div>
-<div id="pros-and-cons-of-parametric-models" class="section level3">
-<h3><span class="header-section-number">5.1.4</span> Pros and cons of parametric models</h3>
+<div id="pros-and-cons-of-g-computation-and-weighting-parametric-models" class="section level3">
+<h3><span class="header-section-number">5.1.5</span> Pros and cons of g-computation and weighting parametric models</h3>
 <ul>
 <li>Pros:
 <ul>
@@ -1212,7 +1226,7 @@ to misspecify the models</li>
 </ul>
 </div>
 <div id="an-example-of-the-bias-of-a-g-computation-estimator-of-the-natural-direct-effect" class="section level3">
-<h3><span class="header-section-number">5.1.5</span> An example of the bias of a g-computation estimator of the natural direct effect</h3>
+<h3><span class="header-section-number">5.1.6</span> An example of the bias of a g-computation estimator of the natural direct effect</h3>
 <ul>
 <li>The following <code>R</code> chunk provides simulation code to exemplify the bias of a
 g-computation parametric estimator in a simple situation</li>
@@ -1284,8 +1298,8 @@ distribution, and compute a g-computation estimator based on</li>
 <span id="cb33-22"><a href="preliminaries-on-semiparametric-estimation.html#cb33-22"></a>), <span class="dt">cex =</span> <span class="fl">1.2</span>)</span></code></pre></div>
 <p><img src="05-preliminaries-estimation_files/figure-html/unnamed-chunk-6-1.png" width="80%" style="display: block; margin: auto;" /></p>
 </div>
-<div id="pros-and-cons-of-g-computation-with-data-adaptive-regression" class="section level3">
-<h3><span class="header-section-number">5.1.6</span> Pros and cons of g-computation with data-adaptive regression</h3>
+<div id="pros-and-cons-of-g-computation-or-weighting-with-data-adaptive-regression" class="section level3">
+<h3><span class="header-section-number">5.1.7</span> Pros and cons of g-computation or weighting with data-adaptive regression</h3>
 <ul>
 <li>Pros:
 <ul>

@@ -1057,10 +1057,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.1" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#from-causal-to-statistical-quantities"><i class="fa fa-check"></i><b>5.1</b> From causal to statistical quantities</a><ul>
 <li class="chapter" data-level="5.1.1" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#computing-identification-formulas-if-you-know-the-true-distribution"><i class="fa fa-check"></i><b>5.1.1</b> Computing identification formulas if you know the true distribution</a></li>
 <li class="chapter" data-level="5.1.2" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#estimating-identification-formulas"><i class="fa fa-check"></i><b>5.1.2</b> Estimating identification formulas</a></li>
-<li class="chapter" data-level="5.1.3" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#how-can-g-estimation-be-implemented-in-practice"><i class="fa fa-check"></i><b>5.1.3</b> How can g-estimation be implemented in practice?</a></li>
-<li class="chapter" data-level="5.1.4" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#pros-and-cons-of-parametric-models"><i class="fa fa-check"></i><b>5.1.4</b> Pros and cons of parametric models</a></li>
-<li class="chapter" data-level="5.1.5" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#an-example-of-the-bias-of-a-g-computation-estimator-of-the-natural-direct-effect"><i class="fa fa-check"></i><b>5.1.5</b> An example of the bias of a g-computation estimator of the natural direct effect</a></li>
-<li class="chapter" data-level="5.1.6" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#pros-and-cons-of-g-computation-with-data-adaptive-regression"><i class="fa fa-check"></i><b>5.1.6</b> Pros and cons of g-computation with data-adaptive regression</a></li>
+<li class="chapter" data-level="5.1.3" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#weighted-estimator-akin-to-ipw"><i class="fa fa-check"></i><b>5.1.3</b> Weighted estimator (akin to IPW)</a></li>
+<li class="chapter" data-level="5.1.4" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#how-can-g-estimation-and-weighted-estimation-be-implemented-in-practice"><i class="fa fa-check"></i><b>5.1.4</b> How can g-estimation and weighted estimation be implemented in practice?</a></li>
+<li class="chapter" data-level="5.1.5" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#pros-and-cons-of-g-computation-and-weighting-parametric-models"><i class="fa fa-check"></i><b>5.1.5</b> Pros and cons of g-computation and weighting parametric models</a></li>
+<li class="chapter" data-level="5.1.6" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#an-example-of-the-bias-of-a-g-computation-estimator-of-the-natural-direct-effect"><i class="fa fa-check"></i><b>5.1.6</b> An example of the bias of a g-computation estimator of the natural direct effect</a></li>
+<li class="chapter" data-level="5.1.7" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#pros-and-cons-of-g-computation-or-weighting-with-data-adaptive-regression"><i class="fa fa-check"></i><b>5.1.7</b> Pros and cons of g-computation or weighting with data-adaptive regression</a></li>
 </ul></li>
 <li class="chapter" data-level="5.2" data-path="preliminaries-on-semiparametric-estimation.html"><a href="preliminaries-on-semiparametric-estimation.html#semiparametric-estimation"><i class="fa fa-check"></i><b>5.2</b> Semiparametric estimation</a></li>
 </ul></li>
@@ -1171,11 +1172,16 @@ and <em>medshift</em></li>
 <li><p>Let <span class="math inline">\(Q(M, W)\)</span> denote <span class="math inline">\(\E(Y\mid A=1, M, W) - \E(Y\mid A=0, M, W)\)</span></p></li>
 <li><p>We can now introduce the EIF:
 <span class="math display">\[\begin{align*}
-  D(O) &amp;= \color{ForestGreen}{\bigg\{ \frac{I(A=1)}{\P(A=1\mid W)}\frac{\P(M\mid A=0,W)}{\P(M\mid A=1,W)} -
+  D(O) &amp;= \color{RoyalBlue}{\bigg\{ \frac{I(A=1)}{\P(A=1\mid W)}\frac{\P(M\mid A=0,W)}{\P(M\mid A=1,W)} -
     \frac{I(A=0)}{\P(A=0\mid W)}\bigg\}} \times \color{Goldenrod}{[Y-\E(Y\mid A,M,W)]}  \\
-  &amp;+ \color{ForestGreen}{\frac{I(A=0)}{\P(A=0\mid W)}}\color{Goldenrod}{\big\{Q(M,W) - \E[Q(M,W) | W,A=0] \big\}}\\
+  &amp;+ \color{RoyalBlue}{\frac{I(A=0)}{\P(A=0\mid W)}}\color{Goldenrod}{\big\{Q(M,W) - \E[Q(M,W) | W,A=0] \big\}}\\
   &amp;+ \color{Goldenrod}{\E[Q(M,W) | W,A=0] - \psi(\P)}
 \end{align*}\]</span></p></li>
+<li><p>In this EIF, you can recognize elements from the g-computation estimator and the weighted estimator:</p>
+<ul>
+<li><span class="math inline">\(Q(M, W)\)</span> shows up in the g-computation estimator</li>
+<li>The weights in blue in the first part of the EIF are used in the weighted estimator</li>
+</ul></li>
 <li><p>Estimating <span class="math inline">\(\P(M\mid A, W)\)</span> is a really hard problem when <span class="math inline">\(M\)</span> is
 high-dimensional. But, since we have the ratio of these conditional
 densitities, we can reparamterize using Bayes rule to get something that is
@@ -1194,9 +1200,9 @@ notation that will be useful later:</p>
 <li>The EIF is</li>
 </ul>
 <p><span class="math display">\[\begin{align*}
-    D(O) &amp;= \color{ForestGreen}{\bigg\{ \frac{I(A=1)}{g(0\mid W)}\frac{e(0\mid M,W)}{e(1\mid M,W)} -
+    D(O) &amp;= \color{RoyalBlue}{\bigg\{ \frac{I(A=1)}{g(0\mid W)}\frac{e(0\mid M,W)}{e(1\mid M,W)} -
       \frac{I(A=0)}{g(0\mid W)}\bigg\}} \times \color{Goldenrod}{[Y-b(A,M,W)]}  \\
-    &amp;+ \color{ForestGreen}{\frac{I(A=0)}{g(0\mid W)}}\color{Goldenrod}{\big\{Q(M,W) - \E[Q(M,W) | W,A=0] \big\}}\\
+    &amp;+ \color{RoyalBlue}{\frac{I(A=0)}{g(0\mid W)}}\color{Goldenrod}{\big\{Q(M,W) - \E[Q(M,W) | W,A=0] \big\}}\\
     &amp;+ \color{Goldenrod}{\E[Q(M,W) | W,A=0] - \psi(\P)}
 \end{align*}\]</span></p>
 </div>
@@ -1269,8 +1275,8 @@ regression algorithms, such as the Super Learner <span class="citation">(van der
 <ol start="4" style="list-style-type: decimal">
 <li>Estimate the weights
 <span class="math display">\[\begin{equation*}
-  \bigg\{ \frac{I(A=1)}{g(0\mid W)}\frac{e(0\mid M,W)}{e(1\mid M,W)} -
-   \frac{I(A=0)}{g(0\mid W)}\bigg\}
+  \color{RoyalBlue}{\bigg\{ \frac{I(A=1)}{g(0\mid W)}\frac{e(0\mid M,W)}{e(1\mid M,W)} -
+   \frac{I(A=0)}{g(0\mid W)}\bigg\}}
   \end{equation*}\]</span>
 using the above predictions:</li>
 </ol>

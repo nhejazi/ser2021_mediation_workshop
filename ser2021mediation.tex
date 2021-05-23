@@ -213,7 +213,7 @@
 \makeatother
 \subtitle{A Workshop at SER 2021}
 \author{Iván Díaz, Nima Hejazi, Kara Rudolph}
-\date{updated: May 20, 2021}
+\date{updated: May 23, 2021}
 
 \begin{document}
 \maketitle
@@ -2131,8 +2131,29 @@ distribution \(\P\)
   This is known as the g-computation estimator
 \end{itemize}
 
-\hypertarget{how-can-g-estimation-be-implemented-in-practice}{%
-\subsection{How can g-estimation be implemented in practice?}\label{how-can-g-estimation-be-implemented-in-practice}}
+\hypertarget{weighted-estimator-akin-to-ipw}{%
+\subsection{Weighted estimator (akin to IPW)}\label{weighted-estimator-akin-to-ipw}}
+
+\begin{itemize}
+\tightlist
+\item
+  An alternative expresion of the parameter functional (for the NDE) is given by
+\end{itemize}
+
+\[\E\bigg[\color{RoyalBlue}{\bigg\{ \frac{I(A=1)}{\P(A=1\mid W)}\frac{\P(M\mid A=0,W)}{\P(M\mid A=1,W)} -
+      \frac{I(A=0)}{\P(A=0\mid W)}\bigg\}} \times \color{Goldenrod}{Y}\bigg]\]
+
+\begin{itemize}
+\tightlist
+\item
+  Thus, you can also construct a weighted estimator as
+\end{itemize}
+
+\[\frac{1}{n}\sum_{i=1}^n\bigg[\color{RoyalBlue}{\bigg\{ \frac{I(A_i=1)}{\hat\P(A_i=1\mid W_i)}\frac{\hat\P(M_i\mid A_i=0,W_i)}{\hat\P(M_i\mid A_i=1,W_i)} -
+      \frac{I(A_i=0)}{\hat\P(A_i=0\mid W_i)}\bigg\}} \times \color{Goldenrod}{Y}\bigg]\]
+
+\hypertarget{how-can-g-estimation-and-weighted-estimation-be-implemented-in-practice}{%
+\subsection{How can g-estimation and weighted estimation be implemented in practice?}\label{how-can-g-estimation-and-weighted-estimation-be-implemented-in-practice}}
 
 \begin{itemize}
 \tightlist
@@ -2148,8 +2169,8 @@ distribution \(\P\)
   \end{itemize}
 \end{itemize}
 
-\hypertarget{pros-and-cons-of-parametric-models}{%
-\subsection{Pros and cons of parametric models}\label{pros-and-cons-of-parametric-models}}
+\hypertarget{pros-and-cons-of-g-computation-and-weighting-parametric-models}{%
+\subsection{Pros and cons of g-computation and weighting parametric models}\label{pros-and-cons-of-g-computation-and-weighting-parametric-models}}
 
 \begin{itemize}
 \tightlist
@@ -2282,8 +2303,8 @@ text(450, 0.01, paste0(
 
 \begin{center}\includegraphics[width=0.8\linewidth]{05-preliminaries-estimation_files/figure-latex/unnamed-chunk-6-1} \end{center}
 
-\hypertarget{pros-and-cons-of-g-computation-with-data-adaptive-regression}{%
-\subsection{Pros and cons of g-computation with data-adaptive regression}\label{pros-and-cons-of-g-computation-with-data-adaptive-regression}}
+\hypertarget{pros-and-cons-of-g-computation-or-weighting-with-data-adaptive-regression}{%
+\subsection{Pros and cons of g-computation or weighting with data-adaptive regression}\label{pros-and-cons-of-g-computation-or-weighting-with-data-adaptive-regression}}
 
 \begin{itemize}
 \tightlist
@@ -2448,11 +2469,21 @@ First, we need to introduce some notation to describe the EIF for the NDE
 \item
   We can now introduce the EIF:
   \begin{align*}
-    D(O) &= \color{ForestGreen}{\bigg\{ \frac{I(A=1)}{\P(A=1\mid W)}\frac{\P(M\mid A=0,W)}{\P(M\mid A=1,W)} -
+    D(O) &= \color{RoyalBlue}{\bigg\{ \frac{I(A=1)}{\P(A=1\mid W)}\frac{\P(M\mid A=0,W)}{\P(M\mid A=1,W)} -
       \frac{I(A=0)}{\P(A=0\mid W)}\bigg\}} \times \color{Goldenrod}{[Y-\E(Y\mid A,M,W)]}  \\
-    &+ \color{ForestGreen}{\frac{I(A=0)}{\P(A=0\mid W)}}\color{Goldenrod}{\big\{Q(M,W) - \E[Q(M,W) | W,A=0] \big\}}\\
+    &+ \color{RoyalBlue}{\frac{I(A=0)}{\P(A=0\mid W)}}\color{Goldenrod}{\big\{Q(M,W) - \E[Q(M,W) | W,A=0] \big\}}\\
     &+ \color{Goldenrod}{\E[Q(M,W) | W,A=0] - \psi(\P)}
   \end{align*}
+\item
+  In this EIF, you can recognize elements from the g-computation estimator and the weighted estimator:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \(Q(M, W)\) shows up in the g-computation estimator
+  \item
+    The weights in blue in the first part of the EIF are used in the weighted estimator
+  \end{itemize}
 \item
   Estimating \(\P(M\mid A, W)\) is a really hard problem when \(M\) is
   high-dimensional. But, since we have the ratio of these conditional
@@ -2481,9 +2512,9 @@ notation that will be useful later:
 \end{itemize}
 
 \begin{align*}
-    D(O) &= \color{ForestGreen}{\bigg\{ \frac{I(A=1)}{g(0\mid W)}\frac{e(0\mid M,W)}{e(1\mid M,W)} -
+    D(O) &= \color{RoyalBlue}{\bigg\{ \frac{I(A=1)}{g(0\mid W)}\frac{e(0\mid M,W)}{e(1\mid M,W)} -
       \frac{I(A=0)}{g(0\mid W)}\bigg\}} \times \color{Goldenrod}{[Y-b(A,M,W)]}  \\
-    &+ \color{ForestGreen}{\frac{I(A=0)}{g(0\mid W)}}\color{Goldenrod}{\big\{Q(M,W) - \E[Q(M,W) | W,A=0] \big\}}\\
+    &+ \color{RoyalBlue}{\frac{I(A=0)}{g(0\mid W)}}\color{Goldenrod}{\big\{Q(M,W) - \E[Q(M,W) | W,A=0] \big\}}\\
     &+ \color{Goldenrod}{\E[Q(M,W) | W,A=0] - \psi(\P)}
 \end{align*}
 
@@ -2594,8 +2625,8 @@ q_pred <- predict(q_fit, newdata = data.frame(a = 0, w = w))
 \item
   Estimate the weights
   \begin{equation*}
-    \bigg\{ \frac{I(A=1)}{g(0\mid W)}\frac{e(0\mid M,W)}{e(1\mid M,W)} -
-     \frac{I(A=0)}{g(0\mid W)}\bigg\}
+    \color{RoyalBlue}{\bigg\{ \frac{I(A=1)}{g(0\mid W)}\frac{e(0\mid M,W)}{e(1\mid M,W)} -
+     \frac{I(A=0)}{g(0\mid W)}\bigg\}}
     \end{equation*}
   using the above predictions:
 \end{enumerate}
