@@ -66,13 +66,27 @@ The above is how you would compute the _true value_ **if you know** the true
   \end{equation*}
 - This is known as the g-computation estimator
 
-### How can g-estimation be implemented in practice?
+### Weighted estimator (akin to IPW)
+
+- An alternative expresion of the parameter functional (for the NDE) is given by
+
+\[\E\bigg[\color{RoyalBlue}{\bigg\{ \frac{I(A=1)}{\P(A=1\mid W)}\frac{\P(M\mid A=0,W)}{\P(M\mid A=1,W)} -
+      \frac{I(A=0)}{\P(A=0\mid W)}\bigg\}} \times \color{Goldenrod}{Y}\bigg]\]
+
+- Thus, you can also construct a weighted estimator as
+
+\[\frac{1}{n}\sum_{i=1}^n\bigg[\color{RoyalBlue}{\bigg\{ \frac{I(A_i=1)}{\hat\P(A_i=1\mid W_i)}\frac{\hat\P(M_i\mid A_i=0,W_i)}{\hat\P(M_i\mid A_i=1,W_i)} -
+      \frac{I(A_i=0)}{\hat\P(A_i=0\mid W_i)}\bigg\}} \times \color{Goldenrod}{Y}\bigg]\]
+
+
+### How can g-estimation and weighted estimation be implemented in practice?
 
 - There are two possible ways to do g-computation estimation:
   - Using parametric models for the above regressions
   - Using flexible data-adaptive regression (aka machine learning)
 
-### Pros and cons of parametric models
+
+### Pros and cons of g-computation and weighting parametric models
 
 - Pros:
   - Easy to understand
@@ -168,7 +182,7 @@ text(450, 0.01, paste0(
 ), cex = 1.2)
 ```
 
-### Pros and cons of g-computation with data-adaptive regression
+### Pros and cons of g-computation or weighting with data-adaptive regression
 
 - Pros:
   - Easy to understand

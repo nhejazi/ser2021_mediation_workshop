@@ -124,11 +124,15 @@ First, we need to introduce some notation to describe the EIF for the NDE
 - Let $Q(M, W)$ denote $\E(Y\mid A=1, M, W) - \E(Y\mid A=0, M, W)$
 - We can now introduce the EIF:
 \begin{align*}
-    D(O) &= \color{ForestGreen}{\bigg\{ \frac{I(A=1)}{\P(A=1\mid W)}\frac{\P(M\mid A=0,W)}{\P(M\mid A=1,W)} -
+    D(O) &= \color{RoyalBlue}{\bigg\{ \frac{I(A=1)}{\P(A=1\mid W)}\frac{\P(M\mid A=0,W)}{\P(M\mid A=1,W)} -
       \frac{I(A=0)}{\P(A=0\mid W)}\bigg\}} \times \color{Goldenrod}{[Y-\E(Y\mid A,M,W)]}  \\
-    &+ \color{ForestGreen}{\frac{I(A=0)}{\P(A=0\mid W)}}\color{Goldenrod}{\big\{Q(M,W) - \E[Q(M,W) | W,A=0] \big\}}\\
+    &+ \color{RoyalBlue}{\frac{I(A=0)}{\P(A=0\mid W)}}\color{Goldenrod}{\big\{Q(M,W) - \E[Q(M,W) | W,A=0] \big\}}\\
     &+ \color{Goldenrod}{\E[Q(M,W) | W,A=0] - \psi(\P)}
 \end{align*}
+
+- In this EIF, you can recognize elements from the g-computation estimator and the weighted estimator:
+  - $Q(M, W)$ shows up in the g-computation estimator
+  - The weights in blue in the first part of the EIF are used in the weighted estimator
 
 - Estimating $\P(M\mid A, W)$ is a really hard problem when $M$ is
   high-dimensional. But, since we have the ratio of these conditional
@@ -149,9 +153,9 @@ notation that will be useful later:
 - The EIF is
 
 \begin{align*}
-    D(O) &= \color{ForestGreen}{\bigg\{ \frac{I(A=1)}{g(0\mid W)}\frac{e(0\mid M,W)}{e(1\mid M,W)} -
+    D(O) &= \color{RoyalBlue}{\bigg\{ \frac{I(A=1)}{g(0\mid W)}\frac{e(0\mid M,W)}{e(1\mid M,W)} -
       \frac{I(A=0)}{g(0\mid W)}\bigg\}} \times \color{Goldenrod}{[Y-b(A,M,W)]}  \\
-    &+ \color{ForestGreen}{\frac{I(A=0)}{g(0\mid W)}}\color{Goldenrod}{\big\{Q(M,W) - \E[Q(M,W) | W,A=0] \big\}}\\
+    &+ \color{RoyalBlue}{\frac{I(A=0)}{g(0\mid W)}}\color{Goldenrod}{\big\{Q(M,W) - \E[Q(M,W) | W,A=0] \big\}}\\
     &+ \color{Goldenrod}{\E[Q(M,W) | W,A=0] - \psi(\P)}
 \end{align*}
 
@@ -229,8 +233,8 @@ q_pred <- predict(q_fit, newdata = data.frame(a = 0, w = w))
 
 4. Estimate the weights
   \begin{equation*}
-  \bigg\{ \frac{I(A=1)}{g(0\mid W)}\frac{e(0\mid M,W)}{e(1\mid M,W)} -
-      \frac{I(A=0)}{g(0\mid W)}\bigg\}
+  \color{RoyalBlue}{\bigg\{ \frac{I(A=1)}{g(0\mid W)}\frac{e(0\mid M,W)}{e(1\mid M,W)} -
+      \frac{I(A=0)}{g(0\mid W)}\bigg\}}
   \end{equation*}
   using the above predictions:
 ```{r}
