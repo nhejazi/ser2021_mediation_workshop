@@ -80,8 +80,6 @@ There are two possible ways of defining stochastic effects:
 - Consider the effect of an intervention where the exposure is drawn from a
   distribution
   - For example incremental propensity score interventions
-
-<!--KER this next bullet does not make sense to me-->
 - Consider the effect of an intervention where the post-intervention exposure is
   a function of the actually received exposure
   - For example modified treatment policies
@@ -279,13 +277,3 @@ mean(direct)
   - There is a version of these effects that can accomodate intermediate
     confounders [@hejazi2020nonparametric]
   - `R` implementation to be released soon...stay tuned!
-
-<!--
-ID: Should I add: continuous interventions, and/or the definitions of effects
-with intermediate confounders?
-
-KER: I don't think adding for intermediate confounders is necessary. Continuous
-interventions would be really useful *if* practical methods existed for that,
-but I think despite the paper existing, it hasn't really been done in practice,
-right? So probably wouldn't want to get into that.
--->

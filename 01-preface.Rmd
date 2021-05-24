@@ -21,10 +21,6 @@
   - Are those mediated effects different for homeless vs non-homeless
     individuals?
 
-<!--
-ID: Need to fix format of the following figure
--->
-
 ```{r, echo = FALSE, fig.cap="", out.width = '100%'}
 knitr::include_graphics(here::here("img", "ctndag.png"))
 ```
