@@ -1112,7 +1112,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li>We have arrived at identification formulas that express quantities that we
 care about in terms of observable quantities</li>
-<li>That is, these formulas express what would have happened in hypothetical worlds in terms of quantities observable in this world</li>
+<li>That is, these formulas express what would have happened in hypothetical
+worlds in terms of quantities observable in this world.</li>
 <li>This required <strong>causal assumptions</strong>
 <ul>
 <li>Many of these assumptions are empirically unverifiable</li>
@@ -1121,7 +1122,8 @@ cost of changing the parameter interpretation</li>
 <li>and where we could relax the positivity assumption, also at the cost of
 changing the parameter interpretation</li>
 </ul></li>
-<li>We are now ready to tackle the estimation problem, i.e., how do we best learn the value of quantities that are observable?</li>
+<li>We are now ready to tackle the estimation problem, i.e., how do we best learn
+the value of quantities that are observable?</li>
 <li>The resulting estimation problem can be tackled using <strong>statistical
 assumptions</strong> of various degrees of strength
 <ul>
@@ -1129,24 +1131,24 @@ assumptions</strong> of various degrees of strength
 <li>Thus, most are unnecessary (except for convenience)</li>
 <li>We have worked hard to try to satisfy the required causal assumptions</li>
 <li>This is not the time to introcuce unnecessary statistical assumptions</li>
-<li>The estimation approach we will introduce reduces reliance on these statistical
-assumptions</li>
+<li>The estimation approach we will introduce reduces reliance on these
+statistical assumptions.</li>
 </ul></li>
 </ul>
 <div id="computing-identification-formulas-if-you-know-the-true-distribution" class="section level3">
 <h3><span class="header-section-number">5.1.1</span> Computing identification formulas if you know the true distribution</h3>
 <ul>
-<li><p>The mediation parameters that we consider can be
-seen as a function of the joint probability distribution of <span class="math inline">\(O=(W,A,Z,M,Y)\)</span></p></li>
-<li><p>For example, under identifiability assumptions the natural direct effect is
+<li>The mediation parameters that we consider can be
+seen as a function of the joint probability distribution of <span class="math inline">\(O=(W,A,Z,M,Y)\)</span></li>
+<li>For example, under identifiability assumptions the natural direct effect is
 equal to
 <span class="math display">\[\begin{equation*}
   \psi(\P) =  \E[\color{Goldenrod}{\E\{\color{ForestGreen}{\{E(Y \mid A=1, M, W) - \E(Y \mid A=0, M, W)}\mid A=0,W\}}]
-\end{equation*}\]</span></p></li>
-<li><p>The notation <span class="math inline">\(\psi(\P)\)</span> implies that the parameter is a function of <span class="math inline">\(\P\)</span></p></li>
-<li><p>This means that we can compute it for any distribution <span class="math inline">\(\P\)</span></p></li>
-<li><p>For example, if we know the true <span class="math inline">\(\P(W,A,M,Y)\)</span>, we can comnpute the true value
-of the parameter by:</p>
+\end{equation*}\]</span></li>
+<li>The notation <span class="math inline">\(\psi(\P)\)</span> implies that the parameter is a function of <span class="math inline">\(\P\)</span></li>
+<li>This means that we can compute it for any distribution <span class="math inline">\(\P\)</span></li>
+<li>For example, if we know the true <span class="math inline">\(\P(W,A,M,Y)\)</span>, we can comnpute the true value
+of the parameter by:
 <ul>
 <li>Computing the conditional expectation <span class="math inline">\(\E(Y\mid A=1,M=m,W=w)\)</span> for all
 values <span class="math inline">\((m,w)\)</span></li>
@@ -1221,7 +1223,8 @@ distribution <span class="math inline">\(\P\)</span></p>
 <li>Unless <span class="math inline">\(W\)</span> and <span class="math inline">\(M\)</span> contain very few categorical variables, it is very easy
 to misspecify the models</li>
 <li>This can introduce sizable bias in the estimators</li>
-<li>This modelling assumptions have become less necessary in the presence of data-adaptive regression tools (a.k.a machine learning)</li>
+<li>This modelling assumptions have become less necessary in the presence of
+data-adaptive regression tools (a.k.a., machine learning)</li>
 </ul></li>
 </ul>
 </div>
@@ -1319,19 +1322,12 @@ fail in some cases</li>
 </div>
 <div id="semiparametric-estimation" class="section level2">
 <h2><span class="header-section-number">5.2</span> Semiparametric estimation</h2>
-<!--
-KER this may be just me, but I'm not sure the "incorrect bias/variance
-tradeoff" argument will be super concrete for folks. I think maybe a more
-concrete/motivating argument would be to say that we want to use data adaptive
-methods because we don't know how to correctly specify all our models. we also
-want valid standard errors and confidence intervals. to do this, we need to use
-semiparametric estimation
--->
 <ul>
 <li>Intuitively, it offers a way to use data-adaptive regression to
 <ul>
 <li>avoid model misspecification bias,</li>
-<li>endow the estimators with additional robustness (e.g., double robustness), while</li>
+<li>endow the estimators with additional robustness (e.g., double robustness),
+while</li>
 <li>allowing the computation of correct standard errors and confidence intervals</li>
 </ul></li>
 <li>This can be achieved by adding a bias correction factor the the g-computation

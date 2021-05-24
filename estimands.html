@@ -1121,10 +1121,6 @@ FIGURE 2.1: Directed acyclic graph under <em>no intermediate confounders</em> of
 <div id="controlled-direct-effects" class="section level2">
 <h2><span class="header-section-number">2.1</span> Controlled direct effects</h2>
 <p><span class="math display">\[\psi_{\text{CDE}} = \E(Y_{1,m} - Y_{0,m}) \]</span></p>
-<!--
-ID: Reminder to ask Kara about the purpose of these cartoons
-KER: !!
--->
 <p><img src="img/graphic4a3.png" width="50%" style="display: block; margin: auto;" /></p>
 <ul>
 <li>Set the mediator to a reference value <span class="math inline">\(M=m\)</span> uniformly for everyone in the
@@ -1231,11 +1227,6 @@ while keeping treatment fixed</li>
 </ul>
 <div id="identification-assumptions-1" class="section level3">
 <h3><span class="header-section-number">2.2.1</span> Identification assumptions:</h3>
-<!--
-ID: For all the effects, we should add a discussion of identification
-assumptions: what they mean and try to teach people to identify when they are
-violated. We can do this in the context of our motivating examples.
--->
 <ul>
 <li><span class="math inline">\(A \indep Y_{a,m} \mid W\)</span></li>
 <li><span class="math inline">\(M \indep Y_{a,m} \mid W, A\)</span></li>
@@ -1322,7 +1313,7 @@ result</li>
 <h3><span class="header-section-number">2.2.4</span> Is this the estimand I want?</h3>
 <ul>
 <li>Makes sense to intervene on <span class="math inline">\(A\)</span> but not directly on <span class="math inline">\(M\)</span>.</li>
-<li>Want to understand a natural mechanism underlying an association/ total
+<li>Want to understand a natural mechanism underlying an association / total
 effect. J. Pearl calls this <em>descriptive</em>.</li>
 <li>NDE + NIE = total effect (ATE).</li>
 <li>Okay with the assumptions.</li>
@@ -1367,15 +1358,7 @@ are correlated even after adjusting for <span class="math inline">\(W\)</span> b
 correlated.</li>
 </ul>
 <!--
-Ivan, this is such a great explanation!!  After that explanation, I'm not sure
-what you have below adds anything, but I'm happy to keep it if you guys think
-it's useful. Espeically because i think we do essentially adjust for z in our
-sequential regressions if we are estimating controlled direct effects in this
-environment, right?
--->
-<!--
 Intuitively:
-
 - $Z$ is a confounder of the relation $M \rightarrow Y$, which requires
   adjustment
 - But $Z$ is on the pathway $A\rightarrow Y$, which precludes adjustment
@@ -1387,10 +1370,6 @@ intervention.</p>
 </div>
 <div id="interventional-indirect-effects" class="section level2">
 <h2><span class="header-section-number">2.3</span> Interventional (in)direct effects</h2>
-<!--
-I think the distinction between fully conditional and not will be completely
-lost on people
--->
 <ul>
 <li>Let <span class="math inline">\(G_a\)</span> denote a random draw from the distribution of <span class="math inline">\(M_a \mid W\)</span></li>
 <li>Define the counterfactual <span class="math inline">\(Y_{1,G_0}\)</span> as the counterfactual
@@ -1423,11 +1402,6 @@ of the causal effect (cannot decompose the ATE)</li>
 analyses where we want the distribution conditional on <span class="math inline">\(Z\)</span>, instrumental
 variable designs where it doesn’t make sense to condition on <span class="math inline">\(Z\)</span>)</li>
 </ul>
-<!--
-KER: I see that you commented all of this out and I don't feel that strongly
-about it, but i think it is interesting and it is relevant and it is important
-for folks to think about.
--->
 <!--
  + Marginal PIDE: $\E(Y_{a, g_{M \mid a^{\star}, W}}) -
    \E(Y_{a^{\star}, g_{M \mid a^{\star}, W}})$
@@ -1525,10 +1499,6 @@ effect.</li>
 </div>
 <div id="estimand-summary" class="section level2">
 <h2><span class="header-section-number">2.4</span> Estimand Summary</h2>
-<!--
-ID: Can we redo the below table fixing the G notation? Also, is it possible to
-fix the formatting? (currently not very amenable to a presentation I think)
--->
 <div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-21"></span>
 <img src="img/table1.png" alt="Excerpted from @rudolph2019causal" width="125%" />
 <p class="caption">

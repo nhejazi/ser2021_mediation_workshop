@@ -4,28 +4,29 @@
 
 - We have arrived at identification formulas that express quantities that we
   care about in terms of observable quantities
-- That is, these formulas express what would have happened in hypothetical worlds in terms of quantities observable in this world
+- That is, these formulas express what would have happened in hypothetical
+  worlds in terms of quantities observable in this world.
 - This required **causal assumptions**
   - Many of these assumptions are empirically unverifiable
   - We saw an example where we could relax the cross-world assumption, at the
     cost of changing the parameter interpretation
   - and where we could relax the positivity assumption, also at the cost of
     changing the parameter interpretation
-- We are now ready to tackle the estimation problem, i.e., how do we best learn the value of quantities that are observable?
+- We are now ready to tackle the estimation problem, i.e., how do we best learn
+  the value of quantities that are observable?
 - The resulting estimation problem can be tackled using **statistical
   assumptions** of various degrees of strength
   - Most of these assumptions are verifiable (e.g., a linear model)
   - Thus, most are unnecessary (except for convenience)
   - We have worked hard to try to satisfy the required causal assumptions
   - This is not the time to introcuce unnecessary statistical assumptions
-  - The estimation approach we will introduce reduces reliance on these statistical
-    assumptions
+  - The estimation approach we will introduce reduces reliance on these
+    statistical assumptions.
 
 ### Computing identification formulas if you know the true distribution
 
 - The mediation parameters that we consider can be
   seen as a function of the joint probability distribution of $O=(W,A,Z,M,Y)$
-  
 - For example, under identifiability assumptions the natural direct effect is
   equal to
   \begin{equation*}
@@ -78,13 +79,11 @@ The above is how you would compute the _true value_ **if you know** the true
 \[\frac{1}{n}\sum_{i=1}^n\bigg[\color{RoyalBlue}{\bigg\{ \frac{I(A_i=1)}{\hat\P(A_i=1\mid W_i)}\frac{\hat\P(M_i\mid A_i=0,W_i)}{\hat\P(M_i\mid A_i=1,W_i)} -
       \frac{I(A_i=0)}{\hat\P(A_i=0\mid W_i)}\bigg\}} \times \color{Goldenrod}{Y}\bigg]\]
 
-
 ### How can g-estimation and weighted estimation be implemented in practice?
 
 - There are two possible ways to do g-computation estimation:
   - Using parametric models for the above regressions
   - Using flexible data-adaptive regression (aka machine learning)
-
 
 ### Pros and cons of g-computation and weighting parametric models
 
@@ -97,7 +96,8 @@ The above is how you would compute the _true value_ **if you know** the true
   - Unless $W$ and $M$ contain very few categorical variables, it is very easy
     to misspecify the models
   - This can introduce sizable bias in the estimators
-  - This modelling assumptions have become less necessary in the presence of data-adaptive regression tools (a.k.a machine learning)
+  - This modelling assumptions have become less necessary in the presence of
+    data-adaptive regression tools (a.k.a., machine learning)
 
 ### An example of the bias of a g-computation estimator of the natural direct effect
 
@@ -204,20 +204,12 @@ text(450, 0.01, paste0(
     fail in some cases
 
 
-## Semiparametric estimation 
-
-<!--
-KER this may be just me, but I'm not sure the "incorrect bias/variance
-tradeoff" argument will be super concrete for folks. I think maybe a more
-concrete/motivating argument would be to say that we want to use data adaptive
-methods because we don't know how to correctly specify all our models. we also
-want valid standard errors and confidence intervals. to do this, we need to use
-semiparametric estimation
--->
+## Semiparametric estimation
 
 - Intuitively, it offers a way to use data-adaptive regression to
   - avoid model misspecification bias,
-  - endow the estimators with additional robustness (e.g., double robustness), while
+  - endow the estimators with additional robustness (e.g., double robustness),
+    while
   - allowing the computation of correct standard errors and confidence intervals
 - This can be achieved by adding a bias correction factor the the g-computation
   as follows:

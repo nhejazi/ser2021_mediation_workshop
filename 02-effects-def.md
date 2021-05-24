@@ -17,11 +17,6 @@
 
 $$\psi_{\text{CDE}} = \E(Y_{1,m} - Y_{0,m}) $$
 
-<!--
-ID: Reminder to ask Kara about the purpose of these cartoons
-KER: !!
--->
-
 \begin{figure}
 
 {\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/graphic4a3} 
@@ -139,12 +134,6 @@ Then we can decompose the _average treatment effect_ $E(Y_1-Y_0)$ as follows
 
 ### Identification assumptions:
 
-<!--
-ID: For all the effects, we should add a discussion of identification
-assumptions: what they mean and try to teach people to identify when they are
-violated. We can do this in the context of our motivating examples.
--->
-
 - $A \indep Y_{a,m} \mid W$
 - $M \indep Y_{a,m} \mid W, A$
 - $A \indep M_a \mid W$
@@ -218,7 +207,6 @@ pred_y0 <- predict(lm_y, newdata = data.frame(a = 0, m = m, w = w))
   A=0, M, W)}\color{Goldenrod}{\mid A=0,W\}}\]
 
 
-
 ```r
 pseudo <- pred_y1 - pred_y0
 lm_pseudo <- lm(pseudo ~ a + w)
@@ -237,7 +225,7 @@ mean(pred_pseudo)
 ### Is this the estimand I want?
 
 - Makes sense to intervene on $A$ but not directly on $M$.
-- Want to understand a natural mechanism underlying an association/ total
+- Want to understand a natural mechanism underlying an association / total
   effect. J. Pearl calls this _descriptive_.
 - NDE + NIE = total effect (ATE).
 - Okay with the assumptions.
@@ -291,15 +279,7 @@ are correlated even after adjusting for $W$ by virtue of $Z_1$ and $Z_0$ being
 correlated.
 
 <!--
-Ivan, this is such a great explanation!!  After that explanation, I'm not sure
-what you have below adds anything, but I'm happy to keep it if you guys think
-it's useful. Espeically because i think we do essentially adjust for z in our
-sequential regressions if we are estimating controlled direct effects in this
-environment, right?
--->
-<!--
 Intuitively:
-
 - $Z$ is a confounder of the relation $M \rightarrow Y$, which requires
   adjustment
 - But $Z$ is on the pathway $A\rightarrow Y$, which precludes adjustment
@@ -311,15 +291,11 @@ intervention.
 
 ## Interventional (in)direct effects
 
-<!--
-I think the distinction between fully conditional and not will be completely
-lost on people
--->
 - Let $G_a$ denote a random draw from the distribution of $M_a \mid W$
 - Define the counterfactual $Y_{1,G_0}$ as the counterfactual
   variable in a hypothetical world where $A$ is set $A=1$ and $M$ is
   set to $M=G_0$ with probability one.
-  
+
 \begin{figure}
 
 {\centering \includegraphics[width=0.5\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/graphic4b} 
@@ -352,11 +328,6 @@ lost on people
   analyses where we want the distribution conditional on $Z$, instrumental
   variable designs where it doesn't make sense to condition on $Z$)
 
-<!--
-KER: I see that you commented all of this out and I don't feel that strongly
-about it, but i think it is interesting and it is relevant and it is important
-for folks to think about.
--->
 <!--
  + Marginal PIDE: $\E(Y_{a, g_{M \mid a^{\star}, W}}) -
    \E(Y_{a^{\star}, g_{M \mid a^{\star}, W}})$
@@ -459,10 +430,7 @@ mean(pred_pseudo)
 
 
 ## Estimand Summary
-<!--
-ID: Can we redo the below table fixing the G notation? Also, is it possible to
-fix the formatting? (currently not very amenable to a presentation I think)
--->
+
 \begin{figure}
 
 {\centering \includegraphics[width=1.25\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/table1} 

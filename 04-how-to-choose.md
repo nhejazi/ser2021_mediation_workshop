@@ -49,14 +49,12 @@ $\rightarrow$ So, _not_ natural (in)direct effects.
  + Here $G_a$ is a draw from the distribution of $M_a\mid W$.
 - Need to incorporate multiple and continuous mediators
 
-
 #### What if the positivity assumption $\P(A=a\mid W)>0$ violated? {-}
 
 $\rightarrow$ Can't identify or estimate any of the above effects
 
 - But we can estimate the effect of some stochastic interventions, e.g., IPSIs
 - Tradeoff between feasibility and interpretation
-
 
 #### What if the exposure variable is continuous? {-}
 

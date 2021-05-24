@@ -213,7 +213,7 @@
 \makeatother
 \subtitle{A Workshop at SER 2021}
 \author{Iván Díaz, Nima Hejazi, Kara Rudolph}
-\date{updated: May 23, 2021}
+\date{updated: May 24, 2021}
 
 \begin{document}
 \maketitle
@@ -1228,7 +1228,7 @@ mean(pred_pseudo)
 \item
   Makes sense to intervene on \(A\) but not directly on \(M\).
 \item
-  Want to understand a natural mechanism underlying an association/ total
+  Want to understand a natural mechanism underlying an association / total
   effect. J. Pearl calls this \emph{descriptive}.
 \item
   NDE + NIE = total effect (ATE).
@@ -1555,10 +1555,6 @@ There are two possible ways of defining stochastic effects:
   \item
     For example incremental propensity score interventions
   \end{itemize}
-\end{itemize}
-
-\begin{itemize}
-\tightlist
 \item
   Consider the effect of an intervention where the post-intervention exposure is
   a function of the actually received exposure
@@ -2016,7 +2012,8 @@ for homeless and nonhomeless individuals?
   We have arrived at identification formulas that express quantities that we
   care about in terms of observable quantities
 \item
-  That is, these formulas express what would have happened in hypothetical worlds in terms of quantities observable in this world
+  That is, these formulas express what would have happened in hypothetical
+  worlds in terms of quantities observable in this world.
 \item
   This required \textbf{causal assumptions}
 
@@ -2032,7 +2029,8 @@ for homeless and nonhomeless individuals?
     changing the parameter interpretation
   \end{itemize}
 \item
-  We are now ready to tackle the estimation problem, i.e., how do we best learn the value of quantities that are observable?
+  We are now ready to tackle the estimation problem, i.e., how do we best learn
+  the value of quantities that are observable?
 \item
   The resulting estimation problem can be tackled using \textbf{statistical
   assumptions} of various degrees of strength
@@ -2048,8 +2046,8 @@ for homeless and nonhomeless individuals?
   \item
     This is not the time to introcuce unnecessary statistical assumptions
   \item
-    The estimation approach we will introduce reduces reliance on these statistical
-    assumptions
+    The estimation approach we will introduce reduces reliance on these
+    statistical assumptions.
   \end{itemize}
 \end{itemize}
 
@@ -2057,6 +2055,7 @@ for homeless and nonhomeless individuals?
 \subsection{Computing identification formulas if you know the true distribution}\label{computing-identification-formulas-if-you-know-the-true-distribution}}
 
 \begin{itemize}
+\tightlist
 \item
   The mediation parameters that we consider can be
   seen as a function of the joint probability distribution of \(O=(W,A,Z,M,Y)\)
@@ -2197,7 +2196,8 @@ distribution \(\P\)
   \item
     This can introduce sizable bias in the estimators
   \item
-    This modelling assumptions have become less necessary in the presence of data-adaptive regression tools (a.k.a machine learning)
+    This modelling assumptions have become less necessary in the presence of
+    data-adaptive regression tools (a.k.a., machine learning)
   \end{itemize}
 \end{itemize}
 
@@ -2347,7 +2347,8 @@ text(450, 0.01, paste0(
   \item
     avoid model misspecification bias,
   \item
-    endow the estimators with additional robustness (e.g., double robustness), while
+    endow the estimators with additional robustness (e.g., double robustness),
+    while
   \item
     allowing the computation of correct standard errors and confidence intervals
   \end{itemize}

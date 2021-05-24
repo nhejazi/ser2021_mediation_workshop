@@ -21,10 +21,6 @@
   - Are those mediated effects different for homeless vs non-homeless
     individuals?
 
-<!--
-ID: Need to fix format of the following figure
--->
-
 \begin{figure}
 
 {\centering \includegraphics[width=1\linewidth]{/home/runner/work/ser2021_mediation_workshop/ser2021_mediation_workshop/img/ctndag} 
